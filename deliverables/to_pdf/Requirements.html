@@ -1,0 +1,678 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <title>5iver output</title>
+   <meta charset="UTF-8" />
+   <style>
+       html { font-family: "Times New Roman", Garamond, Georgia, serif; }
+       body { max-width: 42em; margin: auto; text-align: justify; }
+       h1 { text-align: center; }
+       h2 { font-variant: small-caps; }
+
+       pre { white-space: pre-wrap; }
+   </style>
+</head>
+<body>
+  <header>
+<h1>SmartHome Requirements Document</h1>
+<h3>
+  Seth Davis, Devin Hanger, Brent Holland, Ahmed Ghoneim, Steven Maschmeyer, Eddie Santos, Tsung Lin Yong
+</h3>
+
+
+  <h3>
+    TA: <a href="mailto:fokaefs@ualberta.ca">Marios Fokaefs</a>
+  </h3>
+</header>
+
+<h2>Contents</h2>
+
+<blockquote>
+  <ol>
+<li><a href="#Project Overview">Project Overview</a></li>
+<li><a href="#Requirements">Requirements</a></li>
+<li>&nbsp; &nbsp; <a href="#User Stories">User Stories</a></li>
+<li>&nbsp; &nbsp; <a href="#Use Cases">Use Cases</a></li>
+<li><a href="#User Interface">User Interface</a></li>
+<li><a href="#Software License">Software License</a></li>
+<li><a href="#Project Glossary">Project Glossary</a></li>
+<li><a href="#Competing Products">Competing Products</a></li>
+<li><a href="#Other Resources">Other Resources</a></li>
+<li><a href="#See Also">See Also</a></li>
+</ol>
+</blockquote>
+
+<p><a name='Project Overview'/></p>
+
+<h2>Project Overview</h2>
+
+<p>Our client (<a href="http://www.wbhadc.ca/">WBHDC</a>) produces affordable apartments for low-income tenants. To this end, they would like to know how to maximize the efficiency of operating these apartments. They are currently tracking metrics such as heat lost through certain walls, heating required, and electricity consumed by the different appliances in each apartment. Identifying inefficiencies in these apartments will assist the engineers in constructing more efficient housing in the future; further, identifying what aspects of maintenance are most expensive will assist the building managers in planning, budgeting, and incentivizing tenants to reduce costs in these areas. Tenants may also be interested to see where and why they are spending the most money on heating and electricity. However, the current visualization of this data is insufficient for the needs of any of these stakeholders. Developing custom visualizations so that each of these stakeholders can quickly extract the information they are interested will make this job easier to perform and perhaps assist in future development of low-income housing.</p>
+
+<p><a name='Requirements'/></p>
+
+<h2>Requirements</h2>
+
+<p><strong>Overview</strong> <br />
+For this first pass, I have followed the Volere template for requirement analysis. I have devised the following list of requirement types and use cases. In general, cuts to requirements of categories 1, 2, or 3 indicate a failure to deliver the system as promised. I have allowed multiple use cases for a single requirement as different users will have different use cases but similar requirements.</p>
+
+<p><strong>Requirement Types</strong> <br />
+- 1. System – These are back-end requirements which are necessary for the completion of the project. As they are the most likely candidates for bottlenecking our system development, they should be our first priority.
+- 2. Mandatory – We cannot consider the project to be completed in any sense without fulfilling these requirements for the user.
+- 3. Flexible – We must have something approximately equivalent to this requirement to consider the project completed, but the details need not be exactly as described. <br />
+- 4. Polish – While not strictly necessary for completion of this project, these requirements will add significant quality to our project and should be considered part of our deliverables unless the project falls well behind schedule. <br />
+- 5. Optional – While desirable, these requirements can be cut if time is running low.</p>
+
+<hr />
+
+<p><strong>Requirement Name:</strong> Data Selection <br />
+<strong>Requirement #:</strong> 1    <strong>Requirement Type:</strong> 2 <strong>Use Cases:</strong> 2.1, 3.1</p>
+
+<p><strong>Description:</strong> The product will allow building managers and engineers to select what types of data they are interested in, and how they would like that data displayed.</p>
+
+<p><strong>Rationale:</strong> Building managers and engineers should be permitted access to all of the same data, as it is possible that either may be interested in data that is “usually” the domain of the other. However, providing all this data at once is not feasible. A system must exist to act as the “controller” for our product, and allow the user to choose what data they would like to see, and how they would like to see it.</p>
+
+<p><strong>Fit Criterion:</strong> The user will be able to provide as input to the product any collection of apartments outfitted with sensors and a time period, as well as visualization options and optional information such as financial analysis, efficiency analysis,  (either through a dropdown menu or by selecting a different search form). The product will then return the aggregate and average data as appropriate for the selected sensors, in the selected apartments, displayed in the selected format. In short, our system must be flexible in what data it displays, and how it displays it.</p>
+
+<p><strong>Customer Satisfaction:</strong> 4        <strong>Customer Dissatisfaction:</strong> 9 <br />
+<strong>Dependencies:</strong> 2, 4          <strong>Conflicts:</strong> None <br />
+<strong>Supporting Materials:</strong> None</p>
+
+<hr />
+
+<p><strong>Requirement Name:</strong> Report Generation <br />
+<strong>Requirement #:</strong> 2    <strong>Requirement Type:</strong> 2 <strong>Use Cases:</strong> 2.2, 3.1</p>
+
+<p><strong>Description:</strong>  The product will produce plaintext reports, based on selection options, of sensor data for a given apartment.</p>
+
+<p><strong>Rationale:</strong> The raw numbers and data collected by the sensor are too numerous and small to be of use to any of our stakeholders. The aggregate data must be available in plaintext for use in stakeholder databases, reports, etc.</p>
+
+<p><strong>Fit Criterion:</strong>  When provided an apartment and time period by the user, the product will return, in plaintext, the aggregate and average data (as appropriate) for the selected apartment in the selected time period.</p>
+
+<p><strong>Customer Satisfaction:</strong> 3        <strong>Customer Dissatisfaction:</strong> 10 <br />
+<strong>Dependencies:</strong> 3         <strong>Conflicts:</strong> None <br />
+<strong>Supporting Materials:</strong> None</p>
+
+<hr />
+
+<p><strong>Requirement Name:</strong> Data Processing <br />
+<strong>Requirement #:</strong> 3    <strong>Requirement Type:</strong> 1 <strong>Use Cases:</strong>   </p>
+
+<p><strong>Description:</strong> Database access and calculations will be handled by an http web service.</p>
+
+<p><strong>Rationale:</strong> To facilitate a flexible design, the clients have requested that our data-level protocols be kept separate from the display of these protocols.</p>
+
+<p><strong>Fit Criterion:</strong> Whenever database access or calculations on this data (i.e., calculation of efficiency coefficients for heat loss) must be performed, this data will be sent from the front-end page to the back-end web service through an http request. This service will perform all necessary calculations and return the data to the front-end of the system, which will be responsible for the display of this data.</p>
+
+<p><strong>Customer Satisfaction:</strong> 1        <strong>Customer Dissatisfaction:</strong> 8 <br />
+<strong>Dependencies:</strong> None          <strong>Conflicts:</strong> None <br />
+<strong>Supporting Materials:</strong> None</p>
+
+<hr />
+
+<p><strong>Requirement Name:</strong> Visualization Options <br />
+<strong>Requirement #:</strong> 4    <strong>Requirement Type:</strong> 1 <strong>Use Cases:</strong> 2.1, 2.3, 3.1, 4.4, 4.5 </p>
+
+<p><strong>Description:</strong> Data must be presented in some visual format: i.e. interactive graphs.</p>
+
+<p><strong>Rationale:</strong> While plaintext data is valuable for certain tasks, graphs and charts are easier to digest at a glance.</p>
+
+<p><strong>Fit Criterion:</strong> Whenever a user requests data from the system, they should have the choice of different visual formats.</p>
+
+<p><strong>Customer Satisfaction:</strong> 4        <strong>Customer Dissatisfaction:</strong> 6 <br />
+<strong>Dependencies:</strong> 1         <strong>Conflicts:</strong> None <br />
+<strong>Supporting Materials:</strong> None</p>
+
+<hr />
+
+<p><strong>Requirement Name:</strong>  Apartment View <br />
+<strong>Requirement #:</strong> 5    <strong>Requirement Type:</strong> 2 <strong>Use Cases:</strong> 2.1, 3.1, 4.4, 4.5</p>
+
+<p><strong>Description:</strong> Data should be presented overlaid over the floor plan of the apartment from which the data was collected.</p>
+
+<p><strong>Rationale:</strong> Being able to glance at the floor plan of an apartment and immediately identify the areas of high and low energy loss will greatly simplify the work of the building manager and engineers, who are both interested in tracking down problem spots throughout the apartments.</p>
+
+<p><strong>Fit Criterion:</strong> Whenever a user requests data from the system, they should have the option to select Apartment View. This view should cause data to be represented in some fashion (dots, color-coded) as an overlay on the floor plan of the selected apartments.</p>
+
+<p><strong>Customer Satisfaction:</strong> 8        <strong>Customer Dissatisfaction:</strong> 4 <br />
+<strong>Dependencies:</strong> 4         <strong>Conflicts:</strong> None <br />
+<strong>Supporting Materials:</strong> None</p>
+
+<hr />
+
+<p><strong>Requirement Name:</strong>  Graph View <br />
+<strong>Requirement #:</strong> 6    <strong>Requirement Type:</strong> 1 <strong>Use Cases:</strong> 2.1, 3.1, 4.4, 4.5</p>
+
+<p><strong>Description:</strong> Data must be presented in some visual format: i.e. interactive graphs.</p>
+
+<p><strong>Rationale:</strong> While plaintext data is valuable for certain tasks, graphs and charts are easier to digest at a glance.</p>
+
+<p><strong>Fit Criterion:</strong> Whenever a user requests data from the system, they should have the option of selecting from one or more Graph Views. These views will display the data in some visual format, such as a bar chart, pie chart, or line chart (where appropriate).</p>
+
+<p><strong>Customer Satisfaction:</strong> 1        <strong>Customer Dissatisfaction:</strong> 8 <br />
+<strong>Dependencies:</strong> 1, 2          <strong>Conflicts:</strong> None <br />
+<strong>Supporting Materials:</strong> None</p>
+
+<hr />
+
+<p><strong>Requirement Name:</strong> Multiple Apartment Selection <br />
+<strong>Requirement #:</strong> 7    <strong>Requirement Type:</strong> 1 <strong>Use Cases:</strong> 2.1, 3.1, 4.4, 4.5</p>
+
+<p><strong>Description:</strong> Data must be presented in some visual format: i.e. interactive graphs.</p>
+
+<p><strong>Rationale:</strong> While plaintext data is valuable for certain tasks, graphs and charts are easier to digest at a glance.</p>
+
+<p><strong>Fit Criterion:</strong> Whenever a user requests data from the system, they should have the option of</p>
+
+<p><strong>Customer Satisfaction:</strong> 1        <strong>Customer Dissatisfaction:</strong> 8 <br />
+<strong>Dependencies:</strong> 1, 2          <strong>Conflicts:</strong> None <br />
+<strong>Supporting Materials:</strong> None</p>
+
+<hr />
+
+<p><strong>Requirement Name:</strong> Chart/Graph Visualization <br />
+<strong>Requirement #:</strong> 8    <strong>Requirement Type:</strong> 1 <strong>Use Cases:</strong> 2.1, 3.1, 4.4, 4.5</p>
+
+<p><strong>Description:</strong> Data must be presented in some visual format: i.e. interactive graphs.</p>
+
+<p><strong>Rationale:</strong> To facilitate a flexible design, the clients have requested that our data-level protocols be kept separate from the display of these protocols.</p>
+
+<p><strong>Fit Criterion:</strong> Whenever database access or calculations on this data (i.e., calculation of efficiency coefficients for heat loss) must be performed, this data will be sent from the front-end page to the back-end web service through an http request. This service will perform all necessary calculations and return the data to the front-end of the system, which will be responsible for the display of this data.</p>
+
+<p><strong>Customer Satisfaction:</strong> 1        <strong>Customer Dissatisfaction:</strong> 8 <br />
+<strong>Dependencies:</strong> 3         <strong>Conflicts:</strong> None <br />
+<strong>Supporting Materials:</strong> None</p>
+
+<hr />
+
+<p><strong>Requirement Name:</strong> Weather Data</p>
+
+<p><strong>Requirement #:</strong> 9    <strong>Requirement Type:</strong> 5 <strong>Use Cases:</strong></p>
+
+<p><strong>Description:</strong> Data is parsed from Environment Canada or a similar website, and presented side-by-side with sensor data.</p>
+
+<p><strong>Rationale:</strong> Heat loss and heating data is more useful within the context of that day&#8217;s weather.</p>
+
+<p><strong>Fit Criterion:</strong> When selecting sensor data and apartments, the user should have the option of displaying the average daily temperature (alternatively, the daily high and daily low temperature) for that day, in addition to the other requested information.</p>
+
+<p><strong>Customer Satisfaction:</strong> 4        <strong>Customer Dissatisfaction:</strong> 3 <br />
+<strong>Dependencies:</strong> 3         <strong>Conflicts:</strong> None <br />
+<strong>Supporting Materials:</strong> None</p>
+
+<p><a name='user-stories'/></p>
+
+<h2>User Stories</h2>
+
+<table>
+  <tr><th>ID</th><th width='100%'>Description</th><th>Priority</th></tr>
+  <tr>
+    <td>1.1</td>
+    <td>As a user, I want to be able to log in to my account.</td>
+    <td>Medium</td>
+  </tr>
+</table>
+
+<p><a name='us-buidling-manager'/></p>
+
+<h5>Building Manager</h5>
+
+<table>
+  <tr><th>ID</th><th width='100%'>Description</th><th>Priority</th></tr>
+  <tr>
+    <td>2.1</td>
+    <td>As the building manager, I want to see the consumption pattern of a particular utility for an apartment unit over a given time period in an easily understandable form.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>2.2</td>
+    <td>As the building manager, I want to compare the consumption pattern of a particular utility over a given time period between unit X and unit Y.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>2.3</td>
+    <td>As the building manager, I want to generate a daily/weekly/monthly/yearly report with a pie chart that depicts the ratio of water to electricity to gas consumption for selected units.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>2.4</td>
+    <td>As the building manager, I want to see the consumption cost of a particular utility for an apartment over a given time period.</td>
+    <td>High</td>
+  </tr>
+  <tr>
+    <td>2.5</td>
+    <td>As the building manager, I want to compare the cost of a particular utility over a given time period for unit X and unit Y.</td>
+    <td>High</td>
+  </tr>
+</table>
+
+<p><a name='us-engineer'/></p>
+
+<h5>Engineer</h5>
+
+<table>
+  <tr><th>ID</th><th width='100%'>Description</th><th>Priority</th></tr>
+  <tr>
+    <td>3.1</td>
+    <td>As an Engineer, I want to group results by apartment number, type, floor, facing direction, or any combination of those categories.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.2</td>
+    <td>As an Engineer, I want to specify a time range for results.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.3</td>
+    <td>As an Engineer, I want results reported on a granularity of hour, day, and month.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.4</td>
+    <td>As an Engineer, I want to visualize results on a graph.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.5</td>
+    <td>As an Engineer, I want to determine exact values from looking at results on a graph.</td>
+    <td>High</td>
+  </tr>
+  <tr>
+    <td>3.6</td>
+    <td>As an Engineer, I want to know the hours in which a given metric reaches its maximum and minimum values.</td>
+    <td>High</td>
+  </tr>
+  <tr>
+    <td>3.7</td>
+    <td>As an Engineer, I want to generate reports summarizing important information from a result set.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.8</td>
+    <td>As an Engineer, I want to visualize the average C02 concentration (ppm) for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.9</td>
+    <td>As an Engineer, I want to visualize the average relative humidity (%) for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.10</td>
+    <td>As an Engineer, I want to visualize the temperature (C) for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.11</td>
+    <td>As an Engineer, I want to visualize the heat flux through studs (W/m^2) for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.12</td>
+    <td>As an Engineer, I want to visualize the heat flux through insulation (W/m^2) for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.13</td>
+    <td>As an Engineer, I want to visualize the total energy (Wh) of water used to heat the building for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.14</td>
+    <td>As an Engineer, I want to visualize the total volume (L), mass (g), and current flow (L/s) of water used to heat the building for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.15</td>
+    <td>As an Engineer, I want to visualize the outdoor temperature over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.16</td>
+    <td>As an Engineer, I want to compare how the outdoor temperature effects heating parameters for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.17</td>
+    <td>As an Engineer, I want to visualize the total electrical energy usage (KWh) for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.18</td>
+    <td>As an Engineer, I want to visualize the total electrical energy usage (KWh) on a given socket for a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.19</td>
+    <td>As an Engineer, I want to visualize the total water usage (gallons) of a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.20</td>
+    <td>As an Engineer, I want to visualize the total hot water usage (gallons) of a set of apartment groups over a given time range and granularity.</td>
+    <td>Medium</td>
+  </tr>
+</table>
+
+<p><a name='uc-resident'/></p>
+
+<h5>Resident</h5>
+
+<table>
+  <tr><th>ID</th><th width='100%'>Description</th><th>Priority</th></tr>
+  <tr>
+    <td>4.1</td>
+    <td>As a resident, I want to be shown my current standing and usage upon logging in.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>4.2</td>
+    <td>As a resident, I want to be able to view my awards history, with granularity on the level (gold/silver/bronze) and the type (co2,electricity etc.).</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>4.3</td>
+    <td>As a resident, I want to be told ways to improve my standing.</td>
+    <td>Low</td>
+  </tr>
+  <tr>
+    <td>4.4</td>
+    <td>As a resident, I want to see how the usage of the room has changed since the sensors were installed.</td>
+    <td>Low</td>
+  </tr>
+  <tr>
+    <td>4.5</td>
+    <td>As a resident, I want to be able to see how the room&#8217;s usage has changed since I moved in.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>4.6</td>
+    <td>As a resident, I want to be able to view and specify my current average occupancy.</td>
+    <td>Low</td>
+  </tr>
+</table>
+
+<p><a name='Use Cases'/></p>
+
+<h2>Use Cases</h2>
+
+<p><a name="uc-general" /></p>
+
+<pre>
+ID:              1.1
+Description:     User logs in
+Preconditions:   None
+Postconditions:  User is logged in and sees his/her SmartHome profile page.
+Success flow:
+                 1. User inputs his/her username and password.
+                 2. System validates the username and password.
+                 3. System shows user his/her SmartHome profile page.
+Alternative flows:
+                 1a. User clicks "Forgot password".
+                     1. System asks user to input his/her username and inform him/her that it will email a
+                        temporary password to his/her associated email.
+                     2. User inputs his/her username.
+                     3. System sends an email to the username's corresponding email containing the
+                        temporary password.
+                     4. System returns to the log in page.
+Exceptions:
+                 2a. Username does not exist.
+                     1. System lets the user know the username he/she entered does not exist.
+                 2b. Password is incorrect.
+                     1. System will let the user know his/her password is incorrect.
+</pre>
+
+<p><a name="uc-building-manager" /></p>
+
+<h5>Building Manager</h5>
+
+<pre>
+ID:              2.1
+Description:     Building manager views utility usage data
+Preconditions:   User is logged in as a Building Manager.
+Postconditions:  
+Success Flow:
+                 1. System displays utility options
+                 2. Building manager selects electricity option (water and gas represent alternative flows)
+                 3. System displays electricity consumption for all apartments (default) for latest day
+                    (default) as bar chart (default)
+                 4. Building manager selects latest week (previous days/weeks/months/years represent
+                    alternative flows)
+                 5. System displays electricity consumption for all apartments for last week as bar chart
+                 6. Building manager selects apartment 5 for display (other discreet apartment
+                    units/combinations represent alternative flows)
+                 7. System displays electricity consumption for apartment 5 for last week as bar chart
+                 8. Building manager selects line graph (pie chart represents an alternative flow)
+                 9. System displays electricity consumption for apartment 5 for last week as line graph
+</pre>
+
+<pre>
+ID:              2.2
+Description:     Building manager generates report of utility usage data
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  
+Success Flow:
+                 1. System displays utility options
+                 2. Building manager selects generate report (secondary function access: select report at
+                    point 11 of use case #1)
+                 3. System displays utility type selector, time period selector, unit selector and report
+                    type selector
+                 4. Building manager selects all utilities, previous year, all apartments, pie chart
+                    options (plain text report represents alternative flow)
+                 5. System displays pan-utility consumption for previous year for all units in pie chart
+                    form
+                 6. Building manager selects print (export report represents alternative flow)
+                 7. System prints out report
+</pre>
+
+<pre>
+ID:              2.3
+Description:     Building manager views utility cost data
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  
+Success Flow:
+                 1. System displays utility options
+                 2. Building manager selects cost analysis
+                 3. System displays cost analysis per utility type (in dollars) for all apartments
+                    (default) for latest day (default)
+                 4. Building manager selects cost analysis for natural gas
+                 5. System displays cost analysis for natural gas for all apartments for latest day
+                    (electricity and water represent alternative flows)
+                 6. Building manager selects apartment 12 (other apartments represent alternative flows)
+                 7. System displays cost analysis for natural gas for apartment 12 for latest day
+                 8. Building manager selects time period as latest week (previous days/weeks/months/years
+                    represent alternative flows)
+                 9. System displays cost analysis for natural gas for apartment 12 for latest week
+</pre>
+
+<p><a name="uc-engineer" /></p>
+
+<h5>Engineer</h5>
+
+<pre>
+ID:              3.1
+Description:     Engineer requests to visualize building data for set of apartment groups over a given time
+                 range and granularity. 
+Preconditions:   User is logged in as an Engineer
+Postconditions:  Engineer sees results in their selected visualization method
+Success Flow:
+                 1. User selects the metrics they want visualize
+                 2. User selects a method of visualization
+                 3. User chooses to group the results
+                 4. User enters the time granularity they want to see the results
+                 5. User enters the date range for the results (default month)
+                 6. User requests the results
+                 7. Client validates page
+                 8. System returns results to the client based on the given query
+Variations:
+                 1a. Metrics:
+                     1.  CO2 (ppm)
+                     2.  Humidity (%)
+                     3.  Temperature (C)
+                     4.  Heat flux through studs (W/m^2)
+                     5.  Heat flux through insulation (W/m^2)
+                     6.  Heating water energy consumption (Wh)
+                     7.  Heating water volume (L), mass (g), flow (L/s)
+                     8.  Electrical energy consumption (KWh)
+                     9.  Total water consumption (gallons)
+                     10. Hot water consumption (gallons)
+                 2a. Visualization Methods:
+                     1. Graph
+                     2. Report
+                     3. Building view
+                 3a. Grouping Methods:
+                     1. Apartment number (default)
+                     2. Apartment floor
+                     3. Apartment type
+                     4. Apartment facing direction
+                 4a. Time granularity:
+                     1. Hour (default)
+                     2. Day
+                     3. Month
+Exceptions:
+                 7a. Client validation detects problem
+                     1. Client informs user of invalid input
+                 8a. System fails to execute query
+                     1. System provides explanation for why query failed
+                     2. Client displays failure information to user
+</pre>
+
+<p><a name="uc-resident" /></p>
+
+<h5>Resident</h5>
+
+<pre>
+ID:              4.1
+Description:     Resident views their stats page
+Preconditions:   Resident is logged in
+Postconditions:  Resident is shown current stats page
+Success Flow:
+                 1. User navigates to stats page.
+                 2. System loads resident's latest room data
+                 3. System loads latest data for other rooms
+                 4. System determines residents ranking
+                 5. System displays user's current room status screen, with raw numbers and position
+                    (don't display other user data)
+</pre>
+
+<pre>
+ID:              4.2  
+Description:     Resident views the awards page
+Preconditions:   Resident is logged in
+Postconditions:  User is shown the awards page
+Success Flow:
+                 1. Resident requests awards history
+                 2. System displays awards page; listing medals, prizes, badges and achievements which
+                    have been won/possible to win.
+</pre>
+
+<pre>
+ID:              4.3
+Description:     Resident is informed of ways to improve their standing
+Preconditions:   Resident is logged in
+Postconditions:  User is shown useful suggestions
+Success Flow:
+                 1. Resident requests suggestions
+                 2. System analyzes current room status against optimal settings
+                 3. System loads suggestions based on analysis
+                 4. System displays suggestions page
+</pre>
+
+<pre>
+ID:              4.4
+Description:     Resident views historical sensor data for their room
+Preconditions:   Resident is logged in
+                 Manager doesn't terribly mind someone seeing info from before
+Postconditions:  User sees graphs of data on the room since the beginning
+Success Flow:
+                 1. Resident requests room history
+                 2. System displays engineering options (restricted to this room)
+                 3. System requests aspect of interest (heating/electricity/humidity/co2) and timeframe
+                 4. Resident provides settings
+                 5. System loads requested data from database (this room only)
+                 6. System uses engineering requirement graphs to display data
+</pre>
+
+<pre>
+ID:              4.5
+Description:     Resident views personal historical sensor data for their room
+Preconditions:   Resident is logged in
+Postconditions:  Resident is shown contrasting graphs that hopefully get better
+Success Flow:
+                 1. Resident requests personal history
+                 2. System displays engineering options (this room and only since date moved in)
+                 3. System requests aspect of interest
+                 4. Resident provides setting
+                 5. System loads requested data from database
+                 6. System uses engineering requirements graph to display data
+</pre>
+
+<pre>
+ID:              4.6
+Description:     Resident views/changes occupancy information.
+Preconditions:   Resident is logged in.
+Postconditions:  Resident sees his/her current occupancy.
+                 The current occupancy has changed as specified by the user.
+Success flow:
+                 1. User clicks preferences.
+                 2. System shows the user his/her current expected occupancy.
+                 3. User indicates he/she wants to change his/her current occupancy.
+                 4. System asks user what his/her actual current occupancy is.
+                 5. User indicates what he/she expects the occupancy of his/her apartment will be most of
+                    the time.
+                 6. System stores the information and displays the updated information.
+</pre>
+
+<p><a name='user-interface'/></p>
+
+<h2>User Interface</h2>
+
+<ul>
+<li><a href="Storyboards">See Storyboards</a></li>
+</ul>
+
+<p><a name='software-license'/></p>
+
+<h2>Software License</h2>
+
+<p>Our team has agreed to the software license we discussed in class, but we have not yet met with stakeholders and had them sign off on it. We will do so at our meeting this week.</p>
+
+<p><a name='project-glossary'/></p>
+
+<h2>Project Glossary</h2>
+
+<ul>
+<li><a href="http://www.kmccontrols.com/products/Understanding_Building_Automation_and_Control_Systems.aspx">BAS/BMS</a>: Building Automation/Management System</li>
+<li><a href="http://en.wikipedia.org/wiki/HVAC">HVAC</a>: Heating, Ventilation, and Air Conditioning</li>
+<li><a href="http://en.wikipedia.org/wiki/Energy_recovery_ventilation">ERV</a>: Energy Recovery Ventilation</li>
+<li>EDH: Electrical Duct Heating</li>
+<li>HWT: Hot Water Tank</li>
+</ul>
+
+<p><a name='competing-products'/></p>
+
+<h2>Competing Products</h2>
+
+<ul>
+<li><a href="https://buildingsolutions.honeywell.com/HBSCDMS/attune/">Honeywell Attune</a></li>
+<li><a href="http://www.dglogik.com/dglux/features/overview">DGLux</a></li>
+<li><a href="http://www.luciddesigngroup.com/products.php">Lucid Building Dashboard</a></li>
+</ul>
+
+<p><a name='other-resources'/></p>
+
+<h2>Other Resources</h2>
+
+<ul>
+<li><a href="http://www.wbhadc.ca/">Client Website (WBHDC)</a></li>
+<li><a href="http://hci.rwth-aachen.de/materials/publications/tsoleridis2012.pdf">Designing an Energy Consumption Visualization for an End User Home Automation Display</a></li>
+</ul>
+
+<p><a name='see-also'/></p>
+
+<h2>See Also</h2>
+
+<ul>
+<li>[[Project Plan]]</li>
+<li><a href="https://eclass.srv.ualberta.ca/mod/page/view.php?id=479345">Requirements Document Specification</a></li>
+</ul>
+</body>
+</html>
