@@ -29,7 +29,7 @@
                 <ul>
                     <li><a href="#">Home</a></li>
                     <li><a href="#">Achievements</a></li>
-                    <li><a href="#">Scoreboard</a></li>
+                    <li><a href="./scoreboard.php">Scoreboard</a></li>
                     <li><a href="#">Advice</a></li>
                     <li><a href="#">History</a></li>
                 </ul>
