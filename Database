@@ -1,0 +1,68 @@
+<?php
+include 'config.php';
+
+class db {
+
+private $conn;
+//private static $conn ;
+//Database Connections 
+     public  function db_open_connection() {
+  	 $this->conn = mysql_connect(DB_HOST, DB_USER, DB_PASS);
+		
+		if(!$this->conn)
+			die('Could not connect : ' . mysql_error());
+		echo 'Connected Successfully <br />';
+
+	}
+	 function db_query($table,$apt,$column,$Date,$Hour)
+	{
+	   //$conn=mysql_connect('localhost', 'root', '');
+	    mysql_select_db(DB_NAME, $this->conn) or die( "Unable to select database");
+		$sql="select * from ".$table." where Apt=".$apt."  AND Date= '".$Date."'AND hour=".$Hour."" ;
+		$result = mysql_query($sql,$this->conn);
+		return $result;
+	}
+//Insert Temp
+ public function db_insert_temp ($Date,$temp){
+  //Apt ,Time,Temp
+  mysql_select_db("401", $this->conn) or die( "Unable to select database");
+  $stmt ="INSERT INTO Temp VALUES('".$Date."',".$temp.")";
+  mysql_query($stmt,$this->conn);
+  }
+	
+    public  function db_close_connection() {
+		{
+			mysql_close($this->conn);
+				
+		}
+	}
+}
+
+// Example code
+// must code
+$testdb=new db ();
+$testdb->db_open_connection();
+// example of query of view v_air for appartment 1 and return column CO2 for the specified date & hour
+$column = "CO2";
+$result = $testdb->db_query("v_air",1,$column,'2012-2-29',22);
+		// echo number of rows retrived
+		
+		echo "Number of Rows : ".mysql_numrows($result);
+		echo "<br />";
+		echo "===========================";
+	    echo "<br />";
+			while($row = mysql_fetch_array($result))
+            {
+             echo "Apt : ".$row['Apt'];
+			 echo "<br />";
+			 echo "CO2 : ".$row[$column];
+			 echo "<br />";
+             echo "---------------------";
+             echo "<br />";
+            }
+
+// example of insert new tempreature to the tempreature table
+$testdb->db_insert_temp('2012-2-29',93);
+// must code at the end of code
+$testdb->db_close_connection();
+?>
