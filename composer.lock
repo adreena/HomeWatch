@@ -1,0 +1,59 @@
+{
+    "hash": "97785e8ba355e6647c1c0dbcee6b072a",
+    "packages": [
+        {
+            "name": "vierbergenlars/simpletest",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vierbergenlars/simpletest.git",
+                "reference": "22244271be6e9f50e200120e69212e24f4cba98e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vierbergenlars/simpletest/zipball/22244271be6e9f50e200120e69212e24f4cba98e",
+                "reference": "22244271be6e9f50e200120e69212e24f4cba98e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Marcus Baker",
+                    "homepage": "http://sourceforge.net/users/lastcraft"
+                },
+                {
+                    "name": "Perrick Penet",
+                    "homepage": "http://sourceforge.net/users/pp11"
+                }
+            ],
+            "description": "Unit testing for PHP",
+            "keywords": [
+                "SimpleTest",
+                "test",
+                "testing",
+                "unittest"
+            ],
+            "time": "2013-01-19 15:22:40"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "vierbergenlars/simpletest": 20
+    }
+}
