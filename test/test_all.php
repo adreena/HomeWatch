@@ -11,9 +11,11 @@ require_once dirname(__FILE__) . '/../vendor/vierbergenlars/simpletest/autorun.p
  */
 
 class TestAllSuite extends TestSuite {
-   function __construct() {
-       parent::__construct();
-       $this->collect(dirname(__FILE__),
-         new SimplePatternCollector('/test.php$/'));
-   }
+    function __construct() {
+        parent::__construct();
+        /* Run all test cases from files called "*test.php"
+         * in this directory. */
+        $this->collect(__DIR__,
+            new SimplePatternCollector('/test.php$/'));
+    }
 }

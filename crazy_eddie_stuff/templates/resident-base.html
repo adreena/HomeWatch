@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>SmartHome - {% block title %}{% endblock %}</title>
+</head>
+<body>
+<div id="container">
+    {% include 'resident-common.html' %}
+
+    <article>
+    {% block content %}{% endblock %}
+    </article>
+</div>{# container #}
+</body>
+</html>
