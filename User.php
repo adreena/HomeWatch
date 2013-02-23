@@ -12,8 +12,8 @@ require_once "Database.php";
 ///
 class User {
 
-  public static $REG_ERR     = -1;
-  public static $REG_SUCCESS = 0;
+  const REG_ERROR   = -1;
+  const REG_SUCCESS = 0;
 
   private $m_username;
 
@@ -85,8 +85,9 @@ class User {
   /// Attempts to register a new user with the given arguments.
   ///
   public static function RegisterNewUser($username, $password) {
-    if(strlen($username) > 30)
-      return User::$REG_ERR;
+    if(strlen($username) > 30) {
+      return User::REG_ERROR;
+    }
 
     $salt = User::GenerateSalt();
     $securepw = User::GenerateSecurePassword($password, $salt);
@@ -102,9 +103,9 @@ class User {
     $s->execute();
 
     if ($s->errorCode() != 0)
-      return User::$REG_ERR;
+      return User::REG_ERROR;
 
-    return User::$REG_SUCCESS;
+    return User::REG_SUCCESS;
   }
 
   ///

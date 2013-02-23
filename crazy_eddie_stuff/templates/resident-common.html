@@ -1,10 +1,10 @@
 {# The header for the resident UI. #}
 <header role="banner">
   <div class="blade">
-      <h1>SmartHome</h1>
-      <h2>Welcome user!</h2>
+      <h1 class="logo">SmartHome</h1>
       <nav class="minor-nav">
-          <a href="#">preferences</a> | <a href="#">logout</a>
+          <span class="user-status">Welcome {{ user|default('anonymous') }}!</span>
+          <a href="#">Preferences</a> | <a href="#">Logout</a>
       </nav>
   </div>
 </header>

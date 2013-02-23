@@ -25,9 +25,9 @@ composer install
 ## PHP Tests
 
 For now, I'm just dumping them all in the `test/` directory. Check out
-`dummy\_test.php` to give you the template for all of your unit tests.
+`dummy_test.php` to give you the template for all of your unit tests.
 Essentially, just include the autorunner and define a subclass of
 `UnitTestCase`. To run it, simply navigate to the test in your browser
 or run it from the command line with PHP (e.g.,  `php
-tests/some\_test.php`).
+tests/some_test.php`).
 

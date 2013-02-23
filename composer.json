@@ -3,6 +3,7 @@
     "description":  "University of Alberta SmartHome multi-role visualization system.",
     "require": {
         "vierbergenlars/simpletest": "dev-master",
-        "twig/twig": ">=1.12"
+        "twig/twig": ">=1.12",
+        "eddieantonio/bcrypt": "dev-master"
     }
 }
