@@ -45,12 +45,19 @@ body {
 }
 #container > article {
     position: absolute;
-    right: 0;
-    min-width: 720px;
+    left: 160px;
+    width: 800px;
+    padding-bottom: 16px;
 }.achievements div {
     display: inline-block;
     float: left;
 }
 .achievements {
     width: 800px;
+}
+.scoreboard {
+  display: inline-block;
+  border: 5px solid;
+  float: left;
+  width: 240px; 
 }
