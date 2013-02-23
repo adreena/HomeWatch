@@ -37,5 +37,17 @@ private $conn;
 				
 		}
 	}
+
+  ///
+  /// Returns a new PDO connection to the database.
+  /// Dies if the connection cannot be established.
+  ///
+  public static function OpenPDOConnection() {
+    try {
+      return new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASS);
+    } catch (PDOException $e) {
+      die("Could not connect to database.");
+    }
+  }
 }
 
