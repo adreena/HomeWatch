@@ -4,28 +4,22 @@
 }
 
 #menu_content {
-    position: absolute;
-    left: 5px;
-    top: 5px;
-    bottom: 0 px;
-    width: 300px;
+    float: left;
+    width: 25%;
+    height: 100%;
     border-top: 1px solid #ccc;
 }
 
-#results {
-    position: absolute;
-    top: 5px;
-    left: 310px;
-    right: 0px;
-    bottom: 36px;
-}
+#icons {
+    float: left;
+    width: 6%;
+    height: 100%;
+}    
 
-#footer {
-    position: absolute;
-    height: 55px;
-    left: 310px;
-    bottom: 0px;
-    right: 0px;
+#results {
+    float: right;
+    width: 69%;
+    height: 100%;
 }
 
 #menu_content a {
@@ -47,7 +41,6 @@
 #menu_content ul li ul li {
     display: inline;
     border: none;
-    <!--margin: 0 0 0 25px;-->
 }
 
 #menu_content ul li a {
@@ -72,7 +65,6 @@ a.selected {
 	margin: 0;
 	padding: 0;
 	vertical-align: top;
-	<!--width: 136px;-->
 }
 
 .submenus ul {
@@ -84,7 +76,6 @@ a.selected {
 
 #sensors {
     width: 100%;
-    <!--background: blue;-->
 }
 
 fieldset {
@@ -110,6 +101,6 @@ input[type="radio"] {
 }
 
 .images {
-    position: absolute;
-    left: 305px;
+    width: 75%;
+    margin: 0 auto;
 }
