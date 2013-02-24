@@ -9,13 +9,24 @@ $(document).ready(function() {
         $(this).toggleClass("expanded").toggleClass("collapsed").parent().find('> ul').slideToggle("medium");
     });
 
+     
 
-    $('.checkAll').click(function() {
-        $(this).parents('.check-group').children(':checkbox').not('.checkAll').prop('checked', this.checked);
+    $('.checkAllSensors').change(function() {
+        if(this.checked) {
+            $('.sensor-group1 :checkbox, sensor-group2 :checkbox').prop('checked', this.checked);
+            $('.sensor-group2 :checkbox').prop('checked', this.checked);
+        } else {
+            $('.sensor-group1 :checkbox').prop('checked', false);
+            $('.sensor-group2 :checkbox').prop('checked', this.checked);
+        }
     });
 
-    $('.checkAll').parents('.check-group').children(':checkbox').not('.checkAll,:checked').click(function() {
-        $(this).parents('.check-group').children('.checkAll').prop('checked', false);
+    $('.allApts').change(function() {
+        if(this.checked) {
+            $('.apartment-group :checkbox').prop('checked', this.checked);
+        } else {
+            $('.apartment-group :checkbox').prop('checked', false);
+        }
     });
 
     $("#submitbutton").click(function(){
@@ -36,5 +47,5 @@ $(document).ready(function() {
             }
         }
         });
-  });	
+    });	
 });
