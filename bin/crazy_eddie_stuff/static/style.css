@@ -1,0 +1,63 @@
+@charset "UTF-8";
+/* Copy-pasted from Google Chrome inspector stylesheet. */
+body {
+    font-family: "Helvetica Neue", Helvetica, FreeSans, Arial, sans-serif;
+    margin: 0;
+}
+#container {
+    max-width: 960px;
+    margin: auto;
+    position: relative;
+}
+
+.blade h1, .blade h2, .blade h3 {
+    margin: 0 0;
+}
+.blade {
+    position: relative;
+    height: 42px;
+}
+.blade .logo {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.blade .minor-nav {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.minor-nav a {
+    text-transform: lowercase;
+}
+#container > header {
+    border-bottom: solid 2px grey;
+}
+.left-menu {
+    position: absolute;
+    left: 0;
+    top: 42px;
+    width: 160px;
+}
+.left-menu ul, .left-menu ol {
+    list-style: none;
+    padding-left: 0;
+}
+#container > article {
+    position: absolute;
+    left: 160px;
+    width: 800px;
+    padding-bottom: 16px;
+}.achievements div {
+    display: inline-block;
+    float: left;
+}
+.achievements {
+    width: 800px;
+}
+.scoreboard {
+  display: inline-block;
+  border: 5px solid;
+  float: left;
+  width: 240px; 
+}
