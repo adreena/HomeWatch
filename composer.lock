@@ -1,19 +1,22 @@
 {
-    "hash": "97dab45cb2ccc4a3b7957e74e1fec64c",
+    "hash": "b7bb414ebd5714666be146cc2e473e3a",
     "packages": [
         {
             "name": "eddieantonio/bcrypt",
-            "version": "dev-master",
+            "version": "0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eddieantonio/bcrypt.git",
-                "reference": "33fd3a3bbe623862ac641e2059e68a2b06bbd21a"
+                "reference": "0.3.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eddieantonio/bcrypt/zipball/33fd3a3bbe623862ac641e2059e68a2b06bbd21a",
-                "reference": "33fd3a3bbe623862ac641e2059e68a2b06bbd21a",
+                "url": "https://api.github.com/repos/eddieantonio/bcrypt/zipball/0.3.1",
+                "reference": "0.3.1",
                 "shasum": ""
+            },
+            "require-dev": {
+                "vierbergenlars/simpletest": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -32,7 +35,7 @@
                 }
             ],
             "description": "Bcrypt class stolen from the internet, for use with Composer.",
-            "time": "2013-02-23 09:17:40"
+            "time": "2013-02-24 21:00:13"
         },
         {
             "name": "twig/twig",
@@ -136,7 +139,6 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "vierbergenlars/simpletest": 20,
-        "eddieantonio/bcrypt": 20
+        "vierbergenlars/simpletest": 20
     }
 }

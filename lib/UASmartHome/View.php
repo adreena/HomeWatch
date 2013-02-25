@@ -1,26 +1,4 @@
-<?php
-
-class Model {
-}
-
-class Controller {
-}
-
-
-class Achievement {
-
-  public $description;
-  public $achieved;
-  public $receivedDate;
-
-  public function __construct($description, $achieved, $receivedDate) {
-      $this->description = $description;
-      $this->achieved = $achieved;
-      $this->receivedDate = $receivedDate;
-  }
-
-}
-
+<?php namespace UASmartHome;
 
 class View {
   private $model;
@@ -41,8 +19,8 @@ class View {
           new Achievement("Maintain electricity usage under <x+5> for a month!", True, "08/10/2013"),
           new Achievement("Maintain electricity usage under <x+10> for a month!", True, "08/10/2013"),
           new Achievement("Maintain healthy levels of humidity for a month!", True, "08/10/2013"),
-          new Achievement("Maintain healthy levels of CO&#178 for a month!", True, "08/10/2013"),
-          new Achievement("Maintain indoor temperatures under 20&#176C for a week!", True, "08/10/2013"),
+          new Achievement("Maintain healthy levels of CO₂ for a month!", True, "08/10/2013"),
+          new Achievement("Maintain indoor temperatures under 20°C for a week!", True, "08/10/2013"),
           new Achievement("Decrease water usage by 10% in one month!", True, "08/10/2013"),
           new Achievement("Decrease water usage by 150% in one month!", True, "08/10/2013"),
           new Achievement("Decrease water usage by 20% in one month!", True, "08/10/2013"),

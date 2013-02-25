@@ -1,9 +1,14 @@
 {
     "name": "ualberta/smarthome",
-    "description":  "University of Alberta SmartHome multi-role visualization system.",
+    "description":  "University of Alberta SmartHome sensor visualization.",
     "require": {
         "vierbergenlars/simpletest": "dev-master",
         "twig/twig": ">=1.12",
-        "eddieantonio/bcrypt": "dev-master"
+        "eddieantonio/bcrypt": ">=0.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "UASmartHome": "lib/"
+        }
     }
 }
