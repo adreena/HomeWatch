@@ -8,36 +8,10 @@
 
 <body>
     <div id="container">
-        <div id="header">
-            <h1>SmartHome</h1>
-            <h2>Welcome user!</h2>
-            <h3>
-                <a href="#">preferences</a> | <a href="#">logout</a>
-            <h3>
-        </div>
 
-        <div id="menu">
-            <br /><br /><hr>
-        </div>
+	<?php require_once 'sidebar.php'?>
 
-        <div id="leftmenu">
 
-        <div id="leftmenu_top"></div>
-
-            <div id="leftmenu_main">
-
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Achievements</a></li>
-                    <li><a href="./scoreboard.php">Scoreboard</a></li>
-                    <li><a href="#">Advice</a></li>
-                    <li><a href="#">History</a></li>
-                </ul>
-
-            </div>
-
-        <div id="leftmenu_bottom"></div>
-    </div>
 
     <div id="content">
 

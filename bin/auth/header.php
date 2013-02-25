@@ -1,7 +1,7 @@
 <?php
   require_once 'User.php';
 
-  // If the user is logged in, redirect them to their home page.
+  // If the user is not logged in, redirect them to the login page.
   if (!User::GetSessionUser()) {
     header('Location: login.php');
     exit();
