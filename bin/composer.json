@@ -1,10 +1,12 @@
 {
     "name": "ualberta/smarthome",
-    "description":  "University of Alberta SmartHome sensor visualization.",
+    "description": "University of Alberta SmartHome sensor visualization.",
     "require": {
-        "vierbergenlars/simpletest": "dev-master",
         "twig/twig": ">=1.12",
         "eddieantonio/bcrypt": ">=0.3"
+    },
+    "require-dev": {
+        "vierbergenlars/simpletest": "dev-master"
     },
     "autoload": {
         "psr-0": {

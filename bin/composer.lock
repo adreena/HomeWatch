@@ -1,18 +1,18 @@
 {
-    "hash": "b7bb414ebd5714666be146cc2e473e3a",
+    "hash": "c51124a3cb1e75a2fb0563efce9bee11",
     "packages": [
         {
             "name": "eddieantonio/bcrypt",
-            "version": "0.3.1",
+            "version": "0.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eddieantonio/bcrypt.git",
-                "reference": "0.3.1"
+                "reference": "0.3.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eddieantonio/bcrypt/zipball/0.3.1",
-                "reference": "0.3.1",
+                "url": "https://api.github.com/repos/eddieantonio/bcrypt/zipball/0.3.3",
+                "reference": "0.3.3",
                 "shasum": ""
             },
             "require-dev": {
@@ -26,7 +26,7 @@
             },
             "notification-url": "http://packagist.org/downloads/",
             "license": [
-                "SAX-PD"
+                "CC0-1.0"
             ],
             "authors": [
                 {
@@ -35,7 +35,7 @@
                 }
             ],
             "description": "Bcrypt class stolen from the internet, for use with Composer.",
-            "time": "2013-02-24 21:00:13"
+            "time": "2013-02-25 21:01:33"
         },
         {
             "name": "twig/twig",
@@ -85,52 +85,6 @@
                 "templating"
             ],
             "time": "2013-02-09 18:21:53"
-        },
-        {
-            "name": "vierbergenlars/simpletest",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vierbergenlars/simpletest.git",
-                "reference": "22244271be6e9f50e200120e69212e24f4cba98e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vierbergenlars/simpletest/zipball/22244271be6e9f50e200120e69212e24f4cba98e",
-                "reference": "22244271be6e9f50e200120e69212e24f4cba98e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    ""
-                ]
-            },
-            "notification-url": "http://packagist.org/downloads/",
-            "license": [
-                "LGPL"
-            ],
-            "authors": [
-                {
-                    "name": "Marcus Baker",
-                    "homepage": "http://sourceforge.net/users/lastcraft"
-                },
-                {
-                    "name": "Perrick Penet",
-                    "homepage": "http://sourceforge.net/users/pp11"
-                }
-            ],
-            "description": "Unit testing for PHP",
-            "keywords": [
-                "SimpleTest",
-                "test",
-                "testing",
-                "unittest"
-            ],
-            "time": "2013-01-19 15:22:40"
         }
     ],
     "packages-dev": null,
