@@ -20,7 +20,7 @@ echo "<br />";
 while($row = mysql_fetch_array($result)) {
     echo "Apt : ".$row['Apt'];
     echo "<br />";
-    echo "CO2 : ".$row[$column];
+    echo $column.": ".$row[$column];
     echo "<br />";
     echo "---------------------";
     echo "<br />";
