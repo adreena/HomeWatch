@@ -1,5 +1,6 @@
 <?php namespace UASmartHome;
 
-class Controller {
-}
+class Controller
+{
 
+}

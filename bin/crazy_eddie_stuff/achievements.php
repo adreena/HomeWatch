@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+
 /* Setup Twig environment. */
 $twig = require(__DIR__ . '/twig_config.inc');
 
