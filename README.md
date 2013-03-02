@@ -21,7 +21,7 @@ Then in `bin/` or `www/` or whatever we're going to call it,
 simply:
 
 ```sh
-composer install
+composer install --dev
 ```
 
 To install all dependencies.
