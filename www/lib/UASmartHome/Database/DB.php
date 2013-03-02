@@ -1,6 +1,6 @@
-<?php
+<?php namespace UASmartHome\Database;
 
-require_once '../auth/config.php';
+//require_once '../auth/config.php';
 
 class DB {
 

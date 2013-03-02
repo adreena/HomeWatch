@@ -1,10 +1,15 @@
 <?php
 
-require 'Database.php';
+require __DIR__ .  '/vendor/autoload.php';
+
+/* Make a shortcut to this class. */
+use \UASmartHome\Database\DB;
+
+derple();
 
 // Example code
 // must code
-$testdb=new DB ();
+$testdb = new DB ();
 $testdb->db_open_connection();
 // example of query of view v_air for appartment 1 and return column CO2 for the specified date & hour
 $column = "CO2";

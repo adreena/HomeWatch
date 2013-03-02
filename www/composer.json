@@ -11,6 +11,9 @@
     "autoload": {
         "psr-0": {
             "UASmartHome": "lib/"
-        }
+        },
+        "files": [
+            "config/config.php"
+        ]
     }
 }
