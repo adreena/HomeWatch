@@ -5,8 +5,6 @@ require __DIR__ .  '/vendor/autoload.php';
 /* Make a shortcut to this class. */
 use \UASmartHome\Database\DB;
 
-derple();
-
 // Example code
 // must code
 $testdb = new DB ();
