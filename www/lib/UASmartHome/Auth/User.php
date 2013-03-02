@@ -1,6 +1,10 @@
-<?php
+<?php namespace UASmartHome\Auth;
 
-require_once "db/Database.php";
+// I'm wondering it this line is really needed.
+// Likely, clients of this class will have already required this.
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
+use \UASmartHome\Database\DB;
 
 ///
 /// A generic user.

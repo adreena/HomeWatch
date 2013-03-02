@@ -7,7 +7,9 @@
   /// (See http://stackoverflow.com/questions/4281900/php-header-redirect-with-post-variables)
   ///
   
-  require_once "User.php";
+  require_once __DIR__ .  "/../vendor/autoload.php";
+
+  use \UASmartHome\Auth\User;
 
   $login_error = 0;
 

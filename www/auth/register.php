@@ -6,7 +6,9 @@
   /// in the event there is an error.
   ///
 
-  require_once 'User.php';
+  require_once __DIR__ .  "/../vendor/autoload.php";
+
+  use \UASmartHome\Auth\User;
 
   // Error codes
   // TODO: these should be combined
