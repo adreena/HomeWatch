@@ -1,0 +1,49 @@
+
+.login-form li {
+  display: block;
+}
+
+.login-form {
+  list-style: none;
+}
+
+.login-form li label {
+  display: inline-block;
+  min-width: 80px;
+}
+
+.login-form li input {
+  display: inline-block;
+  width: 160px;
+}
+
+#wrapper {
+  text-align: center; 
+}
+
+.small-content {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 240px;
+  margin: 0 auto;
+  margin-top: -120px;
+  margin-left: -200px;
+  text-align: left;
+}
+
+.small-content header {
+  text-align: center;
+}
+
+.extra-items {
+  text-align: right;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
