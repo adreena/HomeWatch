@@ -1,0 +1,41 @@
+{% set loginTitle = pageTitle|default('SmartHome Login') %}
+{% set loginAction = loginPage|default('/auth/login.php') %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>{{ loginTitle }}</title>
+    <link rel="stylesheet" type="text/css" href="/css/default.css" />
+    <link rel="stylesheet" type="text/css" href="/css/login.css" />
+  </head>
+<body>
+  <div id="wrapper">
+    <div class="small-content">
+    <header>
+    {% block loginHeader %}
+      <h1>{{ loginTitle }}</h1>
+    {% endblock loginHeader %}
+    </header>
+    {% block loginForm %}
+    <form action="{{ loginAction }}" method="POST">
+      <ul class="login-form">
+        <li>
+          <label for="username">Username</label>
+          <input id="username" type="text" name="username">
+        </li>
+        <li>
+          <label for="password">Password</label>
+          <input id="password" type="password" name="password">
+        </li>
+      </ul>
+      <input type="submit" value="Login"/>
+    </form>
+
+    <nav class="extra-items">
+      <a href="{{ '/password_reset.php' }}">Forgot password?</a>
+      {#<a href="{{ '/back_door.php' }}">BACKDOOR!</a>#}
+    </nav>
+    {% endblock loginForm %}
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<dataset>
+    <!-- THIS IS A SAMPLE DATABASE SEED. I have no idea what the actual schema
+         looks like! -->
+    <resident id="1" room="2-201" username="goat" points="25600" status="on-holiday" />
+</dataset>

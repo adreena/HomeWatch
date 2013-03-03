@@ -1,0 +1,21 @@
+{
+    "name": "ualberta/smarthome",
+    "description": "University of Alberta SmartHome sensor visualization.",
+    "require": {
+        "twig/twig": ">=1.12",
+        "eddieantonio/bcrypt": ">=0.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=3.7",
+        "phpunit/dbunit": "1.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "UASmartHome": "lib/"
+        },
+        "files": [
+            "config/config.php",
+            "config/TwigSingleton.php"
+        ]
+    }
+}
