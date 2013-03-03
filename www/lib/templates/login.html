@@ -1,9 +1,10 @@
 {% set loginTitle = pageTitle|default('SmartHome Login') %}
-{% set loginAction = loginPage|default('/login.php') %}
+{% set loginAction = loginPage|default('/auth/login.php') %}
 <!DOCTYPE HTML>
 <html>
   <head>
     <title>{{ loginTitle }}</title>
+    <link rel="stylesheet" type="text/css" href="/css/default.html" />
     <link rel="stylesheet" type="text/css" href="/css/login.html" />
   </head>
 <body>
@@ -31,6 +32,7 @@
 
     <nav class="extra-items">
       <a href="{{ '/password_reset.php' }}">Forgot password?</a>
+      {#<a href="{{ '/back_door.php' }}">BACKDOOR!</a>#}
     </nav>
     {% endblock loginForm %}
     </div>

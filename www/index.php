@@ -1,43 +1,24 @@
 <?php
-echo "<!DOCTYPE HTML>";
-echo "<html><head>";
-echo '<link rel="stylesheet" type="text/css" href="css/default.css" /></head>';
-echo "<body>";
 	   
-//TODO: header should be defined in header.php, and header.php should be renamed to something like auth.php
+require_once __DIR__ . '/vendor/autoload.php';
 
+$role = 'resident'; //Defining user as resident until we get DB up
+//$role = 'manager';
+//$role = 'engineer';
 
-//require 'auth/header.php';  TODO: Commented out for testing, since we have no database working yet.
-$role = 'RESIDENT'; //Defining user as resident until we get DB up
-//$role = 'MANAGER';
-//$role = 'ENGINEER';
+// TODO: Perhaps get Twig Environment with user.
+$twig = \TwigSingleton::getInstance();
 
+// User is logged in...
+if (isset($_SESSION['user'])) {
+    // Shouldn't the user contain role information? Whatever...
+	$user = $_SESSION['user'];
 
-$user = null;
-if (ISSET($_SESSION['user'])) {
-	$user = $_SESSION['user']->get_username();
-}  	
-echo "<div id='content-div'><h1>";
-if ($user) {
-	echo "Welcome " . $_SESSION['user']->get_username();
-} else { 
-	echo "You should not be here just yet."; //TODO: This is testing only, should be removed eventually
-}
-echo "</h1> </div>";
-
-
-//TODO: Embed "home page"
-
-if ($role == 'MANAGER') {
-	echo '<a href="search/jSearch.php"> Why not try a search?</a>';	
-} 
-
-if ($role == 'RESIDENT') {
-	echo '<a href="resident_prototype/achievements.php"> Check your score</a>';
+    echo $twig->render("$role/home.html", array(
+        "user" => $user
+    ));
+} else {
+    // No user session? Make 'em login.
+    echo $twig->render('login.html');
 }
 
-
-
-
-echo "</body>";
-?>

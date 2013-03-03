@@ -6,5 +6,5 @@ use \UASmartHome\Auth\User;
 
 User::LogoutSessionUser();
 
-header("Location: login.php");
+header("Location: /");
 

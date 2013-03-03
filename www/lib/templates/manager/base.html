@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{% block pageTitle %}{% endblock %}{% block masterTitle ' - SmartHome' %}</title>
+  <link rel="styleshee" type="text/css" href="/css/default.css">
+  {% block extraStyles '' %}
+  {% block extraScripts '' %}
+</head>
+<body>
+  <div id="wrapper">
+    {% include '%s/header.html'|format(userRole|default('manager')) %}
+    {% block content '' %}
+  </div>
+</body
