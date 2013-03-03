@@ -1,9 +1,10 @@
 <?php
 
 /**
- * Twig singletone!
+ * Twig singleton!
  *
- * Holds the key to Twig environment.
+ * Holds the key to Twig environment. Just call
+ * TwigSingleton::getInstance()!
  */
 
 class TwigSingleton
