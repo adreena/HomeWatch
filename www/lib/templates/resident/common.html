@@ -3,8 +3,8 @@
   <div class="blade">
       <h1 class="logo">SmartHome</h1>
       <nav class="minor-nav">
-          <span class="user-status">Welcome {{ user|default('anonymous') }}!</span>
-          <a href="#">Preferences</a> | <a href="#">Logout</a>
+          <span class="user-status">Welcome {{ user.username|default('anonymous') }}!</span>
+          <a href="#">Preferences</a> | <a href="/auth/logout.php">Logout</a>
       </nav>
   </div>
 </header>
@@ -13,8 +13,9 @@
   <nav>
     <ul>
         <li><a href="#">Home</a></li>
-        <li><a href="./achievements.php">Achievements</a></li>
-        <li><a href="./scoreboard.php">Scoreboard</a></li>
+        {# Hard-coded URLS. Woohoo! #}
+        <li><a href="/resident/achievements.php">Achievements</a></li>
+        <li><a href="/resident/scoreboard.php">Scoreboard</a></li>
         <li><a href="#">Advice</a></li>
         <li><a href="#">History</a></li>
     </ul>

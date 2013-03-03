@@ -1,0 +1,11 @@
+<form action="template_test.php" method="GET">
+  <label> Choose a template </label>
+  <select name="t">
+  {% for template in templates %}
+    <option value="{{ template }}">{{ template }}</option>
+  {% else %}
+    <option> No templates to select! </option>
+  {% endfor %}
+  </select>
+  <input type="submit" value="Render!">
+</form>

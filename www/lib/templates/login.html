@@ -20,19 +20,19 @@
       <ul class="login-form">
         <li>
           <label for="username">Username</label>
-          <input id="username" type="text" name="username">
+          <input id="username" type="text" name="username" autofocus>
         </li>
         <li>
           <label for="password">Password</label>
           <input id="password" type="password" name="password">
         </li>
       </ul>
-      <input type="submit" value="Login"/>
+      <input type="submit" name="submit" value="Login"/>
     </form>
 
     <nav class="extra-items">
-      <a href="{{ '/password_reset.php' }}">Forgot password?</a>
-      {#<a href="{{ '/back_door.php' }}">BACKDOOR!</a>#}
+      <a href="/auth/password_reset.php">Forgot password?</a>
+      <a href="/backdoor.php">BACKDOOR!</a>
     </nav>
     {% endblock loginForm %}
     </div>

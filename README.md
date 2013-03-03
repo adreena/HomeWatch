@@ -17,8 +17,7 @@ curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 ```
 
-Then in `bin/` or `www/` or whatever we're going to call it,
-simply:
+Then in  `www/` simply:
 
 ```sh
 composer install --dev

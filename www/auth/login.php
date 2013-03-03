@@ -27,7 +27,7 @@
 
   // If the user is logged in, redirect them to their home page.
   if (User::GetSessionUser()) {
-    header('Location: ../index.php');
+    header('Location: /');
     exit();
   }
 
