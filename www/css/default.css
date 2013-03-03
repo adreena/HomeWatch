@@ -1,3 +1,12 @@
+/**
+ * Common styles should go in here!
+ */
+
+body {
+  font-family: "Helvetica Neue", Helvetica, "FreeSans", Arial, sans-serif;
+}
+
+
 .error-string
 {
   color:#AA0000;
