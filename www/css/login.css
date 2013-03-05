@@ -1,49 +1,55 @@
-
-.login-form li {
-  display: block;
-}
-
-.login-form {
-  list-style: none;
-}
-
-.login-form li label {
-  display: inline-block;
-  min-width: 80px;
-}
-
-.login-form li input {
-  display: inline-block;
-  width: 160px;
-}
-
-#wrapper {
-  text-align: center; 
-}
-
-.small-content {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  height: 240px;
-  margin: 0 auto;
-  margin-top: -120px;
-  margin-left: -200px;
-  text-align: left;
-}
-
-.small-content header {
-  text-align: center;
-}
-
-.extra-items {
-  text-align: right;
-}
+@charset "UTF-8";
 
 body {
   margin: 0;
   padding: 0;
 }
 
+#wrapper {
+  text-align: center; 
+}
+
+.middle-content {
+  display: block;
+  width: 400px;
+  height: 240px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.login-box header {
+  text-align: center;
+}
+
+.list-form li {
+  display: block;
+}
+
+.list-form {
+  list-style: none;
+}
+
+.middle-content .list-form {
+  padding: 0 40px;
+}
+
+.list-form li label {
+  display: inline-block;
+  width: 120px;
+}
+
+.list-form li input {
+  display: inline-block;
+  box-sizing: border-box;
+  margin-left: 20px;
+  width: 160px;
+}
+
+.login-box input[type="submit"] {
+  display: block;
+  float: right;
+}
+
+.login-box .extra-items {
+  float: left;
+}

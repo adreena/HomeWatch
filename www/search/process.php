@@ -1,5 +1,5 @@
 <?php
-header('Content-type: text/html; charset=utf-8');
+header('Content-Type: application/json; charset=utf-8');
 
 $sensors = array();
 $apartments = array();
@@ -14,7 +14,7 @@ if($_GET['sensors']) {
   }
 }
 
-if($_GET['apartments']) {
+if(isset($_GET['apartments'])) {
   foreach($_GET['apartments'] as $value) {
     array_push($apartments, $value);
   }
@@ -53,4 +53,4 @@ foreach($jsonIterator as $key => $value) {
   }
 }
 echo json_encode($carbon_dioxide);
-?>
+

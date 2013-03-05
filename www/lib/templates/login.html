@@ -4,38 +4,43 @@
 <html>
   <head>
     <title>{{ loginTitle }}</title>
-    <link rel="stylesheet" type="text/css" href="/css/default.css" />
+    <link rel="stylesheet" type="text/css" href="/css/common.css" />
     <link rel="stylesheet" type="text/css" href="/css/login.css" />
   </head>
 <body>
-  <div id="wrapper">
-    <div class="small-content">
+<div id="wrapper">
+  <div class="middle-content login-box">
     <header>
     {% block loginHeader %}
       <h1>{{ loginTitle }}</h1>
     {% endblock loginHeader %}
     </header>
-    {% block loginForm %}
+
+  {% block loginForm %}
     <form action="{{ loginAction }}" method="POST">
-      <ul class="login-form">
+      <ul class="list-form">
         <li>
           <label for="username">Username</label>
           <input id="username" type="text" name="username" autofocus>
         </li>
+
         <li>
           <label for="password">Password</label>
           <input id="password" type="password" name="password">
         </li>
       </ul>
-      <input type="submit" name="submit" value="Login"/>
     </form>
 
+    <input type="submit" name="submit" value="Login"/>
+
     <nav class="extra-items">
-      <a href="/auth/password_reset.php">Forgot password?</a>
-      <a href="/backdoor.php">BACKDOOR!</a>
+      <ul class="inline-nav-list">
+        <li><a href="/auth/password_reset.php">Forgot password?</a></li>
+        <li><a href="/backdoor.php">BACKDOOR!</a></li>
+      </ul>
     </nav>
-    {% endblock loginForm %}
-    </div>
-  </div>
+  {% endblock loginForm %}
+  </div>{# .login-box #}
+</div>{# #wrapper #}
 </body>
 </html>

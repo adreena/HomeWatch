@@ -44,8 +44,8 @@ private $conn;
   ///
   public static function OpenPDOConnection() {
     try {
-      return new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASS);
-    } catch (PDOException $e) {
+      return new \PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASS);
+    } catch (\PDOException $e) {
       die("Could not connect to database.");
     }
   }

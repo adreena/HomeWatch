@@ -1,0 +1,27 @@
+@charset "UTF-8";
+/**
+ * Common styles should go in here!
+ */
+
+body {
+  font-family: "Helvetica Neue", Helvetica, "FreeSans", Arial, sans-serif;
+}
+
+
+.error-string {
+  color:#AA0000;
+}
+
+.inline-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline;
+}
+
+.inline-nav-list li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline;
+}

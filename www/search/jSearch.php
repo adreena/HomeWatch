@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <title>Search Page</title>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
-<link rel="stylesheet" href="/resources/demos/style.css" />
+<!--link rel="stylesheet" href="/resources/demos/style.css" /-->
 <link rel="stylesheet" href="jSearch.css" />
 
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
@@ -19,7 +19,7 @@
             <ul id="menu" class="submenus">
 	        <li><a class="collapsed">Sensors</a>
 		    <ul>
-     	       	        <div id="sensors">
+                <div id="sensors">
 			    <fieldset class="sensor-group1">
 			        <legend>Air Data</legend> 
 		                <input type="checkbox" name="sensors[]" id="sensor1" value="CO2">
