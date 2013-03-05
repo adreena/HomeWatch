@@ -1,0 +1,30 @@
+<?php
+include 'config.php';
+
+class Achievements {
+
+//Daily Script
+  function Create_Earned_Achievement ($resident_id,$achievement_ID,$Date)
+	{
+			   $result =array();
+		       $Query=$GLOBALS['conn']->prepare("INSERT INTO Earned_Achievements (Resident_ID ,Achievement_ID ,Date_Earned)
+	           VALUES  (:Res_ID,:Ach_ID,:Date)") ;
+				$Query->bindValue(":Res_ID",$resident_id);
+				$Query->bindValue(":Ach_ID",$achievement_ID);
+				$Query->bindValue(":Date",$Date);
+				$Query->execute();
+	}
+	
+	
+	
+	
+}
+
+// Example code
+// must code
+$testdb=new Achievements ();
+$row=$testdb->Create_Earned_Achievement(1,2,'2013-03-08');
+
+//echo count ($row);
+
+?>
