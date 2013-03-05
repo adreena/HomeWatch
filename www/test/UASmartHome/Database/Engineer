@@ -1,1 +1,128 @@
-s
+<?php
+include 'config.php';
+
+class Engineer {
+
+//Engineer
+  function db_query_Yearly($apt,$table,$Year)
+	{
+	           
+			   
+			    $result =array();
+			    $table .= '_yearly';
+		        $sql=$GLOBALS['conn']->prepare("select * from ".$table." where Apt= :Apt_Num AND Year= :Year ") ;
+				$sql->bindValue(":Apt_Num",$apt);
+				$sql->bindValue(":Year",$Year);
+				$sql->execute();
+				$row_count= $sql->rowCount();
+				while ($row = $sql->fetch(PDO::FETCH_OBJ))
+				{
+				$result[]=(array)$row;
+				}
+				$a= $sql->rowCount();
+				return $result;
+	}
+	
+function db_query_Monthly($apt,$table,$Year,$Month)
+	{
+			    $result =array();
+			    $table .= '_monthly';
+		        $sql=$GLOBALS['conn']->prepare("select * from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month ") ;
+				$sql->bindValue(":Apt_Num",$apt);
+				$sql->bindValue(":Year",$Year);
+				$sql->bindValue(":Month",$Month);
+				$sql->execute();
+				$row_count= $sql->rowCount();
+				while ($row = $sql->fetch(PDO::FETCH_OBJ))
+				{
+				$result[]=(array)$row;
+				}
+				$a= $sql->rowCount();
+				return $result;
+	}
+	function db_query_Weekly($apt,$table,$Year,$Week)
+	{
+			    $result =array();
+			    $table .= '_weekly';
+		        $sql=$GLOBALS['conn']->prepare("select * from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
+				$sql->bindValue(":Apt_Num",$apt);
+				$sql->bindValue(":Year",$Year);
+				$sql->bindValue(":Week",$Week);
+				$sql->execute();
+				$row_count= $sql->rowCount();
+				while ($row = $sql->fetch(PDO::FETCH_OBJ))
+				{
+				$result[]=(array)$row;
+				}
+				$a= $sql->rowCount();
+				return $result;
+	}
+	function db_query_Daily($apt,$table,$date)
+	{
+	           
+			   
+			    $result =array();
+			    $table .= '_daily';
+		        $sql=$GLOBALS['conn']->prepare("select * from ".$table." where Apt= :Apt_Num AND Date= :Date ") ;
+				$sql->bindValue(":Apt_Num",$apt);
+				$sql->bindValue(":Date",$date);
+				$sql->execute();
+				$row_count= $sql->rowCount();
+				while ($row = $sql->fetch(PDO::FETCH_OBJ))
+				{
+				$result[]=(array)$row;
+				}
+				$a= $sql->rowCount();
+				return $result;
+	}
+	function db_query_Hourly($apt,$table,$date,$Hour)
+	{
+	           
+			   
+			    $result =array();
+			    $table .= '_hourly';
+		        $sql=$GLOBALS['conn']->prepare("select * from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour ") ;
+				$sql->bindValue(":Apt_Num",$apt);
+				$sql->bindValue(":Date",$date);
+				$sql->bindValue(":Hour",$Hour);
+				$sql->execute();
+				$row_count= $sql->rowCount();
+				while ($row = $sql->fetch(PDO::FETCH_OBJ))
+				{
+				$result[]=(array)$row;
+				}
+				$a= $sql->rowCount();
+				return $result;
+	}
+	
+	
+}
+
+// Example code
+// must code
+$testdb=new Engineer ();
+
+//Test it Yearly
+$r0=$testdb->db_query_Yearly(1,'air','2012');
+print_r($r0);
+echo "<br />";
+echo "===========================";
+//Test it Monthly
+$r1=$testdb->db_query_Monthly(1,'air','2012',3);
+print_r($r1);
+echo "<br />";
+echo "===========================";
+//Test it Weekly
+$r2=$testdb->db_query_Weekly (1,'air','2012',9);
+print_r($r2);
+echo "<br />";
+echo "===========================";
+//Test it Daily
+$r3=$testdb->db_query_Daily(1,'air','2012-02-29');
+print_r($r3);
+//Test It Hourly
+$r4=$testdb->db_query_Hourly(1,'air','2012-02-29',22);
+print_r($r4);
+//echo count ($row);
+
+?>
