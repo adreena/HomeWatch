@@ -1,0 +1,89 @@
+<?php
+include 'config.php';
+
+class Resident_DB {
+
+
+   public function Resident_DB_Read($resident_id)
+  {
+			   $result =array();
+		       $Query=$GLOBALS['conn']->prepare("select Name ,Username,Room_Number ,Location,
+			   Points,Room_Status from resident where Resident_ID=:Res_ID") ;
+			   $Query->bindValue(":Res_ID",$resident_id);
+			   $Query->execute();
+			   $row = $Query->fetch(PDO::FETCH_OBJ);
+			   $result=(array)$row;
+			   $a= $Query->rowCount();
+			   echo $a;
+			   echo "<br \>";
+				return $result;
+	}
+
+	
+	public function Resident_DB_Update ($resident_id,$Room_Status,$Name,$Username)
+	{ //update set where
+	
+	 $Query=$GLOBALS['conn']->prepare("update resident  
+		set Room_Status= :RS , Name= :NM ,	Username= :US where Resident_ID= :Res_ID") ;
+		$Query->bindValue(":Res_ID",$resident_id);
+		$Query->bindValue(":RS",$Room_Status);
+		$Query->bindValue(":NM",$Name);
+		$Query->bindValue(":US",$Username);
+		$Query->execute();
+	}
+	
+	public 	function Resident_DB_Achievement ()
+	{
+			   $result =array();
+		       $Query=$GLOBALS['conn']->prepare("select `Name`, `Description`, `Enabled_Icon`, `Disabled_Icon`, `Points` from achievements ") ;
+			   $Query->execute();
+				while ($row = $Query->fetch(PDO::FETCH_OBJ))
+				{
+				$result[]=(array)$row;
+				}
+				return $result;
+	}
+	public 	function Resident_DB_Earned_Achievement ($resident_id)
+	{
+			   $result =array();
+		       $Query=$GLOBALS['conn']->prepare("select * from `earned achievements` where Resident_ID= :Res_ID") ;
+				$Query->bindValue(":Res_ID",$resident_id);
+				$Query->execute();
+				while ($row = $Query->fetch(PDO::FETCH_OBJ))
+				{
+				$result[]=(array)$row;
+				}
+				return $result;
+	}
+	
+	public 	function Resident_DB_Building ($resident_id)
+	{
+			    $result =array();
+		        $Query=$GLOBALS['conn']->prepare("select * from building where Resident_ID= :Res_ID") ;
+				$Query->bindValue(":Res_ID",$resident_id);
+				$Query->execute();
+				$row = $Query->fetch(PDO::FETCH_OBJ);
+				$result=(array)$row;
+				$row_count= $Query->rowCount();
+				$a= $Query->rowCount();
+				return $result;
+	}
+	
+	
+}
+
+// Example code
+$testdb=new Resident_DB();
+//Test Resident Read
+//$a=$testdb->Resident_DB_Read(1);
+//Test Resident Update
+//$testdb->Resident_DB_Update (,'TOOZ','AHMED','5waaal');
+//Test READ ALL achievements 
+//$a=$testdb->Resident_DB_Achievement() ;
+//Test Read Earned Achievments
+//$a=$testdb->Resident_DB_Earned_Achievement(1);
+
+//Test Read Building
+//$a=$testdb->Resident_DB_Building (1);
+
+?>
