@@ -784,6 +784,7 @@ With there large user base, there is no doubt they are doing something right. Wh
 * Improved glossary
 * Added information about competing products
 * Added a general use case diagram for overall data access
+* Clarified each of the storyboards for residents
 
 [WBHDC]: http://www.wbhadc.ca/
 [Stony Mountain Plaza]: http://www.wbhadc.ca/rg_stonymountain.html
