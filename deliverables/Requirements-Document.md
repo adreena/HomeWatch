@@ -63,13 +63,13 @@ For this first pass, I have followed the Volere template for requirement analysi
 **Requirement Name:** Data Processing  
 **Requirement #:** 3 	**Requirement Type:** 1	**Use Cases:**   
 
-**Description:** Database access and calculations will be handled by an http web service.
+**Description:** Database access and calculations will be handled by a page completely separate from the front-end pages.
 
 **Rationale:** To facilitate a flexible design, the clients have requested that our data-level protocols be kept separate from the display of these protocols.
 
-**Fit Criterion:** Whenever database access or calculations on this data (i.e., calculation of efficiency coefficients for heat loss) must be performed, this data will be sent from the front-end page to the back-end web service through an http request. This service will perform all necessary calculations and return the data to the front-end of the system, which will be responsible for the display of this data.
+**Fit Criterion:** Whenever database access or calculations on this data (i.e., calculation of efficiency coefficients for heat loss) must be performed, this data will be sent from the front-end page to a different page which will do all calculations. This page will perform all necessary calculations and return the data to the front-end of the system, which will be responsible for the display of this data. 
 
-**Customer Satisfaction:** 1		**Customer Dissatisfaction:** 8  
+**Customer Satisfaction:** 1		**Customer Dissatisfaction:** 6  
 **Dependencies:** None			**Conflicts:** None  
 **Supporting Materials:** None
 
@@ -120,23 +120,9 @@ For this first pass, I have followed the Volere template for requirement analysi
 
 ---
 
-**Requirement Name:** Multiple Apartment Selection  
-**Requirement #:** 7 	**Requirement Type:** 1	**Use Cases:** 2.1, 3.1, 4.4, 4.5
-
-**Description:** Data must be presented in some visual format: i.e. interactive graphs.
-
-**Rationale:** While plaintext data is valuable for certain tasks, graphs and charts are easier to digest at a glance.
-
-**Fit Criterion:** Whenever a user requests data from the system, they should have the option of
-
-**Customer Satisfaction:** 1		**Customer Dissatisfaction:** 8  
-**Dependencies:** 1, 2			**Conflicts:** None  
-**Supporting Materials:** None
-
----
 
 **Requirement Name:** Chart/Graph Visualization  
-**Requirement #:** 8 	**Requirement Type:** 1	**Use Cases:** 2.1, 3.1, 4.4, 4.5
+**Requirement #:** 7 	**Requirement Type:** 1	**Use Cases:** 2.1, 3.1, 4.4, 4.5
 
 **Description:** Data must be presented in some visual format: i.e. interactive graphs.
 
@@ -152,7 +138,7 @@ For this first pass, I have followed the Volere template for requirement analysi
 
 **Requirement Name:** Weather Data
 
-**Requirement #:** 9 	**Requirement Type:** 5	**Use Cases:**
+**Requirement #:** 8 	**Requirement Type:** 5	**Use Cases:**
 
 **Description:** Data is parsed from Environment Canada or a similar website, and presented side-by-side with sensor data.
 
@@ -161,6 +147,22 @@ For this first pass, I have followed the Volere template for requirement analysi
 **Fit Criterion:** When selecting sensor data and apartments, the user should have the option of displaying the average daily temperature (alternatively, the daily high and daily low temperature) for that day, in addition to the other requested information.
 
 **Customer Satisfaction:** 4		**Customer Dissatisfaction:** 3  
+**Dependencies:** 3			**Conflicts:** None  
+**Supporting Materials:** None
+
+---
+
+**Requirement Name:** Floor Plan Selection
+
+**Requirement #:** 9  **Requirement Type:** 2	**Use Cases:**
+
+**Description:** A list of floor plans will have to be maintainable, as apartments with new floor plans may be added to the system.
+
+**Rationale:** If this system is extended to include more apartments, the floor plans of these new apartments must be supported.
+
+**Fit Criterion:** The system will allow users to upload new floor plans for use in the system, whether through an upload tool or API.
+
+**Customer Satisfaction:** 3		**Customer Dissatisfaction:** 7
 **Dependencies:** 3			**Conflicts:** None  
 **Supporting Materials:** None
 
