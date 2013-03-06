@@ -9,6 +9,7 @@
 > 1. [Competing Products](#Competing Products)
 > 1. [Other Resources](#Other Resources)
 > 1. [See Also](#See Also)
+> 1. [Repair Log](#Repair Log)
 
 <a name='Project Overview'/>
 ## Project Overview
@@ -120,9 +121,23 @@ For this first pass, I have followed the Volere template for requirement analysi
 
 ---
 
+**Requirement Name:** Multiple Apartment Selection  
+**Requirement #:** 7 	**Requirement Type:** 1	**Use Cases:** 2.1, 3.1, 4.4, 4.5
+
+**Description:** Data must be presented in some visual format: i.e. interactive graphs.
+
+**Rationale:** While plaintext data is valuable for certain tasks, graphs and charts are easier to digest at a glance.
+
+**Fit Criterion:** Whenever a user requests data from the system, they should have the option of
+
+**Customer Satisfaction:** 1		**Customer Dissatisfaction:** 8  
+**Dependencies:** 1, 2			**Conflicts:** None  
+**Supporting Materials:** None
+
+---
 
 **Requirement Name:** Chart/Graph Visualization  
-**Requirement #:** 7 	**Requirement Type:** 1	**Use Cases:** 2.1, 3.1, 4.4, 4.5
+**Requirement #:** 8 	**Requirement Type:** 1	**Use Cases:** 2.1, 3.1, 4.4, 4.5
 
 **Description:** Data must be presented in some visual format: i.e. interactive graphs.
 
@@ -138,7 +153,7 @@ For this first pass, I have followed the Volere template for requirement analysi
 
 **Requirement Name:** Weather Data
 
-**Requirement #:** 8 	**Requirement Type:** 5	**Use Cases:**
+**Requirement #:** 9 	**Requirement Type:** 5	**Use Cases:**
 
 **Description:** Data is parsed from Environment Canada or a similar website, and presented side-by-side with sensor data.
 
@@ -167,12 +182,23 @@ For this first pass, I have followed the Volere template for requirement analysi
 **Supporting Materials:** None
 
 <a name='user-stories'/>
+<a name='User Stories'/>
 ## User Stories
 <table>
   <tr><th>ID</th><th width='100%'>Description</th><th>Priority</th></tr>
   <tr>
     <td>1.1</td>
     <td>As a user, I want to be able to log in to my account.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>1.2</td>
+    <td>As a resident, I want to be able to register for the service.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>1.3</td>
+    <td>As a user, I want to be able to edit my account information.</td>
     <td>Medium</td>
   </tr>
 </table>
@@ -378,6 +404,56 @@ Exceptions:
                      1. System will let the user know his/her password is incorrect.
 </pre>
 
+<pre>
+ID:              1.2
+Description:     Resident registers for the service
+Preconditions:   Resident has an ID that can is tied to their apartment
+Postconditions:  Resident can login to the system (UC1.1)
+Success flow:
+                 1.  Resident navigates to the SmartHome website.
+                 2.  System shows a welcome page that prompts the resident to login or register.
+                 3.  Resident selects the register option.
+                 4.  System prompts the resident for their ID.
+                 5.  Resident enters their ID.
+                 6.  System validates the resident ID (may require manual intervention).
+                 7.  System prompts the resident to enter a username, password, and email for the new 
+                     account
+                 8.  Resident enters their information.
+                 9.  System validates the information and registers the resident.
+                 10. System sends the resident an email to activate their account.
+                 11. Resident opens their email, and clicks the link, bringing the resident back to
+                     the SmartHome website.
+                 12. System prompts the resident to login to their new account (UC1.1).
+Exceptions:
+                 6a.  Resident enters an invalid ID.
+                      1. System indicates that the ID is invalid and logs the attempt.
+                 6b.  Resident enters an ID of another resident.
+                      1. System indicates that the ID is invalid and flags the attempt for
+                         investigation.
+                 11a. Resident does not receive an activation email.
+                      1. Resident can attempt to register again.
+</pre>
+
+<pre>
+ID:              1.3
+Description:     User edits account information
+Preconditions:   User is logged in
+Postconditions:  System immediately reflects the user's new information
+Success flow:
+                 1. User navigates to the edit account information page.
+                 2. User edits their existing account information and saves the changes.
+                 3. System validates the changes.
+                 4. System indicates that the changes have been saved.
+Alternative flows:
+                 2a. User cancels editing their changes by pressing a cancel button.
+                     1. System cancels any changes and indicates that no changes have been made.
+                 2b. User cancels editing their changes by navigating away from the page.
+                     1. System cancels the changes.
+Exceptions:
+                 3a. User attempts to make invalid changes.
+                     1. System rejects the changes, and indicates what is wrong.
+</pre>
+
 <a name="uc-building-manager" />
 ##### Building Manager
 <pre>
@@ -448,13 +524,13 @@ Description:     Engineer requests to visualize building data for set of apartme
 Preconditions:   User is logged in as an Engineer
 Postconditions:  Engineer sees results in their selected visualization method
 Success Flow:
-                 1. User selects the metrics they want visualize
-                 2. User selects a method of visualization
-                 3. User chooses to group the results
-                 4. User enters the time granularity they want to see the results
-                 5. User enters the date range for the results (default month)
-                 6. User requests the results
-                 7. Client validates page
+                 1. Engineer selects the metrics they want visualize
+                 2. Engineer selects a method of visualization
+                 3. Engineer chooses to group the results
+                 4. Engineer enters the time granularity they want to see the results
+                 5. Engineer enters the date range for the results (default month)
+                 6. Engineer requests the results
+                 7. System client validates page
                  8. System returns results to the client based on the given query
 Variations:
                  1a. Metrics:
@@ -482,11 +558,11 @@ Variations:
                      2. Day
                      3. Month
 Exceptions:
-                 7a. Client validation detects problem
-                     1. Client informs user of invalid input
+                 7a. System client validation detects problem
+                     1. System informs engineer of invalid input
                  8a. System fails to execute query
                      1. System provides explanation for why query failed
-                     2. Client displays failure information to user
+                     2. System displays failure information to engineer
 </pre>
 
 <a name="uc-resident" />
@@ -497,11 +573,11 @@ Description:     Resident views their stats page
 Preconditions:   Resident is logged in
 Postconditions:  Resident is shown current stats page
 Success Flow:
-                 1. User navigates to stats page.
+                 1. Resident navigates to stats page.
                  2. System loads resident's latest room data
                  3. System loads latest data for other rooms
                  4. System determines residents ranking
-                 5. System displays user's current room status screen, with raw numbers and position
+                 5. System displays resident's current room status screen, with raw numbers and position
                     (don't display other user data)
 </pre>
 
@@ -509,7 +585,7 @@ Success Flow:
 ID:              4.2  
 Description:     Resident views the awards page
 Preconditions:   Resident is logged in
-Postconditions:  User is shown the awards page
+Postconditions:  Resident is shown the awards page
 Success Flow:
                  1. Resident requests awards history
                  2. System displays awards page; listing medals, prizes, badges and achievements which
@@ -520,7 +596,7 @@ Success Flow:
 ID:              4.3
 Description:     Resident is informed of ways to improve their standing
 Preconditions:   Resident is logged in
-Postconditions:  User is shown useful suggestions
+Postconditions:  Resident is shown useful suggestions
 Success Flow:
                  1. Resident requests suggestions
                  2. System analyzes current room status against optimal settings
@@ -533,7 +609,7 @@ ID:              4.4
 Description:     Resident views historical sensor data for their room
 Preconditions:   Resident is logged in
                  Manager doesn't terribly mind someone seeing info from before
-Postconditions:  User sees graphs of data on the room since the beginning
+Postconditions:  Resident sees graphs of data on the room since the beginning
 Success Flow:
                  1. Resident requests room history
                  2. System displays engineering options (restricted to this room)
@@ -562,45 +638,103 @@ ID:              4.6
 Description:     Resident views/changes occupancy information.
 Preconditions:   Resident is logged in.
 Postconditions:  Resident sees his/her current occupancy.
-                 The current occupancy has changed as specified by the user.
+                 The current occupancy has changed as specified by the resident.
 Success flow:
-                 1. User clicks preferences.
-                 2. System shows the user his/her current expected occupancy.
-                 3. User indicates he/she wants to change his/her current occupancy.
-                 4. System asks user what his/her actual current occupancy is.
-                 5. User indicates what he/she expects the occupancy of his/her apartment will be most of
-                    the time.
+                 1. Resident clicks preferences.
+                 2. System shows the resident his/her current expected occupancy.
+                 3. Resident indicates he/she wants to change his/her current occupancy.
+                 4. System asks residetwhat his/her actual current occupancy is.
+                 5. Resident indicates what he/she expects the occupancy of his/her apartment will be most 
+                    of the time.
                  6. System stores the information and displays the updated information.
 </pre>
 
-<a name='user-interface'/>
+##### Overall Data Access
+![](http://yuml.me/e6910974)
+<!-- EDIT HERE: http://yuml.me/edit/e6910974 -->
+
+<a name='User Interface'/>
 ## User Interface
 * [See Storyboards](Storyboards)
 
-<a name='software-license'/>
+<a name='Software License'/>
 ## Software License  
 Our team has agreed to the software license we discussed in class, but we have not yet met with stakeholders and had them sign off on it. We will do so at our meeting this week.
 
-<a name='project-glossary'/>
+<a name='Project Glossary'/>
 ## Project Glossary  
-* [BAS/BMS](http://www.kmccontrols.com/products/Understanding_Building_Automation_and_Control_Systems.aspx): Building Automation/Management System
-* [HVAC](http://en.wikipedia.org/wiki/HVAC): Heating, Ventilation, and Air Conditioning
-* [ERV](http://en.wikipedia.org/wiki/Energy_recovery_ventilation): Energy Recovery Ventilation
-* EDH: Electrical Duct Heating
-* HWT: Hot Water Tank
+* **[WBHDC]:** The client, the Wood Buffalo Housing and Development Corporation.
 
-<a name='competing-products'/>
+**Building Terms**
+* **Building:** The [Stony Mountain Plaza](http://www.wbhadc.ca/rg_stonymountain.html) owned by the [WBHDC].
+* **Unit:** A rental unit in the building where a resident lives.
+* **Stack:** Apartment units with the same floor plan that exist at the same location on each floor of the building.
+* **Utility:** Any of electricity, hot/cold water, or natural gas.
+* **Electricity:** Electrical power drawn from solar panels and geothermal fields, as well as from the main power lines.
+* **Hot Water:** Hot water produced by geothermal fields or natural gas boilers.
+* **Geothermal Field:** A set of pipes underneath the building collecting heat energy from the earth.
+* **[BAS/BMS](http://www.kmccontrols.com/products/Understanding_Building_Automation_and_Control_Systems.aspx):** Building Automation/Management System. The building has an existing BMS that provides lower-level access to sensor data. Our application provides a more accessible front-end to this system.
+* **[HVAC](http://en.wikipedia.org/wiki/HVAC):** Heating, Ventilation, and Air Conditioning
+* **[ERV](http://en.wikipedia.org/wiki/Energy_recovery_ventilation):** Energy Recovery Ventilation
+* **EDH:** Electrical Duct Heating
+* **HWT:** Hot Water Tank
+
+**Actors**
+* **Building Manager:** A manager at the [Stony Mountain Plaza] interested in using aggregate sensor data to analyze financial aspects of the building.
+* **Resident:** A resident at the [Stony Mountain Plaza] interested in using sensor data to reduce their bills and environmental impact.
+* **Engineer:** A construction or research engineer.
+* **Research engineer:** A privileged user interested in using sensor data to evaluate sustainability issues (ex. analyzing the sustainability of the building's solar/geothermal/natgas energy setup.) 
+* **Construction Engineer:** A privileged user interested in analyzing sensor data to improve the physical design of the building (ex. wall thickness, insulation, and stud placement).
+* **Privileged user:** A user with access to all sensor data.
+
+**Resident Terms**
+* **Achievement:** A sustainability goal achievable by residents to improve their score and flaunt status.
+* **Sustainability Goal:** A goal based on reducing the consumption of utilities indicated by sensor data.
+* **Score:** The total number of points a resident has accumulated based on their utility usage over a certain time period.
+* **Scoreboard (ladder):** A webpage that shows the total score of every resident (by a chosen username) in the building.
+
+<a name='Competing Products'/>
 ## Competing Products
-* [Honeywell Attune](https://buildingsolutions.honeywell.com/HBSCDMS/attune/)
-* [DGLux](http://www.dglogik.com/dglux/features/overview)
-* [Lucid Building Dashboard](http://www.luciddesigngroup.com/products.php)
 
-<a name='other-resources'/>
+####[Honeywell Attune](https://buildingsolutions.honeywell.com/HBSCDMS/attune/)
+**Overview**  
+Honeywell Attune offers services to help building managers improve the efficiency of their buildings. Attune provides an [Energy Awareness Dashboard](https://buildingsolutions.honeywell.com/HBSCDMS/attune/css/images/popup-image02.jpg) that gives building managers easy access to information collected from their buildings, such as utility usage and cost. Attune also provides benchmarks, recommendations, and diagnostics for analyzing the sustainability and financial cost of the building.
+
+**Analysis**  
+Attune appears to be geared towards building managers, providing only aggregate information about the building. It does not appear to provide access to data on a room by room basis, and does not seem to support multiple types of users. The benchmarks, recommendations, and diagnostics it provide are interesting, but beyond the scope of our project.
+***
+####[DGLux](http://www.dglogik.com/dglux/features/overview)
+**Overview**  
+> DGLux is a "drag & drop" visualization platform that enables you to design real-time, data-driven applications and dashboards without ever writing a single line of code.
+
+**Analysis**  
+DGLux is solely a visualization platform. Its method of binding data to widgets appears very flexible. It is even possible to [visualize data on an image of a floorplan](http://www.dglogik.com/dgnews/company-news/117-zone-temperature-overlays-tutorial). DGLux works on mobile platforms as well. If it were possible, it would work great as a visualization component inside of our web application.
+
+***
+####[Lucid Building Dashboard](http://www.luciddesigngroup.com/products.php)
+**Overview**  
+Lucid Building Dashboard is used in many large buildings across North America (see http://www.luciddesigngroup.com/customers.php). The dashboard provides graphs and breakdowns of utility usage and cost by floor and end use. It allows users to compare their usage information with other users in the Dashboard Network, and is integrated with social networking sites. Lucid keeps their user base involved by hosting competitions and awarding medals. Lucid also provides a "Kiosk" version of the dashboard that can be used in public places.
+
+**Analysis**  
+With there large user base, there is no doubt they are doing something right. While the dashboard looks perfect for our building manager and resident users, it does not appear flexible enough to handle our engineer requirements, as the visualizations it provides are too basic. Nonetheless, we should take some notes from their design for our resident pages.
+
+<a name='Other Resources'/>
 ## Other Resources
 * [Client Website (WBHDC)](http://www.wbhadc.ca/)
 * [Designing an Energy Consumption Visualization for an End User Home Automation Display](http://hci.rwth-aachen.de/materials/publications/tsoleridis2012.pdf)
 
-<a name='see-also'/>
+<a name='See Also'/>
 ## See Also
 * [[Project Plan]]
 * [Requirements Document Specification](https://eclass.srv.ualberta.ca/mod/page/view.php?id=479345)
+
+<a name='Repair Log'/>
+## Repair Log
+* Added use cases for registering residents and editing account information
+* Clarified use case actors
+* Improved glossary
+* Added information about competing products
+* Added a general use case diagram for overall data access
+
+[WBHDC]: http://www.wbhadc.ca/
+[Stony Mountain Plaza]: http://www.wbhadc.ca/rg_stonymountain.html
