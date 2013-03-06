@@ -121,23 +121,8 @@ For this first pass, I have followed the Volere template for requirement analysi
 
 ---
 
-**Requirement Name:** Multiple Apartment Selection  
-**Requirement #:** 7 	**Requirement Type:** 1	**Use Cases:** 2.1, 3.1, 4.4, 4.5
-
-**Description:** Data must be presented in some visual format: i.e. interactive graphs.
-
-**Rationale:** While plaintext data is valuable for certain tasks, graphs and charts are easier to digest at a glance.
-
-**Fit Criterion:** Whenever a user requests data from the system, they should have the option of
-
-**Customer Satisfaction:** 1		**Customer Dissatisfaction:** 8  
-**Dependencies:** 1, 2			**Conflicts:** None  
-**Supporting Materials:** None
-
----
-
 **Requirement Name:** Chart/Graph Visualization  
-**Requirement #:** 8 	**Requirement Type:** 1	**Use Cases:** 2.1, 3.1, 4.4, 4.5
+**Requirement #:** 7	**Requirement Type:** 1	**Use Cases:** 2.1, 3.1, 4.4, 4.5
 
 **Description:** Data must be presented in some visual format: i.e. interactive graphs.
 
@@ -153,7 +138,7 @@ For this first pass, I have followed the Volere template for requirement analysi
 
 **Requirement Name:** Weather Data
 
-**Requirement #:** 9 	**Requirement Type:** 5	**Use Cases:**
+**Requirement #:** 8 	**Requirement Type:** 5	**Use Cases:**
 
 **Description:** Data is parsed from Environment Canada or a similar website, and presented side-by-side with sensor data.
 
@@ -784,6 +769,12 @@ With there large user base, there is no doubt they are doing something right. Wh
 * Improved glossary
 * Added information about competing products
 * Added a general use case diagram for overall data access
+* Clarified each of the storyboards for residents
+* Removed requirement for "multiple apartment search" as it was confusing and unnecessary
+* Clarified requirement for data processing separation from front-end system
+* Added requirement for floor plan selection 
+* Added captions to storyboards.
+* Changed storyboard table headers from "data" to more plausible titles.
 
 [WBHDC]: http://www.wbhadc.ca/
 [Stony Mountain Plaza]: http://www.wbhadc.ca/rg_stonymountain.html
