@@ -361,7 +361,7 @@ For this first pass, I have followed the Volere template for requirement analysi
   </tr>
   <tr>
     <td>4.4</td>
-    <td>As a resident, I want to see how the usage of the room has changed since the sensors were installed.</td>
+    <td>As a resident, I want to see how the usage of the room has changed since the sensors were installed, restricted to averages over broad timeframes (weeks/months) and only for non personal systems (ie. heat loss and not electricity) to preserve privacy.</td>
     <td>Low</td>
   </tr>
   <tr>
@@ -613,7 +613,7 @@ Postconditions:  Resident sees graphs of data on the room since the beginning
 Success Flow:
                  1. Resident requests room history
                  2. System displays engineering options (restricted to this room)
-                 3. System requests aspect of interest (heating/electricity/humidity/co2) and timeframe
+                 3. System requests aspect of interest (restricted for privacy of previous tennant) and timeframe (restricted for privacy of previous tennant)
                  4. Resident provides settings
                  5. System loads requested data from database (this room only)
                  6. System uses engineering requirement graphs to display data
