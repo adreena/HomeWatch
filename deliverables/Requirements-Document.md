@@ -361,7 +361,7 @@ For this first pass, I have followed the Volere template for requirement analysi
   </tr>
   <tr>
     <td>4.4</td>
-    <td>As a resident, I want to see how the usage of the room has changed since the sensors were installed, restricted to averages over broad timeframes (weeks/months) and only for non personal systems (ie. heat loss and not electricity) to preserve privacy.</td>
+    <td>As a resident, I want to see how the usage of the room has changed since the sensors were installed.</td>
     <td>Low</td>
   </tr>
   <tr>
@@ -458,61 +458,110 @@ Exceptions:
 ##### Building Manager
 <pre>
 ID:              2.1
-Description:     Building manager views utility usage data
-Preconditions:   User is logged in as a Building Manager.
-Postconditions:  
+Description:     Building manager requests visualization of utility usage data
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  Building Manager sees visualization of results of selected query
 Success Flow:
-                 1. System displays utility options
-                 2. Building manager selects electricity option (water and gas represent alternative flows)
-                 3. System displays electricity consumption for all apartments (default) for latest day
-                    (default) as bar chart (default)
-                 4. Building manager selects latest week (previous days/weeks/months/years represent
-                    alternative flows)
-                 5. System displays electricity consumption for all apartments for last week as bar chart
-                 6. Building manager selects apartment 5 for display (other discreet apartment
-                    units/combinations represent alternative flows)
-                 7. System displays electricity consumption for apartment 5 for last week as bar chart
-                 8. Building manager selects line graph (pie chart represents an alternative flow)
-                 9. System displays electricity consumption for apartment 5 for last week as line graph
+                 1. System displays all utility options
+                 2. Building manager selects utilities for visualization
+                 3. Building manager selects apartments of interest
+                 4. Building manager selects time frame of interest
+                 5. Building manager selects desired form of visualization
+                 6. Building manager requests results
+                 7. System client validates page
+                 8. System displays consumption data of selected utilities for 
+                    selected apartments over selected period in desired format
+
+Variations:      2a. 
+                    1. Electrical energy consumption (kWh)
+                    2. Heating water energy consumption (Wh)
+                    3. Total water consumption (gallons)
+                    4. Hot water consumption (gallons)
+
+                 3a.
+                    1. Unit A
+                    2. Unit B
+                    3. Unit C
+                    4. Unit D
+                    5. Unit E
+
+                 4a.
+                    1. Single day
+                    2. Single week
+                    3. Singe month
+                    4. Single year
+                    5. Multiple days
+                    6. Multiple weeks
+                    5. Multiple months
+                    8. Multiple years
+
+                 5a.
+                    1. Plain text
+                    2. Histogram
+                    3. Pie chart
+                    4. Line graph 
+
+Exceptions:      7a. System client validation detects problem
+                     1. System informs building manager of invalid input
+                 8a. System fails to execute query
+                     1. System provides explanation for why query failed
+                     2. System displays failure information to building manager                   
 </pre>
 
 <pre>
 ID:              2.2
 Description:     Building manager generates report of utility usage data
 Preconditions:   User is logged in as a Building Manager
-Postconditions:  
+Postconditions:  Building manager receives compiled usage data as report
 Success Flow:
-                 1. System displays utility options
-                 2. Building manager selects generate report (secondary function access: select report at
-                    point 11 of use case #1)
-                 3. System displays utility type selector, time period selector, unit selector and report
-                    type selector
-                 4. Building manager selects all utilities, previous year, all apartments, pie chart
-                    options (plain text report represents alternative flow)
-                 5. System displays pan-utility consumption for previous year for all units in pie chart
-                    form
-                 6. Building manager selects print (export report represents alternative flow)
-                 7. System prints out report
+                 1. System displays all utility options
+                 2. Building manager selects generate report
+                 3. System displays utility, apartment, time period and report type selectors
+                 4. Building manager selects desired utilities for inclusion in report
+                 5. Building manager selects desired apartments for inclusion in report
+                 6. Building manager selects desired time period of report
+                 7. Building manager selects format of report
+                 8. Building manager requests report generation
+                 9. System client validates page
+                10. System compiles usage data and generates report in selected form
+                11. Building manager selects output method
+                12. System outputs report
+
+Variations:     4a. Same as for use case 2.1(2a)
+                5a. Same as for use case 2.1(3a)
+                6a. Same as for use case 2.1(4a)
+                7a. Same as for use case 2.1(5a)
+               10a. 
+                   1. Print report
+                   2. Export report 
+
+Exceptions:     9a. Same as for 2.1(7a)
+                10a. Same as for 2.1(8a)
 </pre>
 
 <pre>
 ID:              2.3
 Description:     Building manager views utility cost data
 Preconditions:   User is logged in as a Building Manager
-Postconditions:  
+Postconditions:  Building manager sees visualization of monetary cost of consumption
 Success Flow:
-                 1. System displays utility options
+                 1. System displays all utility options
                  2. Building manager selects cost analysis
-                 3. System displays cost analysis per utility type (in dollars) for all apartments
-                    (default) for latest day (default)
-                 4. Building manager selects cost analysis for natural gas
-                 5. System displays cost analysis for natural gas for all apartments for latest day
-                    (electricity and water represent alternative flows)
-                 6. Building manager selects apartment 12 (other apartments represent alternative flows)
-                 7. System displays cost analysis for natural gas for apartment 12 for latest day
-                 8. Building manager selects time period as latest week (previous days/weeks/months/years
-                    represent alternative flows)
-                 9. System displays cost analysis for natural gas for apartment 12 for latest week
+                 3. System displays utility, apartment and time period selectors
+                 4. Building manager selects utilities of interest
+                 5. Building manager selects apartments of interest
+                 6. Building manager selects time period of interest
+                 7. Building manager requests financial analysis
+                 8. System client validates page
+                 9. System compiles and displays cost analysis for given utilities in 
+                    given apartments over given time period
+
+Variations:     4a. Same as for use case 2.1(2a)
+                5a. Same as for use case 2.1(3a)
+                6a. Same as for use case 2.1(4a)
+
+Exceptions:     8a. Same as for 2.1(7a)
+                9a. Same as for 2.1(8a)
 </pre>
 
 <a name="uc-engineer" />
