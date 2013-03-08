@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS  temp,test,air_monthly,air_weekly,air_yearly,air_Daily,air_Hourly,air_Weekly,air_daily,air_hourly,AIR_DAILY,AIR_HOURLY,AIR_MONTHLY,AIR_WEEKLY,AIR_YEARLY,User_Role,`earned_achievements`,building,achievements,roles,users,resident;
