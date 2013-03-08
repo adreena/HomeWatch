@@ -2,7 +2,6 @@
 
 /** The following are defines to setup the database.
  * The defaults here are set to the one on the DB developer's machine. */
-<?php
 defined('DB_TYPE') ? NULL : define('DB_TYPE', 'mysql');
 defined('DB_HOST') ? NULL : define('DB_HOST', 'localhost');
 defined('DB_USER') ? NULL : define('DB_USER', 'root');
