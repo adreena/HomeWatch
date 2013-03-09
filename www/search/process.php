@@ -66,29 +66,31 @@ if(ISSET($startdate) && ISSET($enddate)) {
 	//$date = $_GET['date'];
 	$date = "2012-03-01";
 
-	$jsonResults = '"data": {';
+	//$jsonResults = '"data": {';
 
+	$bigArray = array();
 	foreach ($apartments as $apartment) {
-		$jsonResults += '"'+$apartment+'": {';
+	//	$jsonResults += '"'+$apartment+'": {';
 		foreach ($sensors as $sensor) {
-			$jsonResults += '"'+$sensor+'": [';
+			//$jsonResults += '"'+$sensor+'": [';
 			$data = db_pull_query($apartment, $sensor, $date, $period);
 			foreach ($data as $d) {
-				$jsonResults += '"'+$d+'", ';
+				//$jsonResults += '"'+$d+'", ';
+				$bigArray[$apartment][$sensor] = $d;
 			}
-			$jsonResults += '],';
+			//$jsonResults += '],';
 		}	
-		$jsonResults += '],';
+		//$jsonResults += '],';
 
 	}
 
-	$jsonResults += '}';
+//	$jsonResults += '}';
 	if (ISSET($startdate) && ($enddate)) {
-		$jsonResults += ', "from": "'+$startdate+'", "to": "'+$enddate+'",';
+		//$jsonResults += ', "from": "'+$startdate+'", "to": "'+$enddate+'",';
 	} else if (ISSET($date)) {
-		$jsonResults += ', "date": "'+$date+'",';
+		//$jsonResults += ', "date": "'+$date+'",';
 	}
-	$jsonResults += '"granularity" : "'+$period+'"';
-	echo json_encode($jsonResults);
+	//$jsonResults += '"granularity" : "'+$period+'"';
+	echo vardump($bigArray);
 }
 
