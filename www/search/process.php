@@ -26,7 +26,7 @@ $period = "Daily";
 
 
 //if(ISSET($_GET['startdate'] && $_GET['enddate']) {
-if(ISSET($startdate && $enddate) {
+if(ISSET($startdate) && ISSET($enddate)) {
 	//$startdate = $_GET["startdate"];
 	$startdate = "2012-01-01";
 	//$enddate = $_GET['enddate'];
