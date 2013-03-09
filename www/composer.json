@@ -14,8 +14,7 @@
             "UASmartHome": "lib/"
         },
         "files": [
-            "config/config.php",
-            "config/TwigSingleton.php"
+            "config/config.php"
         ]
     }
 }

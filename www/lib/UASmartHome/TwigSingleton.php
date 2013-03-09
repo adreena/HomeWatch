@@ -1,4 +1,4 @@
-<?php
+<?php namespace UASmartHome;
 
 /**
  * Twig singleton!
@@ -9,7 +9,6 @@
 
 class TwigSingleton
 {
-    
 
     /** The fabled Twig instance. */
     private static $twig = null;
@@ -18,17 +17,17 @@ class TwigSingleton
     private static function setupTwig()
     {
         /* The location of the templates is pretty dang hard-coded here. */
-        $templateLocation = __DIR__ . '/../lib/templates';
+        $templateLocation = UASMARTHOME_ROOT_DIR . '/lib/templates';
 
         /* Twig configuration. */
-        $loader = new Twig_Loader_Filesystem($templateLocation);
-        self::$twig = new Twig_Environment($loader);
+        $loader = new \Twig_Loader_Filesystem($templateLocation);
+        self::$twig = new \Twig_Environment($loader);
     }
 
     /* Get the singleton Twig instance. */
     static function getInstance()
     {
-        if (self::$twig == null) {
+        if (self::$twig === null) {
             self::setupTwig();
         }
 

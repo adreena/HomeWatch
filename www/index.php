@@ -18,7 +18,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 //$user = \UASmartHome\Auth\User::GetSessionUser();
 session_start();
 
-$twig = \TwigSingleton::getInstance();
+$twig = \UASmartHome\TwigSingleton::getInstance();
 
 // User is logged in...
 if (isset($_SESSION['user'])) {

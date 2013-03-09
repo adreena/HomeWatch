@@ -4,7 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 
 /* Setup Twig environment. */
-$twig = TwigSingleton::getInstance();
+$twig = \UASmartHome\TwigSingleton::getInstance();
 
 /* Initialize all of these! */
 $model = new \UASmartHome\Model();

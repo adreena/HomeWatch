@@ -14,7 +14,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$twig = TwigSingleton::getInstance();
+$twig = \UASmartHome\TwigSingleton::getInstance();
 
 $template = '';
 $args = array();

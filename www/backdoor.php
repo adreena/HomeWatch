@@ -26,7 +26,7 @@ if (in_array($role, $roles)) {
     header('Location: /');
 
 } else {
-    $twig = TwigSingleton::getInstance();
+    $twig = \UASmartHome\TwigSingleton::getInstance();
     echo $twig->render('backdoor-delete-me.html');
 }
 
