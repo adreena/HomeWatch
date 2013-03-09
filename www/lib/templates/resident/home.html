@@ -6,12 +6,31 @@
 
 {% extends 'resident/base.html' %}
 
+{% block extraScripts %}
+<script src="/js/residentHome.js"></script>
+{% endblock %}
+
 {% block title 'Home' %}
 
 {% block content %}
   <h2>Resident home</h2>
 
-  <div> Latest achievements here, probably!  </div>
-  <div> Partial scoreboard. </div>
-  <div> Some quick stats. </div>
+  <div><h3>Latest achievements here, probably!</h3></div>
+  <div id="latest5Achievements">
+    
+    <script>displayAchievements()</script>
+
+  </div>
+  <div><h3>Some quick stats.</h3></div>
+  <div id="quickStats">
+    
+    <script>displayStats()</script>
+
+  </div>
+  <div><h3>Partial scoreboard.</h3></div>
+  <div id="partialScoreboard">
+    
+    <script>displayScoreboard()</script>
+
+  </div>
 {% endblock %}
