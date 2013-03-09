@@ -62,7 +62,7 @@ if(ISSET($startdate && $enddate) {
 	//$date = $_GET['date'];
 	$date = "2012-03-01";
 
-	$jsonResults = '"data": {';
+	/*$jsonResults = '"data": {';
 
 	foreach ($apartments as $apartment) {
 		$jsonResults += '"'+$apartment+'": {';
@@ -84,7 +84,7 @@ if(ISSET($startdate && $enddate) {
 	} else if (ISSET($date)) {
 		$jsonResults += ', "date": "'+$date+'",';
 	}
-	$jsonResults += '"granularity" : "'+$period+'"';
-	echo json_encode($jsonResults);
+	$jsonResults += '"granularity" : "'+$period+'"';*/
+	echo json_encode($date);
 }
 
