@@ -29,3 +29,4 @@ if (in_array($role, $roles)) {
     $twig = TwigSingleton::getInstance();
     echo $twig->render('backdoor-delete-me.html');
 }
+
