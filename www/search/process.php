@@ -1,7 +1,11 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
 
-//require_once __DIR__ . '/../vendor/autoload.php';
+/* Remember to `composer install` in /www to generate the
+ * autoload files! */
+require_once __DIR__ . '/../vendor/autoload.php';
+
+/* Aw yea, baby. We just gon' spit out sum JSON. */
+header('Content-Type: application/json; charset=utf-8');
 
 $sensors = array();
 $apartments = array();
