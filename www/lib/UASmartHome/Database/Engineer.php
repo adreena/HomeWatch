@@ -4,6 +4,34 @@ include 'config.php';
 class Engineer {
 
 //Engineer
+
+
+
+	function db_pull_query($apt, $table, $date, $period) {
+		$dateparts = explode($date, "-");
+		$year = $dateparts[0];
+		$month = $dateparts[1];
+		$day = $dateparts[2];
+
+		if ($period == "Hourly") {
+			//return db_query_Hourly(
+			//Needs the "get every hour" function
+		} else if ($period == "Daily") {
+			return db_query_Daily($apt, $table, $date);
+		} else if ($period == "Weekly") {
+			$week = date_create_from_format("d-M-Y", $date);
+			//return db_query_Weekly($apt, $table, $
+			//CANT GET WEEK NUMBER RELIABLY
+		} else if ($period == "Monthly") {
+			return db_query_Monthly($apt, $table, $year, $month); 
+		} else if ($period == "Yearly") {
+			return db_query_Yearly($apt, $table, $year);
+		}
+		
+	}
+
+
+
 	function db_query_Yearly($apt,$table,$Year)
 	{
 	           

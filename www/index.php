@@ -43,6 +43,10 @@ if ($user != null) {
     echo $twig->render($homepage, array(
         "user" => $user
     ));
+
+    echo '<a href="/www/search/jSearch.php">Search</a>';
+
+
 } else {
     // No user session? Make 'em login.
     echo $twig->render('login.html');
