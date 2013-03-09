@@ -85,6 +85,6 @@ if(ISSET($startdate) && ISSET($enddate)) {
 		$jsonResults += ', "date": "'+$date+'",';
 	}
 	$jsonResults += '"granularity" : "'+$period+'"';
-	echo json_encode($date);
+	echo $jsonResults;
 }
 
