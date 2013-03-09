@@ -25,7 +25,8 @@ $enddate = null; //testing
 $period = "Daily";
 
 
-if(ISSET($_GET['startdate'] && $_GET['enddate']) {
+//if(ISSET($_GET['startdate'] && $_GET['enddate']) {
+if(ISSET($startdate && $enddate) {
 	//$startdate = $_GET["startdate"];
 	$startdate = "2012-01-01";
 	//$enddate = $_GET['enddate'];
@@ -56,7 +57,8 @@ if(ISSET($_GET['startdate'] && $_GET['enddate']) {
 		}
 	}
 //Pull data between startdate and enddate
-} else if (ISSET($_GET['date'])) {	
+//} else if (ISSET($_GET['date'])) {	
+} else if (ISSET($date)) {
 	//$date = $_GET['date'];
 	$date = "2012-03-01";
 
