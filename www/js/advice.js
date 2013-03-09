@@ -1,4 +1,4 @@
-/* Render scoreboards. */
+/* Render advice. */
 
 /* This one requires A LOT of refactoring, so I didn't really bother. Just
  * changed a few things.

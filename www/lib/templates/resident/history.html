@@ -6,23 +6,18 @@
 
 {% extends 'resident/base.html' %}
 
-{% block title 'Scoreboard' %}
+{% block title 'History' %}
 
 {% block extraScripts %}
-<script src="/js/scoreboard.js"></script>
+<script src="/js/history.js"></script>
 {% endblock %}
 
 {% block content %}
-  <h1>Scoreboard</h1>
+  <h1>History</h1>
 
   <!--h2>Waffles!</h2-->
 
-  <div id="scoreboards">
-
-    <div id="tableA"></div> 
-    <div id="tableB"></div> 
-    <div id="tableC"></div> 
-    <div id="tableD"></div> 
+  <div id="history_space">
     
     <script>displayTables()</script>
 

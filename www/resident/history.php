@@ -8,5 +8,5 @@ $twig = TwigSingleton::getInstance();
 /* This one is "dynamic"; it doesn't need any data to be produced whilst 
  * rendering the template. */
 
-echo $twig->render('resident/scoreboard.html');
+echo $twig->render('resident/history.html');
 

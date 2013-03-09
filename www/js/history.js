@@ -1,4 +1,4 @@
-/* Render scoreboards. */
+/* Render history. */
 
 /* This one requires A LOT of refactoring, so I didn't really bother. Just
  * changed a few things.
@@ -12,7 +12,6 @@
 var entryNames = ["ID","Heating","Water","Waffles"];
 var currentScores = [1111, 10, 100, 0];
 var entries = [["First",1000,0],["Second",900,100],["Third",800,200],["Fourth",700,300],["Fifth",600,400],["Sixth",500,500],["Seventh",400,600],["Eighth",300,700],["Ninth",200,800]];
-
 
 function CreateCurrentScoreTable() {
 	var str = '<table><tr>'; 
@@ -46,7 +45,7 @@ function CreateRankingTable(interestLabel, interestEntry) {
 function displayTables() {
 	fillEntries();
 
-	var existingDiv = document.getElementById('scoreboards');
+	var existingDiv = document.getElementById('history_space');
 	existingDiv.innerHTML += CreateCurrentScoreTable();
 	existingDiv.innerHTML += "<p>&nbsp;</p><p>&nbsp;</p>";
 	SortEntries(1);
@@ -55,7 +54,5 @@ function displayTables() {
 	existingDiv.innerHTML += CreateRankingTable(entryNames[2],2);
 	SortEntries(3);
 	existingDiv.innerHTML += CreateRankingTable(entryNames[3],1);
-	
-	//setTimeout("displayTables()",3000);
 }
 
