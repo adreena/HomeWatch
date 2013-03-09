@@ -21,7 +21,11 @@ $startdate = null; //testing
 $enddate = null; //testing
 
 //$period = $_GET["period"]; //Granularity of data
+//$apartments = $_GET['apartments'];
+//$sensors = $_GET['sensors'];
 
+$apartments = array("Apt1, Apt2");
+$sensors = array("air");
 $period = "Daily";
 
 
