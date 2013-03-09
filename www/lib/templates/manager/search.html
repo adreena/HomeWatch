@@ -1,0 +1,148 @@
+{#
+ # Manager HTML template.
+ #
+ # Data required: None (as of now).
+ #
+ #} 
+
+
+{% extends 'manager/base.html' %}
+
+{% block title 'Search' %}
+
+{% block content %}
+<nav class="menu-content">
+
+<form id="search-controls" method="GET" action="/search/process.php">
+<ul class="spiffy-menus">
+  <li id="sensors" data-spiffy-show>
+    <a>Sensors</a>
+    <fieldset class="select-all-category">
+      <legend>All Data</legend>
+      <input type="checkbox" class="checkAllSensors"
+        value="select-all" id="allData">All Sensor Data</input>
+    </fieldset>  
+  </li>
+
+  <li id="apts">
+    <a>Apartments</a>
+    <fieldset class="apartment-group">
+        <legend>Unit Numbers</legend> 
+    <input type="checkbox" class="allApts" value="select-all" id="select-all">All Apartments 
+    </fieldset>
+  </li>
+
+  <li id="dates">
+    <a>Dates</a>
+    <input type="text" name="datepicker" placeholder="Enter Date"/>
+  </li>
+
+  <li id="graphs">
+    <a>Graphs</a>
+    <fieldset>
+        <legend>Graph Data</legend>
+        <input type="radio" name="charts" value="plainText">
+        <label for="plainText">Plain Text</label>
+        <input type="radio" name="charts" value="tabular">
+        <label for="tabular">Table</label>
+
+        <input type="radio" name="charts" value="pie">
+        <label for="pie">Pie Chart</label>
+        <input type="radio" name="charts" value="histo">
+        <label for="histo">Histogram</label>
+
+        <input type="radio" name="charts" value="line">
+        <label for="line">Line Graph</label>		               
+    </fieldset>
+  </li>	
+</ul>
+</form>
+</nav>{# .menu-contents #}
+
+<div id="icons">
+  <div class="images">
+  <input type="image" id="submitbutton" value="GenerateReport" src="search.png" alt="Generate Report">
+  <a href="#home"><img id="homebutton" src="home.png" alt="return home"></a>
+</div>
+
+<div class="graph-container" id="results">
+  <!-- All results here -->
+</div>
+
+{% endblock content %}
+
+
+
+{% block extraScripts %}
+{#
+  Embedded underscore templates:
+#}
+{# Sensor categories. #}
+<script id="_t-sensor-category" type="text/html">
+<fieldset class="sensor-group">
+  <legend><%- majesticTitle %></legend> 
+{# The sensor-checkbox template will be placed here. Probably more than once. #}
+</fieldset>	
+</script>
+{# Sensor checkbox inputs: #}
+<script id="_t-sensor-checkbox" type="text/html">
+<label>
+  <input type="checkbox" name="sensors[]" value="<%= id %>">
+  <%- name %>
+</label>
+</script>
+<script id="_t-apt-checkbox" type="text/html">
+<label>
+  <input type="checkbox name="apartments[]" value="apt<%= num %>">
+  Unit <%= num %>
+</label>
+</script>
+{#
+  Temporarily define all of the sensor data here.
+#}
+<script id="__HACK-current-fields" type="application/json" >
+{# NOTE: This JSON is VERY ad-hoc and its schema may change at random. #}
+[
+  {# List of fields, in order. #}
+  {
+    "name": "Sensors",
+    "lookup": "sensor",
+    "categories": {
+
+      {# Title of the category to sensors. #}
+      "Air Data": {
+        {# value to display name #}
+        "CO2": "Carbon Dioxide",
+        "Temp": "Temperature",
+        "RelHum": "Relative Humitidy"
+      },
+      "Water Data": {
+        "HotWater": "Hot Water",
+        "TotalWater": "Total Water"
+      },
+      "Heat Data": {
+        "Insulation": "Insulation",
+        "Stud": "Stud",
+        "CurrentFlow": "Current Flow",
+        "CurrentTemp": "Current Temp",
+        "TotalMass": "Total Mass",
+        "TotalEnery": "Total Energy",
+        "TotalVol": "Total Volume"
+      }
+    }
+  },
+
+  {# This one MUST NOT be hard-coded! This will come from le datahbase. #}
+  {
+    "name": "Apartment",
+    "lookup": "apt",
+    "categories": {
+      "Unit Number": {
+        {# This will be inserted by some otherworldly function. #}
+      }
+    }
+  }
+]
+</script>
+
+{% endblock extraScripts %}
