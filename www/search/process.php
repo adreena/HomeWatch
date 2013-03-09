@@ -56,7 +56,7 @@ if(ISSET($startdate && $enddate) {
 			$period = "Yearly";
 		}
 	}
-//Pull data between startdate and enddate
+	//TODO: Pull data between startdate and enddate
 //} else if (ISSET($_GET['date'])) {	
 } else if (ISSET($date)) {
 	//$date = $_GET['date'];
