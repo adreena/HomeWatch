@@ -1,13 +1,28 @@
 <?php
 include 'config.php';
 
+
 class Resident_DB {
 
 
+    private $conn;
+	 public function Connect ()
+	 {
+	  
+	 try {
+	 	$this->conn = new PDO(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
+	    $this->conn ->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		echo "Connected Successfully";
+	     }
+	 catch (PDOException $e) {
+       die('Failed to Connect' . $e->getMessage());
+	 }
+	 
+	 }
    public function Resident_DB_Read($resident_id)
 	{
 			   $result =array();
-		       $Query=$GLOBALS['conn']->prepare("select Name ,Username,Room_Number ,Location,
+		       $Query=$this->conn->prepare("select Name ,Username,Room_Number ,Location,
 			   Points,Room_Status from Resident where Resident_ID=:Res_ID") ;
 			   $Query->bindValue(":Res_ID",$resident_id);
 			   $Query->execute();
@@ -18,12 +33,12 @@ class Resident_DB {
 			   echo "<br \>";
 				return $result;
 	}
-
+	 
 	
 	public function Resident_DB_Update ($resident_id,$Room_Status,$Name,$Username)
 	{ //update set where
 	
-	 $Query=$GLOBALS['conn']->prepare("update Resident  
+	 $Query=$this->conn->prepare("update resident  
 		set Room_Status= :RS , Name= :NM ,	Username= :US where Resident_ID= :Res_ID") ;
 		$Query->bindValue(":Res_ID",$resident_id);
 		$Query->bindValue(":RS",$Room_Status);
@@ -35,8 +50,8 @@ class Resident_DB {
 	public 	function Resident_DB_Achievement ()
 	{
 			   $result =array();
-		       $Query=$GLOBALS['conn']->prepare("select `Name`, `Description`, `Enabled_Icon`, `Disabled_Icon`, `Points` from Achievements ") ;
-			   $Query->execute();
+		       $Query=$this->conn->prepare("select `Name`, `Description`, `Enabled_Icon`, `Disabled_Icon`, `Points` from Achievements") ;
+				$Query->execute();
 				while ($row = $Query->fetch(PDO::FETCH_OBJ))
 				{
 				$result[]=(array)$row;
@@ -46,7 +61,7 @@ class Resident_DB {
 	public 	function Resident_DB_Earned_Achievement ($resident_id)
 	{
 			   $result =array();
-		       $Query=$GLOBALS['conn']->prepare("select * from `Earned_Achievements` where Resident_ID= :Res_ID") ;
+		       $Query=$this->conn->prepare("select * from `Earned_Achievements` where Resident_ID= :Res_ID") ;
 				$Query->bindValue(":Res_ID",$resident_id);
 				$Query->execute();
 				while ($row = $Query->fetch(PDO::FETCH_OBJ))
@@ -59,7 +74,7 @@ class Resident_DB {
 	public 	function Resident_DB_Building ($resident_id)
 	{
 			    $result =array();
-		        $Query=$GLOBALS['conn']->prepare("select * from Building where Resident_ID= :Res_ID") ;
+		        $Query=$this->conn->prepare("select * from Building where Resident_ID= :Res_ID") ;
 				$Query->bindValue(":Res_ID",$resident_id);
 				$Query->execute();
 				$row = $Query->fetch(PDO::FETCH_OBJ);
@@ -74,6 +89,7 @@ class Resident_DB {
 
 // Example code
 $testdb=new Resident_DB();
+$testdb->Connect ();
 //Test Resident Read
 echo "Test Resident Read : By Passing the Resident ID::";
 echo "<br>";
