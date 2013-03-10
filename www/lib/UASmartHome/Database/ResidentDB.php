@@ -1,6 +1,4 @@
 <?php namespace UASmartHome\Database;
-include 'config.php';
-
 
 class ResidentDB {
 
@@ -12,7 +10,7 @@ class ResidentDB {
 	 try {
 	 	$this->conn = new \PDO(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
 	    $this->conn ->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-		echo "Connected Successfully";
+		//echo "Connected Successfully";
 	     }
 	 catch (\PDOException $e) {
        die('Failed to Connect' . $e->getMessage());
@@ -113,6 +111,7 @@ class ResidentDB {
 	
 }
 
+/*
 // Example code
 $testdb=new Resident_DB();
 $testdb->Connect ();
@@ -167,7 +166,7 @@ echo "<br>";
 echo "===========================";
 echo "<br>";
 
-
+*/
 
 
 ?>
