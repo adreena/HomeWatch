@@ -94,6 +94,67 @@ function db_query_Monthly($apt,$table,$Year,$Month)
 				$a= $sql->rowCount();
 				return $result;
 	}
+	public function db_air_Period($apt,$datefrom,$dateto,$hourfrom,$hourto,$type)
+	{
+			    $result =array();
+				$errinf =array();
+				$subsql ="test";
+				print_r($hourfrom);
+				if ($hourfrom==Null) $hourfrom=0;
+				if ($hourto==Null)   $hourto=23;
+				if ($type <> 5)
+				   {
+				     $hourfrom=0;
+					 $hourto=23;
+				   }
+				switch ($type)
+				{
+					case 1:	
+						$subsql = "v0_air.Year";
+						break;
+					case 2: 
+						$subsql = "v0_air.Year,v0_air.Month";
+						break;
+					case 3: 
+						$subsql = "v0_air.Year,v0_air.Week";
+						break;
+					case 4: 
+						$subsql = "v0_air.Date";
+						break;
+					case 5: 
+						$subsql = "v0_air.Date,v0_air.Hour";
+						break;
+				}
+				print_r($type);
+				$sqlstatment="select `v0_air`.`Apt` AS `Apt`,".$subsql.",avg(`v0_air`.`Temperature`) AS `Temperature`,
+							avg(`v0_air`.`Relative Humidity`) AS `Relative Humidity`,
+							avg(`v0_air`.`CO2`) AS `CO2`
+							from  v0_air
+							where Apt= :Apt_Num AND (Date between  :datefrom and :dateto)
+							AND (Hour between  :hourfrom and :hourto)
+  							Group by v0_air.`Apt`,".$subsql;
+				//print_r($sqlstatment);
+							
+				$sql=$GLOBALS['conn']->prepare($sqlstatment);
+
+				$sql->bindValue(":Apt_Num",$apt);
+				$sql->bindValue(":datefrom",$datefrom);
+				$sql->bindValue(":dateto",$dateto);
+				$sql->bindValue(":hourfrom",$hourfrom);
+				$sql->bindValue(":hourto",$hourto);
+				$errinf = $sql->errorinfo();
+				$sql->execute();
+				$row_count= $sql->rowCount();
+				array_push($result,$errinf[0]);
+				array_push($result,$errinf[1]);
+				array_push($result,$errinf[2]);
+				while ($row = $sql->fetch(PDO::FETCH_OBJ))
+				{
+					array_push($result,$row);
+				}
+				array_push($result,$sql->rowCount());
+				return $result;
+	}
 	
 	
 }
@@ -143,6 +204,14 @@ echo "<br>";
 echo "===========================";
 echo "<br>";
 
+//Test It Periodically
+echo "Test it Periodically : By Passing the Apt# Date from '2012-02-29' and '2013-03-31' ";
+echo "<br>";
+$r4=$testdb->db_air_Period(5,'2012-03-01','2012-03-01',0,5,5);
+print_r($r4);
+echo "<br>";
+echo "===========================";
+echo "<br>";
 
 
 ?>
