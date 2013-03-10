@@ -1,6 +1,18 @@
-<header class="masthead">
-  <h1> SmartHome </h1>
+<header class="page-header">
+  <div class="masthead">
+    <h1 class="logo"> <a href="/">SmartHome</a> </h1>
+
+    <nav class="primary-nav"> <ul class="inline-nav">
+      {% block primaryNav %}
+        <li><a href=""> Overview </a></li>
+        <li><a href=""> Graphs </a></li>
+        <li><a href=""> Reports </a></li>
+      {% endblock primaryNav %}
+    </ul> </nav>
+
+    <nav class="secondary-nav"> <ul class="inline-nav">
+        <li><a href="/auth/logout.php">Logout</a></li>
+    </ul> </nav>
+  </div>{# .masthead #}
+
 </header>
-<nav class="blade">
-  <a href="/auth/logout.php">Logout</a>
-</nav>

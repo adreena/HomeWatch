@@ -1,0 +1,65 @@
+body {
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.masthead {
+    margin: auto;
+    width: 960px;
+    position: relative;
+}
+
+.inline-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.inline-nav > li {
+    display: inline;
+}
+
+.primary-nav {
+    font-size: larger;
+    display: inline;
+}
+
+.logo {
+    width: 220px;
+    margin: 0 10px;
+    display: inline;
+}
+.logo a:link {
+    color: black;
+    text-decoration: none;
+}
+
+.primary-nav > ul {
+    display: inline;
+    margin: 0 10px;
+}
+.secondary-nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.page-header {
+    height: 48px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.content-wrapper {
+    width: 960px;
+    margin: auto;
+    position: relative;
+}
+
+.search-controls {
+  /* Make the controls a little thing to the right. */
+  width: 220px;
+  margin: 0 10px;
+  position: absolute;
+  right: 0;
+}
+
