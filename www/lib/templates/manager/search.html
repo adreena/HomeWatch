@@ -10,12 +10,15 @@
 
 {% block title 'Search' %}
 
+
+{# See below for the extra scripts. #}
+
 {% block content %}
 <nav class="search-controls menu-content">
 <form method="GET" action="/search/process.php">
 <ul class="spiffy-menus">
   <li id="sensors" data-spiffy-show>
-    <a>Sensors</a>
+    <h3>Sensors</h3>
     <fieldset class="select-all-category">
       <legend>All Data</legend>
       <input type="checkbox" class="checkAllSensors"
@@ -24,7 +27,7 @@
   </li>
 
   <li id="apts">
-    <a>Apartments</a>
+    <h3>Apartments</h3>
     <fieldset class="apartment-group">
         <legend>Unit Numbers</legend> 
     <input type="checkbox" class="allApts" value="select-all" id="select-all">All Apartments 
@@ -32,13 +35,16 @@
   </li>
 
   <li id="dates">
-    <a>Dates</a>
-    <input type="text" name="datepicker" placeholder="Enter Date"/>
+    <h3>Dates</h3>
+    <fieldset>
+      <legend> Date range </legend>
+      <input type="text" name="datepicker" placeholder="Enter Date"/>
+    </fieldset>
   </li>
 
   <li id="graphs">
-    <a>Graphs</a>
-    <fieldset>
+    <h3>Graphs</h3>
+    <fieldset class="graph-group">
         <legend>Graph Data</legend>
         <input type="radio" name="charts" value="plainText">
         <label for="plainText">Plain Text</label>
@@ -56,13 +62,13 @@
   </li>	
 </ul>
 </form>
-</nav>{# .menu-contents #}
-
 <div id="icons">
   <div class="images">
   <input type="image" id="submitbutton" value="GenerateReport" src="search.png" alt="Generate Report">
   <a href="#home"><img id="homebutton" src="home.png" alt="return home"></a>
 </div>
+</nav>{# .menu-contents #}
+
 
 <div class="graph-container" id="results">
   <!-- All results here -->
@@ -73,6 +79,9 @@
 
 
 {% block extraScripts %}
+{# The actual script. This should probably be loaded with requireJS. #}
+<script src="/js/jsearch.js"></script>
+<script src="/js/spiffy/spiffy.min.js"></script>
 {#
   Embedded underscore templates:
 #}

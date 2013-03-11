@@ -1,0 +1,3 @@
+[submodule "www/js/spiffy"]
+	path = www/js/spiffy
+	url = git@github.com:eddieantonio/spiffy.git
