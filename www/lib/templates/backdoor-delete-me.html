@@ -1,7 +1,0 @@
-<p><strong style="color:#C00;">Not a valid role!</strong></p>
-<p>Choose one of these:</p>
-<ul>
-{% for role in ['resident', 'manager', 'engineer'] %}
-  <li><a href="/backdoor.php?role={{ role }}">{{ role }}</a></li>
-{% endfor %}
-</ul>

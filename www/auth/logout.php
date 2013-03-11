@@ -1,24 +1,20 @@
 <?php
 
+///
+/// Causes the session user to logout, destroying their session.
+/// The user is sent back to the homepage.
+///
+
 require_once __DIR__ . '/../vendor/autoload.php';
+
 use \UASmartHome\Auth\User;
 
-/*
- * Okay, so this is disgusting right now.
- * Basically, once the database is up and running we can forget about all of 
- * this checking instanceof stuff and *just* use the static methods of the User 
- * class.
- */
-
+// Logout the session user
 $user = User::getSessionUser();
-
-// My stupid hack makes the user not an instance of the User.
-if ($user instanceof User) {
-    User::LogoutSessionUser();
-} else {
-    session_unset();
-    session_destroy();
+if ($user != null) {
+    $user->logout();
 }
 
+// Direct the user back to the homepage
 header("Location: /");
 

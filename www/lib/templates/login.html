@@ -6,6 +6,7 @@
     <title>{{ loginTitle }}</title>
     <link rel="stylesheet" type="text/css" href="/css/common.css" />
     <link rel="stylesheet" type="text/css" href="/css/login.css" />
+    <script src="/js/gen_validatorv4.js" type="text/javascript"></script>
   </head>
 <body>
 <div id="wrapper">
@@ -17,26 +18,44 @@
     </header>
 
   {% block loginForm %}
-    <form action="{{ loginAction }}" method="POST">
+    <form name="login-form" action="{{ loginAction }}" method="POST">
       <ul class="list-form">
         <li>
           <label for="username">Username</label>
-          <input id="username" type="text" name="username" autofocus>
+          <input id="username" type="text" name="username" value="{{ username }}" autofocus="autofocus" />
+          <div id="login-form_username_errorloc" class="error-string"></div>
         </li>
 
         <li>
           <label for="password">Password</label>
-          <input id="password" type="password" name="password">
+          <input id="password" type="password" name="password" />
+          <div id="login-form_password_errorloc" class="error-string"></div>
         </li>
       </ul>
+
+      <input type="submit" name="submit" value="Login"/>
+      
+      {% if errorCode == 1 %}
+      <div class="error-string"><p>Incorrect login information.</p></div>
+      {% endif %}
+
     </form>
 
-    <input type="submit" name="submit" value="Login"/>
-
+    <script type="text/javascript">
+      var v = new Validator("login-form");
+      v.EnableOnPageErrorDisplay();
+      v.EnableMsgsTogether();
+      v.addValidation("username", "req", "Please enter your username.");
+      v.addValidation("username", "maxlen=30", "Max length for username is 30.");
+      v.addValidation("password", "req", "Please enter your password.");
+    </script>
+    
     <nav class="extra-items">
       <ul class="inline-nav-list">
         <li><a href="/auth/password_reset.php">Forgot password?</a></li>
-        <li><a href="/backdoor.php">BACKDOOR!</a></li>
+      </ul>
+      <ul class="inline-nav-list">
+        <li><a href="/auth/register.php">Register</a></li>
       </ul>
     </nav>
   {% endblock loginForm %}

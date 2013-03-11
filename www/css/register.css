@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#wrapper {
+  text-align: center; 
+}
+
+.middle-content {
+  display: block;
+  width: 460px;
+  height: 240px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.register-box header {
+  text-align: center;
+}
+
+.list-form li {
+  display: block;
+}
+
+.list-form {
+  list-style: none;
+}
+
+.middle-content .list-form {
+  padding: 0 40px;
+}
+
+.list-form li label {
+  display: inline-block;
+  width: 160px;
+}
+
+.list-form li input {
+  display: inline-block;
+  box-sizing: border-box;
+  margin-left: 20px;
+  width: 160px;
+}
+
+.register-box input[type="submit"] {
+  display: block;
+  float: right;
+}
+
+.login-box .extra-items {
+  float: left;
+}

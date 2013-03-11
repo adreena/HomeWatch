@@ -1,0 +1,81 @@
+{% set title = pageTitle|default('SmartHome Registration') %}
+{% set registerAction = registerPage|default('/auth/register.php') %}
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" type="text/css" href="/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="/css/register.css" />
+    <script src="/js/gen_validatorv4.js" type="text/javascript"></script>
+  </head>
+<body>
+<div id="wrapper">
+  <div class="middle-content register-box">
+    <header>
+      <h1>{{ title }}</h1>
+    </header>
+
+    <form name="register-form" action="{{ registerAction }}" method="POST">
+      <ul class="list-form">
+        <li>
+          <label for="username">Username</label>
+          <input id="username" type="text" name="username" value="{{ account.username }}" autofocus="autofocus" />
+          <div id="register-form_username_errorloc" class="error-string"></div>
+        </li>
+
+        <li>
+          <label for="password">Password</label>
+          <input id="password" type="password" name="password" />
+          <div id="register-form_password_errorloc" class="error-string"></div>
+        </li>
+     
+        <li>
+          <label for="password">Confirm Password</label>
+          <input id="conf-password" type="password" name="conf-password" />
+          <div id="register-form_conf-password_errorloc" class="error-string"></div>
+        </li>
+        
+        <li>
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" value="{{ account.email }}" />
+          <div id="register-form_email_errorloc" class="error-string"></div>
+        </li>
+        
+        <li>
+          <label for="role">Role ID</label>
+          <input id="role" type="role" name="role" value="{{ account.roleID }}" />
+          <div id="register-form_role_errorloc" class="error-string"></div>
+        </li>
+      </ul>
+
+      <input type="submit" name="submit" value="Register"/>
+      
+      {% if result.isBad %}
+      <div class="error-string"><p>Failed to register user. {{ result.friendlyResultOverall }} </p></div>
+      {% endif %}
+
+    </form>
+
+    <script type="text/javascript">
+      var v = new Validator("register-form");
+      v.EnableOnPageErrorDisplay();
+      v.EnableMsgsTogether();
+      v.addValidation("username", "req", "Please enter a username.");
+      v.addValidation("username", "maxlen=30", "Max length for username is 30.");
+      v.addValidation("password", "req", "Please enter a password.");
+      v.addValidation("conf-password", "req", "Please confirm your password.");
+      v.addValidation("conf-password", "eqelmnt=password","Passwords do not match.");
+      v.addValidation("email", "req", "Please enter your email.");
+      v.addValidation("email", "email");
+      v.addValidation("role", "req", "Please enter your role.");
+    </script>
+    
+    <nav class="extra-items">
+      <ul class="inline-nav-list">
+        <li><a href="/auth/login.php">Login</a></li>
+      </ul>
+    </nav>
+  </div>{# .register-box #}
+</div>{# #wrapper #}
+</body>
+</html>

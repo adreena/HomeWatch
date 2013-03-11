@@ -13,21 +13,34 @@
 	   
 require_once __DIR__ . '/vendor/autoload.php';
 
+use \UASmartHome\Auth\User;
 
 // Start dat session, yo!
-//$user = \UASmartHome\Auth\User::GetSessionUser();
 session_start();
+$user = User::getSessionUser();
 
 $twig = \UASmartHome\TwigSingleton::getInstance();
 
 // User is logged in...
-if (isset($_SESSION['user'])) {
-    // Shouldn't the user contain role information? Whatever...
-	$user = $_SESSION['user'];
-    // So... this won't work when the User class is working.
-    $role = $user['role'];
-
-    echo $twig->render("$role/home.html", array(
+if ($user != null) {
+    $homepage = '';
+    
+    switch ($user->getRoleID()) {
+        case User::ROLE_RESIDENT:
+            $homepage = 'resident/home.html';
+            break;
+        case User::ROLE_MANAGER:
+            $homepage = 'manager/home.html';
+            break;
+        case User::ROLE_ENGINEER:
+            $homepage = 'engineer/home.html';
+            break;
+        default:
+            $homepage = 'resident/home.html';
+            break;
+    }
+            
+    echo $twig->render($homepage, array(
         "user" => $user
     ));
 } else {

@@ -3,7 +3,7 @@
     "description": "University of Alberta SmartHome sensor visualization.",
     "require": {
         "twig/twig": ">=1.12",
-        "eddieantonio/bcrypt": ">=0.3"
+	"ircmaxell/password-compat": ">=1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=3.7",
