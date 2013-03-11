@@ -27,10 +27,24 @@ class ResidentDB {
 			   $row = $Query->fetch(\PDO::FETCH_OBJ);
 			   $result=(array)$row;
 			   $a= $Query->rowCount();
-			   echo $a;
-			   echo "<br \>";
+			   //echo $a;
+			   //echo "<br \>";
 				return $result;
 	}
+
+   public function Resident_DB_Get_All_Residents()
+	{
+			   $result =array();
+		       $Query=$this->conn->prepare("select Resident_ID from Resident") ;
+			   $Query->execute();
+			   $row = $Query->fetchAll(\PDO::FETCH_COLUMN);
+			   $result=(array)$row;
+			   //$a= $Query->rowCount();
+			   //echo $a;
+			   //echo "<br \>";
+				return $result;
+	}
+
 	   public function Resident_DB_Score($resident_id)
 	{
 			   $result =array();
@@ -40,8 +54,8 @@ class ResidentDB {
 			   $row = $Query->fetch(\PDO::FETCH_OBJ);
 			   $result=(array)$row;
 			   $a= $Query->rowCount();
-			   echo $a;
-			   echo "<br \>";
+			   //echo $a;
+			   //echo "<br \>";
 				return $result;
 	}
 	 
@@ -58,6 +72,17 @@ class ResidentDB {
 		$Query->execute();
 	}
 	
+	public function Resident_DB_Earned_Update ($resident_id,$achieve_id,$date_earned)
+	{
+
+	 $Query=$this->conn->prepare("insert into earned_achievements values
+		(:Res_ID, :Achiev_ID, :DE)") ;
+		$Query->bindValue(":Res_ID",$resident_id);
+		$Query->bindValue(":Achiev_ID",$achieve_id);
+		$Query->bindValue(":DE",$date_earned);
+		$Query->execute();
+	}
+
 	public 	function Resident_DB_Achievement ()
 	{
 			   $result =array();
