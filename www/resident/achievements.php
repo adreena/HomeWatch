@@ -1,4 +1,4 @@
-<?php
+<?php namespace UASmartHome;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -7,9 +7,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $twig = \UASmartHome\TwigSingleton::getInstance();
 
 /* Initialize all of these! */
-$model = new \UASmartHome\Model();
-$controller = new \UASmartHome\Controller();
-$view = new \UASmartHome\View($controller, $model);
+$view = new \UASmartHome\View();
 
 $achievements = $view->getAchievements();
 
