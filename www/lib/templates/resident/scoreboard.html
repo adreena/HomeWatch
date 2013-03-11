@@ -8,19 +8,9 @@
 
 {% block title 'Scoreboard' %}
 
-{% block extraScripts %}
-<script src="/js/scoreboard.js"></script>
-{% endblock %}
-
 {% block content %}
   <h1>Scoreboard</h1>
 
-  <!--h2>Waffles!</h2-->
-
-  <div id="scoreboards">
-    
-    <script>displayTables()</script>
-
-  </div>
+  {% include 'resident/scores-tables.html' %}
 
 {% endblock %}
