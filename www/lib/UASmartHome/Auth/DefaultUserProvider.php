@@ -15,7 +15,8 @@ class DefaultUserProvider extends UserProvider
 {
 
     const PW_COST = 10; // CPU cost of password hashing algorithm (from 4 to 31)
-        
+    
+    // TODO: Pass in a DB or DB config object so that this class can be properly tested
     public function __construct()
     {
     

@@ -18,6 +18,7 @@ class AccountData
     const FIELD_EMAIL       = 'email';
     
     public $username;
+    public $password;
     public $roleID;
     public $email;
     

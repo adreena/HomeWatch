@@ -45,7 +45,7 @@ class RegistrationResult
     ///
     public function getResultCode($field)
     {
-        return isset($this->resultCods[$field]) ? $this->resultCodes[$field] : RegistrationResult::CODE_OK;
+        return isset($this->resultCodes[$field]) ? $this->resultCodes[$field] : RegistrationResult::CODE_OK;
     }
     
     ///
