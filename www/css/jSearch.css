@@ -110,4 +110,9 @@ input[type="radio"] {
     margin: 0 auto;
 }
 
+.graph1 {
+    display: block;
+    width: 950px;
+    height: 300px;
+}
 
