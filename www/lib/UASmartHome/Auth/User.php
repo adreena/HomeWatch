@@ -111,7 +111,16 @@ class User
     public static function getSessionUser()
     {
         @session_start();
-        return isset($_SESSION['user']) ? $_SESSION['user'] : null;
+        $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+
+        // Ensure the user is valid before returning it.
+        if ($user !== null && !($user instanceof User)) {
+            trigger_error("Invalid session user. Clearing session...", E_USER_WARNING);
+            User::destroySession();
+            return null;
+        }
+
+        return $user;
     }
 
     ///
