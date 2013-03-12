@@ -4,6 +4,9 @@
  * autoload files! */
 require_once __DIR__ . '/../vendor/autoload.php';
 
+/* We want to use the ENGINEER database access class as just 'Engineer'. */
+use \UASmartHome\Database\Engineer;
+
 /* Aw yea, baby. We just gon' spit out sum JSON. */
 header('Content-Type: application/json; charset=utf-8');
 
@@ -28,9 +31,9 @@ $enddate = null; //testing
 //$apartments = $_GET['apartments'];
 //$sensors = $_GET['sensors'];
 
-$apartments = array("Apt1, Apt2");
+$apartments = array("apt1, apt2");
 $sensors = array("air");
-$period = "Daily";
+$period = "daily";
 
 
 //if(ISSET($_GET['startdate'] && $_GET['enddate']) {
@@ -77,7 +80,7 @@ if(ISSET($startdate) && ISSET($enddate)) {
 	//	$jsonResults += '"'+$apartment+'": {';
 		foreach ($sensors as $sensor) {
 			//$jsonResults += '"'+$sensor+'": [';
-			$data = db_pull_query($apartment, $sensor, $date, $period);
+			$data = Engineer::db_pull_query($apartment, $sensor, $date, $period);
 			foreach ($data as $d) {
 				//$jsonResults += '"'+$d+'", ';
 				$bigArray[$apartment][$sensor] = $d;
@@ -95,6 +98,6 @@ if(ISSET($startdate) && ISSET($enddate)) {
 		//$jsonResults += ', "date": "'+$date+'",';
 	}
 	//$jsonResults += '"granularity" : "'+$period+'"';
-	echo vardump($bigArray);
+//	echo vardump($bigArray);
 }
 
