@@ -122,7 +122,7 @@ function db_query_Monthly($apt,$table,$Year,$Month)
 				$a= $sql->rowCount();
 				return $result;
 	}
-	public function db_air_Period($apt,$datefrom,$dateto,$hourfrom,$hourto,$type)
+         	public function db_air_Period($apt,$datefrom,$dateto,$hourfrom,$hourto,$type)
 	{
 			    $result =array();
 				$errinf =array();
@@ -153,7 +153,7 @@ function db_query_Monthly($apt,$table,$Year,$Month)
 						$subsql = "v0_air.Date,v0_air.Hour";
 						break;
 				}
-				print_r($type);
+			//	print_r($type);
 				$sqlstatment="select `v0_air`.`Apt` AS `Apt`,".$subsql.",avg(`v0_air`.`Temperature`) AS `Temperature`,
 							avg(`v0_air`.`Relative Humidity`) AS `Relative Humidity`,
 							avg(`v0_air`.`CO2`) AS `CO2`
@@ -183,7 +183,7 @@ function db_query_Monthly($apt,$table,$Year,$Month)
 				array_push($result,$sql->rowCount());
 				return $result;
 	}
-	
+		
 	
 }
 
@@ -240,6 +240,5 @@ print_r($r4);
 echo "<br>";
 echo "===========================";
 echo "<br>";
-
 
 ?>
