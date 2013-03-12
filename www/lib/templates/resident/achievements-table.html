@@ -3,13 +3,12 @@
    Uses `achievements` array.
 
 #}
-{# PROBABLY should host these icons ourselves and make sure the license is
-   permissive enough. #}
-{% set achievedIcon = "http://findicons.com/files/icons/1197/agua/128/home_badge.png" %}
-{% set notAchievedIcon = "http://findicons.com/files/icons/1580/devine_icons_part_2/128/home.png" %}
+
+{# icons found in http://www.iconarchive.com #}
+
 <div class="achievements">
 {% for achievement in achievements %}
-  {%- set iconURL = achievement.achieved ? achievedIcon : notAchievedIcon %}
+  {%- set iconURL = achievement.icon %}
   {%- set desc = achievement.description %}
   <div><img src="{{ iconURL }}" alt="{{ desc }}" title="{{ desc }}" /></div>
 {% endfor %}

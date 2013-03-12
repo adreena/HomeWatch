@@ -30,17 +30,22 @@ class Controller
             if ($has_achieved)
             {
                 array_push($achievements,
-                    new Achievement($achiev["Description"], True, $date_achieved));
+                    new Achievement($achiev["Description"], True, "icons/" . $achiev["Enabled_Icon"], $date_achieved));
             }
             else
             {
                 array_push($achievements,
-                    new Achievement($achiev["Description"], False, ""));
+                    new Achievement($achiev["Description"], False, "icons/" . $achiev["Disabled_Icon"], ""));
 
             }
         }
 
         return $achievements;
+
+    }
+
+    public function getScores($resident_id)
+    {
 
     }
 }
