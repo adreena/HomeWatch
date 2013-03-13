@@ -46,12 +46,17 @@ class Controller
 
     public function getScores($resident_id)
     {
+        $residents = $this->model->Resident_DB_Get_All_Residents();
         $scores = array();
-        $scores[0] = new Score(0, 100);
-        $scores[1] = new Score(1, 123);
-        $scores[2] = new Score(2, 200);
-        $scores[3] = new Score(3, 350);
-        $scores[4] = new Score(4, 401);
+	$rank = 0;
+
+        foreach ($residents as $resident) {
+            $rank++;
+            $data = $this->model->Resident_DB_Score($resident);
+
+            array_push($scores, new Score($rank, $data["Score"]));
+        }
+
         return $scores;
     }
 }
