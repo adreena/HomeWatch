@@ -48,13 +48,31 @@ class Controller
     {
         $residents = $this->model->Resident_DB_Get_All_Residents();
         $scores = array();
+        $unsorted_scores = array();
 	$rank = 0;
 
         foreach ($residents as $resident) {
-            $rank++;
             $data = $this->model->Resident_DB_Score($resident);
 
-            array_push($scores, new Score($rank, $data["Score"]));
+            if ($resident == $resident_id)
+                $unsorted_scores["r"] = $data["Score"];
+            else
+                array_push($unsorted_scores, $data["Score"]);
+
+        }
+
+        asort($unsorted_scores);
+
+        while ($score = current($unsorted_scores)) {
+            $rank++;
+
+            if (key($unsorted_scores) === "r") {
+                array_push($scores, new Score($rank, $score, True));
+            }
+            else
+                array_push($scores, new Score($rank, $score, False));
+
+            next($unsorted_scores);
         }
 
         return $scores;

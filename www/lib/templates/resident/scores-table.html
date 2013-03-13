@@ -13,10 +13,14 @@
                 <th>Score</th>
             </tr>
             {% for resscore in scores %}
-            <tr>
-                <td>{{resscore.rank}}</td>
-                <td>{{resscore.score}}</td>
-            </tr>
+                {% if resscore.ismyscore %}
+                <tr bgcolor=#FFFF00>
+                {% else %}
+                <tr>
+                {% endif %}
+                    <td>{{resscore.rank}}</td>
+                    <td>{{resscore.score}}</td>
+                </tr>
             {% endfor %}
         </table>
     </div>
