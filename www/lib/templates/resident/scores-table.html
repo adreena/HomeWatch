@@ -4,117 +4,22 @@
    Uses `scores` array.
 
 #}
-
-<div class="score">
-	{%- set co2 = score.co2 %}
-	{%- set energy = score.energy %}
-	{%- set temperature = score.temperature %}
-	{%- set heatloss = score.heatloss %}
-	{%- set humidity = score.humidity %}
-	<div>
-		<table>
-			<tr>
-				<th>"CO2"</th>
-				<th>"Energy"</th>
-				<th>"Temperature"</th>
-				<th>"Heat Loss"</th>
-				<th>"Humidity"</th>
-			</tr>
-			<tr>
-				<td>"{{co2}}"</td>
-				<td>"{{energy}}"</td>
-				<td>"{{temperature}}"</td>
-				<td>"{{heatloss}}"</td>
-				<td>"{{humidity}}"</td>
-			</tr>
-		</table>
-	</div>
-	<p>&nbsp;</p><p>&nbsp;</p>
-</div>
   
 <div class="scores">
-{% for ResidentScores in scores %}
-	{%- set ID = score.ID %}
-	{%- set co2 = score.co2 %}
-	<div>
-		<table>
-			<tr>
-				<th>"ID"</th>
-				<th>"CO2"</th>
-			</tr>
-			<tr>
-				<td>"{{ID}}"</td>
-				<td>"{{co2}}"</td>
-			</tr>
-		</table>
-	</div>
-{% endfor %}
+    <div>
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Score</th>
+            </tr>
+            {% for resscore in scores %}
+            <tr>
+                <td>{{resscore.rank}}</td>
+                <td>{{resscore.score}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-{% for ResidentScores in scores %}
-	{%- set ID = score.ID %}
-	{%- set energy = score.energy %}
-	<div>
-		<table>
-			<tr>
-				<th>"ID"</th>
-				<th>"Energy"</th>
-			</tr>
-			<tr>
-				<td>"{{ID}}"</td>
-				<td>"{{energy}}"</td>
-			</tr>
-		</table>
-	</div>
-{% endfor %}
 
-{% for ResidentScores in scores %}
-	{%- set ID = score.ID %}
-	{%- set temperature = score.temperature %}
-	<div>
-		<table>
-			<tr>
-				<th>"ID"</th>
-				<th>"Temperature"</th>
-			</tr>
-			<tr>
-				<td>"{{ID}}"</td>
-				<td>"{{temperature}}"</td>
-			</tr>
-		</table>
-	</div>
-{% endfor %}
-
-{% for ResidentScores in scores %}
-	{%- set ID = score.ID %}
-	{%- set heatloss = score.heatloss %}
-	<div>
-		<table>
-			<tr>
-				<th>"ID"</th>
-				<th>"Heat Loss"</th>
-			</tr>
-			<tr>
-				<td>"{{ID}}"</td>
-				<td>"{{heatloss}}"</td>
-			</tr>
-		</table>
-	</div>
-{% endfor %}
-
-{% for ResidentScores in scores %}
-	{%- set ID = score.ID %}
-	{%- set humidity = score.humidity %}
-	<div>
-		<table>
-			<tr>
-				<th>"ID"</th>
-				<th>"Humidity"</th>
-			</tr>
-			<tr>
-				<td>"{{ID}}"</td>
-				<td>"{{humidity}}"</td>
-			</tr>
-		</table>
-	</div>
-{% endfor %}
 </div>

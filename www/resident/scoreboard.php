@@ -8,9 +8,7 @@ $twig = \UASmartHome\TwigSingleton::getInstance();
 /* Initialize all of these! */
 $view = new \UASmartHome\View();
 
-$score = $view->getMyScores();
-$scores = $view->getAllScores();
+$scores = $view->getScores();
 
 echo $twig->render('resident/scoreboard.html',
-    array('score' => $score),
-	array('scores' => $scores));
+    array('scores' => $scores));

@@ -17,5 +17,10 @@ class View
         return $achievements;
     }
 
+    public function getScores()
+    {
+        $scores = $this->controller->getScores(1);
+        return $scores;
+    }
 }
 
