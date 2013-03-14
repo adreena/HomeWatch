@@ -4,11 +4,14 @@
 <meta charset="utf-8" />
 <title>Search Page</title>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
-<!--link rel="stylesheet" href="/resources/demos/style.css" /-->
 <link rel="stylesheet" href="jSearch.css" />
 
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="flot/excanvas.min.js"></script><![endif]-->
+<script src="flot/jquery.flot.js"></script>
+<script src="flot/jquery.flot.orderBars.js"></script><!--MIT licensed-->
+<script src="flot/jquery.flot.axislabels.js"></script><!-- GNU -->
 <script src="jSearch.js"></script>
 </head>
 
