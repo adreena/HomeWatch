@@ -104,3 +104,17 @@ input[type="radio"] {
     width: 75%;
     margin: 0 auto;
 }
+
+.graph1 {
+    display: block;
+    width: 95%;
+    height: 300px;
+    margin: 0 auto 10px auto;
+}
+
+.graph2 {
+    display: block;
+    width: 95%;
+    height: 300px;
+    margin: 10px auto 0 auto;
+}

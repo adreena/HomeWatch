@@ -137,7 +137,8 @@
         </div>
 
         <div id="results">
-        all results here
+          <div class="graph1"></div>
+          <div class="graph2"></div>  
         </div>
 
     </div>
