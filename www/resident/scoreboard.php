@@ -5,8 +5,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 /* Setup Twig environment. */
 $twig = \UASmartHome\TwigSingleton::getInstance();
 
-/* This one is "dynamic"; it doesn't need any data to be produced whilst 
- * rendering the template. */
+/* Initialize all of these! */
+$view = new \UASmartHome\View();
 
-echo $twig->render('resident/scoreboard.html');
+$scores = $view->getScores();
 
+echo $twig->render('resident/scoreboard.html',
+    array('scores' => $scores));

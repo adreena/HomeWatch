@@ -1,0 +1,29 @@
+{# Scores table
+
+   Uses `score` object.
+   Uses `scores` array.
+
+#}
+  
+<div class="scores">
+    <div>
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Score</th>
+            </tr>
+            {% for resscore in scores %}
+                {% if resscore.ismyscore %}
+                <tr bgcolor=#FFFF00>
+                {% else %}
+                <tr>
+                {% endif %}
+                    <td>{{resscore.rank}}</td>
+                    <td>{{resscore.score}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+</div>
