@@ -66,7 +66,7 @@ class DefaultUserProvider extends UserProvider
     public function registerNewUserImpl($accountData, $result)
     {
         // Generate the password hash
-        $pwhash = password_hash($accountData->password, PASSWORD_DEFAULT, ["cost" => DefaultUserProvider::PW_COST]);
+        $pwhash = password_hash($accountData->password, PASSWORD_DEFAULT, array("cost" => DefaultUserProvider::PW_COST));
         if ($pwhash == false) {
             $result->setResultCodeOverall(RegistrationResult::CODE_ERROR);
             return;
