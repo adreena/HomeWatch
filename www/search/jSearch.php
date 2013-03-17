@@ -9,10 +9,10 @@
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="flot/excanvas.min.js"></script><![endif]-->
-<script src="flot/jquery.flot.js"></script>
-<script src="flot/jquery.flot.orderBars.js"></script><!--MIT licensed-->
-<script src="flot/jquery.flot.axislabels.js"></script><!-- GNU -->
-<script src="jSearch.js"></script>
+<script src="/js/flot/jquery.flot.js"></script>
+<script src="/js/flot-orderbars/jquery.flot.orderBars.js"></script><!--MIT licensed-->
+<script src="/js/flot-axislabels/jquery.flot.axislabels.js"></script><!-- GNU -->
+<script src="/js/jSearch.js"></script>
 </head>
 
 <body>
