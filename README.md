@@ -3,14 +3,18 @@ SmartHome
 
 Smart Home Sensor Visualization Project
 
-
 ## Setup
 
-I'm using the [Composer][] dependency manager to automatically track
-PHP library dependencies (for example, [PHPUnit][], [Twig][], plus
-any other PHP libraries we may want). The link given should give you
-enough information for how to setup Composer on your machine.
-Essentially, it's just:
+**NEW**: Try `first-time-setup.sh`. The following explains what that
+script does.
+
+### PHP
+
+We're using the [Composer][] dependency manager to automatically track
+PHP library dependencies (for example, [PHPUnit][], [Twig][], plus any
+other PHP libraries we may want). The link given should give you enough
+information for how to setup Composer on your machine.  Essentially,
+it's just:
 
 ```sh
 curl -sS https://getcomposer.org/installer | php
@@ -28,6 +32,27 @@ To install all dependencies.
 [Composer]: http://getcomposer.org/doc/00-intro.md
 [PHPUnit]: http://www.phpunit.de/manual/3.6/en/writing-tests-for-phpunit.html
 [Twig]: http://twig.sensiolabs.org/
+
+### JavaScript
+
+JavaScript modules are cloned into `www/js/` using [git-submodules][].
+
+The first time you pull, you must use:
+
+```sh
+git submodule init
+git submodule update
+```
+
+...to get the latest versions of all submodules. When somebody changes
+the submodule version (you can check this using `git submodule status`),
+you can update again using:
+
+```sh
+git submodule update
+```
+
+[git-submodules]: http://git-scm.com/book/en/Git-Tools-Submodules
 
 ## PHP Tests
 
