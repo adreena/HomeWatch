@@ -109,6 +109,8 @@ if ($test) {
 	$diff = abs(strtotime($enddate) - strtotime($startdate));
 	if ($diff < 0) {
 		//ERROR: END DATE IS BEFORE START DATE
+        // put the PHP HTTP status here!
+        exit();
 	} else {
 		$hours = floor ($diff/$SECONDS_PER_HOUR);
 		if ($hours > $HOURLY_VIEW_MAX && $period == "Hourly") {

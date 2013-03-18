@@ -106,11 +106,42 @@
   Unit <%= num %>
 </label>
 </script>
+{# Experiment! Template for the ENTIRE category. #}
+<script id="_t-checkbox-category" type="text/html">
+{# Takes the following options:
+
+  * majesticTitle
+      The BIG title of the category
+  * paramName 
+      The parameter sent to the process script
+  * data
+      Object with whose keys are the values (this gets confusing, bear
+      with me) are sent to the process script. The values of the object
+      are the fancy name presented.
+  * checkAll
+      If set to true, shows a "check-all" text box.
+  
+#}
+<fieldset class="checkbox-group">
+  <legend><%= majesticTitle %></legend> 
+  <ul>
+  <% _.each(data, function (val, text) { %>
+  <li><label>
+    <input type="checkbox" name="<%- paramName %>[]" value="<%- val %>">
+    <%= text %>
+  </label></li>
+  <% }); %>
+  </ul>
+  <% if (checkAll !== undefined && checkAll === true) { %>
+    <input class="js-check-all" type="button" value="Check all">
+  <% } %>
+</fieldset>	
+</script>
 {#
   Temporarily define all of the sensor data here.
 #}
 <script id="__HACK-current-fields" type="application/json" >
-{# NOTE: This JSON is VERY ad-hoc and its schema may change at random. #}
+{# NOTE: This JSON is VERY ad-hoc and its schema may change at without warning. #}
 [
   {# List of fields, in order. #}
   {
