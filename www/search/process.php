@@ -13,18 +13,17 @@ require_once __DIR__. '/../lib/UASmartHome/Database/Engineer.php';
 header('Content-Type: application/json; charset=utf-8');
 
 
-//echo json_encode($_GET);
-//exit();
-
-
 $test = true;
-
-//echo var_dump($_GET);
 
 
 $sensors = array();
 $apartments = array();
 $message = "";
+
+// Boolean: Whether the date should be converted to UNIX time * 1000
+// Should probably be specified in query string, but whatever.
+$UNIX_time = true;
+
 //$period = "";
 //$startdate = "";
 //$enddate = "";
@@ -105,7 +104,7 @@ if ($test) {
 
 	//$start = date_create_from_format("d-M-Y", $startdate);
 	//$end = date_create_from_format("d-M-Y", $enddate);
-	
+
 	$diff = abs(strtotime($enddate) - strtotime($startdate));
 	if ($diff < 0) {
 		//ERROR: END DATE IS BEFORE START DATE
@@ -121,12 +120,12 @@ if ($test) {
 		if ($days > $DAILY_VIEW_MAX && $period == "Daily") {
 			$period = "Weekly";
 			$message = "Too much data for hourly view, switching to weekly view";
-		} 
+		}
 		$weeks = ceil($days / $DAYS_PER_WEEK);
 		if ($weeks > $WEEKLY_VIEW_MAX && $period == "Weekly") {
 			$period = "Monthly";
 			$message = "Too much data for weekly view, switching to monthly view";
-		} 
+		}
 		$months = ceil($weeks / $WEEKS_PER_MONTH);
 		if ($weeks > $MONTHLY_VIEW_MAX && $period == "Monthly") {
 			$period = "Yearly";
@@ -134,28 +133,36 @@ if ($test) {
 		}
 	}
 
-	$bigArray =array(); 
+// Create the big array that will contain the result of the query.
+$bigArray = array();
 
-	foreach ($apartments as $apartment) {
-        //      $jsonResults += '"'+$apartment+'": {';
-                foreach ($sensors as $sensor) {
-                        //$jsonResults += '"'+$sensor+'": [';
-			//echo var_dump($data);
-                        $data = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period);
-			//echo var_dump($data);
-			foreach ($data as $date=>$d) {
-				//$date = $d['Date'];
-				//echo var_dump($date);
-				//echo var_dump($d);
-				$bigArray[$apartment][$date][$sensor] = $d[$sensor];
-			}
-                        //$jsonResults += '],';
-                }       
-                //$jsonResults += '],';
+// For each 
+foreach ($apartments as $apartment) {
+    foreach ($sensors as $sensor) {
 
+        $data = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period);
+
+        foreach ($data as $date => $d) {
+            // I've always wanted to have a date with a eunich
+            if ($UNIX_time) {
+                // Brent needs the date as a UNIX timestamp.
+                $date = strtotime($date) * 1000;
+            }
+
+            $bigArray[$apartment][$date][$sensor] = $d[$sensor];
         }
-	$bigArray['granularity'] = $period;
-	$bigArray['message'] = $message;
-        $json = json_encode($bigArray);
-        echo $json;
-//} 
+    }
+}
+
+
+$metaData['granularity'] = $period;
+$metaData['message'] = $message;
+
+$resultArray = array(
+    'query' => $metaData,
+    'data' => $bigArray
+);
+
+
+echo json_encode($resultArray);
+

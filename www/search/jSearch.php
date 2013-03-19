@@ -102,7 +102,7 @@
 	        <li><a class="collapsed">Dates</a>
 		    <ul>
 			
-                        <input type="text" id="datepicker" name="datepicker" placeholder="Enter Date"/>
+                        <input type="text" class="datepicker" name="datepicker" placeholder="Enter Date"/>
 		    </ul>
 	        </li>
 
