@@ -12,6 +12,12 @@
 <script src="/js/flot/jquery.flot.js"></script>
 <script src="/js/flot-orderbars/jquery.flot.orderBars.js"></script><!--MIT licensed-->
 <script src="/js/flot-axislabels/jquery.flot.axislabels.js"></script><!-- GNU -->
+<script>
+    // TEMPORARY: Here whilst we transition to requireJS.
+    function require(_unused, func) {
+        func(jQuery, null);
+    }
+</script>
 <script src="/js/jSearch.js"></script>
 </head>
 
