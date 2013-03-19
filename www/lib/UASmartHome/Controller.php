@@ -61,7 +61,7 @@ class Controller
 
         }
 
-        asort($unsorted_scores);
+        arsort($unsorted_scores);
 
         while ($score = current($unsorted_scores)) {
             $rank++;

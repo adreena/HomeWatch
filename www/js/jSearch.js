@@ -1,533 +1,299 @@
 $(document).ready(function() {
 
-    $(function() { 
-        $("#datepicker").datepicker({dateFormat: 'yy-mm-dd'});
-    });
+	$(function() { 
+        	$("#datepicker").datepicker({dateFormat: 'yy-mm-dd'});
+    	});
 
  	
-    $("#menu > li > a").click(function() {
-        $(this).toggleClass("expanded").toggleClass("collapsed").parent().find('> ul').slideToggle("medium");
-    });
+    	$("#menu > li > a").click(function() {
+        	$(this).toggleClass("expanded").toggleClass("collapsed").parent().find('> ul').slideToggle("medium");
+    	});
 
      
 
-    $('.checkAllSensors').change(function() {
-        if(this.checked) {
-            $('.sensor-group1 :checkbox, sensor-group2 :checkbox').prop('checked', this.checked);
-            $('.sensor-group2 :checkbox').prop('checked', this.checked);
-        } else {
-            $('.sensor-group1 :checkbox').prop('checked', false);
-            $('.sensor-group2 :checkbox').prop('checked', this.checked);
-        }
-    });
+    	$('.checkAllSensors').change(function() {
+        	if(this.checked) {
+            	$('.sensor-group1 :checkbox, sensor-group2 :checkbox').prop('checked', this.checked);
+            	$('.sensor-group2 :checkbox').prop('checked', this.checked);
+        	} else {
+            	$('.sensor-group1 :checkbox').prop('checked', false);
+            	$('.sensor-group2 :checkbox').prop('checked', this.checked);
+        	}
+    	});
 
-    $('.allApts').change(function() {
-        if(this.checked) {
-            $('.apartment-group :checkbox').prop('checked', this.checked);
-        } else {
-            $('.apartment-group :checkbox').prop('checked', false);
-        }
-    });
+    	$('.allApts').change(function() {
+        	if(this.checked) {
+            	$('.apartment-group :checkbox').prop('checked', this.checked);
+        	} else {
+            	$('.apartment-group :checkbox').prop('checked', false);
+        	}
+    	});
 
-    $("#submitbutton").click(function(){
-        var data = $("form").serialize();
+    	$("#submitbutton").click(function(){
+        	var data = $("form").serialize();
     
-        $.ajax({
-        url: "process.php",
-        data: data,
-        cache: false,
-        dataType: 'json',
-        success: function(result) {
+        	$.ajax({
+        	url: "process.php",
+        	data: data,
+        	cache: false,
+        	dataType: 'json',
+        	success: function(result) {
 
-	//var text = $('#graphs').find('input[name="charts"]').val();
-	var selectedValue = "";
-        var selected = $("#graphs input[type='radio']:checked");
-	if (selected.length > 0) {
-    	  selectedValue = selected.val();
-        //alert(selectedValue);
-	}
+			var selectedValue = "";
+        		var selected = $("#graphs input[type='radio']:checked");
+			if (selected.length > 0) {
+    	  			selectedValue = selected.val();
+			} 
 
-	if(selectedValue == "plainText") {
+			if(selectedValue == "plainText") {
+				displayText(result);
+			} else {
+				render_graph(selectedValue, result);
+			}
+           
+        	} // end success callback
+      		});  // end ajax call
+    	}); // end submit on click
+
+
+// you can run this as test data
+/*var timestampdata = {"granularity":"Daily", "1":{"1330498800000":{"Temperature":["27.1396551724139", "3","4", "5", "6", "7"],"CO2":["115.7222", "44", "55", "66", "77", "88"]}}, "2":{"1330498800000":{"Temperature":["19.6032567049809", "55", "89", "43", "67", "87"], "CO2": ["96.6897", "56", "79", "86", "32", "42"]}}, "6":{"1330498800000":{"Temperature":["28.25", "45.01", "16", "22.6", "6", "15"], "CO2": ["90", "102", "136", "155", "102", "65"]}}};*/
+
+	var displayText = function(result) {
+		var display_text = "";
+		
 		$.each(result, function(key, value) {
-            		var series_data;
-            		var label = "Apt." + key;
-            		alert(label);
-	    	$.each(value, function(key, value) {
-			alert(key);
-		 	$.each(value, function(key, value) {
-		     		alert(key);
-                     		alert(value);
-                 	});
-	    	});
+			if(key === "granularity") {
+				var granularity = value;
+			  	return;
+			}
+
+            		display_text += "<h2><i>Apartment " + key + ": </i></h2>";
+	    		
+			$.each(value, function(key, value) {	
+				display_text += "<h4>" + key + "</h4>";					
+		 			
+				$.each(value, function(key, value) {
+					if($.isArray(value)) {
+						display_text += key + ": <br />";
+						$.each(value, function(i, value) {
+							display_text += "Hour " + i + ": " + value + "<br />";
+						});
+						display_text += "<br />";
+					} else {
+						display_text += key + ": " + value + "<br /> <br />";
+					}
+                 		});
+	    		});
 		});
 
-	} else {
-                
-  //var data1 = [[(new Date("2000/01/01 00:00 UTC")).getTime(), 315.71], [(new Date("2000/01/01 01:00 UTC")), 317.45], [(new Date("2000/01/01 02:00 UTC")), 317.50],  [99968400000, 319.79]]; 
+        	$(".graph1").html(display_text);
+    	}
 
-  //var data2 = [[(new Date("2000/01/01 00:00 UTC")).getTime(), 315.00], [(new Date("2000/01/01 01:00 UTC")), 320.45], [(new Date("2000/01/01 02:00 UTC")), 317.50],  [99968400000, 319.79]];
+	var render_graph = function(selectedValue, result) {
+		var data_and_opts = format_data(selectedValue, result);
+		var data = data_and_opts["data"];
+		var options = data_and_opts["options"];
 
-var data1 = [
-        [(new Date("2000/01/01 00:30 UTC")).getTime(), 954],
-        [(new Date("2000/01/01 02:00 UTC")).getTime(), 999],
-        [(new Date("2000/01/01 03:00 UTC")).getTime(), 1031],
-        [(new Date("2000/01/01 04:00 UTC")).getTime(), 1100],
-        [(new Date("2000/01/01 05:00 UTC")).getTime(), 1030],
-	[(new Date("2000/01/01 06:00 UTC")).getTime(), 1100],
-        [(new Date("2000/01/01 07:00 UTC")).getTime(), 1030]
-    ];
-
-var data2 = [
-        [(new Date("2000/01/01 00:30 UTC")).getTime(), 950],
-        [(new Date("2000/01/01 02:00 UTC")).getTime(), 1000],
-        [(new Date("2000/01/01 03:00 UTC")).getTime(), 1200],
-        [(new Date("2000/01/01 04:00 UTC")).getTime(), 1150],
-	[(new Date("2000/01/01 05:00 UTC")).getTime(), 1100],
-        [(new Date("2000/01/01 06:00 UTC")).getTime(), 900],
-	[(new Date("2000/01/01 07:00 UTC")).getTime(), 900],
-	[(new Date("2000/01/01 23:00 UTC")).getTime(), 900],
-	[(new Date("2000/01/01 24:00 UTC")).getTime(), 900]
-    ];
-
-var data3 = [
-        [(new Date("2000/01/01 00:30 UTC")).getTime(), 950],
-        [(new Date("2000/01/01 02:00 UTC")).getTime(), 1000],
-        [(new Date("2000/01/01 03:00 UTC")).getTime(), 1200],
-        [(new Date("2000/01/01 04:00 UTC")).getTime(), 1150],
-	[(new Date("2000/01/01 05:00 UTC")).getTime(), 1100],
-        [(new Date("2000/01/01 06:00 UTC")).getTime(), 900],
-	[(new Date("2000/01/01 07:00 UTC")).getTime(), 900],
-	[(new Date("2000/01/01 23:00 UTC")).getTime(), 900],
-	[(new Date("2000/01/01 24:00 UTC")).getTime(), 900]
-    ];
-
-var data4 = [
-        [(new Date("2000/01/01 00:30 UTC")).getTime(), 950],
-        [(new Date("2000/01/01 02:00 UTC")).getTime(), 1000],
-        [(new Date("2000/01/01 03:00 UTC")).getTime(), 1200],
-        [(new Date("2000/01/01 04:00 UTC")).getTime(), 1150],
-	[(new Date("2000/01/01 05:00 UTC")).getTime(), 1100],
-        [(new Date("2000/01/01 06:00 UTC")).getTime(), 900],
-	[(new Date("2000/01/01 07:00 UTC")).getTime(), 900],
-	[(new Date("2000/01/01 23:00 UTC")).getTime(), 900],
-	[(new Date("2000/01/01 24:00 UTC")).getTime(), 900]
-    ];
-
-var graphData = [
-        {
-            label: "Apartment 1",
-            data: data1,
-            bars: {
-                show: true,
-                barWidth: 1000*60*60*0.25,
-                fill: true,
-                lineWidth: 1,
-                order: 1,
-                fillColor:  "#AA4643",
-		clickable: true,
-    		hoverable: true,
-            },
-		          
-            	color: "#AA4643"
-        },
-        {
-            label: "Apartment 2",
-            data: data2,
-            bars: {
-                show: true,
-                barWidth: 1000*60*60*0.25,
-                fill: true,
-                lineWidth: 1,
-                order: 2,
-                fillColor:  "#89A54E",
-		clickable: true,
-    		hoverable: true
-            },
-            	
-            	color: "#89A54E"
-        },
-{
-            label: "Apartment 3",
-            data: data3,
-            bars: {
-                show: true,
-                barWidth: 1000*60*60*0.25,
-                fill: true,
-                lineWidth: 1,
-                order: 3,
-                fillColor:  "#003366",
-		clickable: true,
-    		hoverable: true
-            },
-            	
-            	color: "#003366"
-        }/*,
-	{
-            label: "Apartment 4",
-            data: data4,
-            bars: {
-                show: true,
-                barWidth: 1000*60*60*0.25,
-                fill: true,
-                lineWidth: 1,
-                order: 4,
-                fillColor:  "#990066",
-		clickable: true,
-    		hoverable: true 
-            },
-            
-            	color: "#990066"
-        }*/
-    ];
-
-
-$.plot($(".graph1"), graphData, {
-       
-        xaxis: { mode: "time", timezone: "local", tickSize: [1, "hour"],
-                min: (new Date("2000/01/01 00:00 UTC")).getTime(),
-                max: (new Date("2000/01/01 24:00 UTC")).getTime(),
-		axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 12,
-                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-                axisLabelPadding: 5,
-		autoscaleMargin: .50
-		 
-               },
-
-yaxis: {
-            axisLabel: 'CO2',
-            axisLabelUseCanvas: true,
-            axisLabelFontSizePixels: 12,
-            axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-            axisLabelPadding: 5
-        },
-        grid: {
-            hoverable: true,
-            clickable: true,
-            borderWidth: 3,
-	    labelMargin: 3
-        },
-        
-        series: {
-		clickable: true,
-    		hoverable: true, 
-            shadowSize: 1
-        }
-
-//bars: {show:true, barWidth: 1000*60*60*0.5},
-        
-        //clickable:true,hoverable: true
-});
-
-
-var data5 = [
-        [1325376000000, 120],
-        [1328054400000, 70],
-        [1330560000000, 100],
-        [1333238400000, 60],
-        [1335830400000, 35],
-	[1338508800000, 125],
-	[1341161200000, 99],
-	[1343815600000, 85],
-	[1346444000000, 95],
-	[1349122400000, 110],
-	[1351700800000, 120],
-	[1354379200000, 115]
-	
-];
-
-var data6 = [
-        [1325376000000, 100],
-        [1328054400000, 80],
-        [1330560000000, 85],
-        [1333238400000, 79],
-        [1335830400000, 55],
-	[1338508800000, 70],
-	[1341161200000, 95],
-	[1343815600000, 100],
-	[1346444000000, 93],
-	[1349122400000, 118],
-	[1351700800000, 105],
-	[1354379200000, 120]
-	
-];
-
-var data7 = [
-        [1325376000000, 108],
-        [1328054400000, 72],
-        [1330560000000, 100],
-        [1333238400000, 65],
-        [1335830400000, 40],
-	[1338508800000, 115],
-	[1341161200000, 105],
-	[1343815600000, 99],
-	[1346444000000, 95],
-	[1349122400000, 125],
-	[1351700800000, 130],
-	[1354379200000, 135]
-	
-];
-
-var graphData1 = [
-        {
-            label: "Apartment 3",
-            data: data5,
-            //color: "#AA4643"
-        },
-        {
-            label: "Apartment 7",
-            data: data6,
-            color: "#89A54E"
-        },
-{
-            label: "Apartment 10",
-            data: data7,
-            color: "#003366"
-        }/*,
-	{
-            label: "Apartment 4",
-            data: data4,
-            bars: {
-                show: true,
-                barWidth: 1000*60*60*0.25,
-                fill: true,
-                lineWidth: 1,
-                order: 4,
-                fillColor:  "#990066",
-		clickable: true,
-    		hoverable: true 
-            },
-            
-            	color: "#990066"
-        }*/
-    ];
-
-
-/*var graphData1 = [
-        {
-            label: "Apartment 1",
-            data: data1,
-            
-            
-            
-        },
-        {
-            label: "Apartment 2",
-            data: data2,
-            
-            
-            
-        },
-{
-            label: "Apartment 3",
-            data: data3,
-            
-            
-            
-        }/*,
-	{
-            label: "Apartment 4",
-            data: data4,
-                     
-           
-        }
-    ];*/
-
-
-$.plot($(".graph2"), graphData1, {
-        
-        xaxis: 	{ mode: "time", timezone: "local",
-                min: (new Date(2011, 11, 15)).getTime(),
-                max: (new Date(2012, 11, 15)).getTime(),
-                mode: "time",
-                timeformat: "%b",
-                tickSize: [1, "month"],
-                monthNames: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-		axisLabel: 'Month',
-		axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 12,
-                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-                axisLabelPadding: 5,
-		autoscaleMargin: .50
-		 
-		},
-
-	yaxis: {
-            axisLabel: 'CO2',
-            axisLabelUseCanvas: true,
-            axisLabelFontSizePixels: 12,
-            axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-            axisLabelPadding: 5
-        	},
-        grid: 	{
-            hoverable: true,
-            clickable: true,
-            borderWidth: 3,
-	    labelMargin: 3
-        	},
-        
-       series: {
-            lines: { show: true },
-            points: {
-                radius: 3,
-                show: true,
-                fill: true
-            	}
+		$.plot($(".graph1"), data, options);
 	}
-});
 
+	var format_data = function(selectedValue, result) {
+		var sensor_data = [];
+		var series_data = [];
+		var data_and_options = [];
+		var graphname = [];
+		var apartments = [];
+		//var time_stamps = [];
+		var millisecond_multiplier = 3600000;
+		var GMT_offset = 25200000;
+		var graphname_flag = "false";
+		var granularity;
 
-  
-  $(".graph1").bind("plotclick", function (event, pos, item) {
-        //alert("You clicked at " + pos.x + ", " + pos.y);
-        // axis coordinates for other axes, if present, are in pos.x2, pos.x3, ...
-        // if you need global screen coordinates, they are pos.pageX, pos.pageY
+		$.each(result, function(key, value) {
+			if(key === "granularity") {
+				granularity = value;
+			  	return;
+			}
 
-        if (item) {
-          //highlight(item.series, item.datapoint);
-          alert("You clicked a point!");
-        }
-    
-    });
+			var apartment = key;
+			apartments.push(apartment);
+			console.log(apartments);
+			sensor_data[apartment] = [];
 
-var datanew = [
-        [(new Date("2000/01/01 00:00 UTC")).getTime(), 954],
-        [(new Date("2000/01/01 01:00 UTC")).getTime(), 999],
-        [(new Date("2000/01/01 02:00 UTC")).getTime(), 1031],
-        [(new Date("2000/01/01 03:00 UTC")).getTime(), 1050],
-        [(new Date("2000/01/01 04:00 UTC")).getTime(), 1029],
-	[(new Date("2000/01/01 05:00 UTC")).getTime(), 1015],
-        [(new Date("2000/01/01 06:00 UTC")).getTime(), 1075],
-	[(new Date("2000/01/01 07:00 UTC")).getTime(), 1080],
-	[(new Date("2000/01/01 08:00 UTC")).getTime(), 1060],
-	[(new Date("2000/01/01 09:00 UTC")).getTime(), 1065],
-	[(new Date("2000/01/01 10:00 UTC")).getTime(), 1040],
-	[(new Date("2000/01/01 11:00 UTC")).getTime(), 1059],
-	[(new Date("2000/01/01 12:00 UTC")).getTime(), 1066],
-	[(new Date("2000/01/01 13:00 UTC")).getTime(), 1089],
-	[(new Date("2000/01/01 14:00 UTC")).getTime(), 1099],
-	[(new Date("2000/01/01 15:00 UTC")).getTime(), 1100],
-	[(new Date("2000/01/01 16:00 UTC")).getTime(), 1112],
-	[(new Date("2000/01/01 17:00 UTC")).getTime(), 1100],
-	[(new Date("2000/01/01 18:00 UTC")).getTime(), 1105],
-	[(new Date("2000/01/01 19:00 UTC")).getTime(), 1115],
-	[(new Date("2000/01/01 20:00 UTC")).getTime(), 1120],
-	[(new Date("2000/01/01 21:00 UTC")).getTime(), 1122],
-	[(new Date("2000/01/01 22:00 UTC")).getTime(), 1115],
-	[(new Date("2000/01/01 23:00 UTC")).getTime(), 1117],
-    ];
+			$.each(value, function(key, value) {
+				// key = date stamps
+				//if(time_stamps.length === 0) {
+					x_tick =  parseFloat(key-GMT_offset);
+					//console.log(x_tick);				
+				//}
 
-var graphDatanew = [
-        {
-            label: "Apartment 3",
-            data: datanew,
-		          
-            	color: "#AA4643"
-        
-        }
+				if(graphname.length !== 0) {
+					graphname_flag = "true";
+				}
+		 			
+				$.each(value, function(key, value) {					
+					// key = sensor names
+					var sensor = key;
 
-	 ];
+					if(graphname_flag === "false") {
+						graphname.push(sensor);
+					}
 
-$(".graph2").bind("plotclick", function (event, pos, item) {
-        if (item) {
-             var point_value = item.datapoint[1];
-	     alert("You clicked point " + item.dataIndex + " in " + item.series.label + " whose value is" + point_value);
+					if(sensor_data[apartment][sensor] ===  undefined) {
+						console.log(sensor);
+						sensor_data[apartment][sensor] = [];
+					}
 
-	     
-           //alert(item.datapoint[0]);
-           //alert(item.series.data[1][3]);
- 	  //var series = plot.getData();
-          //for (var i = 0; i < series.length; ++i) {
-            //alert(series[i].color);
-          //}
-          //var series_data = plot.getData();
-         //alert("you are here");
-          //alert("It's value is 
-          //$("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
-          //plot.highlight(item.series, item.datapoint);
+					if($.isArray(value)) {
+						$.each(value, function(i, value) {
+							if(series_data.length === 0) {
+								tuple = [];
+							} else {
+								tuple.length = 0;
+							}
 
-        
+							if(i === 0) {
+								var tick_size = x_tick;
+							} else {
+								var tick_size = x_tick + millisecond_multiplier*i;
+							}
+							tuple[0] = tick_size;							
+							tuple[1] = value;
+							sensor_data[apartment][sensor].push(tuple);
+						});
+					} else {
+						if(series_data.length === 0) {
+							tuple = [];
+							console.log(tuple);
+						} else {
+							tuple.length = 0;
+						}
+			
+						tuple[0] = x_tick;							
+						tuple[1] = value;
+						sensor_data[apartment][sensor].push(tuple);
+					}
+                 		});
+	    		});
+		});
 
-	/*,
+		for(var i = 0; i < apartments.length; ++i) {
+			for(var j = 0; j < graphname.length; ++j) {
+				var label = "Apartment " + apartments[i] + " " + graphname[j];
+				series_length = series_data.length;
+				console.log("series length is " + series_length);
+				if(series_length === 0) {
+					series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
+				} else {
+					series_data[series_length] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
+				}
+			}
 
-	{
-            label: "Apartment 4",
-            data: data4,
-
-            bars: {
-                show: true,
-                barWidth: 1000*60*60*0.25,
-                fill: true,
-                lineWidth: 1,
-
-                order: 4,
-                fillColor:  "#990066",
-		clickable: true,
-    		hoverable: true 
-            },
-
-            
-            	color: "#990066"
-        }*/
-
-$.plot($(".graph2"), graphDatanew, {
-        
-        xaxis: 	{ mode: "time", timezone: "local", tickSize: [1, "hour"],
-                min: (new Date("2000/01/01 00:00 UTC")).getTime(),
-                max: (new Date("2000/01/01 24:00 UTC")).getTime(),
-                //mode: "time",
-                //timeformat: "%b",
-          
-		axisLabel: 'Day',
-		axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 12,
-                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-                axisLabelPadding: 5,
-		autoscaleMargin: .50
-		 
-		},
-
-	yaxis: {
-            axisLabel: 'CO2',
-            axisLabelUseCanvas: true,
-            axisLabelFontSizePixels: 12,
-            axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-            axisLabelPadding: 5
-        	},
-        grid: 	{
-            hoverable: true,
-            clickable: false,
-            borderWidth: 3,
-	    labelMargin: 3
-
-        	},
-        
-       series: {
-            lines: { show: true },
-            points: {
-                radius: 3,
-                show: true,
-                fill: true
-            	}
-	}
-    }); // end $.plot
-
-        } // if statement
-
-    
-    }); // end plotclick
-
-	} // end if-else
-
-
-
-
-
-
-           
-            
-        }
-        });
-    });
+		}
 	
+
+	var options = set_all_options(selectedValue, graphname, granularity);
+	data_and_options["data"] = series_data;
+	data_and_options["options"] = options;
+	return data_and_options;
+	}
+
+	var set_all_options = function(graphtype, graphname, granularity) {
+		var x_axis = get_x_axis(granularity);
+		var y_axis = get_y_axis(graphname);
+		var grid = get_grid();
+		var series_opts = get_series_options(graphtype);
+		var options = $.extend({}, x_axis, y_axis, grid, series_opts);
+		return options;
+	}
+
+	var get_x_axis = function(granularity) {
+		var base_x = {
+			xaxis: 	{ mode: "time", timezone: "local", axisLabelUseCanvas: true, axisLabelFontSizePixels: 12,
+                	axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif', axisLabelPadding: 5,
+			autoscaleMargin: .50
+			}		 
+		};
+
+		if(granularity === "Daily") {
+			
+
+		} else if(granularity === "Weekly") {
+			base_x.xaxis["timeformat"] = "%d";
+			base_x.xaxis["tickSize"] = [1, "day"];
+			base_x.xaxis["dayNames"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+			base_x.xaxis["axisLabel"] = 'Week';
+
+		} else if(granularity === "Monthly") {
+
+		} else if(granularity === "Yearly") {
+			base_x.xaxis["timeformat"] = "%b";
+			base_x.xaxis["tickSize"] = [1, "month"];
+			base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+			base_x.xaxis["axisLabel"] = 'Month';
+	
+		}
+		return base_x;		
+	}
+
+	var get_y_axis = function(graphname) {
+		var base_y = {
+			yaxis: 	{ 
+			axisLabelUseCanvas: true, axisLabelFontSizePixels: 12, 
+			axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif', axisLabelPadding: 5
+				}
+        	};
+
+		for(var i = 0; i < graphname.length; ++i) {
+			base_y.yaxis["axisLabel"] = graphname[i];
+		}
+
+		return base_y;
+	}
+
+	var get_grid = function() {
+		return base_grid = {
+			grid: 	{
+            		hoverable: true,
+            		clickable: true,
+            		borderWidth: 3,
+	    		labelMargin: 3
+        			}
+		};     
+	}
+
+	var get_series_options = function(graphtype) {
+		var series = {
+			series: 
+			{
+				lines: {show: true},
+				points: { radius: 3, show: true, fill: true },
+				bars: { show: true, barWidth: 1000*60*60*0.25,
+                		fill: true, lineWidth: 1, clickable: true,
+    				hoverable: true,
+				}
+			}
+		};
+
+		if(graphtype === "line") {
+			delete series.series["bars"];
+		} else if(graphtype === "histo") {
+			delete series.series["lines"];
+			delete series.series["points"];
+		}
+
+		return series;
+	}
+
+	var create_series_object = function (label, data){
+    		return {
+      			label: label,
+			data: data
+    			}
+	}
+
+
+
+  		
 }); // document.ready end
