@@ -30,7 +30,7 @@ require(
              * as well stuff this in a module. */
             CONTROLLER_URL = '/search/process.php', // by the way, this is the model, not the controller...
             SEARCH_SELECTOR = 'form.search',
-            
+
             /* Global Variables. */
             searchCache = {}, // Cache for requests. We don't have to make more requests than necessary.
 
@@ -39,7 +39,7 @@ require(
             bindMenus,
             bindDatepicker,
             bindSearchForm,
-            
+
             onSearch;
 
 
@@ -61,7 +61,7 @@ require(
             });
 
         };
-        
+
 
         // Binds the datepicker inside the search form.
         // Eddie's going to do some crazy stuff in here:
@@ -112,11 +112,13 @@ require(
 
             // Find the request in the cache first.
             if (searchCache[data] !== undefined) {
-                cachedResult = searchCache[data]; 
+                cachedResult = searchCache[data];
                 // setTimeout to run this function outside of the
-                // current call stack, to emulate how jQuery's success
+                // current call stack to emulate how jQuery's success
                 // callback would be called.
-                setTimeout(updateDisplay, 0, [cachedResult]);
+                setTimeout(function () {
+                    updateDisplay(cachedResult);
+                }, 0);
 
                 // DEBUG:
                 console.log({
@@ -138,10 +140,13 @@ require(
                 dataType: 'json',
                 success: function (result) {
                     searchCache[data] = result;
+
+                    // Debug print.
                     console.log({
                         brief: 'Caching request result',
                         request: data,
                         cache: searchCache});
+
                     updateDisplay(result);
                 },
                 error: function () {
@@ -237,7 +242,7 @@ require(
                     // key = date stamps
                     //if(time_stamps.length === 0) {
                     x_tick = parseFloat(key - GMT_offset);
-                    //console.log(x_tick);				
+                    //console.log(x_tick);
                     //}
 
                     if (graphname.length !== 0) {
@@ -431,7 +436,7 @@ require(
 
 
 
-        // Setup the jQuery on document ready 
+        // Setup the jQuery on document ready
         // to bind everything.
         $(onLoad);
 
