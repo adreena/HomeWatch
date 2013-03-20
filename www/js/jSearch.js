@@ -39,8 +39,8 @@ require(
             bindMenus,
             bindDatepicker,
             bindSearchForm,
-
-            onSearch;
+            onSearch,
+            updateDisplay;
 
 
         // This is called when everything is done loading.
@@ -77,7 +77,7 @@ require(
         // Binds stuff in the search form, including the form itself.
         bindSearchForm = function () {
 
-            // Eddie: FIX THIS!
+            // Eddie: consider using a universal check-all'er
             // Binds the check-all stuff.
             $('.checkAllSensors').change(function () {
                 if (this.checked) {
@@ -99,19 +99,40 @@ require(
                 }
             });
 
-            // TODO: Gah, code duplication!
+            // TODO: Gah, code duplication! --^
 
-            $("#submitbutton").click(onSearch); // end submit on click
+            $("#submitbutton").click(function (evt) {
+                // TODO: Make this selector more robust (e.g., it will
+                // break if we add another form to the page).
+                var data = $("form").serialize();
+
+                onSearch(data);
+
+                return false;
+            }); // end submit on click
 
         };
 
-        onSearch = function () {
-            // Hmm...
-            var data = $("form").serialize(),
-                cachedResult;
+        // onSearch takes in data from some form and sends it
+        // to process.php; it is then displayed by updateDisplay().
+        //
+        // If data is not explicitly provided or is undefined, this
+        // serializes the form on the page.
+        //
+        // If the form data is in a cache, onSearch does not bother
+        // making an HTTP request, instead displaying the values from
+        // the cache.
+        onSearch = function (data, forceAJAX) {
+            var cachedResult;
+
+            // If data was not specified,
+            if (data === undefined) {
+                data = $("form").serialize();
+            }
 
             // Find the request in the cache first.
-            if (searchCache[data] !== undefined) {
+            if (forceAJAX !== undefined && forceAJAX &&
+                searchCache[data] !== undefined) {
                 cachedResult = searchCache[data];
                 // setTimeout to run this function outside of the
                 // current call stack to emulate how jQuery's success
@@ -127,7 +148,6 @@ require(
                     inCache: cachedResult
                 });
 
-                return;
             }
 
             // Else, do the AJAX request to fetch the information.
@@ -139,6 +159,7 @@ require(
                 cache: false,
                 dataType: 'json',
                 success: function (result) {
+                    // This request was successful; add it to the cache.
                     searchCache[data] = result;
 
                     // Debug print.
@@ -150,7 +171,7 @@ require(
                     updateDisplay(result);
                 },
                 error: function () {
-                    console.log("Server is being a build master.");
+                    console.log("error accessing process.php");
                }
             });
         };
@@ -163,7 +184,7 @@ require(
                 selectedValue = selected.val();
             }
 
-            if (selectedValue == "plainText") {
+            if (selectedValue === "plainText") {
                 displayText(result);
             } else {
                 render_graph(selectedValue, result);
@@ -205,7 +226,7 @@ require(
             });
 
             $(".graph1").html(display_text);
-        }
+        };
 
         var render_graph = function (selectedValue, result) {
             var data_and_opts = format_data(selectedValue, result);
@@ -213,7 +234,7 @@ require(
             var options = data_and_opts["options"];
 
             $.plot($(".graph1"), data, options);
-        }
+        };
 
         var format_data = function (selectedValue, result) {
             var sensor_data = [];
@@ -318,7 +339,7 @@ require(
             data_and_options["data"] = series_data;
             data_and_options["options"] = options;
             return data_and_options;
-        }
+        };
 
         var set_all_options = function (graphtype, graphname, granularity) {
             var x_axis = get_x_axis(granularity);
@@ -327,7 +348,7 @@ require(
             var series_opts = get_series_options(graphtype);
             var options = $.extend({}, x_axis, y_axis, grid, series_opts);
             return options;
-        }
+        };
 
         var get_x_axis = function (granularity) {
             var base_x = {
@@ -365,7 +386,7 @@ require(
 
             }
             return base_x;
-        }
+        };
 
         var get_y_axis = function (graphname) {
             var base_y = {
@@ -382,7 +403,7 @@ require(
             }
 
             return base_y;
-        }
+        };
 
         var get_grid = function () {
             return base_grid = {
@@ -393,7 +414,7 @@ require(
                     labelMargin: 3
                 }
             };
-        }
+        };
 
         var get_series_options = function (graphtype) {
             var series = {
@@ -425,14 +446,14 @@ require(
             }
 
             return series;
-        }
+        };
 
         var create_series_object = function (label, data) {
             return {
                 label: label,
                 data: data
             }
-        }
+        };
 
 
 
