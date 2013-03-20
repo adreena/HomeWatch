@@ -153,6 +153,7 @@ require(
                     inCache: cachedResult
                 });
 
+                return;
             }
 
             // Else, do the AJAX request to fetch the information.
