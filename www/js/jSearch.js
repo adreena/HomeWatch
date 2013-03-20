@@ -125,14 +125,19 @@ require(
         onSearch = function (data, forceAJAX) {
             var cachedResult;
 
-            // If data was not specified,
+            // If data was not specified, get it from a form.
             if (data === undefined) {
                 data = $("form").serialize();
             }
 
-            // Find the request in the cache first.
-            if (forceAJAX !== undefined && forceAJAX &&
-                searchCache[data] !== undefined) {
+            // If forceAJAX was not provided, assume it is false.
+            if (forceAJAX === undefined) {
+                forceAJAX = false;
+            }
+
+            // Find the request in the cache first,
+            if (!forceAJAX && searchCache[data] !== undefined) {
+
                 cachedResult = searchCache[data];
                 // setTimeout to run this function outside of the
                 // current call stack to emulate how jQuery's success
