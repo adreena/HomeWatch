@@ -229,7 +229,7 @@ if ($test) {
 		}     
 
 
-		if ($waterTempSum) {
+		if ($waterTempDiff) {
 			$data = Engineer::db_get_data_placeholder();
 			foreach ($data as $date=>$d) {
 				$bigArray['data'][$apartment][$date]['waterTempDiff'] = $d[0];
