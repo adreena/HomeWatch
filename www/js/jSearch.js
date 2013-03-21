@@ -1,11 +1,10 @@
 require(
-    ['jquery', 'underscore',            // Main libraries
-     'spiffy/spiffy',                   // Collabible menus
-     'jquryui',                         // For date picker
-     'flot/flot.jquery',                // Flot charts
-     'flot-axislabels/flot-axislabels', // Extra flot plugins
-     'flot-orderbars'
-    ],
+    ['jquery', 'underscore', // Main libraries
+        'spiffy/spiffy', // Collabible menus
+        'jquryui', // For date picker
+        'flot/flot.jquery', // Flot charts
+        'flot-axislabels/flot-axislabels', // Extra flot plugins
+        'flot-orderbars'],
 
     /*
      * jSearch.
@@ -172,13 +171,14 @@ require(
                     console.log({
                         brief: 'Caching request result',
                         request: data,
-                        cache: searchCache});
+                        cache: searchCache
+                    });
 
                     updateDisplay(result);
                 },
                 error: function () {
                     console.log("error accessing process.php");
-               }
+                }
             });
         };
 
@@ -232,105 +232,104 @@ require(
         };
 
         var render_graph = function (selectedValue, result) {
-	    var granularity = result.query.granularity;
+            var granularity = result.query.granularity;
             var data_and_opts = format_data(selectedValue, result);
             var data = data_and_opts["data"];
             var options = data_and_opts["options"];
 
             $.plot($(".graph1"), data, options);
-	    bind_plotclick(granularity);
+            bind_plotclick(granularity);
         };
 
-        var bind_plotclick = function(granularity) {
-	    var drill_granularity;
-	    var date_from;
-	    var date_to;
-	    var data = $("form").serialize();
+        var bind_plotclick = function (granularity) {
+            var drill_granularity;
+            var date_from;
+            var date_to;
+            var data = $("form").serialize();
 
-    	    $(".graph1").bind("plotclick", function (event, pos, item) {
+            $(".graph1").bind("plotclick", function (event, pos, item) {
                 if (item) {
-		    var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
-		    var data_pointUTC = item.datapoint[0] + offset;		
-		    var date = new Date(data_pointUTC);
-		    date_from = format_date(date, "true");
+                    var offset = (new Date(item.datapoint[0])).getTimezoneOffset() * 60 * 1000;
+                    var data_pointUTC = item.datapoint[0] + offset;
+                    var date = new Date(data_pointUTC);
+                    date_from = format_date(date, "true");
 
-		    if(granularity === "Hourly") {
-		        // cannot drill down further
-		        return;
-		   } else if (granularity === "Daily") {
-		       drill_granularity = "Hourly";
-		       date_to = date_from;
-		    } else if (granularity === "Weekly") {
-		        drill_granularity = "Daily";
-		        date_to = get_date_to(data_pointUTC, drill_granularity);		
-		    } else if(granularity === "Monthly") {
-		        drill_granularity = "Weekly";
-			date_to = get_date_to(data_pointUTC, drill_granularity);
-		    }
+                    if (granularity === "Hourly") {
+                        // cannot drill down further
+                        return;
+                    } else if (granularity === "Daily") {
+                        drill_granularity = "Hourly";
+                        date_to = date_from;
+                    } else if (granularity === "Weekly") {
+                        drill_granularity = "Daily";
+                        date_to = get_date_to(data_pointUTC, drill_granularity);
+                    } else if (granularity === "Monthly") {
+                        drill_granularity = "Weekly";
+                        date_to = get_date_to(data_pointUTC, drill_granularity);
+                    }
 
-		data = data.replace(/(granularity=)([a-zA-Z]+)/, '$1' + drill_granularity);
-		data = data.replace(/(from=)([0-9][0-9]%2F[0-9][0-9]%2F[0-9][0-9][0-9][0-9])/, '$1' + encodeURIComponent(date_from));
-		data = data.replace(/(to=)([0-9][0-9]%2F[0-9][0-9]%2F[0-9][0-9][0-9][0-9])/, '$1' + encodeURIComponent(date_to));
+                    data = data.replace(/(granularity=)([a-zA-Z]+)/, '$1' + drill_granularity);
+                    data = data.replace(/(from=)([0-9][0-9]%2F[0-9][0-9]%2F[0-9][0-9][0-9][0-9])/, '$1' + encodeURIComponent(date_from));
+                    data = data.replace(/(to=)([0-9][0-9]%2F[0-9][0-9]%2F[0-9][0-9][0-9][0-9])/, '$1' + encodeURIComponent(date_to));
 
-		onSearch(data, true);
-       	    } // if statement
-	}); // end plotclick
-    };
+                    onSearch(data, true);
+                } // if statement
+            }); // end plotclick
+        };
 
-	var get_days_in_month = function(month, year) {
-	    month = parseInt(month);
-	    year = parseInt(year);
+        var get_days_in_month = function (month, year) {
+            month = parseInt(month);
+            year = parseInt(year);
             return (32 - new Date(year, month, 32).getDate());
         };
 
-	var get_date_to = function(date, drill_granularity) {
-	    var millisecond_day = 86400000;
-	    var millisecond_week = 6*millisecond_day;
+        var get_date_to = function (date, drill_granularity) {
+            var millisecond_day = 86400000;
+            var millisecond_week = 6 * millisecond_day;
 
-	    if(drill_granularity === "Daily") {
-	        var date_to = date + millisecond_week;
-	        date_to = new Date(date_to);
-	        return date_to = format_date(date_to, true); 
-	    }
+            if (drill_granularity === "Daily") {
+                var date_to = date + millisecond_week;
+                date_to = new Date(date_to);
+                return date_to = format_date(date_to, true);
+            }
 
-            if(drill_granularity === "Weekly") {
-	        var temp_date = new Date(date);
-	        var month = temp_date.getUTCMonth();
-		var year = temp_date.getUTCFullYear();
-		var num_days = get_days_in_month(month, year);
-		date_to = date + (num_days-1)*millisecond_day;
-		date_to = new Date(date_to);
-		return date_to = format_date(date_to, true);
-	    }
+            if (drill_granularity === "Weekly") {
+                var temp_date = new Date(date);
+                var month = temp_date.getUTCMonth();
+                var year = temp_date.getUTCFullYear();
+                var num_days = get_days_in_month(month, year);
+                date_to = date + (num_days - 1) * millisecond_day;
+                date_to = new Date(date_to);
+                return date_to = format_date(date_to, true);
+            }
         };
 
-        var format_date = function(date, bool) {
-	    if(bool === "false") {
-		return (date.getUTCMonth() + 1) + '/' + date.getUTCFullYear();
-	    } else {	
-	    return add_leading_zero(date.getUTCMonth() + 1) + '/' + add_leading_zero(date.getUTCDate()) 
-		+ '/' + date.getUTCFullYear();
-	    }
+        var format_date = function (date, bool) {
+            if (bool === "false") {
+                return (date.getUTCMonth() + 1) + '/' + date.getUTCFullYear();
+            } else {
+                return add_leading_zero(date.getUTCMonth() + 1) + '/' + add_leading_zero(date.getUTCDate()) + '/' + date.getUTCFullYear();
+            }
         };
 
-        var add_leading_zero = function(date) {
-            return date < 10? '0' + date: '' + date;
+        var add_leading_zero = function (date) {
+            return date < 10 ? '0' + date : '' + date;
         };
 
-        var format_data = function(selectedValue, result) {
-	    var sensor_data = [];
-	    var series_data = [];
-	    var data_and_options = [];
-	    var graphname = [];
-	    var apartments = [];
-	    var millisecond_multiplier = 3600000;
-	    var millisecond_day = 86400000;
-	    var graphname_flag = "false";
-	    var granularity;
+        var format_data = function (selectedValue, result) {
+            var sensor_data = [];
+            var series_data = [];
+            var data_and_options = [];
+            var graphname = [];
+            var apartments = [];
+            var millisecond_multiplier = 3600000;
+            var millisecond_day = 86400000;
+            var graphname_flag = "false";
+            var granularity;
             var min_date = 0;
-	    var max_date = 0;
+            var max_date = 0;
 
-	    granularity = result.query.granularity
+            granularity = result.query.granularity
 
             $.each(result, function (key, value) {
                 var apartment = key;
@@ -339,25 +338,25 @@ require(
 
                 $.each(value, function (key, value) {
                     // key = date stamps
-                    if(granularity === "Hourly") {
-			x_tick =  parseInt(key);
-			var temp = (new Date(x_tick)).getTimezoneOffset()*60*1000;
-			x_tick = x_tick - temp;						
-		    } else {
-			x_tick = parseInt(key);
-		    }
+                    if (granularity === "Hourly") {
+                        x_tick = parseInt(key);
+                        var temp = (new Date(x_tick)).getTimezoneOffset() * 60 * 1000;
+                        x_tick = x_tick - temp;
+                    } else {
+                        x_tick = parseInt(key);
+                    }
 
-		    if(min_date === 0) {
-			min_date = x_tick;
-		    }
-				
-		    if(x_tick > max_date) {
-                        if(granularity === "Hourly") {
-		            max_date = x_tick + millisecond_day;
-		        } else {
-			    max_date = x_tick;
-			}
-		    }
+                    if (min_date === 0) {
+                        min_date = x_tick;
+                    }
+
+                    if (x_tick > max_date) {
+                        if (granularity === "Hourly") {
+                            max_date = x_tick + millisecond_day;
+                        } else {
+                            max_date = x_tick;
+                        }
+                    }
 
                     if (graphname.length !== 0) {
                         graphname_flag = "true";
@@ -410,73 +409,78 @@ require(
                 });
             });
 
-            for(var i = 0; i < apartments.length; ++i) {
-		for(var j = 0; j < graphname.length; ++j) {
-		    var label = "Apartment " + apartments[i] + " " + graphname[j];
-		    series_length = series_data.length;
-		    if(series_length === 0) {
-			series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
-		    } else {
-			series_data[series_length] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
-		    }
-		}
-	    }
+            for (var i = 0; i < apartments.length; ++i) {
+                for (var j = 0; j < graphname.length; ++j) {
+                    var label = "Apartment " + apartments[i] + " " + graphname[j];
+                    series_length = series_data.length;
+                    if (series_length === 0) {
+                        series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
+                    } else {
+                        series_data[series_length] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
+                    }
+                }
+            }
 
 
             var options = set_all_options(selectedValue, graphname, granularity, min_date, max_date);
-	    data_and_options["data"] = series_data;
-	    data_and_options["options"] = options;
-	    return data_and_options;
+            data_and_options["data"] = series_data;
+            data_and_options["options"] = options;
+            return data_and_options;
         };
 
-        var set_all_options = function(graphtype, graphname, granularity, min_date, max_date) {
-		var x_axis = get_x_axis(granularity, min_date, max_date);
-		var y_axis = get_y_axis(graphname);
-		var grid = get_grid();
-		var series_opts = get_series_options(graphtype);
-		var options = $.extend({}, x_axis, y_axis, grid, series_opts);
-		return options;
-	};
+        var set_all_options = function (graphtype, graphname, granularity, min_date, max_date) {
+            var x_axis = get_x_axis(granularity, min_date, max_date);
+            var y_axis = get_y_axis(graphname);
+            var grid = get_grid();
+            var series_opts = get_series_options(graphtype);
+            var options = $.extend({}, x_axis, y_axis, grid, series_opts);
+            return options;
+        };
 
-        var get_x_axis = function(granularity, min_date, max_date) {
+        var get_x_axis = function (granularity, min_date, max_date) {
             var base_x = {
-			xaxis: 	{ mode: "time", timezone: "local", axisLabelUseCanvas: true, axisLabelFontSizePixels: 12,
-                	axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif', axisLabelPadding: 5,
-			autoscaleMargin: .50
-			}		 
-		};
+                xaxis: {
+                    mode: "time",
+                    timezone: "local",
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                    axisLabelPadding: 5,
+                    autoscaleMargin: .50
+                }
+            };
 
-	    base_x.xaxis["min"] = min_date;
-	    base_x.xaxis["max"] = max_date;
+            base_x.xaxis["min"] = min_date;
+            base_x.xaxis["max"] = max_date;
 
             if (granularity === "Hourly") {
-		base_x.xaxis["tickSize"] = [1, "hour"];
-		var date = new Date(min_date);
-		var label = date.getUTCDay();
-		base_x.xaxis["axisLabel"] = label;
+                base_x.xaxis["tickSize"] = [1, "hour"];
+                var date = new Date(min_date);
+                var label = date.getUTCDay();
+                base_x.xaxis["axisLabel"] = label;
 
-            } else if(granularity === "Daily") {
-		base_x.xaxis["timeformat"] = "%m/%d/%y";
-		base_x.xaxis["tickSize"] = [1, "day"];
-		var date = new Date(min_date);
-		var date_from = date.getUTCDay();
-		var date = new Date(max_date);
-		var date_to = date.getUTCDay();
-		base_x.xaxis["axisLabel"] = date_from + " - " + date_to;
+            } else if (granularity === "Daily") {
+                base_x.xaxis["timeformat"] = "%m/%d/%y";
+                base_x.xaxis["tickSize"] = [1, "day"];
+                var date = new Date(min_date);
+                var date_from = date.getUTCDay();
+                var date = new Date(max_date);
+                var date_to = date.getUTCDay();
+                base_x.xaxis["axisLabel"] = date_from + " - " + date_to;
 
             } else if (granularity === "Weekly") {
-		// TODO
-           } else if(granularity === "Monthly") {
-		// override min date so that January label shows on graph
-		base_x.xaxis["min"] = min_date - 25200000;
-		base_x.xaxis["timeformat"] = "%b";
-		base_x.xaxis["tickSize"] = [1, "month"];
-		base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-		var date = new Date(min_date);
-		var label = date.getFullYear(); 
-		base_x.xaxis["axisLabel"] = 'Year: ' + label;
-	
-		}
+                // TODO
+            } else if (granularity === "Monthly") {
+                // override min date so that January label shows on graph
+                base_x.xaxis["min"] = min_date - 25200000;
+                base_x.xaxis["timeformat"] = "%b";
+                base_x.xaxis["tickSize"] = [1, "month"];
+                base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                var date = new Date(min_date);
+                var label = date.getFullYear();
+                base_x.xaxis["axisLabel"] = 'Year: ' + label;
+
+            }
             return base_x;
         };
 
@@ -497,22 +501,50 @@ require(
             return base_y;
         };
 
-        var get_grid = function() {
-		return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};     
-	};
+        var get_grid = function () {
+            return base_grid = {
+                grid: {
+                    hoverable: true,
+                    clickable: true,
+                    borderWidth: 3,
+                    labelMargin: 3
+                }
+            };
+        };
 
-        var get_series_options = function(graphtype) {
-		var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true }}};
+        var get_series_options = function (graphtype) {
+            var line = {
+                series: {
+                    lines: {
+                        show: true
+                    },
+                    points: {
+                        radius: 3,
+                        show: true,
+                        fill: true
+                    }
+                }
+            };
 
-		var bars = {series: {bars: { show: true, barWidth: 1000*60*60*0.25, fill: true, lineWidth: 1, clickable: true,
-    				hoverable: true}}};
+            var bars = {
+                series: {
+                    bars: {
+                        show: true,
+                        barWidth: 1000 * 60 * 60 * 0.25,
+                        fill: true,
+                        lineWidth: 1,
+                        clickable: true,
+                        hoverable: true
+                    }
+                }
+            };
 
-		if(graphtype === "line") {
-			return line;
-		} else if(graphtype === "histo") {
-			return bars;
-		}
-	};
+            if (graphtype === "line") {
+                return line;
+            } else if (graphtype === "histo") {
+                return bars;
+            }
+        };
 
         var create_series_object = function (label, data) {
             return {

@@ -12,10 +12,11 @@
 <script src="/js/flot/jquery.flot.js"></script>
 <script src="/js/flot-orderbars/jquery.flot.orderBars.js"></script><!--MIT licensed-->
 <script src="/js/flot-axislabels/jquery.flot.axislabels.js"></script><!-- GNU -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 <script>
     // TEMPORARY: Here whilst we transition to requireJS.
-    function require(_unused, func) {
-        func(jQuery, null);
+    function require(_libraries, module) {
+        module(jQuery, null);
     }
 </script>
 <script src="/js/jSearch.js"></script>
