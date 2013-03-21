@@ -15,22 +15,7 @@
 {% block content %}
   <h2>Resident home</h2>
 
-  <div><h3>Latest achievements here, probably!</h3></div>
-  <div id="latest5Achievements">
-    
-    <script>displayAchievements()</script>
-
-  </div>
-  <div><h3>Some quick stats.</h3></div>
-  <div id="quickStats">
-    
-    <script>displayStats()</script>
-
-  </div>
-  <div><h3>Partial scoreboard.</h3></div>
-  <div id="partialScoreboard">
-    
-    <script>displayScoreboard()</script>
+  {% include 'resident/current-info.html' %}
 
   </div>
 {% endblock %}

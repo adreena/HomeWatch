@@ -1,0 +1,39 @@
+{# CurrentInfo table
+
+   Uses `currentInfo` object.
+   Uses `currentInfo` array.
+
+#}
+  
+<div class="currentinfo" style="float:left">
+    <div>
+        <table>
+            <tr>
+                <th>Information</th>
+                <th>Value</th>
+            </tr>
+            {% for info in currentinfo %}
+                <tr>
+                    <td>{{info.info}}</td>
+                    <td>{{info.value}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+<div class="currentrank" style="float:right;">
+    <h1>Your current rank is: </h1>
+    {% if rank == 1 %}
+        <font style="background-color: gold; font-size: 96pt;">
+    {% elseif rank == 2 %}
+        <font style="background-color: silver; font-size: 96pt;">
+    {% elseif rank == 3 %}
+        <font style="background-color: #8C7853; font-size: 96pt;">
+    {% else %}
+        <font style="font-size: 96pt;">
+    {% endif %}
+            {{rank}}
+        </font>
+</div>

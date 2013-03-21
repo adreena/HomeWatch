@@ -49,7 +49,7 @@ class Controller
         $residents = $this->model->Resident_DB_Get_All_Residents();
         $scores = array();
         $unsorted_scores = array();
-	$rank = 0;
+	    $rank = 0;
 
         foreach ($residents as $resident) {
             $data = $this->model->Resident_DB_Score($resident);
@@ -75,6 +75,39 @@ class Controller
             next($unsorted_scores);
         }
 
+        //var_dump(\UASmartHome\Auth\User::getSessionuser());
+
         return $scores;
     }
+
+    public function getCurrentInfo($resident_id)
+    {
+        $currentInfo = array();
+        array_push($currentInfo, new CurrentInfo("elec", "1"));
+        array_push($currentInfo, new CurrentInfo("water", "2"));
+        array_push($currentInfo, new CurrentInfo("humidity", "5"));
+        array_push($currentInfo, new CurrentInfo("co2", "6"));
+        array_push($currentInfo, new CurrentInfo("temp", "7"));
+
+        return $currentInfo;
+
+
+    }
+
+    public function getRank($resident_id)
+    {
+        $scores = $this->getScores($resident_id);
+        $rank = 0;
+
+        foreach ($scores as $score) {
+            if ($score->ismyscore) {
+                $rank = $score->rank;
+            }
+        }
+
+        return $rank;
+
+    }
+
+
 }
