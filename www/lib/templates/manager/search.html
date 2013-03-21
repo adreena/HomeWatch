@@ -137,8 +137,27 @@
   <% } %>
 </fieldset>	
 </script>
+<script id="_t-display-text" type="text/html">
+{# Admitadly, this is a really ugly template. #}
+<h2>Apartment <%= aptNumber %></h2>
+<% $.each(dates, function(date, sensor) { %>
+<h4><%= date %></h4>
+<%  $.each(sensors, function(sensor, sensorData) { %>
+<%      if (_.isArray(val)) { %>
+<h5><%= sensor %></h5>
+<%          $.each(sensorData, function(hour, val) { %>
+<p>Hour <%= hour %></p>
+<%          }); %>
+<%      } else { %>
+<p><%= sensor %>: <%= sensorData %></p>
+<%      }
+    });
+}); %>
+</script>
 {#
   Temporarily define all of the sensor data here.
+
+  This should *really* be created automatically by the server.
 #}
 <script id="__HACK-current-fields" type="application/json" >
 {# NOTE: This JSON is VERY ad-hoc and its schema may change at without warning. #}
@@ -204,5 +223,4 @@
   }
 ]
 </script>
-
 {% endblock extraScripts %}

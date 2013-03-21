@@ -16,7 +16,7 @@
 <script>
     // TEMPORARY: Here whilst we transition to requireJS.
     function require(_libraries, module) {
-        module(jQuery, null);
+        module(jQuery, _);
     }
 </script>
 <script src="/js/jSearch.js"></script>
