@@ -25,6 +25,7 @@ $twig = \UASmartHome\TwigSingleton::getInstance();
 if ($user != null) {
     $homepage = '';
     
+    // Give the user the approrpiate home page based on role.
     switch ($user->getRoleID()) {
         case User::ROLE_RESIDENT:
             $homepage = 'resident/home.html';
@@ -43,9 +44,6 @@ if ($user != null) {
     echo $twig->render($homepage, array(
         "user" => $user
     ));
-
-    echo '<a href="/www/search/jSearch.php">Search</a>';
-
 
 } else {
     // No user session? Make 'em login.
