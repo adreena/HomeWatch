@@ -22,5 +22,17 @@ class View
         $scores = $this->controller->getScores(1);
         return $scores;
     }
+
+    public function getCurrentInfo()
+    {
+        $currentInfo = $this->controller->getCurrentInfo(1);
+        return $currentInfo;
+    }
+
+    public function getRank()
+    {
+        $rank = $this->controller->getRank(1);
+        return $rank;
+    }
 }
 

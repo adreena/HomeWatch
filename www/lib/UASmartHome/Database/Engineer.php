@@ -1,28 +1,11 @@
 <?php
 
 include 'config.php';
-//require_once __DIR__ . '/../vendor/autoload.php';
-
-
-
-
-//$tables = array("Relative Humidity"=>"Air", "Temperature" => "Air", "CO2"=>"Air");
-
-
-
 class Engineer {
 
-//Engineer
-
-//$tables = array("Relative Humidity"=>"Air", "Temperature" => "Air", "CO2"=>"Air"); 
-
-
-
-
-	function db_pull_query($apt, $column, $startdate, $enddate, $period) {
-		
-
-		$tables = array("RelHum"=>"Air", "Temperature" => "Air", "CO2"=>"Air", "HotWater"=>"Water", "TotalWater"=>"Water", "Insulation"=>"Heat", "Stud"=>"Heat", "CurrentFlow"=>"Heat", "CurrentTemp"=>"Heat", "TotalMass"=>"Heat", "TotalEnergy"=>"Heat", "TotalVol"=>"Heat");
+	function db_pull_query($apt, $column, $startdate, $enddate, $period, $phase=null) {
+	
+		$tables = array("Relative_Humidity"=>"Air", "Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "Insulation"=>"Heat_Flux", "Stud"=>"Heat_Flux", "Current_Flow"=>"Heating", "Current_Temperature_1"=>"Heating", "Current_Temperature_2"=>"Heating",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy");
 
 		$dateparts = explode("-", $startdate);
 		$year = $dateparts[0];
@@ -32,34 +15,32 @@ class Engineer {
 		$table = $tables[$column];
 
 		$results = array();
-		//echo $startdate."\n".$enddate;
-		$startdate = date_create_from_Format('Y-m-d', $startdate);
-		$enddate = date_create_from_Format('Y-m-d', $enddate);
-		//$loopkill = false;
-	//	echo $startdate."\n".$enddate;
-		//while (!$loopkill) { 
-		//:	echo "5";
-			//echo var_dump($startdate);
-			//echo var_dump($enddate);
+		$startdate = date_create_from_Format('Y-m-d:G', $startdate);
+		$enddate = date_create_from_Format('Y-m-d:G', $enddate);
+	
 			if ($period == "Hourly") {
 				while ($startdate <= $enddate) {
-					$temp = Engineer::db_query_Hourly($apt,$table,$startdate->format('Y-m-d'), $column);
-					$results[$startdate->format('Y-m-d')] = $temp[0];
+					$temp = Engineer::db_query_Hourly($apt,$table,$startdate->format('Y-m-d'), $startdate->format('G'), $column, $phase);
+					
+					if (ISSET($temp[0])) {
+						$results[$startdate->format('Y-m-d:G')] = $temp[0];
+					} else {
+						$results[$startdate->format('Y-m-d:G')] = 0;
+					}
 					$startdate->add(date_interval_create_from_date_string('1 hour'));
 				}	
-			//return db_query_Hourly(
-			//Needs the "get every hour" function
 			} else if ($period == "Daily") {
-				//$results[$startdate] = Engineer::db_query_Daily($apt, $table, $startdate->format('Y-m-d'), $column)[0][$column];
 				while ($startdate <= $enddate) {
-					$temp = Engineer::db_query_Daily($apt, $table, $startdate->format('Y-m-d'), $column); 
-					$results[$startdate->format('Y-m-d')] = $temp[0]; 
+					$temp = Engineer::db_query_Daily($apt, $table, $startdate->format('Y-m-d'), $column, $phase); 
+					if (ISSET($temp[0])) {
+						$results[$startdate->format('Y-m-d:G')] = $temp[0];
+					} else {
+						$results[$startdate->format('Y-m-d:G')] = 0;
+					}
 					$startdate->add(date_interval_create_from_date_string('1 day'));
-			}
-				//echo var_dump($startdate);
-				//$startdate
+				}
 			} else if ($period == "Weekly") {
-				$week = date_create_from_format("d-M-Y", $date);
+				//$week = date_create_from_format("d-M-Y", $date);
 				//return db_query_Weekly($apt, $table, $
 				//CANT GET WEEK NUMBER RELIABLY
 			} else if ($period == "Monthly") {
@@ -68,8 +49,12 @@ class Engineer {
 				$year = $startdate->format("Y");
 				$month = $startdate->format("n");
 				while ($month <= $endmonth && $year <= $endyear) {
-					$temp = Engineer::db_query_Monthly($apt, $table, $year, $month, $column);
-					$results[$startdate->format('Y-m-d')] =  $temp[0];
+					$temp = Engineer::db_query_Monthly($apt, $table, $year, $month, $column, $phase);
+					if (ISSET($temp[0])) {
+						$results[$startdate->format('Y-m-d:G')] = $temp[0];
+					} else {
+						$results[$startdate->format('Y-m-d:G')] = 0;
+					}
 					$startdate->add(date_interval_create_from_date_string('1 month')); //TODO: This requires a new method that adds days based on the month because this PHP just adds 30 day
 
 			        	$year = $startdate->format("Y");
@@ -81,31 +66,34 @@ class Engineer {
 				$year = $startdate->format("Y");
 				while ($year <= $endyear) {
 
-					$temp = Engineer::db_query_Yearly($apt, $table, $year, $column);
-					$results[$startdate->format('Y-m-d')] = $temp[0];
+					$temp = Engineer::db_query_Yearly($apt, $table, $year, $column, $phase);
+					if (ISSET($temp[0])) {
+						$results[$startdate->format('Y-m-d:G')] = $temp[0];
+					} else {
+						$results[$startdate->format('Y-m-d:G')] = 0;
+					}
 					$startdate->add(date_interval_create_from_date_string('1 year'));
 					$year = $startdate->format("Y");
-
-					//return db_query_Yearly($apt, $table, $year, $column)[0][$column];
 				}
 			}
-		//}
-	
-
-
 		return $results;
-	
 	}
 
 
 
-	function db_query_Yearly($apt,$table,$Year,$column)
+	function db_query_Yearly($apt,$table,$Year,$column, $phase=null)
 	{
 	           
 			   
 			    $result =array();
 			    $table .= '_Yearly';
-		        $sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year ") ;
+		        //$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year ") ;
+			if ($phase == null) {
+		        	$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year") ;
+			} else {
+				$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Phase = :Phase") ;
+				$sql->bindValue(":Phase", $phase);
+			}
 				$sql->bindValue(":Apt_Num",$apt);
 				$sql->bindValue(":Year",$Year);
 				$sql->execute();
@@ -118,11 +106,17 @@ class Engineer {
 				return $result;
 	}
 	
-function db_query_Monthly($apt,$table,$Year,$Month,$column)
+function db_query_Monthly($apt,$table,$Year,$Month,$column, $phase=null)
 	{
 			    $result =array();
 			    $table .= '_Monthly';
-		        $sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month ") ;
+		        //$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month ") ;
+			if ($phase == null) {
+		        	$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month") ;
+			} else {
+				$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month AND Phase = :Phase") ;
+				$sql->bindValue(":Phase", $phase);
+			}
 				$sql->bindValue(":Apt_Num",$apt);
 				$sql->bindValue(":Year",$Year);
 				$sql->bindValue(":Month",$Month);
@@ -135,11 +129,17 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$a= $sql->rowCount();
 				return $result;
 	}
-	function db_query_Weekly($apt,$table,$Year,$Week,$column)
+	function db_query_Weekly($apt,$table,$Year,$Week,$column,$phase=null)
 	{
 			    $result =array();
 			    $table .= '_Weekly';
-		        $sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
+		        //$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
+			if ($phase == null) {
+		        	$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
+			} else {
+				$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week AND Phase = :Phase") ;
+				$sql->bindValue(":Phase", $phase);
+			}
 				$sql->bindValue(":Apt_Num",$apt);
 				$sql->bindValue(":Year",$Year);
 				$sql->bindValue(":Week",$Week);
@@ -152,13 +152,19 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$a= $sql->rowCount();
 				return $result;
 	}
-	function db_query_Daily($apt,$table,$date,$column)
+	function db_query_Daily($apt,$table,$date,$column,$phase=null)
 	{
 	           
 			   
 				$result =array();
 				$table .= '_Daily';
-			        $sql=$GLOBALS['conn']->prepare("select ".$column.", Date from ".$table." where Apt= :Apt_Num AND Date= :Date ") ;
+			       
+			if ($phase == null) {
+		        	$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date") ;
+			} else {
+				$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Phase = :Phase") ;
+				$sql->bindValue(":Phase", $phase);
+			}
 				$sql->bindValue(":Apt_Num",$apt);
 				$sql->bindValue(":Date",$date);
 				$sql->execute();
@@ -170,13 +176,18 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$a= $sql->rowCount();
 				return $result;
 	}
-	function db_query_Hourly($apt,$table,$date,$Hour,$column)
+	function db_query_Hourly($apt,$table,$date,$Hour,$column,$phase=null)
 	{
 	           
-			   
+
 			    $result =array();
 			    $table .= '_Hourly';
-		        $sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour ") ;
+			if ($phase == null) {
+		        	$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour ") ;
+			} else {
+				$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour AND Phase = :Phase") ;
+				$sql->bindValue(":Phase", $phase);
+			}
 				$sql->bindValue(":Apt_Num",$apt);
 				$sql->bindValue(":Date",$date);
 				$sql->bindValue(":Hour",$Hour);
@@ -252,62 +263,44 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 	}
 		
 	
+
+
+	public 	function Utilities_Delete ($Month,$Year)
+	{
+			$conn=new Connection ();
+			$Query=$conn->connect()->prepare("delete from Utilities_Prices where Month= :MT AND Year= :YR" ) ;
+			$Query->bindValue(":MT",$Month);
+			$Query->bindValue(":YR",$Year);
+				$Query->execute();
+	}
+	public 	function Utilities_Insert ($Type,$Month,$Year,$Price)
+	{
+	
+	 $conn=new Connection ();
+	 $Query=$conn->connect()->prepare("INSERT INTO Utilities_Prices (Type,Month,Year,
+	           Price ) VALUES  (:TP,:MT,:YR,:PC)") ;
+			$Query->bindValue(":TP",$Type);
+			$Query->bindValue(":MT",$Month);
+			$Query->bindValue(":YR",$Year);
+			$Query->bindValue(":PC",$Price);
+			$Query->execute();
+	}
+	public 	function Utilities_Update ($Month,$Year,$Price)
+	{
+			   $conn=new Connection ();
+		      $Query=$conn->connect()->prepare("update Utilities_Prices  
+		       set Price= :PC where Month= :MT AND Year= :YR") ;
+			$Query->bindValue(":MT",$Month);
+			$Query->bindValue(":YR",$Year);
+			$Query->bindValue(":PC",$Price);
+			$Query->execute();
+	}
+
+
+
+
+
 }
 
-// Example code
-// must code
-//This should all be  in a test method, because this file has tobe included elsewhere
-/*
-$testdb=new Engineer ();
 
-//Test it Yearly
-echo "Test it Yearly : By Passing the Apt# , table name and Year ::";
-echo "<br>";
-$r0=$testdb->db_query_Yearly(1,'Air','2012');
-print_r($r0);
-echo "<br>";
-echo "===========================";
-echo "<br>";
-//Test it Monthly
-echo "Test it Monthly : By Passing the Apt# , table name , Year and Month ::";
-echo "<br>";
-$r1=$testdb->db_query_Monthly(1,'Air','2012',3);
-print_r($r1);
-echo "<br>";
-echo "===========================";
-echo "<br>";
-//Test it Weekly
-echo "Test it Weekly : By Passing the Apt# , table name , Year and [Week of the Year]IMP ::";
-echo "<br>";
-$r2=$testdb->db_query_Weekly (1,'Air','2012',9);
-print_r($r2);
-echo "<br>";
-echo "===========================";
-echo "<br>";
-//Test it Daily
-echo "Test it Daily : By Passing the Apt# , table name and Date '2012-02-29' ::";
-echo "<br>";
-$r3=$testdb->db_query_Daily(1,'Air','2012-02-29');
-print_r($r3);
-echo "<br>";
-echo "===========================";
-echo "<br>";
-//Test It Hourly
-echo "Test it Hourly : By Passing the Apt# , table name ,Date '2012-02-29' and Hour [24 Hour fromat] ::";
-echo "<br>";
-$r4=$testdb->db_query_Hourly(1,'Air','2012-02-29',22);
-print_r($r4);
-echo "<br>";
-echo "===========================";
-echo "<br>";
-
-//Test It Periodically
-echo "Test it Periodically : By Passing the Apt# Date from '2012-02-29' and '2013-03-31' ";
-echo "<br>";
-$r4=$testdb->db_air_Period(5,'2012-03-01','2012-03-01',0,5,5);
-print_r($r4);
-echo "<br>";
-echo "===========================";
-echo "<br>";
-*/
 ?>
