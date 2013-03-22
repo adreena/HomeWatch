@@ -25,7 +25,7 @@ class ResidentDB {
 	
 			   $result =array();
 			   $conn=new Connection ();
-		       $Query=$conn->connect()->prepare("select Resident_ID where Username= :US") ;
+		       $Query=$conn->connect()->prepare("select Resident_ID from Resident where Username= :US") ;
 			   $Query->bindValue(":US",$username);
 			   $Query->execute();
 			   $row = $Query->fetch(\PDO::FETCH_OBJ);
