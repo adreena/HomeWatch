@@ -5,7 +5,7 @@
 
 #}
   
-<div class="currentinfo" style="float:left">
+<div class="currentinfo" style="float:left;">
     <div>
         <table>
             <tr>
@@ -23,16 +23,16 @@
 
 </div>
 
-<div class="currentrank" style="float:right;">
-    <h1>Your current rank is: </h1>
+<div class="currentrank" style="float:right; font-size: 20pt; width:50%; text-align: center;">
+    Your current rank is: <br><br>
     {% if rank == 1 %}
-        <font style="background-color: gold; font-size: 96pt;">
+        <font style="background-color: gold; font-size: 128pt;">
     {% elseif rank == 2 %}
-        <font style="background-color: silver; font-size: 96pt;">
+        <font style="background-color: silver; font-size: 128pt;">
     {% elseif rank == 3 %}
-        <font style="background-color: #8C7853; font-size: 96pt;">
+        <font style="background-color: #8C7853; font-size: 128pt;">
     {% else %}
-        <font style="font-size: 96pt;">
+        <font style="font-size: 128pt;">
     {% endif %}
             {{rank}}
         </font>
