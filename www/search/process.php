@@ -268,4 +268,3 @@ if ($test) {
 	$bigArray['query']['message'] = $message;
         $json = json_encode($bigArray);
         echo $json;
-//} 
