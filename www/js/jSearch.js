@@ -41,7 +41,9 @@ require(
             bindDatepicker,
             bindSearchForm,
             onSearch,
+
             updateDisplay,
+            displayText,
 
             /* Utility functions. */
             devinDateToUTC,
@@ -222,7 +224,7 @@ require(
         /*
          * Displays the result stuff as a table.
          */
-        var displayText = function (result) {
+        displayText = function (result) {
             var display_text = "",
                 apartments = result.data;
 
@@ -233,12 +235,12 @@ require(
                 display_text += "<h2><i>Apartment " + apartment + ": </i></h2>";
 
                 // For each date...
-                _.each(readings, function (sensorData, date) {
+                _.each(readings, function (sensor_data, date) {
                     display_text += "<h4>" + date + "</h4>";
 
 
                     // For each sensor, display each actual value.
-                    _.each(sensorData, function (data, sensor) {
+                    _.each(sensor_data, function (data, sensor) {
                         if (_.isArray(data)) {
                             display_text += sensor + ": <br />";
                             _.each(data, function (sensorValue, i) {
@@ -347,38 +349,53 @@ require(
             return date < 10 ? '0' + date : '' + date;
         };
 
+        /* Parses the data retrieved from the server, into something usable by
+         * Flot.
+         */
         var format_data = function (selectedValue, result) {
-            var sensor_data = [];
-            var series_data = [];
-            var data_and_options = [];
-            var graphname = [];
-            var apartments = [];
-            var millisecond_multiplier = 3600000;
-            var millisecond_day = 86400000;
-            var graphname_flag = "false";
-            var granularity;
-            var min_date = 0;
-            var max_date = 0;
+            var clean_data,
+                sensor_data = [],
+                series_data = [],
+                data_and_options = [],
+                graphname = [], // Not sure what this is for..
+                apartments = [],
+                millisecond_multiplier = 3600000,
+                millisecond_day = 86400000,
+                graphname_flag = false,
+                granularity,
+                min_date,
+                max_date;
+
+            // First thing's first: Preprocess the data.
+            clean_data = preprocessData(result.data);
 
             granularity = result.query.granularity
 
-            $.each(result, function (key, value) {
-                var apartment = key;
+            $.each(clean_data, function (apartment, time_data) {
+
+                // Add each apartment to the array of apartment.s
                 apartments.push(apartment);
+                // Assuming that each apartment ID is unique.
+                console.assert(sensor_data[apartment] === undefined);
                 sensor_data[apartment] = [];
 
-                $.each(value, function (key, value) {
-                    // key = date stamps
+                $.each(time_data, function (date, sensors) {
+
                     if (granularity === "Hourly") {
-                        x_tick = parseInt(key);
+                        x_tick = parseInt(date, 10);
+                        // Convert from UTC to localtime.
+                        // Not sure if this is really necessary...
                         var temp = (new Date(x_tick)).getTimezoneOffset() * 60 * 1000;
                         x_tick = x_tick - temp;
                     } else {
-                        x_tick = parseInt(key);
+                        x_tick = parseInt(date, 10);
                     }
 
-                    if (min_date === 0) {
+                    // This will happen on the first iteration, assuming the
+                    // list is in monotonically increasing date.
+                    if (min_date === undefined) {
                         min_date = x_tick;
+                        max_date = min_date;
                     }
 
                     if (x_tick > max_date) {
@@ -390,55 +407,79 @@ require(
                     }
 
                     if (graphname.length !== 0) {
-                        graphname_flag = "true";
+                        graphname_flag = true;
                     }
 
-                    $.each(value, function (key, value) {
-                        // key = sensor names
-                        var sensor = key;
+                    $.each(sensors, function (sensor, sensor_reading) {
+                        var tuple = [];
 
-                        if (graphname_flag === "false") {
+                        // Note that sensor readings can be null!
+
+                        if (graphname_flag === false) {
                             graphname.push(sensor);
                         }
 
+                        // Initialize the sensor_data for this particular
+                        // apartment.
                         if (sensor_data[apartment][sensor] === undefined) {
-                            console.log(sensor);
                             sensor_data[apartment][sensor] = [];
                         }
 
-                        if ($.isArray(value)) {
-                            $.each(value, function (i, value) {
+                        if ($.isArray(sensor_reading)) {
+
+                            // Handle several sensor readings for this date.
+
+                            $.each(sensor_reading, function (i, value) {
+                                var tick_size;
+
                                 if (series_data.length === 0) {
                                     tuple = [];
                                 } else {
                                     tuple.length = 0;
                                 }
 
-                                if (i === 0) {
-                                    var tick_size = x_tick;
-                                } else {
-                                    var tick_size = x_tick + millisecond_multiplier * i;
-                                }
+                                // Make the apropriate tick size.
+                                tick_size = (i === 0)
+                                    ? x_tick
+                                    : x_tick + millisecond_multiplier * i;
 
                                 tuple[0] = tick_size;
                                 tuple[1] = value;
+
+                                // Append the datum to the current reading.
                                 sensor_data[apartment][sensor].push(tuple);
                             });
-                        } else {
+
+                        } else if (sensor_reading !== null) {
+
+                            // Handle one sensor reading for this date.
+
                             if (series_data.length === 0) {
                                 tuple = [];
-                                console.log(tuple);
                             } else {
                                 tuple.length = 0;
                             }
 
                             tuple[0] = x_tick;
-                            tuple[1] = value;
+                            tuple[1] = sensor_reading;
+
+                            // Append the datum to the current reading.
                             sensor_data[apartment][sensor].push(tuple);
+
+                        } else {
+                            console.log({
+                                msg: "Got null value in sensor reading!",
+                                apt: apartment,
+                                date: date,
+                                sensor: sensor
+                            });
                         }
+                                
                     });
                 });
             });
+
+            console.log(sensor_data);
 
             for (var i = 0; i < apartments.length; ++i) {
                 for (var j = 0; j < graphname.length; ++j) {
