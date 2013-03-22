@@ -19,6 +19,15 @@ class ManagerDB {
 				return $result;
 	}
 
+	public function Manager_DB_Update_Score($resident_id, $Score)
+	{
+	    $conn=new Connection ();
+	    $Query=$conn->connect()->prepare("update Resident set Score= :SC where Resident_ID= :Res_ID");
+		$Query->bindValue(":Res_ID",$resident_id);
+		$Query->bindValue(":SC",$Score);
+		$Query->execute();
+	}
+
 	public function Manager_DB_Update  ($resident_id,$Room_Number,$Name,$Username,$Room_Status,$Location)
 	{ //update Resdient
 	
@@ -186,7 +195,7 @@ class ManagerDB {
 
 // Example code
 // must code
-$testdb=new Manager_DB();
+$testdb=new ManagerDB();
 //Test Manager Read Row
 /*
 echo " 1. Test Resident Read : By Passing the Resident ID::";
