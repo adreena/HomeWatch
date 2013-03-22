@@ -28,10 +28,11 @@ require(
             /* First, some constants: */
             /* If we're using requireJS's optimization anyway, we might
              * as well stuff this in a module. */
-            //CONTROLLER_URL = '/search/process.php', // by the way, this is the model, not the controller...
+            URI_CONTROLLER = '/search/process.php', // by the way, this is the model, not the controller...
             // MOCKOBJECT FOR DEBUG
-            CONTROLLER_URL = '/search/mockdata.json',
-            SEARCH_SELECTOR = 'form.search',
+            //URI_CONTROLLER = '/search/mockdata.json',
+            SEL_SEARCH = 'form.search',
+            SEL_RESULTS = '#results',
 
             /* Global Variables. */
             searchCache = {}, // Cache for requests. We don't have to make more requests than necessary.
@@ -42,9 +43,13 @@ require(
             bindDatepicker,
             bindSearchForm,
             onSearch,
+            //onAjaxSuccess, // TODO: this needs to do some crazy closure magic.
 
             updateDisplay,
             displayText,
+
+            // Heruuuguuhhghhghu
+            showHelpfulError,
 
             /* Utility functions. */
             devinDateToUTC,
@@ -168,7 +173,7 @@ require(
             // Else, do the AJAX request to fetch the information.
 
             $.ajax({
-                url: CONTROLLER_URL,
+                url: URI_CONTROLLER,
                 type: 'GET',
                 data: data,
                 cache: false,
@@ -186,13 +191,20 @@ require(
 
                     updateDisplay(result);
                 },
-                error: function () {
-                    console.log("Could not get a usable response from server.");
-                }
-            }); // end AJAX
+                error: showHelpfulError
+            });
+        };
 
-        }; // end onSearch
-
+        showHelpfulError = function (weirdAJAXStuff) {
+            console.log("Could not get a usable response from server.");
+            // Empty the results div and put a sad little message specifying
+            // the state of the server.
+            $(SEL_RESULTS)
+                .empty()
+                .append(
+                    $('<p>').text('The server is not responding in a decent way. '
+                        + 'Perhaps it\'s a lack of waffles. Sorry. :/'));
+        };
 
         /**
          * Gets called when the display must be updated with new data.
@@ -219,7 +231,6 @@ require(
             }
 
         };
-
 
 
         /*
@@ -277,6 +288,7 @@ require(
             $('#results').empty().append(
                 $('<div>').attr('id', 'graph1').addClass('graph'));
 
+            // Might want to consider _.uniqueid to make ID
             $.plot($("#graph1"), data, options);
 
             bind_plotclick(granularity);
@@ -289,7 +301,7 @@ require(
             var date_to;
             var data = $("form").serialize();
 
-            $(".graph1").bind("plotclick", function (event, pos, item) {
+            $("#graph1").bind("plotclick", function (event, pos, item) {
                 if (item) {
                     var offset = (new Date(item.datapoint[0])).getTimezoneOffset() * 60 * 1000;
                     var data_pointUTC = item.datapoint[0] + offset;
@@ -358,7 +370,8 @@ require(
             return date < 10 ? '0' + date : '' + date;
         };
 
-        /* Parses the data retrieved from the server, into something usable by
+        /*
+         * Parses the data retrieved from the server, into something usable by
          * Flot.
          */
         var format_data = function (selectedValue, result) {
@@ -668,10 +681,7 @@ require(
             return UTCTime;
         };
 
-        /*
-         * Map, but on the keys of an object.
-         * Uses Underscore.
-         */
+        /* Map, but on the keys of an object. Uses Underscore. */
         mapKeys = function (obj, keyFunc) {
             var func = function (value, key) {
                 return [keyFunc(key), value];
