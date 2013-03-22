@@ -27,7 +27,9 @@ require(
             /* First, some constants: */
             /* If we're using requireJS's optimization anyway, we might
              * as well stuff this in a module. */
-            CONTROLLER_URL = '/search/process.php', // by the way, this is the model, not the controller...
+            //CONTROLLER_URL = '/search/process.php', // by the way, this is the model, not the controller...
+            // MOCKOBJECT FOR DEBUG
+            CONTROLLER_URL = '/search/mockdata.json',
             SEARCH_SELECTOR = 'form.search',
 
             /* Global Variables. */
@@ -40,7 +42,7 @@ require(
             bindSearchForm,
             onSearch,
             updateDisplay,
-            
+
             /* Utility functions. */
             devinDateToUTC,
             preprocessData,
@@ -49,7 +51,7 @@ require(
 
         // This is called when everything is done loading.
         onLoad = function () {
-            bindDatepicker();
+            //bindDatepicker();
             bindMenus();
             bindSearchForm();
         };
@@ -163,7 +165,7 @@ require(
             // Else, do the AJAX request to fetch the information.
 
             $.ajax({
-                url: "process.php",
+                url: CONTROLLER_URL,
                 type: 'GET',
                 data: data,
                 cache: false,
@@ -182,18 +184,29 @@ require(
                     updateDisplay(result);
                 },
                 error: function () {
-                    console.log("error accessing process.php");
+                    console.log("Could not get a usable response from server.");
                 }
             }); // end AJAX
 
         }; // end onSearch
 
+
+        /**
+         * Gets called when the display must be updated with new data.
+         * Handles text views and plots.
+         */
         updateDisplay = function (result) {
 
-            var selectedValue = "";
-            var selected = $("#graphs input[type='radio']:checked");
+            var selectedValue = "",
+                // Get the selected display type.
+                selected = $("#graphs input[type='radio']:checked");
+
+            // Try to get the display type from the form, or
+            // use text view as the default.
             if (selected.length > 0) {
                 selectedValue = selected.val();
+            } else {
+                selectedValue = 'plainText';
             }
 
             if (selectedValue === "plainText") {
@@ -204,36 +217,49 @@ require(
 
         };
 
-        // The rest of the program!
 
+
+        /*
+         * Displays the result stuff as a table.
+         */
         var displayText = function (result) {
-            var display_text = "";
-    
-            $.each(result, function (key, value) {
+            var display_text = "",
+                apartments = result.data;
+
+            // For each apartment...
+            _.each(apartments, function (readings, apartment) {
                 var granularity = result.query.granularity;
 
-                display_text += "<h2><i>Apartment " + key + ": </i></h2>";
+                display_text += "<h2><i>Apartment " + apartment + ": </i></h2>";
 
-                $.each(value, function (key, value) {
-                    display_text += "<h4>" + key + "</h4>";
+                // For each date...
+                _.each(readings, function (sensorData, date) {
+                    display_text += "<h4>" + date + "</h4>";
 
-                    $.each(value, function (key, value) {
-                        if ($.isArray(value)) {
-                            display_text += key + ": <br />";
-                            $.each(value, function (i, value) {
-                                display_text += "Hour " + i + ": " + value +
+
+                    // For each sensor, display each actual value.
+                    _.each(sensorData, function (data, sensor) {
+                        if (_.isArray(data)) {
+                            display_text += sensor + ": <br />";
+                            _.each(data, function (sensorValue, i) {
+                                display_text += "Hour " + i + ": " + sensorValue +
                                     "<br />";
                             });
                             display_text += "<br />";
                         } else {
-                            display_text += key + ": " + value +
+                            display_text += sensor + ": " + data +
                                 "<br /> <br />";
                         }
                     });
                 });
             });
 
-            $(".graph1").html(display_text);
+            // Clear the results div and add the text display to it.
+            $('<div>')
+                .attr('class', 'text-display')
+                .html(display_text)
+                .appendTo(
+                    $("#results").empty());
         };
 
         var render_graph = function (selectedValue, result) {
@@ -638,9 +664,11 @@ require(
         };
 
 
+
         /*
          * Things to happen on document ready.
          */
+
 
 
         // Setup the jQuery on document ready
