@@ -229,8 +229,10 @@ require(
          */
         updateDisplay = function (result) {
 
-            if (result.query.message !== 'Success!') {
-                printSadMessage(result.query.message);
+            // The model places stuff in 'message' when bad stuff happens.
+            if (result.message !== undefined) {
+                printSadMessage(result.message);
+                return;
             }
 
             var selectedValue = "",
