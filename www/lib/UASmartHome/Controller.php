@@ -4,14 +4,18 @@ class Controller
 {
 
     private $model;
+    private $resident_id;
 
     public function __construct() {
         $this->model = new Database\ResidentDB();
+        $username = Auth\User::getSessionuser()->getUsername();
+        $this->resident_id = $this->model->Resident_Get_ResID($username)["Resident_ID"];
+
     }
 
-    public function getAchievements($resident_id) {
+    public function getAchievements() {
 
-        $got_achiev = $this->model->Resident_DB_Earned_Achievement_2($resident_id);
+        $got_achiev = $this->model->Resident_DB_Earned_Achievement_2($this->resident_id);
         $all_achiev = $this->model->Resident_DB_Achievement();
         $achievements = array();
 
@@ -43,7 +47,7 @@ class Controller
 
     }
 
-    public function getScores($resident_id)
+    public function getScores()
     {
         $residents = $this->model->Resident_DB_Get_All_Residents();
         $scores = array();
@@ -53,7 +57,7 @@ class Controller
         foreach ($residents as $resident) {
             $data = $this->model->Resident_DB_Score($resident);
 
-            if ($resident == $resident_id)
+            if ($resident === $this->resident_id)
                 $unsorted_scores["r"] = $data["Score"];
             else
                 array_push($unsorted_scores, $data["Score"]);
@@ -74,12 +78,10 @@ class Controller
             next($unsorted_scores);
         }
 
-        //var_dump(\UASmartHome\Auth\User::getSessionuser());
-
         return $scores;
     }
 
-    public function getCurrentInfo($resident_id)
+    public function getCurrentInfo()
     {
         $currentInfo = array();
         array_push($currentInfo, new CurrentInfo("elec", "1"));
@@ -93,9 +95,9 @@ class Controller
 
     }
 
-    public function getRank($resident_id)
+    public function getRank()
     {
-        $scores = $this->getScores($resident_id);
+        $scores = $this->getScores();
         $rank = 0;
 
         foreach ($scores as $score) {

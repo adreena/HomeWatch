@@ -12,26 +12,25 @@ class View
 
     public function getAchievements()
     {
-        # TODO: when the user controls are in place, replace this 1 by the actual user id
-        $achievements = $this->controller->getAchievements(1);
+        $achievements = $this->controller->getAchievements();
         return $achievements;
     }
 
     public function getScores()
     {
-        $scores = $this->controller->getScores(1);
+        $scores = $this->controller->getScores();
         return $scores;
     }
 
     public function getCurrentInfo()
     {
-        $currentInfo = $this->controller->getCurrentInfo(1);
+        $currentInfo = $this->controller->getCurrentInfo();
         return $currentInfo;
     }
 
     public function getRank()
     {
-        $rank = $this->controller->getRank(1);
+        $rank = $this->controller->getRank();
         return $rank;
     }
 }
