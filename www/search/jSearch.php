@@ -13,6 +13,7 @@
 <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="flot/excanvas.min.js"></script><![endif]-->
 <script src="/js/flot/jquery.flot.js"></script>
+<script src="/js/flot/jquery.flot.time.js"></script>
 <script src="/js/flot-orderbars/jquery.flot.orderBars.js"></script><!--MIT licensed-->
 <script src="/js/flot-axislabels/jquery.flot.axislabels.js"></script><!-- GNU -->
 <script>

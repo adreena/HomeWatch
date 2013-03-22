@@ -1,8 +1,9 @@
 require(
     ['jquery', 'underscore', // Main libraries
-        'spiffy/spiffy', // Collabible menus
-        'jquryui', // For date picker
-        'flot/flot.jquery', // Flot charts
+        'spiffy/spiffy',            // Collapsible menus
+        'jquryui',                  // For date picker
+        'flot/jquery.flot',         // Flot charts
+        'flot/jquery.flot.time',    // Flot time plugin
         'flot-axislabels/jquery.flot.axislabels', // Extra flot plugins
         'flot-orderbars/jquery.flot.orderBars'],
 
@@ -267,11 +268,19 @@ require(
         var render_graph = function (selectedValue, result) {
             var granularity = result.query.granularity;
             var data_and_opts = format_data(selectedValue, result);
-            var data = data_and_opts["data"];
-            var options = data_and_opts["options"];
 
-            $.plot($(".graph1"), data, options);
+            var data = data_and_opts.data;
+            var options = data_and_opts.options;
+
+
+            // Empty the results div and add a div to place our wonderful graph.
+            $('#results').empty().append(
+                $('<div>').attr('id', 'graph1').addClass('graph'));
+
+            $.plot($("#graph1"), data, options);
+
             bind_plotclick(granularity);
+
         };
 
         var bind_plotclick = function (granularity) {
@@ -356,7 +365,7 @@ require(
             var clean_data,
                 sensor_data = [],
                 series_data = [],
-                data_and_options = [],
+                data_and_options = {},
                 graphname = [], // Not sure what this is for..
                 apartments = [],
                 millisecond_multiplier = 3600000,
@@ -371,6 +380,9 @@ require(
 
             granularity = result.query.granularity
 
+            // This massive block of code parses the elaborate, nested
+            // structure of the input JSON into an eleaborate, nested
+            // structure that we can later use with Flot.
             $.each(clean_data, function (apartment, time_data) {
 
                 // Add each apartment to the array of apartment.s
@@ -479,8 +491,7 @@ require(
                 });
             });
 
-            console.log(sensor_data);
-
+            // Converts the above thing into something flot can deal with.
             for (var i = 0; i < apartments.length; ++i) {
                 for (var j = 0; j < graphname.length; ++j) {
                     var label = "Apartment " + apartments[i] + " " + graphname[j];
@@ -493,10 +504,9 @@ require(
                 }
             }
 
-
             var options = set_all_options(selectedValue, graphname, granularity, min_date, max_date);
-            data_and_options["data"] = series_data;
-            data_and_options["options"] = options;
+            data_and_options.data = series_data;
+            data_and_options.options = options;
             return data_and_options;
         };
 
