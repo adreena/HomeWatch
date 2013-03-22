@@ -12,10 +12,25 @@ class AchievementsUpdater
 
     public function __construct() {
         $this->residentDB = new Database\ResidentDB();
+        $this->managerDB = new Database\ManagerDB();
         $this->engineerDB = new Database\Engineer();
 
-        $this->residentDB->Connect();
-        $this->engineerDB->Connect();
+    }
+
+    public function updateScores($resident_id) {
+
+
+        $score = 0;
+        $achiev_data = $this->residentDB->Resident_DB_Earned_Achievement_2($resident_id);
+
+        foreach ($achiev_data as $achieved) {
+            $score += $achieved["Points"];
+        }
+
+        if ($GLOBALS['debug'])
+            echo "score = " . $score . "\n";
+
+        $this->managerDB->Manager_DB_Update_Score($resident_id, $score);
 
     }
 
@@ -69,8 +84,6 @@ class AchievementsUpdater
         }
         else if ($GLOBALS['debug'])
             echo "resident already has achievement id 4\n";
-                
-
 
     }
 
@@ -84,12 +97,14 @@ if(count(getopt("d")) == 1) {
 $updater = new AchievementsUpdater();
 
 $resDB = new Database\ResidentDB();
-$resDB->Connect();
 $residents = $resDB->Resident_DB_Get_All_Residents();
 
 foreach ($residents as $resident) {
     if($debug)
         echo "testing resident id " . $resident . "\n";
 
-    $updater->updateCO2Achievement($resident);
+    //$updater->updateCO2Achievement($resident);
+    if($debug)
+        echo "updating scores " . $resident . "\n";
+    $updater->updateScores($resident);
 }
