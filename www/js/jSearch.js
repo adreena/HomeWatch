@@ -29,9 +29,9 @@ require(
             /* If we're using requireJS's optimization anyway, we might
              * as well stuff this in a module. */
             URI_CONTROLLER = '/search/process.php', // by the way, this is the model, not the controller...
-            // MOCKOBJECT FOR DEBUG
-            //URI_CONTROLLER = '/search/mockdata.json',
-            SEL_SEARCH = 'form.search',
+            URI_MOCKDATA = '/search/mockdata.json', // Mock data for database-less debugging.
+            /* jQuery selectors. */
+            SEL_SEARCH = 'form.sensor-search',
             SEL_RESULTS = '#results',
 
             /* Global Variables. */
@@ -40,9 +40,9 @@ require(
             /* Then some local functions. */
             onLoad,
             bindMenus,
-            bindDatepicker,
+            setupDateStuff,
             bindSearchForm,
-            onSearch,
+            onSearch, // TODO: should probably use _.debounce to do delayed updates (after input).
             //onAjaxSuccess, // TODO: this needs to do some crazy closure magic.
 
             updateDisplay,
@@ -59,7 +59,7 @@ require(
 
         // This is called when everything is done loading.
         onLoad = function () {
-            //bindDatepicker();
+            setupDateStuff();
             bindMenus();
             bindSearchForm();
         };
@@ -79,7 +79,9 @@ require(
 
         // Binds the datepicker inside the search form.
         // Eddie's going to do some crazy stuff in here:
-        bindDatepicker = function () {
+        setupDateStuff = function () {
+
+            // TODO: Context sensitive date controls.
 
             // with jQueryUI
             $(".datepicker").datepicker({
@@ -118,7 +120,7 @@ require(
             $("#submitbutton").click(function (evt) {
                 // TODO: Make this selector more robust (e.g., it will
                 // break if we add another form to the page).
-                var data = $("form").serialize();
+                var data = $(SEL_SEARCH).serialize();
 
                 onSearch(data);
 
@@ -141,7 +143,7 @@ require(
 
             // If data was not specified, get it from a form.
             if (data === undefined) {
-                data = $("form").serialize();
+                data = $(SEL_SEARCH).serialize();
             }
 
             // If forceAJAX was not provided, assume it is false.
@@ -203,7 +205,8 @@ require(
                 .empty()
                 .append(
                     $('<p>').text('The server is not responding in a decent way. '
-                        + 'Perhaps it\'s a lack of waffles. Sorry. :/'));
+                        + 'Perhaps it\'s a lack of waffles. Sorry. :/')
+                );
         };
 
         /**
@@ -273,20 +276,23 @@ require(
                 .attr('class', 'text-display')
                 .html(display_text)
                 .appendTo(
-                    $("#results").empty());
+                    $("#results").empty()
+                );
         };
 
         var render_graph = function (selectedValue, result) {
-            var granularity = result.query.granularity;
-            var data_and_opts = format_data(selectedValue, result);
+            var granularity = result.query.granularity,
 
-            var data = data_and_opts.data;
-            var options = data_and_opts.options;
+                data_and_opts = format_data(selectedValue, result),
+
+                data = data_and_opts.data,
+                options = data_and_opts.options;
 
 
             // Empty the results div and add a div to place our wonderful graph.
             $('#results').empty().append(
-                $('<div>').attr('id', 'graph1').addClass('graph'));
+                $('<div>').attr('id', 'graph1').addClass('graph')
+            );
 
             // Might want to consider _.uniqueid to make ID
             $.plot($("#graph1"), data, options);
@@ -299,7 +305,7 @@ require(
             var drill_granularity;
             var date_from;
             var date_to;
-            var data = $("form").serialize();
+            var data = $(SEL_SEARCH).serialize();
 
             $("#graph1").bind("plotclick", function (event, pos, item) {
                 if (item) {
@@ -391,7 +397,7 @@ require(
             // First thing's first: Preprocess the data.
             clean_data = preprocessData(result.data);
 
-            granularity = result.query.granularity
+            granularity = result.query.granularity;
 
             // This massive block of code parses the elaborate, nested
             // structure of the input JSON into an eleaborate, nested
@@ -405,13 +411,14 @@ require(
                 sensor_data[apartment] = [];
 
                 $.each(time_data, function (date, sensors) {
+                    var x_tick, offset;
 
                     if (granularity === "Hourly") {
                         x_tick = parseInt(date, 10);
                         // Convert from UTC to localtime.
                         // Not sure if this is really necessary...
-                        var temp = (new Date(x_tick)).getTimezoneOffset() * 60 * 1000;
-                        x_tick = x_tick - temp;
+                        offset = (new Date(x_tick)).getTimezoneOffset() * 60 * 1000;
+                        x_tick = x_tick - offset;
                     } else {
                         x_tick = parseInt(date, 10);
                     }
@@ -499,7 +506,7 @@ require(
                                 sensor: sensor
                             });
                         }
-                                
+
                     });
                 });
             });
@@ -520,6 +527,7 @@ require(
             var options = set_all_options(selectedValue, graphname, granularity, min_date, max_date);
             data_and_options.data = series_data;
             data_and_options.options = options;
+
             return data_and_options;
         };
 
@@ -709,9 +717,8 @@ require(
          * Returns the cleaned object.
          */
         preprocessData = function (data) {
-            /* Assumes date is nested within apartment. */
 
-            /* INDENTATION! */
+            /* Assumes date is nested within apartment. */
             return _
                 .chain(data)
                 .map(function (apartment, number) {

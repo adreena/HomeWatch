@@ -8,8 +8,8 @@
 
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-<script src="/js/vendor/jquery-1.9.1.js"></script>
-<script src="/js/vendor/underscore-min.js"></script>
+<!--script src="/js/vendor/jquery-1.9.1.js"></script>
+<script src="/js/vendor/underscore-min.js"></script-->
 <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="flot/excanvas.min.js"></script><![endif]-->
 <script src="/js/flot/jquery.flot.js"></script>
@@ -28,7 +28,7 @@
 <body>
     <div id="wrapper">
         <div id="menu_content">
-        <form>
+        <form class="sensor-search">
             <ul id="menu" class="submenus">
 	        <li><a class="collapsed">Sensors</a>
 		    <ul>
