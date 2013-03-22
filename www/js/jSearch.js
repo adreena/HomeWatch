@@ -50,6 +50,7 @@ require(
 
             // Heruuuguuhhghhghu
             showHelpfulError,
+            printSadMessage,
 
             /* Utility functions. */
             devinDateToUTC,
@@ -204,15 +205,21 @@ require(
             });
         };
 
-        showHelpfulError = function (weirdAJAXStuff) {
-            console.log("Could not get a usable response from server.");
+        showHelpfulError = function () {
+            printSadMessage('The server is not responding in a decent way. '
+                + 'Perhaps it\'s a lack of waffles. Sorry. :/');
+        };
+
+        printSadMessage = function (message) {
             // Empty the results div and put a sad little message specifying
             // the state of the server.
             $(SEL_RESULTS)
                 .empty()
                 .append(
-                    $('<p>').text('The server is not responding in a decent way. '
-                        + 'Perhaps it\'s a lack of waffles. Sorry. :/')
+                    $('<h1>').text("Search error")
+                )
+                .append(
+                    $('<p>').text(message)
                 );
         };
 
@@ -221,6 +228,10 @@ require(
          * Handles text views and plots.
          */
         updateDisplay = function (result) {
+
+            if (result.query.message !== 'Success!') {
+                printSadMessage(result.query.message);
+            }
 
             var selectedValue = "",
                 // Get the selected display type.
