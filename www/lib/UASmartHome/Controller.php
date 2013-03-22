@@ -7,7 +7,6 @@ class Controller
 
     public function __construct() {
         $this->model = new Database\ResidentDB();
-        $this->model->Connect();
     }
 
     public function getAchievements($resident_id) {
