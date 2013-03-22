@@ -3,10 +3,6 @@
 /* Remember to `composer install` in /www to generate the
  * autoload files! */
 require_once __DIR__ . '/../vendor/autoload.php';
-
-/* We want to use the ENGINEER database access class as just 'Engineer'. */
-//use www\lib\UASmartHome\Database\Engineer;
-
 require_once __DIR__. '/../lib/UASmartHome/Database/Engineer.php';
 
 /* Aw yea, baby. We just gon' spit out sum JSON. */
@@ -20,16 +16,10 @@ $sensors = array();
 $apartments = array();
 $message = "";
 
-// TEMPORARY: Send notest to disable test input.
+//If we are getting data from the front end, this flag will tell us to use that input instead of test data
 if (ISSET($_GET['notest'])) {
 	$test = false;
-}
-
-if (ISSET($_GET['sensors'])) {
-	$sensors = $_GET['sensors'];
-} else {
-	$message .= "No sensors selected.\n";
-}
+} 
 
 if (ISSET($_GET['apartments'])) {
 	$apartments = $_GET['apartments'];
@@ -61,44 +51,6 @@ if (ISSET($_GET['finances'])) {
 	$finances = false;
 }
 
-if (ISSET($_GET['phaseAsensors'])) {
-	$phaseASensors = $_GET['phaseAsensors'];
-} else {
-	$phaseASensors = array();
-}
-
-if (ISSET($_GET['phaseBsensors'])) {
-	$phaseASensors = $_GET['phaseBsensors'];
-} else {
-	$phaseBSensors = array();
-}
-
-if (ISSET($_GET['phaseAsum'])) {
-	$phaseASum = true;
-} else {
-	$phaseASum = false;
-}
-
-if (ISSET($_GET['phaseBsum'])) {
-	$phaseBSum = true;
-} else {
-	$phaseBSum = false;
-}
-
-if (ISSET($_GET['elecSum'])) {
-	$elecSum = true;
-} else {
-	$elecSum = false;
-}
-
-if (ISSET($_GET['waterTempDiff'])) {
-	$waterTempDiff = true;
-} else {
-	$waterTempDiff = false;
-}
-
-//echo $message;
-
 if ($test == false && $message > "" ) {
 	echo json_encode(array("message"=>$message));
 	exit();
@@ -113,28 +65,80 @@ $DAILY_VIEW_MAX = 14;
 $WEEKLY_VIEW_MAX = 12;
 $MONTHLY_VIEW_MAX = 12;
 $W_PER_KW = 1000;
-//TODO: COST PER GALLON OF WATER
 
 
 if ($test) {
-	$apartments = array(1, 2);
-	$sensors = array("Temperature", "CO2", "Total_Water", "Total_Energy");
-	//$sensors = array("Temperature", "CO2");
-	//$phaseASensors = array("AUX1");
-	//$phaseBSensors = array("AUX1", "AUX2", "AUX3", "AUX4", "AUX5");
-	$period = "Daily";
+
+	$graphs = array(1 => array("startdate"=>"2012-02-29", "enddate"=>"2012-03-1", "x"=>"time", "xtype"=>"time", "y" => "Temperature", "ytype"=> "sensor", "period"=>"Yearly", "apartments" => array(1, 2)) );
+
 	$message = "";
-	$startdate = "2012-02-29";
-	$enddate = "2012-03-01";
-	
+
 	$finances = true;
 	$price_per_kwh = 1;
 	$price_per_gallon = 1.5;
 }
 
-	$startdate .= ":0";
-	$enddate .= ":0";
+foreach ($graphs as $id=>$graph) {
+
+	$apartments = $graph['apartments'];
+	$startdate = $graph['startdate'].":0";
+	$enddate = $graph['enddate'].":0";
+	$period = $graph['period'];
+	$xtype = $graph['xtype'];
+	$ytype = $graph['ytype'];
+	$x = $graph['x'];
+	$y = $graph['y'];
+	$xdata = array();
+	$ydata = array();
+
 	
+	$bigArray['data'][$id]["x-axis"] = [$x];
+	$bigArray['data'][$id]["y-axis"] = [$y];
+
+	foreach ($apartments as $apartment) {
+		if ($ytype == "sensor") {
+			$ydata = Engineer::db_pull_query($apartment, $y, $startdate, $enddate, $period);
+		} else if ($ytype == "function") {
+			//HANDLE IT: FETCH THE DATA
+		}
+
+		foreach ($ydata as $date=>$yd) {
+			if ($yd[$y] == null) {
+				$message .= "No data found for graph $id apartment $apartment on the y-axis at time $date";
+			}
+			$bigArray['data'][$id][$apartment][$date]["y"] = $yd[$y];
+			if ($xtype == "time") {
+				$xdata[$date]['time'] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
+			}
+		}
+
+		if ($xtype == "sensor") {
+			$xdata = Engineer::db_pull_query($apartment, $x, $startdate, $enddate, $period);
+		} else if ($xtype == "function") {
+			//HANDLE IT
+		} else {
+
+		}
+
+		foreach ($xdata as $date=>$xd) {
+			if ($xd[$x] == null) {
+				$message .= "No data found for graph $id apartment $apartment on the x-axis at time $date";
+			}
+
+			$bigArray['data'][$id][$apartment][$date]['x'] = $xd[$x];
+		}
+		//echo var_dump ($xdata);
+
+	}
+
+}
+
+
+
+
+
+
+/*
 	$diff = abs(strtotime($enddate) - strtotime($startdate));
 	if ($diff < 0) {
 		//ERROR: END DATE IS BEFORE START DATE
@@ -187,14 +191,14 @@ if ($test) {
                 }       
 
 
-
+*/
 		/*
 		*
 		*	TODO: Electricity sensors should be converted from wattseconds to kwh
 		*
 		*/
 
-
+/*
 		foreach ($phaseASensors as $sensor) {
         		$data = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period, "A");
 			foreach ($data as $date=>$d) {
@@ -264,7 +268,7 @@ if ($test) {
 
                 
         }
-
+*/
 
 	if ($message == "") {
 		$message = "Success!";
