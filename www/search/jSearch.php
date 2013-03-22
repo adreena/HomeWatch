@@ -112,9 +112,18 @@
 
             <li>
                 <a class="collapsed">Dates</a>
-                <div>
-                    <input type="text" class="datepicker" name="datepicker" placeholder="Enter Date">
-                </div>
+                <fieldset>
+                    <legend> Choose date range </legend>
+                    <label> Granularity
+                        <select name="period">
+                            <option value="Hourly">Hourly</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Monthly">Monthly</option>
+                    </select> </label>
+                    <label> Start date <input type="date" class="datepicker" name="startdate" placeholder="Start date"></label>
+                    <label> End date <input type="date" class="datepicker" name="enddate" placeholder="End date"></label>
+                </fieldset>
             </li>
 
             <li>
