@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+
+<script type="text/javascript" src="../../js/d3/d3.v3.js"></script>
+<script type="text/javascript" src="../../js/d3floorplan/d3.floorplan.min.js"></script>
+<script type="text/javascript" src="../../js/sprite3d/Sprite3D.js"></script>
+
+<style type="text/css">
+    @import url('../../js/d3floorplan/d3.floorplan.css');
+
+    body {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .floorplan {
+        font-size: 55px;
+        background-color: rgba(135,170,250,0.5);
+        overflow: hidden;
+        border-style: outset;
+        width: 95%;
+        height: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    
+    .maps {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .map {
+        width: 100%;
+        height: 100%
+    }
+    
+    .mapsvg {
+    
+    }
+    
+</style>
+</head>
+<body>
+
+<div id="floorplan" class="floorplan"></div>
+
+<p>
+<ul>
+<li>WASD to pan up, left, down, right</li>
+<li>Right click (on a blank area) and drag to rotate</li>
+</p>
+
+<script type="text/javascript">
+
+var DIV_FLOORPLAN = "floorplan";
+var DIV3_FLOORPLAN = "#"+DIV_FLOORPLAN;
+
+var MOUSE_BUTTON_RIGHT = 3;
+
+var IMG_WIDTH = 2880, IMG_HEIGHT = 640;
+
+var WIDTH = window.innerWidth;
+var HEIGHT = window.innerHeight;
+console.debug("WINDOW HEIGHT: " + HEIGHT);
+
+var RX_MIN = 0, RX_MAX = 80;
+var TX_MIN = -WIDTH, TX_MAX = WIDTH;
+var TY_MIN = -HEIGHT/4, TY_MAX = HEIGHT/4;
+var TZ_MIN = -500, TZ_MAX = 500;
+var SCALE_MIN = 0.5, SCALE_MAX = 5;
+var TRANSLATION_STEP = 25;
+var ROTATION_SPEED = 0.1;
+
+// Create maps
+var maps = d3.select(DIV3_FLOORPLAN).append("div").attr("class", "maps");
+var xscale = d3.scale.linear().domain([0, IMG_WIDTH]).range([0, IMG_WIDTH]);
+var yscale = d3.scale.linear().domain([0, IMG_HEIGHT]).range([0, IMG_HEIGHT]);
+
+var map1 = d3.floorplan();
+map1.xScale(xscale).yScale(yscale).panZoom(false);
+
+// Init stage
+var stage = Sprite3D.stage(document.getElementById(DIV_FLOORPLAN));
+var rootSprite = Sprite3D.create(maps[0][0]);
+rootSprite.origin(IMG_WIDTH/4,0,1000);
+rootSprite.position(0,0,0);
+rootSprite.rotation(30,0,0);
+rootSprite.scale(1,1,1);
+rootSprite.update();
+stage.appendChild( rootSprite );
+
+// Configure maps
+var imagelayer = d3.floorplan.imagelayer();
+var heatmap = d3.floorplan.heatmap();
+var mapdata = {};
+
+mapdata[imagelayer.id()] = [{
+    url: 'f1.svg',
+    x: 0,
+    y: 0,
+    width: IMG_WIDTH,
+    height: IMG_HEIGHT
+}];
+
+map1.addLayer(imagelayer).addLayer(heatmap);
+
+d3.json("demo-data.json", function(data) {
+	mapdata[heatmap.id()] = data.heatmap;
+
+    var map1Div3 = maps.append("div").attr("class", "map").attr("id", "map1")
+	.append("svg").attr("class", "mapsvg").attr("width", IMG_WIDTH).attr("height", IMG_HEIGHT)
+    .datum(mapdata).call(map1);
+    
+    var map1Sprite = Sprite3D.create(document.getElementById("map1")) // WARNING: map1Div3[0][0] will not work
+    .origin(0,0,0)
+    .position(0,0,0)
+    .rotation(0,0,0)
+    .update();
+    rootSprite.appendChild( map1Sprite );
+});
+
+// Mouse controls
+var m_mouseButton = -1;
+document.getElementById(DIV_FLOORPLAN).onmousedown = function (e) { m_mouseButton = e.which; };
+document.getElementById(DIV_FLOORPLAN).onmouseup = function(e) { m_mouseButton = e.which; };
+
+var dragBehavior = d3.behavior.drag().origin(Object)
+.on("drag", function() {
+    if (m_mouseButton != MOUSE_BUTTON_RIGHT) return;
+
+    var rz = rootSprite.rotationZ() + d3.event.dx * ROTATION_SPEED;
+    rootSprite.rotationZ(rz);
+    
+    var rx = rootSprite.rotationX() - d3.event.dy * ROTATION_SPEED;
+    if (rx > RX_MAX) rx = RX_MAX;
+    if (rx < RX_MIN) rx = RX_MIN;
+    rootSprite.rotationX(rx);
+    
+    rootSprite.update();
+});
+
+var zoomBehavior = d3.behavior.zoom().scaleExtent([SCALE_MIN, SCALE_MAX])
+.on("zoom", function() {
+    rootSprite.scale(d3.event.scale);
+    rootSprite.update();
+});
+
+d3.select(DIV3_FLOORPLAN)
+.call(dragBehavior)
+.call(zoomBehavior);
+
+// Keyboard controls
+d3.select("body").on("keydown", function() {
+    console.debug(rootSprite.y());
+    
+    switch (d3.event.keyCode) {
+        case 87: // w
+            rootSprite.y(Math.min(rootSprite.y() + TRANSLATION_STEP, TY_MAX));
+            rootSprite.update();
+            break;
+        case 65: // a
+            rootSprite.x(Math.min(rootSprite.x() + TRANSLATION_STEP, TX_MAX));
+            rootSprite.update();
+            break;
+        case 68: // d
+            rootSprite.x(Math.max(rootSprite.x() - TRANSLATION_STEP, TX_MIN));
+            rootSprite.update();
+            break;
+        case 83: // s
+            rootSprite.y(Math.max(rootSprite.y() - TRANSLATION_STEP, TY_MIN));
+            rootSprite.update();
+            break;
+        }
+    }
+);
+
+</script>
+</body>
+</html>
