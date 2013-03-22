@@ -20,6 +20,11 @@ $sensors = array();
 $apartments = array();
 $message = "";
 
+// TEMPORARY: Send notest to disable test input.
+if (ISSET($_GET['notest'])) {
+	$test = false;
+}
+
 if (ISSET($_GET['sensors'])) {
 	$sensors = $_GET['sensors'];
 } else {
