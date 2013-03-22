@@ -56,6 +56,9 @@ require(
             preprocessData,
             mapKeys;
 
+        // Uncomment this to use the mockdata instead of the actual contoller.
+        //URI_CONTROLLER = URI_MOCKDATA;
+
 
         // This is called when everything is done loading.
         onLoad = function () {
@@ -68,11 +71,15 @@ require(
         // Binds the search category menus.
         bindMenus = function () {
 
-            // with Spiffy! ...except not yet.
-            $("#menu > li > a").click(function () {
-                $(this).toggleClass("expanded").toggleClass("collapsed").parent()
-                    .find('> ul').slideToggle("medium");
+            $("#menu").spiffy({
+                hideAll: true
             });
+
+            // with Spiffy! ...except not yet.
+            //$("#menu > li > a").click(function () {
+            //    $(this).toggleClass("expanded").toggleClass("collapsed").parent()
+            //        .find('> ul').slideToggle("medium");
+            //});
 
         };
 
@@ -245,7 +252,14 @@ require(
 
             // For each apartment...
             _.each(apartments, function (readings, apartment) {
-                var granularity = result.query.granularity;
+                var granularity = result.query.granularity,
+                    period = {
+                        Hourly: 'Hour',
+                        Daily: 'Day',
+                        Weekly: 'Week',
+                        Monthly: 'Month',
+                        Yearly: 'Year',
+                    }[granularity];
 
                 display_text += "<h2><i>Apartment " + apartment + ": </i></h2>";
 
@@ -259,7 +273,7 @@ require(
                         if (_.isArray(data)) {
                             display_text += sensor + ": <br />";
                             _.each(data, function (sensorValue, i) {
-                                display_text += "Hour " + i + ": " + sensorValue +
+                                display_text += period + " " + i + ": " + sensorValue +
                                     "<br />";
                             });
                             display_text += "<br />";
