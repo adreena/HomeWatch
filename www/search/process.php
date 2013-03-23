@@ -45,7 +45,7 @@ $W_PER_KW = 1000;
 
 //Testing data for when not hooked up to the front end
 if ($test) {
-	$graphs = array("Graph 1" => array("startdate"=>"2012-02-29", "enddate"=>"2012-09-1", "x"=>"CO2", "xtype"=>"sensor", "y" => "Temperature", "ytype"=> "sensor", "period"=>"Weekly", "apartments" => array(1, 2)) );
+	$graphs = array("Graph 1" => array("startdate"=>"2012-02-29", "enddate"=>"2012-09-01", "xaxis" => "CO2 (ppm)", "x"=>array("CO2"), "xtype"=>"sensorarray", "yaxis" => "Temperature (C)", "y" => array("Temperature"), "ytype"=> "sensorarray", "period"=>"Monthly", "apartments" => array(1, 2)) );
 	$message = "";
 	$finances = true;
 	$price_per_kwh = 1;
@@ -61,10 +61,13 @@ foreach ($graphs as $id=>$graph) {
 	$period = $graph['period'];
 	$xtype = $graph['xtype'];
 	$ytype = $graph['ytype'];
+	$xaxis = $graph['xaxis'];
+	$yaxis = $graph['yaxis'];
 	$x = $graph['x'];
 	$y = $graph['y'];
 	$xdata = array();
 	$ydata = array();
+
 	$error = null;
 
 	if ($apartments == null) {
@@ -97,6 +100,20 @@ foreach ($graphs as $id=>$graph) {
 	if ($y == null) {
 		$error .= "No y-axis dataset selected. ";
 	}
+
+	/*
+	 *  Is it necessary to throw an error if the axis labels are not present?
+         *
+         * if ($xaxis == null) {
+		$error .= "No y-axis dataset selected. ";
+	}
+
+	if ($yaxis == null) {
+		$error .= "No y-axis dataset selected. ";
+	}*/
+
+
+
 	if ($startdate != null && $enddate != null) {
 		$startdate .= ":0";
 		$enddate .= ":0";
@@ -114,31 +131,42 @@ foreach ($graphs as $id=>$graph) {
 
 
 	
-	$bigArray['data'][$id]["x-axis"] = [$x];
-	$bigArray['data'][$id]["y-axis"] = [$y];
+	$bigArray['data'][$id]["x-axis"] = $xaxis;
+	$bigArray['data'][$id]["y-axis"] = $yaxis;
 
 	foreach ($apartments as $apartment) {
-		if ($ytype == "sensor") {
-			$ydata = Engineer::db_pull_query($apartment, $y, $startdate, $enddate, $period);
+		if ($ytype == "sensorarray") {
+			foreach ($y as $sensor) {
+				$ydata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period);
+			}
+				foreach ($ydata as $date=>$yd) {
+				if ($yd[$sensor] == null) {
+					$message .= "No data found for graph $id apartment $apartment on the y-axis at time $date";
+				}
+
+				$bigArray['data'][$id]['values'][$apartment][$date][$sensor]["y"] = $yd[$sensor];
+				if ($xtype == "time") {
+					$xdata[$date]['time'] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
+				}
+			}
+
 		} else if ($ytype == "function") {
 			$function = parseFunctionToJson($ydata, $startdate, $enddate, $period, $apartment);
 			$ydata = parser::getData($function);
 		}
 
-		foreach ($ydata as $date=>$yd) {
-			if ($yd[$y] == null) {
-				$message .= "No data found for graph $id apartment $apartment on the y-axis at time $date";
+		
+	
+		if ($xtype == "sensorarray") {
+			foreach ($x as $sensor) {
+				$xdata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period);
+				foreach ($xdata as $date=>$xd) {
+					if ($xd[$sensor] == null) {
+						$message .= "No data found for graph $id apartment $apartment on the x-axis at time $date";
+					}
+					$bigArray['data'][$id]['values'][$apartment][$date][$sensor]['x'] = $xd[$sensor];
+				}
 			}
-
-
-			$bigArray['data'][$id][$apartment][$date]["y"] = $yd[$y];
-			if ($xtype == "time") {
-				$xdata[$date]['time'] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
-			}
-		}
-
-		if ($xtype == "sensor") {
-			$xdata = Engineer::db_pull_query($apartment, $x, $startdate, $enddate, $period);
 		} else if ($xtype == "function") {
 			$function = parseFunctionToJson($xdata, $startdate, $enddate, $period, $apartment);
 			$xdata = parser::getData($function);
@@ -146,22 +174,7 @@ foreach ($graphs as $id=>$graph) {
 			//For "time" we do nothing
 		}
 
-		foreach ($xdata as $date=>$xd) {
-			if ($xd[$x] == null) {
-				$message .= "No data found for graph $id apartment $apartment on the x-axis at time $date";
-			}
-
-			$bigArray['data'][$id][$apartment][$date]['x'] = $xd[$x];
-		}
-		//echo var_dump ($xdata);
-
-
 		$message = checkAlerts($xdata, $ydata, $x, $y, $message, $apartment);
-
-
-
-
-
 
 	}
 
@@ -251,7 +264,7 @@ function parseFunctionToJson ($data, $startdate, $enddate, $period, $apartment) 
 
 function calculateRejection($startdate, $enddate, $period) {
 
-$SECONDS_PER_HOUR = 60*60;
+$SECONDS_PER_HOUR = 3600;
 $HOURS_PER_DAY = 24;
 $DAYS_PER_WEEK = 7;
 $WEEKS_PER_MONTH = 4;
@@ -261,7 +274,7 @@ $WEEKLY_VIEW_MAX = 12;
 $MONTHLY_VIEW_MAX = 12;
 
 
-	echo var_dump($startdate);	
+	//echo var_dump($startdate);	
 	
 	$error = null;
 	$startdate = date_create_from_Format('Y-m-d:G', $startdate);
@@ -286,9 +299,9 @@ $MONTHLY_VIEW_MAX = 12;
 			$error = "Time period of $weeks weeks is too large for weekly view.";
 		}
 	} else if ($period == "Monthly") {
-		$months = ceil($diff/$SECONDS_PER_HOUR/$HOURS_PER_DAY/$WEEKS_PER_MONTH);
+		$months = ceil($diff/$SECONDS_PER_HOUR/$HOURS_PER_DAY/$DAYS_PER_WEEK/$WEEKS_PER_MONTH);
 		if ($months > $MONTHLY_VIEW_MAX) {
-			$error = "Time period of $years years is too large for monthly view.";
+			$error = "Time period of $months months is too large for monthly view.";
 		}
 	} 
 
