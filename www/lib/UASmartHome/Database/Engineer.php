@@ -91,7 +91,6 @@ class Engineer {
 			    $result =array();
 			    $table .= '_Yearly';
 		      $sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year ") ;
-		
 				$sql->bindValue(":Apt_Num",$apt);
 				$sql->bindValue(":Year",$Year);
 				$sql->execute();
@@ -242,37 +241,50 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 	}
 		
 	
-
-
-	public 	function Utilities_Delete ($Month,$Year)
+	public 	function Utilities_Delete ($StartDate,$EndDate,$Type)
 	{
-			$conn=new Connection ();
-			$Query=$conn->connect()->prepare("delete from Utilities_Prices where Month= :MT AND Year= :YR" ) ;
-			$Query->bindValue(":MT",$Month);
-			$Query->bindValue(":YR",$Year);
+			   $conn=new Connection ();
+		       $Query=$conn->connect()->prepare("delete from Utilities_Prices  
+		       where Start_Date= :SD AND End_Date= :ED AND Type= :TP" ) ;
+			$Query->bindValue(":SD",$StartDate);
+			$Query->bindValue(":ED",$EndDate);
+			$Query->bindValue(":TP",$Type);
 				$Query->execute();
 	}
-	public 	function Utilities_Insert ($Type,$Month,$Year,$Price)
+	public 	function Utilities_Insert ($Type,$StartDate,$EndDate,$Price)
 	{
 	
 	 $conn=new Connection ();
-	 $Query=$conn->connect()->prepare("INSERT INTO Utilities_Prices (Type,Month,Year,
-	           Price ) VALUES  (:TP,:MT,:YR,:PC)") ;
+	 $Query=$conn->connect()->prepare("INSERT INTO Utilities_Prices (Type,Price,Start_Date,
+	           End_Date ) VALUES  (:TP,:PC,:SD, :ED) ") ;
+			$Query->bindValue(":SD",$StartDate);
+			$Query->bindValue(":ED",$EndDate);
 			$Query->bindValue(":TP",$Type);
-			$Query->bindValue(":MT",$Month);
-			$Query->bindValue(":YR",$Year);
 			$Query->bindValue(":PC",$Price);
 			$Query->execute();
 	}
-	public 	function Utilities_Update ($Month,$Year,$Price)
+	public 	function Utilities_Update ($Start_Date,$End_Date,$Price)
 	{
 			   $conn=new Connection ();
 		      $Query=$conn->connect()->prepare("update Utilities_Prices  
-		       set Price= :PC where Month= :MT AND Year= :YR") ;
-			$Query->bindValue(":MT",$Month);
-			$Query->bindValue(":YR",$Year);
+		       set Price= :PC where Start_Date= :SD AND End_Date= :ED") ;
+			$Query->bindValue(":SD",$Start_Date);
+			$Query->bindValue(":ED",$End_Date);
 			$Query->bindValue(":PC",$Price);
 			$Query->execute();
+	}
+	public 	function Utilities_getPrice ($Type,$Start_Date,$End_Date)
+	{
+			   $conn=new Connection ();
+		      $Query=$conn->connect()->prepare("select price from Utilities_Prices  
+		        where Start_Date= :SD AND End_Date= :ED and Type= :TP") ;
+			$Query->bindValue(":SD",$Start_Date);
+			$Query->bindValue(":ED",$End_Date);
+			$Query->bindValue(":TP",$Type);
+			$Query->execute();
+			$row = $Query->fetch(PDO::FETCH_OBJ);
+			 $result=(array)$row;
+			 return $result;
 	}
 
 
