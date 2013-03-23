@@ -265,14 +265,15 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 			$Query->bindValue(":PC",$Price);
 			$Query->execute();
 	}
-	public 	function Utilities_Update ($Start_Date,$End_Date,$Price)
+	public 	function Utilities_Update ($Start_Date,$End_Date,$Price,$Type)
 	{
 			   $conn=new Connection ();
 		      $Query=$conn->connect()->prepare("update Utilities_Prices  
-		       set Price= :PC where Start_Date= :SD AND End_Date= :ED") ;
+		       set Price= :PC where Start_Date= :SD AND End_Date= :ED AND Type= :TP") ;
 			$Query->bindValue(":SD",$Start_Date);
 			$Query->bindValue(":ED",$End_Date);
 			$Query->bindValue(":PC",$Price);
+			$Query->bindValue(":TP",$Type);
 			$Query->execute();
 	}
 	
