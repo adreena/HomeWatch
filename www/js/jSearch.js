@@ -2,7 +2,6 @@ require([
     'jquery',                   // Using the require+jquery combo
     'underscore',               // Underscore
     'spiffy/spiffy',            // Collapsible menus
-    //'jquryui',                // For the (sub-par) date picker
     'flot/jquery.flot',         // Flot charts
     'flot/jquery.flot.time',    // Flot time plugin
     'flot-axislabels/jquery.flot.axislabels', // Extra flot plugins
@@ -74,13 +73,7 @@ require([
         bindMenus = function () {
 
             //$("#menu").spiffy({
-            //    hideAll: true
-            //});
-
-            // with Spiffy! ...except not yet.
-            //$("#menu > li > a").click(function () {
-            //    $(this).toggleClass("expanded").toggleClass("collapsed").parent()
-            //        .find('> ul').slideToggle("medium");
+                //hideAll: true
             //});
 
         };
