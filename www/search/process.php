@@ -69,7 +69,7 @@ $W_PER_KW = 1000;
 
 if ($test) {
 
-	$graphs = array(1 => array("startdate"=>"2012-02-29", "enddate"=>"2012-03-1", "x"=>"CO2", "xtype"=>"sensor", "y" => "Temperature", "ytype"=> "sensor", "period"=>"Yearly", "apartments" => array(1, 2)) );
+	$graphs = array("Graph 1" => array("startdate"=>"2012-02-29", "enddate"=>"2012-03-1", "x"=>"CO2", "xtype"=>"sensor", "y" => "Temperature", "ytype"=> "sensor", "period"=>"Yearly", "apartments" => array(1, 2)) );
 
 	$message = "";
 
@@ -98,8 +98,8 @@ foreach ($graphs as $id=>$graph) {
 		if ($ytype == "sensor") {
 			$ydata = Engineer::db_pull_query($apartment, $y, $startdate, $enddate, $period);
 		} else if ($ytype == "function") {
-			$function = parseFunctionToJson($y, $ydata, $startdate, $enddate, $period, $apartment);
-			//TODO: $ydata = ???
+			$function = parseFunctionToJson($ydata, $startdate, $enddate, $period, $apartment);
+			$ydata = parser::getData($function);
 		}
 
 		foreach ($ydata as $date=>$yd) {
@@ -117,8 +117,8 @@ foreach ($graphs as $id=>$graph) {
 		if ($xtype == "sensor") {
 			$xdata = Engineer::db_pull_query($apartment, $x, $startdate, $enddate, $period);
 		} else if ($xtype == "function") {
-			$function = parseFunctionToJson($y, $ydata, $startdate, $enddate, $period, $apartment);
-			//TODO: $xdata = ???
+			$function = parseFunctionToJson($xdata, $startdate, $enddate, $period, $apartment);
+			$xdata = parser::getData($function);
 		} else {
 			//For "time" we do nothing
 		}
@@ -133,7 +133,7 @@ foreach ($graphs as $id=>$graph) {
 		//echo var_dump ($xdata);
 
 
-		$message = checkAlerts($xdata, $ydata, $x, $y, $message);
+		$message = checkAlerts($xdata, $ydata, $x, $y, $message, $apartment);
 
 
 
@@ -297,22 +297,28 @@ foreach ($graphs as $id=>$graph) {
 
 
 
-function checkAlerts ($xdata, $ydata, $x, $y, $message) {
+function checkAlerts ($xdata, $ydata, $x, $y, $message, $apartment) {
 	$alerts = array();
+	$co2alert = "CO2 levels are extremely high in apartment $apartment! ";
 	foreach ($ydata as $yd) {
 		if ($y == "CO2" && $yd[$y] > 10) {
-			$alerts["CO2_high"] = "CO2 levels are extremely high!";
+			//echo var_dump ($yd[$y]);
+			$alerts[$co2alert] = $co2alert;
 		}
 	}
 	foreach ($xdata as $xd) {
 		if ($x == "CO2" && $xd[$x] > 10) {
-			$alerts["CO2_high"] = "CO2 levels are extremely high!";
+			//echo var_dump ($xd[$x]);
+			$alerts[$co2alert] = $co2alert;
 		}
 	}
+
+	//echo var_dump($alerts);
 
 	foreach ($alerts as $alert) {
 		$message .= $alert;
 	}
+	return $message;
 }
 
 /*
@@ -320,17 +326,17 @@ function checkAlerts ($xdata, $ydata, $x, $y, $message) {
  * Startdate, enddate: YYYY-mm-dd:hh Date strings
  * Apartment: Apartment ID of the apartment queried on
  * Granularity: String, one of Daily, Monthly, Hourly, Weekly, Yearly
- * Function: The function to be parsed
- * Functionname: The name of the function (maybe unnecesary)?
+ * Data: The function to be parsed
+ * Name: The name of the function (maybe unnecesary)?
  */
-function parseFunctionToJson ($name, $data, $startdate, $enddate, $period, $apartment) {
+function parseFunctionToJson ($data, $startdate, $enddate, $period, $apartment) {
 	$functionArray = array();
-	$functionArray["startdate"] => $startdate;
-	$functionArray["enddate"] => $enddate;
-	$functionArray["apartment"] => $apartment;
-	$functionArray["granularity"] => $period;
-	$functionArray["function"] => $data;
-	$functionArray["functionname"] => $name;
+	$functionArray["startdate"] = $startdate;
+	$functionArray["enddate"] = $enddate;
+	$functionArray["apartment"] = $apartment;
+	$functionArray["granularity"] = $period;
+	$functionArray["function"] = $data;
+	//$functionArray["functionname"] = $name;
 	
 	return json_encode($functionArray);
 }
