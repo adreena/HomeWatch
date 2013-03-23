@@ -1,0 +1,17 @@
+{
+    "A ch1":    "Mains (Phase A)",
+    "A ch2":    "Bedroom and hot water tank (Phase A)",
+    "A aux1":   "Oven (Phase A) and range hood",
+    "A aux2":   "Microwave and ERV controller",
+    "A aux3":   "Electrical duct heating",
+    "A aux4":   "Kitchen plugs (Phase A) and bathroom lighting",
+    "A aux5":   "Energy recovery ventilation",
+
+    "B ch1":    "Mains (Phase B)",
+    "B ch2":    "Kitchen plugs (Phase B) and kitchen counter",
+    "B aux1":   "Oven (Phase B)",
+    "B aux2":   "Bathroom",
+    "B aux3":   "Living room and balcony",
+    "B aux4":   "Hot water tank (phase b)",
+    "B aux5":   "Refridgerator"
+}
