@@ -15,12 +15,6 @@ define([
     
     function ($, _) {
 
-        var 
-            /* Utility functions. */
-            devinDateToUTC,
-            preprocessData,
-            mapKeys;
-
         /*
          * Err... nothing's in here yet...
          */
@@ -33,7 +27,7 @@ define([
          * UNIX epoch. Assumes everything is using the same timezone.  If the
          * input cannot be parsed, returns undefined.
          */
-        devinDateToUTC = function (dateString) {
+        var devinDateToUTC = function (dateString) {
             var dateRegex = /(\d+)-(\d+)-(\d+):(\d+)/,
                 m, // m for match
                 UTCTime;
@@ -55,7 +49,7 @@ define([
         };
 
         /* Map, but on the keys of an object. Uses Underscore. */
-        mapKeys = function (obj, keyFunc) {
+        var mapKeys = function (obj, keyFunc) {
             var func = function (value, key) {
                 return [keyFunc(key), value];
             };
@@ -81,7 +75,7 @@ define([
          *
          * Returns the cleaned object.
          */
-        preprocessData = function (data) {
+        var preprocessData = function (data) {
 
             /* Assumes date is nested within apartment. */
             return _
@@ -95,3 +89,25 @@ define([
                 .object()
                 .value();
         };
+
+        return {
+            create: function (element, onClick, initialData) {
+                // Does stuff to create graph!
+
+
+
+                // Returns a "graph object"
+                return {
+                    // anything the graph needs to keep.
+                    element: element,
+                    onClick: onClick
+                };
+
+            },
+
+            update: function (graphObject, data) {
+                // updates the given graph object.
+
+            }
+    };
+});
