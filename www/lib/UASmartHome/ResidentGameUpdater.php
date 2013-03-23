@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+
 $debug = False;
 
 class AchievementsUpdater
@@ -13,7 +14,7 @@ class AchievementsUpdater
     public function __construct() {
         $this->residentDB = new Database\ResidentDB();
         $this->managerDB = new Database\ManagerDB();
-        $this->engineerDB = new Database\Engineer();
+        //$this->engineerDB = new Database\Engineer();
 
     }
 
@@ -63,7 +64,8 @@ class AchievementsUpdater
                 if ($GLOBALS['debug'])
                     echo "year = " . $year . " month = " . $month . "\n";
 
-                $data = $this->engineerDB->db_query_Monthly($apt, 'Air', $year, $month);
+               // $data = $this->engineerDB->db_query_Monthly($apt, 'Air', $year, $month, "CO2");
+		$data = Engineer::db_query_Monthly($apt, 'Air', $year, $month, "CO2");
 
                 if ($month == 1) {
                     $month = 12;
@@ -73,7 +75,7 @@ class AchievementsUpdater
                     $month--;
                 }
 
-                if (count($data) != 0 && $data[0]["CO2"] < 1250) {
+                if (count($data) != 0 && $data[0] < 1250) {
                     try {
                         $this->residentDB->Resident_DB_Earned_Update($resident_id, 4, "today");
                     } catch (Exception $e) {
