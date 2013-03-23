@@ -8,6 +8,10 @@
 
 require_once __DIR__ .  "/../vendor/autoload.php";
 
+// TODO: Leaving commented out for now because we don't have a default user
+//use \UASmartHome\Auth\Firewall;
+//Firewall::instance()->restrictAccess(Firewall::ROLE_MANAGER);
+
 use \UASmartHome\Auth\AccountData;
 use \UASmartHome\Auth\DefaultUserProvider;
 use \UASmartHome\Auth\RegistrationResult;
