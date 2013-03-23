@@ -21,30 +21,14 @@ if (ISSET($_GET['notest'])) {
 	$test = false;
 } 
 
-if (ISSET($_GET['apartments'])) {
-	$apartments = $_GET['apartments'];
+//We need to grab all of this data from the request header to correctly handle it
+if (ISSET($_GET['graphs'])) {
+	$graphs = $_GET['graphs'];
 } else {
-	$message .= "No apartments selected\n";
+	$message .= "No graph data received\n";
 }
 
-if (ISSET($_GET['startdate'])) {
-	$startdate = $_GET['startdate'];
-} else {
-	$message .= "No start date selected \n";
-}
-
-if (ISSET($_GET['enddate'])) {
-	$enddate = $_GET['enddate'];
-} else {
-	$message .= "No end date selected\n";
-}
-
-if (ISSET($_GET['period'])) {
-	$period = $_GET['period'];
-} else {
-	$message .= "No granularity selected\n";
-}
-
+//TODO: We might need to handle this differently
 if (ISSET($_GET['finances'])) {
 	$finances = true;
 } else {
@@ -56,32 +40,24 @@ if ($test == false && $message > "" ) {
 	exit();
 }
 
-$SECONDS_PER_HOUR = 60*60;
-$HOURS_PER_DAY = 24;
-$DAYS_PER_WEEK = 7;
-$WEEKS_PER_MONTH = 4;
-$HOURLY_VIEW_MAX = 24;
-$DAILY_VIEW_MAX = 14;
-$WEEKLY_VIEW_MAX = 12;
-$MONTHLY_VIEW_MAX = 12;
+
 $W_PER_KW = 1000;
 
-
+//Testing data for when not hooked up to the front end
 if ($test) {
-
-	$graphs = array("Graph 1" => array("startdate"=>"2012-02-29", "enddate"=>"2012-03-1", "x"=>"CO2", "xtype"=>"sensor", "y" => "Temperature", "ytype"=> "sensor", "period"=>"Yearly", "apartments" => array(1, 2)) );
-
+	$graphs = array("Graph 1" => array("startdate"=>"2012-02-29", "enddate"=>"2012-09-1", "x"=>"CO2", "xtype"=>"sensor", "y" => "Temperature", "ytype"=> "sensor", "period"=>"Weekly", "apartments" => array(1, 2)) );
 	$message = "";
-
 	$finances = true;
 	$price_per_kwh = 1;
 	$price_per_gallon = 1.5;
 }
 
+//This loop goes through each graph request from the front end, grabs the data, and sends it back to the front end in the form of a json array
 foreach ($graphs as $id=>$graph) {
+	//parsing out the components of the graph
 	$apartments = $graph['apartments'];
-	$startdate = $graph['startdate'].":0";
-	$enddate = $graph['enddate'].":0";
+	$startdate = $graph['startdate'];
+	$enddate = $graph['enddate'];
 	$period = $graph['period'];
 	$xtype = $graph['xtype'];
 	$ytype = $graph['ytype'];
@@ -89,6 +65,53 @@ foreach ($graphs as $id=>$graph) {
 	$y = $graph['y'];
 	$xdata = array();
 	$ydata = array();
+	$error = null;
+
+	if ($apartments == null) {
+		$error .= "No apartments selected. ";
+	}	
+	if ($startdate == null) {
+		$error .= "No start date. ";
+	}
+
+	if ($enddate == null) {
+		$error .= "No end date. ";
+	}
+
+	if ($period == null) {
+		$error .= "No granularity. ";
+	}
+
+	if ($xtype == null) {
+		$error .= "X-axis type not specified. ";
+	}
+
+	if ($ytype == null) {
+		$error .= "Y-axis type not specified. ";
+	}
+	
+	if ($x == null) {
+		$error .= "No x-axis dataset selected. ";
+	}
+
+	if ($y == null) {
+		$error .= "No y-axis dataset selected. ";
+	}
+	if ($startdate != null && $enddate != null) {
+		$startdate .= ":0";
+		$enddate .= ":0";
+		$error .= calculateRejection($startdate, $enddate, $period);	
+	}
+	if ($error != null) {
+		$bigArray['query']['granularity'] = $period;
+		$bigArray['query']['message'] = $error;
+        	$json = json_encode($bigArray);
+        	echo $json;
+		die;
+	}
+
+	//Necessary to append :0 to these strings so that the hours line up nicely
+
 
 	
 	$bigArray['data'][$id]["x-axis"] = [$x];
@@ -147,140 +170,6 @@ foreach ($graphs as $id=>$graph) {
 
 
 
-
-
-/*
-	$diff = abs(strtotime($enddate) - strtotime($startdate));
-	if ($diff < 0) {
-		//ERROR: END DATE IS BEFORE START DATE
-	} else {
-		$hours = floor ($diff/$SECONDS_PER_HOUR);
-		if ($hours > $HOURLY_VIEW_MAX && $period == "Hourly") {
-			$period = "Daily";
-			$message = "Too much data to display hourly, switching to daily view";
-		}
-		$days = floor($hours / ($HOURS_PER_DAY));
-		if ($days > $DAILY_VIEW_MAX && $period == "Daily") {
-			$period = "Weekly";
-			$message = "Too much data for hourly view, switching to weekly view";
-		} 
-		$weeks = ceil($days / $DAYS_PER_WEEK);
-		if ($weeks > $WEEKLY_VIEW_MAX && $period == "Weekly") {
-			$period = "Monthly";
-			$message = "Too much data for weekly view, switching to monthly view";
-		} 
-		$months = ceil($weeks / $WEEKS_PER_MONTH);
-		if ($weeks > $MONTHLY_VIEW_MAX && $period == "Monthly") {
-			$period = "Yearly";
-			$message = "Too much data for monthly view, switching to yearly view";
-		}
-	}
-
-	$bigArray =array(); 
-
-	foreach ($apartments as $apartment) {
-                foreach ($sensors as $sensor) {
-                        $data = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period);
-			foreach ($data as $date=>$d) {
-				$cost = -1;
-				if ($d[$sensor] == null) {
-					$message .= "No data found for Apartment $apartment on date $date for sensor $sensor. ";
-				}
-					$bigArray['data'][$apartment][$date][$sensor] = $d[$sensor];
-
-				if ($finances && $d[$sensor] != null) {
-					if ($sensor == "Hot_Water" || $sensor == "Total_Water") {
-						$cost = $d[$sensor] * $price_per_gallon;
-					} else if ($sensor == "Total_Energy") {
-						$cost = $d[$sensor] / $W_PER_KW * $price_per_kwh; //Total Energy is in watt hours
-					} 
-					if ($cost >= 0)	{
-						$bigArray['finances'][$apartment][$date][$sensor] = round($cost, 2);
-					}
-				} 
-			}
-                }       
-
-
-*/
-		/*
-		*
-		*	TODO: Electricity sensors should be converted from wattseconds to kwh
-		*
-		*/
-
-/*
-		foreach ($phaseASensors as $sensor) {
-        		$data = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period, "A");
-			foreach ($data as $date=>$d) {
-				$cost = -1;
-				if ($d[$sensor] == null) {
-					$message .= "No data found for Apartment $apartment on date $date for sensor $sensor. ";
-				} 
-				$bigArray['data'][$apartment][$date]["PhaseA"][$sensor] = $d[$sensor];
-				
-	
-				if ($finances && $d[$sensor] != null) {
-					$cost = $d[$sensor] / $SECONDS_PER_HOUR / $W_PER_KW * $price_per_kwh; // These are in watt-seconds
-					if ($cost >= 0)	{
-						$bigArray['finances'][$apartment][$date][$sensor] = round($cost, 2);
-					}
-				} 
-			}
-		}       
-
-		foreach ($phaseBSensors as $sensor) {
-        		$data = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period, "B");
-			foreach ($data as $date=>$d) {
-				$cost = -1;
-				if ($d[$sensor] == null) {
-					$message .= "No data found for Apartment $apartment on date $date for sensor $sensor. ";
-				}
-				$bigArray['data'][$apartment][$date]["PhaseB"][$sensor] = $d[$sensor];
-
-
-				if ($finances && $d[$sensor] != null) {
-					$cost = $d[$sensor] / $SECONDS_PER_HOUR / $W_PER_KW * $price_per_kwh; // These are in watt-seconds
-					if ($cost >= 0)	{
-						$bigArray['finances'][$apartment][$date][$sensor] = round($cost, 2);
-					}
-				} 
-			}
-		}     
-
-
-		if ($waterTempDiff) {
-			$data = Engineer::db_get_data_placeholder();
-			foreach ($data as $date=>$d) {
-				$bigArray['data'][$apartment][$date]['waterTempDiff'] = $d[0];
-			}
-		}
-
-		if ($elecSum) {
-			$data = Engineer::db_get_data_placeholder();
-			foreach ($data as $date=>$d) {
-				$bigArray['data'][$apartment][$date]['elecDiff'] = $d[0];
-			}
-		}
-
-		if ($phaseASum) {
-			$data = Engineer::db_get_data_placeholder();
-			foreach ($data as $date=>$d) {
-				$bigArray['data'][$apartment][$date]["PhaseA"]['Sum'] = $d[0];
-			}
-		}
-
-		if ($phaseBSum) {
-			$data = Engineer::db_get_data_placeholder();
-			foreach ($data as $date=>$d) {
-				$bigArray['data'][$apartment][$date]["PhaseB"]['Sum'] = $d[0];
-			}
-		}
-
-                
-        }
-*/
-
 	if ($message == "") {
 		$message = "Success!";
 	}
@@ -294,7 +183,17 @@ foreach ($graphs as $id=>$graph) {
 
 
 
-
+/*
+ * This function determines what alerts should be shown alongside the graph.
+ * Alerts could be things like high CO2, energy usage, or other.
+ * Theoretically there is a plan for these to be specified by the user 
+ * but for now they are hard-coded in.
+ * As input, this method takes the x and y data being graphed,
+ * the name of these data sets, the current apartment, and the error-logging 
+ * variable "message".
+ * The variable "message" passed as an argument is returned by this method,
+ * with any additional alerts identified by the system appended to it.
+ */
 
 
 function checkAlerts ($xdata, $ydata, $x, $y, $message, $apartment) {
@@ -342,6 +241,60 @@ function parseFunctionToJson ($data, $startdate, $enddate, $period, $apartment) 
 }
 
 
+/*
+ * This function calculates whether a query should be rejected or not based on the size of the data set requested.
+ * The [period]_VIEW_MAX variables can be configured to allow smaller or larger data sets.
+ * Returns "Null" if the specified timeframe and granularity are allowed based on the _VIEW_MAX variable
+ * Returns an error message and causes the system to return if the requested data set exceeds the _VIEW_MAX variable.
+ */
+
+
+function calculateRejection($startdate, $enddate, $period) {
+
+$SECONDS_PER_HOUR = 60*60;
+$HOURS_PER_DAY = 24;
+$DAYS_PER_WEEK = 7;
+$WEEKS_PER_MONTH = 4;
+$HOURLY_VIEW_MAX = 24;
+$DAILY_VIEW_MAX = 14;
+$WEEKLY_VIEW_MAX = 12;
+$MONTHLY_VIEW_MAX = 12;
+
+
+	echo var_dump($startdate);	
+	
+	$error = null;
+	$startdate = date_create_from_Format('Y-m-d:G', $startdate);
+	$enddate = date_create_from_Format('Y-m-d:G', $enddate);
+	$diff = ($enddate->format("U") - $startdate->format("U"));
+
+	//echo var_dump($diff);
+
+	if ($period == "Hourly") {
+		$hours = ceil($diff/$SECONDS_PER_HOUR);
+		if ($hours > $HOURLY_VIEW_MAX) {
+			$error = "Time period of $hours hours is too large for hourly view.";
+		}
+	} else if ($period == "Daily") {
+		$days = ceil($diff/$SECONDS_PER_HOUR/$HOURS_PER_DAY);
+		if ($days > $DAILY_VIEW_MAX) {
+			$error = "Time period of $days days is too large for daily view.";
+		}
+	} else if ($period == "Weekly") {
+		$weeks = ceil($diff/$SECONDS_PER_HOUR/$HOURS_PER_DAY/$DAYS_PER_WEEK);
+		if ($weeks > $WEEKLY_VIEW_MAX) {
+			$error = "Time period of $weeks weeks is too large for weekly view.";
+		}
+	} else if ($period == "Monthly") {
+		$months = ceil($diff/$SECONDS_PER_HOUR/$HOURS_PER_DAY/$WEEKS_PER_MONTH);
+		if ($months > $MONTHLY_VIEW_MAX) {
+			$error = "Time period of $years years is too large for monthly view.";
+		}
+	} 
+
+	return $error;
+
+}
 
 
 
