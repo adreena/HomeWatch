@@ -6,23 +6,37 @@
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
 <link rel="stylesheet" href="jSearch.css" />
 
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script src="/js/vendor/require-jquery.js" data-main="/js/jSearch"></script>
+<script>
+// Require config!
+require.config({
+    shim: {
+        underscore: {
+            exports: '_'
+        }
+    },
+    paths: {
+        underscore: 'vendor/underscore'
+   }
+});
+</script>
+<!--script src="http://code.jquery.com/jquery-1.9.1.js"></script-->
+<!--script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script-->
 <!--script src="/js/vendor/jquery-1.9.1.js"></script>
 <script src="/js/vendor/underscore-min.js"></script-->
-<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+<!--script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script-->
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="flot/excanvas.min.js"></script><![endif]-->
-<script src="/js/spiffy/spiffy.min.js"></script>
-<script src="/js/flot/jquery.flot.js"></script>
-<script src="/js/flot/jquery.flot.time.js"></script>
-<script src="/js/flot-orderbars/jquery.flot.orderBars.js"></script><!--MIT licensed-->
-<script src="/js/flot-axislabels/jquery.flot.axislabels.js"></script><!-- GNU -->
-<script>
+<!--script src="/js/spiffy/spiffy.min.js"></script-->
+<!--script src="/js/flot/jquery.flot.js"></script-->
+<!--script src="/js/flot/jquery.flot.time.js"></script-->
+<!--script src="/js/flot-orderbars/jquery.flot.orderBars.js"></script--><!--MIT licensed-->
+<!--script src="/js/flot-axislabels/jquery.flot.axislabels.js"></script--><!-- GNU -->
+<!--script>
     // TEMPORARY: Here whilst we transition to requireJS.
     function require(_libraries, module) {
         module(jQuery, _);
     }
-</script>
+</script-->
 <script src="/js/jSearch.js"></script>
 </head>
 

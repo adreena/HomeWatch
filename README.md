@@ -63,3 +63,10 @@ Essentially, just include define a subclass of
 exeucturable somewhere in your path. Then, you can simply run the test
 in the command line (e.g.,  `phpunit tests/DummyTest.php`).
 
+
+# Credits
+
+Using the [EvalMath][] PHP class by Miles Kaufmann.
+
+[EvalMath]:
+http://www.phpclasses.org/package/2695-PHP-Safely-evaluate-mathematical-expressions.html

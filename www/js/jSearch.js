@@ -1,11 +1,12 @@
-require(
-    ['jquery', 'underscore', // Main libraries
-        'spiffy/spiffy',            // Collapsible menus
-        'jquryui',                  // For date picker
-        'flot/jquery.flot',         // Flot charts
-        'flot/jquery.flot.time',    // Flot time plugin
-        'flot-axislabels/jquery.flot.axislabels', // Extra flot plugins
-        'flot-orderbars/jquery.flot.orderBars'],
+require([
+    'jquery',                   // Using the require+jquery combo
+    'underscore',               // Underscore
+    'spiffy/spiffy',            // Collapsible menus
+    //'jquryui',                // For the (sub-par) date picker
+    'flot/jquery.flot',         // Flot charts
+    'flot/jquery.flot.time',    // Flot time plugin
+    'flot-axislabels/jquery.flot.axislabels', // Extra flot plugins
+    'flot-orderbars/jquery.flot.orderBars'],
 
     /*
      * jSearch.
@@ -72,9 +73,9 @@ require(
         // Binds the search category menus.
         bindMenus = function () {
 
-            $("#menu").spiffy({
-                hideAll: true
-            });
+            //$("#menu").spiffy({
+            //    hideAll: true
+            //});
 
             // with Spiffy! ...except not yet.
             //$("#menu > li > a").click(function () {
@@ -92,9 +93,9 @@ require(
             // TODO: Context sensitive date controls.
 
             // with jQueryUI
-            $(".datepicker").datepicker({
-                dateFormat: 'yy-mm-dd'
-            });
+            //$(".datepicker").datepicker({
+            //    dateFormat: 'yy-mm-dd'
+            //});
 
         };
 
