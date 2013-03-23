@@ -1,6 +1,7 @@
 <?php
 
-include 'config.php';
+include ('Connection.php');
+
 class Engineer {
 
 	function db_pull_query($apt, $column, $startdate, $enddate, $period) {
@@ -90,16 +91,17 @@ class Engineer {
 			   
 			    $result =array();
 			    $table .= '_Yearly';
-		      $sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year ") ;
-				$sql->bindValue(":Apt_Num",$apt);
-				$sql->bindValue(":Year",$Year);
-				$sql->execute();
-				$row_count= $sql->rowCount();
-				while ($row = $sql->fetch(PDO::FETCH_ASSOC))
+				$conn=new Connection ();
+		      $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year ") ;
+				$Query->bindValue(":Apt_Num",$apt);
+				$Query->bindValue(":Year",$Year);
+				$Query->execute();
+				$row_count= $Query->rowCount();
+				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
-				$a= $sql->rowCount();
+				$a= $Query->rowCount();
 				return $result;
 	}
 	
@@ -107,37 +109,36 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 	{
 			    $result =array();
 			    $table .= '_Monthly';
-		        $sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month ") ;
-		
-				$sql->bindValue(":Apt_Num",$apt);
-				$sql->bindValue(":Year",$Year);
-				$sql->bindValue(":Month",$Month);
-				$sql->execute();
-				$row_count= $sql->rowCount();
-				while ($row = $sql->fetch(PDO::FETCH_ASSOC))
+				$conn=new Connection ();
+		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month ") ;
+				$Query->bindValue(":Apt_Num",$apt);
+				$Query->bindValue(":Year",$Year);
+				$Query->bindValue(":Month",$Month);
+				$Query->execute();
+				$row_count= $Query->rowCount();
+				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
-				$a= $sql->rowCount();
+				$a= $Query->rowCount();
 				return $result;
 	}
 	function db_query_Weekly($apt,$table,$Year,$Week,$column)
 	{
 			    $result =array();
 			    $table .= '_Weekly';
-			//echo "$apt $table $Year $Week $column <br>";
-		        $sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
-
-				$sql->bindValue(":Apt_Num",$apt);
-				$sql->bindValue(":Year",$Year);
-				$sql->bindValue(":Week",$Week);
-				$sql->execute();
-				$row_count= $sql->rowCount();
-				while ($row = $sql->fetch(PDO::FETCH_ASSOC))
+				$conn=new Connection ();
+		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
+				$Query->bindValue(":Apt_Num",$apt);
+				$Query->bindValue(":Year",$Year);
+				$Query->bindValue(":Week",$Week);
+				$Query->execute();
+				$row_count= $Query->rowCount();
+				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
-				$a= $sql->rowCount();
+				$a= $Query->rowCount();
 				return $result;
 	}
 	function db_query_Daily($apt,$table,$date,$column)
@@ -146,16 +147,17 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 			   
 				$result =array();
 				$table .= '_Daily';
-		        	$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date") ;
-				$sql->bindValue(":Apt_Num",$apt);
-				$sql->bindValue(":Date",$date);
-				$sql->execute();
-				$row_count= $sql->rowCount();
-				while ($row = $sql->fetch(PDO::FETCH_ASSOC))
+				$conn=new Connection ();
+		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date") ;
+				$Query->bindValue(":Apt_Num",$apt);
+				$Query->bindValue(":Date",$date);
+				$Query->execute();
+				$row_count= $Query->rowCount();
+				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
-				$a= $sql->rowCount();
+				$a= $Query->rowCount();
 				return $result;
 	}
 	function db_query_Hourly($apt,$table,$date,$Hour,$column)
@@ -163,19 +165,19 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 	           
 
 			    $result =array();
-			    $table .= '_Hourly';
-		        	$sql=$GLOBALS['conn']->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour ") ;
-
-				$sql->bindValue(":Apt_Num",$apt);
-				$sql->bindValue(":Date",$date);
-				$sql->bindValue(":Hour",$Hour);
-				$sql->execute();
-				$row_count= $sql->rowCount();
-				while ($row = $sql->fetch(PDO::FETCH_ASSOC))
+				$table .= '_Hourly';
+				$conn=new Connection ();
+		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour ") ;
+				$Query->bindValue(":Apt_Num",$apt);
+				$Query->bindValue(":Date",$date);
+				$Query->bindValue(":Hour",$Hour);
+				$Query->execute();
+				$row_count= $Query->rowCount();
+				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
-				$a= $sql->rowCount();
+				$a= $Query->rowCount();
 				return $result;
 	}
          	public function db_air_Period($apt,$datefrom,$dateto,$hourfrom,$hourto,$type)
@@ -210,37 +212,37 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 						break;
 				}
 			//	print_r($type);
-				$sqlstatment="select `v0_air`.`Apt` AS `Apt`,".$subsql.",avg(`v0_air`.`Temperature`) AS `Temperature`,
+				$Querystatment="select `v0_air`.`Apt` AS `Apt`,".$subsql.",avg(`v0_air`.`Temperature`) AS `Temperature`,
 							avg(`v0_air`.`Relative Humidity`) AS `Relative Humidity`,
 							avg(`v0_air`.`CO2`) AS `CO2`
 							from  v0_air
 							where Apt= :Apt_Num AND (Date between  :datefrom and :dateto)
 							AND (Hour between  :hourfrom and :hourto)
   							Group by v0_air.`Apt`,".$subsql;
-				//print_r($sqlstatment);
+				//print_r($Querystatment);
 							
-				$sql=$GLOBALS['conn']->prepare($sqlstatment);
+				$Query=$conn->connect()->prepare($Querystatment);
 
-				$sql->bindValue(":Apt_Num",$apt);
-				$sql->bindValue(":datefrom",$datefrom);
-				$sql->bindValue(":dateto",$dateto);
-				$sql->bindValue(":hourfrom",$hourfrom);
-				$sql->bindValue(":hourto",$hourto);
-				$errinf = $sql->errorinfo();
-				$sql->execute();
-				$row_count= $sql->rowCount();
+				$Query->bindValue(":Apt_Num",$apt);
+				$Query->bindValue(":datefrom",$datefrom);
+				$Query->bindValue(":dateto",$dateto);
+				$Query->bindValue(":hourfrom",$hourfrom);
+				$Query->bindValue(":hourto",$hourto);
+				$errinf = $Query->errorinfo();
+				$Query->execute();
+				$row_count= $Query->rowCount();
 				array_push($result,$errinf[0]);
 				array_push($result,$errinf[1]);
 				array_push($result,$errinf[2]);
-				while ($row = $sql->fetch(PDO::FETCH_ASSOC))
+				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
 				{
 					array_push($result,$row);
 				}
-				array_push($result,$sql->rowCount());
+				array_push($result,$Query->rowCount());
 				return $result;
 	}
 		
-	
+	//Updated Utilities Functions
 	public 	function Utilities_Delete ($StartDate,$EndDate,$Type)
 	{
 			   $conn=new Connection ();
@@ -273,6 +275,7 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 			$Query->bindValue(":PC",$Price);
 			$Query->execute();
 	}
+	
 	public 	function Utilities_getPrice ($Type,$Start_Date,$End_Date)
 	{
 			   $conn=new Connection ();
