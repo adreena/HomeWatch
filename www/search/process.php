@@ -1,13 +1,14 @@
 <?php
 
-/* Remember to `composer install` in /www to generate the
- * autoload files! */
+/*
+ * @author Devin Hanchar
+ * Processes all queries from jSearch.php and returns the data as a multidimensional JSON array
+ */
+
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__. '/../lib/UASmartHome/Database/Engineer.php';
 
-/* Aw yea, baby. We just gon' spit out sum JSON. */
 header('Content-Type: application/json; charset=utf-8');
-
 
 //TESTING FLAG: SET TO FALSE TO USE DATA FROM SERVER
 $test = true;
@@ -22,8 +23,8 @@ if (ISSET($_GET['notest'])) {
 } 
 
 //We need to grab all of this data from the request header to correctly handle it
-if (ISSET($_GET['graphs'])) {
-	$graphs = $_GET['graphs'];
+if (ISSET($_GET['graph'])) {
+	$graph = $_GET['graph'];
 } else {
 	$message .= "No graph data received\n";
 }
@@ -45,7 +46,7 @@ $W_PER_KW = 1000;
 
 //Testing data for when not hooked up to the front end
 if ($test) {
-	$graphs = array("Graph 1" => array("startdate"=>"2012-02-29", "enddate"=>"2012-09-01", "xaxis" => "CO2 (ppm)", "x"=>array("CO2"), "xtype"=>"sensorarray", "yaxis" => "Temperature (C)", "y" => array("Temperature"), "ytype"=> "sensorarray", "period"=>"Monthly", "apartments" => array(1, 2)) );
+	$graph = array("startdate"=>"2012-02-29", "enddate"=>"2012-03-01", "xaxis" => "CO2 (ppm)", "x"=>array("CO2", "Temperature"), "xtype"=>"sensorarray", "yaxis" => "Total_Water", "y" => array("Total_Water"), "ytype"=> "sensorarray", "period"=>"Hourly", "apartments" => array(1, 2)) ;
 	$message = "";
 	$finances = true;
 	$price_per_kwh = 1;
@@ -53,7 +54,7 @@ if ($test) {
 }
 
 //This loop goes through each graph request from the front end, grabs the data, and sends it back to the front end in the form of a json array
-foreach ($graphs as $id=>$graph) {
+
 	//parsing out the components of the graph
 	$apartments = $graph['apartments'];
 	$startdate = $graph['startdate'];
@@ -104,7 +105,8 @@ foreach ($graphs as $id=>$graph) {
 	/*
 	 *  Is it necessary to throw an error if the axis labels are not present?
          *
-         * if ($xaxis == null) {
+         
+	if ($xaxis == null) {
 		$error .= "No y-axis dataset selected. ";
 	}
 
@@ -113,15 +115,17 @@ foreach ($graphs as $id=>$graph) {
 	}*/
 
 
-
+	//Check to make sure the query is over a reasonable data set
 	if ($startdate != null && $enddate != null) {
 		$startdate .= ":0";
 		$enddate .= ":0";
 		$error .= calculateRejection($startdate, $enddate, $period);	
 	}
+
+	//If any errors have occurred at this point there's no way we can process the query, so we spit out the query data, any error messages, and die
 	if ($error != null) {
-		$bigArray['query']['granularity'] = $period;
-		$bigArray['query']['message'] = $error;
+		$bigArray['granularity'] = $period;
+		$bigArray['message'] = $error;
         	$json = json_encode($bigArray);
         	echo $json;
 		die;
@@ -131,8 +135,8 @@ foreach ($graphs as $id=>$graph) {
 
 
 	
-	$bigArray['data'][$id]["x-axis"] = $xaxis;
-	$bigArray['data'][$id]["y-axis"] = $yaxis;
+	$bigArray["x-axis"] = $xaxis;
+	$bigArray["y-axis"] = $yaxis;
 
 	foreach ($apartments as $apartment) {
 		if ($ytype == "sensorarray") {
@@ -141,10 +145,10 @@ foreach ($graphs as $id=>$graph) {
 			}
 				foreach ($ydata as $date=>$yd) {
 				if ($yd[$sensor] == null) {
-					$message .= "No data found for graph $id apartment $apartment on the y-axis at time $date";
+					$message .= "No data found for apartment $apartment on the y-axis at time $date";
 				}
 
-				$bigArray['data'][$id]['values'][$apartment][$date][$sensor]["y"] = $yd[$sensor];
+				$bigArray['values'][$apartment][$date][$sensor]["y"] = $yd[$sensor];
 				if ($xtype == "time") {
 					$xdata[$date]['time'] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
 				}
@@ -162,9 +166,9 @@ foreach ($graphs as $id=>$graph) {
 				$xdata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period);
 				foreach ($xdata as $date=>$xd) {
 					if ($xd[$sensor] == null) {
-						$message .= "No data found for graph $id apartment $apartment on the x-axis at time $date";
+						$message .= "No data found for apartment $apartment on the x-axis at time $date";
 					}
-					$bigArray['data'][$id]['values'][$apartment][$date][$sensor]['x'] = $xd[$sensor];
+					$bigArray['values'][$apartment][$date][$sensor]['x'] = $xd[$sensor];
 				}
 			}
 		} else if ($xtype == "function") {
@@ -178,7 +182,7 @@ foreach ($graphs as $id=>$graph) {
 
 	}
 
-}
+
 
 
 
@@ -187,8 +191,8 @@ foreach ($graphs as $id=>$graph) {
 		$message = "Success!";
 	}
 
-	$bigArray['query']['granularity'] = $period;
-	$bigArray['query']['message'] = $message;
+	$bigArray['granularity'] = $period;
+	$bigArray['message'] = $message;
         $json = json_encode($bigArray);
         echo $json;
 
@@ -268,10 +272,10 @@ $SECONDS_PER_HOUR = 3600;
 $HOURS_PER_DAY = 24;
 $DAYS_PER_WEEK = 7;
 $WEEKS_PER_MONTH = 4;
-$HOURLY_VIEW_MAX = 24;
-$DAILY_VIEW_MAX = 14;
-$WEEKLY_VIEW_MAX = 12;
-$MONTHLY_VIEW_MAX = 12;
+$HOURLY_VIEW_MAX = 168;
+$DAILY_VIEW_MAX = 155;
+$WEEKLY_VIEW_MAX = 104;
+$MONTHLY_VIEW_MAX = 120;
 
 
 	//echo var_dump($startdate);	

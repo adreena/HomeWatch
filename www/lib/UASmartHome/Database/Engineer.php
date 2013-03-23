@@ -20,7 +20,7 @@ class Engineer {
 		$enddate = date_create_from_Format('Y-m-d:G', $enddate);
 	
 			if ($period == "Hourly") {
-				while ($startdate <= $enddate) {
+				while ($startdate < $enddate) {
 					$temp = Engineer::db_query_Hourly($apt,$table,$startdate->format('Y-m-d'), $startdate->format('G'), $column);
 					
 					if (ISSET($temp[0])) {
@@ -32,7 +32,7 @@ class Engineer {
 
 				}	
 			} else if ($period == "Daily") {
-				while ($startdate <= $enddate) {
+				while ($startdate < $enddate) {
 					$temp = Engineer::db_query_Daily($apt, $table, $startdate->format('Y-m-d'), $column); 
 					if (ISSET($temp[0])) {
 						$results[$startdate->format('Y-m-d:G')] = $temp[0];
@@ -42,7 +42,7 @@ class Engineer {
 					$startdate->add(date_interval_create_from_date_string('1 day'));
 				}
 			} else if ($period == "Weekly") {
-				while ($startdate <= $enddate) {
+				while ($startdate < $enddate) {
 					$year = $startdate->format("Y");	
 					$week = $startdate->format("W");
 					$temp = Engineer::db_query_Weekly($apt, $table, $year, $week, $column); 
@@ -54,7 +54,7 @@ class Engineer {
 					$startdate->add(date_interval_create_from_date_string('1 week'));
 				}
 			} else if ($period == "Monthly") {
-				while ($startdate <= $enddate) {
+				while ($startdate < $enddate) {
 					$year = $startdate->format("Y");
 					$month = $startdate->format("n");
 					$temp = Engineer::db_query_Monthly($apt, $table, $year, $month, $column);
@@ -68,7 +68,7 @@ class Engineer {
 			} else if ($period == "Yearly") {
 				$endyear = $enddate->format("Y");
 				$year = $startdate->format("Y");
-				while ($startdate <= $enddate) {
+				while ($startdate < $enddate) {
 
 					$temp = Engineer::db_query_Yearly($apt, $table, $year, $column);
 					if (ISSET($temp[0])) {
@@ -102,6 +102,7 @@ class Engineer {
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
+				$conn->close();
 				return $result;
 	}
 	
@@ -121,6 +122,7 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
+				$conn->close();
 				return $result;
 	}
 	function db_query_Weekly($apt,$table,$Year,$Week,$column)
@@ -139,6 +141,7 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
+				$conn->close();
 				return $result;
 	}
 	function db_query_Daily($apt,$table,$date,$column)
@@ -158,6 +161,7 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
+				$conn->close();
 				return $result;
 	}
 	function db_query_Hourly($apt,$table,$date,$Hour,$column)
@@ -178,6 +182,7 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
+				$conn->close();
 				return $result;
 	}
          	public function db_air_Period($apt,$datefrom,$dateto,$hourfrom,$hourto,$type)
@@ -252,6 +257,7 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 			$Query->bindValue(":ED",$EndDate);
 			$Query->bindValue(":TP",$Type);
 				$Query->execute();
+				$conn->close();
 	}
 	public 	function Utilities_Insert ($Type,$StartDate,$EndDate,$Price)
 	{
@@ -264,6 +270,7 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 			$Query->bindValue(":TP",$Type);
 			$Query->bindValue(":PC",$Price);
 			$Query->execute();
+				$conn->close();
 	}
 	public 	function Utilities_Update ($Start_Date,$End_Date,$Price,$Type)
 	{
@@ -275,6 +282,7 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 			$Query->bindValue(":PC",$Price);
 			$Query->bindValue(":TP",$Type);
 			$Query->execute();
+				$conn->close();
 	}
 	
 	public 	function Utilities_getPrice ($Type,$Start_Date,$End_Date)
@@ -286,9 +294,10 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 			$Query->bindValue(":ED",$End_Date);
 			$Query->bindValue(":TP",$Type);
 			$Query->execute();
-			$row = $Query->fetch(PDO::FETCH_OBJ);
+			$row = $Query->fetch(PDO::FETCH_ASSOC);
 			 $result=(array)$row;
 			 return $result;
+				$conn->close();
 	}
 	
 	public 	function Utilities_getAllOfType	($Type)
@@ -298,8 +307,9 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 		        where Type= :TP");
 		$Query->bindValue(":TP",$Type);
 		$Query->execute();
-		$row = $Query->fetch(PDO::FETCH_OBJ);
+		$row = $Query->fetch(PDO::FETCH_ASSOC);
 		$result=(array)$row;
+				$conn->close();
 		return $result;
 	}
 	
@@ -308,8 +318,9 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 		$conn=new Connection ();
 		$Query=$conn->connect()->prepare("select price from Utilities_Prices");
 		$Query->execute();
-		$row = $Query->fetch(PDO::FETCH_OBJ);
+		$row = $Query->fetch(PDO::FETCH_ASSOC);
 		$result=(array)$row;
+			$conn->close();
 		return $result;
 	}
 
