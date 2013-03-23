@@ -1,7 +1,8 @@
 require([
     'jquery',                   // Using the require+jquery combo
     'underscore',               // Underscore
-    'spiffy/spiffy',            // Collapsible menus
+    'jSearch/defines',          // Definitions for use with jSearch
+    //'spiffy/spiffy',            // Collapsible menus
     'flot/jquery.flot',         // Flot charts
     'flot/jquery.flot.time',    // Flot time plugin
     'flot-axislabels/jquery.flot.axislabels', // Extra flot plugins
@@ -18,24 +19,16 @@ require([
      *
      */
 
-    function ($, _) {
+    function ($, _, defs) {
 
         // For some stupid reason, JSLint requires
         // all var statements appear at the top of the file.
         // See: http://www.jslint.com/lint.html#scope
         var searchMod,
 
-            /* First, some constants: */
-            /* If we're using requireJS's optimization anyway, we might
-             * as well stuff this in a module. */
-            URI_CONTROLLER = '/search/process.php', // by the way, this is the model, not the controller...
-            URI_MOCKDATA = '/search/mockdata.json', // Mock data for database-less debugging.
-            /* jQuery selectors. */
-            SEL_SEARCH = 'form.sensor-search',
-            SEL_RESULTS = '#results',
-
             /* Global Variables. */
             searchCache = {}, // Cache for requests. We don't have to make more requests than necessary.
+            searchURI = defs.uri.controller,
 
             /* Then some local functions. */
             onLoad,
@@ -58,7 +51,7 @@ require([
             mapKeys;
 
         // Uncomment this to use the mockdata instead of the actual contoller.
-        //URI_CONTROLLER = URI_MOCKDATA;
+        //searchURI = defs.uri.mockdata;
 
 
         // This is called when everything is done loading.
@@ -177,7 +170,7 @@ require([
             // Else, do the AJAX request to fetch the information.
 
             $.ajax({
-                url: URI_CONTROLLER,
+                url: searchURI,
                 type: 'GET',
                 data: data,
                 cache: false,
@@ -207,7 +200,7 @@ require([
         printSadMessage = function (message) {
             // Empty the results div and put a sad little message specifying
             // the state of the server.
-            $(SEL_RESULTS)
+            $(defs.sel.resultBox)
                 .empty()
                 .append(
                     $('<h1>').text("Search error")
@@ -326,7 +319,7 @@ require([
             var drill_granularity;
             var date_from;
             var date_to;
-            var data = $(SEL_SEARCH).serialize();
+            var data = $(defs.sel.searchForm).serialize();
 
             $("#graph1").bind("plotclick", function (event, pos, item) {
                 if (item) {
