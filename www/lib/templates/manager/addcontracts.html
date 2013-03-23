@@ -1,0 +1,24 @@
+{% extends 'manager/base.html' %}
+
+{% block title 'UtilityContracts' %}
+
+{% block content %}
+<header>
+  <h1> This is the add contract page. </h1>
+</header>
+
+<FORM action="submitcontract.php" method="post">
+    <P>
+    <LABEL for="Utility Type">Utility Type: </LABEL>
+              <INPUT type="text" name="type"><BR>
+	<LABEL for="Price">Price: </LABEL>
+              <INPUT type="text" name="price"><BR>
+    <LABEL for="Start Date">Start Date: </LABEL>
+              <INPUT type="date" name="startdate"><BR>
+	<LABEL for="End Date">End Date: </LABEL>
+              <INPUT type="date" name="enddate"><BR>
+    <INPUT type="submit" name="formSubmit" value="Submit New"> <INPUT type="reset">
+    </P>
+ </FORM>
+
+{% endblock %}

@@ -16,6 +16,21 @@ class ManagerView
         $resinfo = $this->controller->getResidentInfo(1);
         return $resinfo;
     }
+	
+	public function getUtilityContracts()
+	{
+		$contracts = $this->controller->getUtilityContracts();
+	}
+	
+	public function submitContract($Type, $Price, $Start_Date, $End_Date)
+	{
+		$this->controller->submitContract($Type, $Price, $Start_Date, $End_Date);
+	}
+	
+	public function editContract($Type, $Price, $Start_Date, $End_Date)
+	{
+		$this->controller->editContract($Type, $Price, $Start_Date, $End_Date);
+	}
 
 }
 

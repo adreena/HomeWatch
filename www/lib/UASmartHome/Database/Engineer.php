@@ -290,6 +290,28 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 			 $result=(array)$row;
 			 return $result;
 	}
+	
+	public 	function Utilities_getAllOfType	($Type)
+	{
+		$conn=new Connection ();
+		$Query=$conn->connect()->prepare("select price from Utilities_Prices  
+		        where Type= :TP");
+		$Query->bindValue(":TP",$Type);
+		$Query->execute();
+		$row = $Query->fetch(PDO::FETCH_OBJ);
+		$result=(array)$row;
+		return $result;
+	}
+	
+	public 	function Utilities_getAll	()
+	{
+		$conn=new Connection ();
+		$Query=$conn->connect()->prepare("select price from Utilities_Prices");
+		$Query->execute();
+		$row = $Query->fetch(PDO::FETCH_OBJ);
+		$result=(array)$row;
+		return $result;
+	}
 
 
 

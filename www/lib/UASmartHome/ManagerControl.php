@@ -1,5 +1,7 @@
 <?php namespace UASmartHome;
 
+include ('Engineer.php');
+
 class ManagerControl
 {
 
@@ -42,6 +44,19 @@ class ManagerControl
         return $info;
     }
 
-
+	public function getUtilityContracts	($Type)
+	{
+		return Engineer::Utilities_getAll()
+	}
+	
+	public function submitContract($Type, $Price, $Start_Date, $End_Date)
+	{
+		Engineer::Utilities_Insert($Type, $Start_Date, $End_Date, $Price);
+	}
+	
+	public function editContract($Type, $Price, $Start_Date, $End_Date)
+	{
+		Engineer::Utilities_Insert($Start_Date, $End_Date, $Price, $Type);
+	}
 
 }

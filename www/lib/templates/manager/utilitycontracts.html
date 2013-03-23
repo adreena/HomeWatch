@@ -1,0 +1,32 @@
+{% extends 'manager/base.html' %}
+
+{% block title 'UtilityContracts' %}
+
+{% block content %}
+<header>
+  <h1> This is the contracts page. </h1>
+</header>
+
+<div class="searchbuttons">
+	<form action="utilitycontracts.php" method="post">
+	  <input type="submit" name="All Contracts" value="All Contracts">
+	</form>
+
+	<form action="electricityContracts.php" method="post">
+	  <input type="submit" name="Electricity Contracts" value="Electricity Contracts">
+	</form>
+</div>
+
+<div class="addbutton">
+	<form action="addcontracts.php" method="post">
+	  <input type="submit" name="Add A Contract" value="Add A Contract">
+	</form>
+	
+	<form action="editcontracts.php" method="post">
+	  <input type="submit" name="Edit A Contract" value="Edit A Contract">
+	</form>
+</div>
+
+  {% include 'manager/contracts-table.html' %}
+
+{% endblock %}
