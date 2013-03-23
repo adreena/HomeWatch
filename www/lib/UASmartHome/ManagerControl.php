@@ -9,9 +9,9 @@ class ManagerControl
     private $connection;
 
     public function __construct() {
-        //$this->model = new Database\ResidentDB();
-        //$this->connection = new Database\Connection();
-        //$this->connection->Connect();
+        $this->model = new Database\ResidentDB();
+        $this->connection = new Database\Connection();
+        $this->connection->Connect();
     }
 
     public function getResidentInfo() {
@@ -46,26 +46,17 @@ class ManagerControl
 
 	public function getUtilityContracts	($Type)
 	{
-		//$contracts = Engineer::Utilities_getAll()
-		$ret = array();
-		$i = 0;
-		while($i < 4)
-		{
-			$i++;
-			
-			array_push($ret, new UtilityContract($i, $i, $i, $i));
-		}
-		
-		array_push($ret, new UtilityContract($i, $i, $i, $i));
-		array_push($ret, new UtilityContract($i, $i, $i, $i));
-		array_push($ret, new UtilityContract($i, $i, $i, $i));
-		
-		return $ret;
+		return Engineer::Utilities_getAll()
 	}
 	
 	public function submitContract($Type, $Price, $Start_Date, $End_Date)
 	{
-		//Engineer::Utilities_Insert($Type, $Start_Date, $End_Date, $Price);
+		Engineer::Utilities_Insert($Type, $Start_Date, $End_Date, $Price);
+	}
+	
+	public function editContract($Type, $Price, $Start_Date, $End_Date)
+	{
+		Engineer::Utilities_Insert($Start_Date, $End_Date, $Price, $Type);
 	}
 
 }

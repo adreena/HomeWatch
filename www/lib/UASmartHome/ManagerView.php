@@ -26,6 +26,11 @@ class ManagerView
 	{
 		$this->controller->submitContract($Type, $Price, $Start_Date, $End_Date);
 	}
+	
+	public function editContract($Type, $Price, $Start_Date, $End_Date)
+	{
+		$this->controller->editContract($Type, $Price, $Start_Date, $End_Date);
+	}
 
 }
 
