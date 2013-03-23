@@ -2,17 +2,15 @@ require([
     'jquery',                   // Using the require+jquery combo
     'underscore',               // Underscore
     'jSearch/defines',          // Definitions for use with jSearch
-    //'spiffy/spiffy',            // Collapsible menus
     'flot/jquery.flot',         // Flot charts
     'flot/jquery.flot.time',    // Flot time plugin
     'flot-axislabels/jquery.flot.axislabels', // Extra flot plugins
     'flot-orderbars/jquery.flot.orderBars'],
 
     /*
-     * jSearch.
+     * jSearch.js
      *
-     * Currently, the file that handles *ALL* JavaScript
-     * stuff on the mangineer search page.
+     * Sets up stuff on the mangineer search page.
      *
      * TODO: Consider stuffing some of these things in modules,
      * and compiling stuff with RequireJS.
@@ -43,15 +41,10 @@ require([
 
             // Heruuuguuhhghhghu
             showHelpfulError,
-            printSadMessage,
-
-            /* Utility functions. */
-            devinDateToUTC,
-            preprocessData,
-            mapKeys;
+            printSadMessage;
 
         // Uncomment this to use the mockdata instead of the actual contoller.
-        //searchURI = defs.uri.mockdata;
+        searchURI = defs.uri.mockdata;
 
 
         // This is called when everything is done loading.
@@ -64,11 +57,7 @@ require([
 
         // Binds the search category menus.
         bindMenus = function () {
-
-            //$("#menu").spiffy({
-                //hideAll: true
-            //});
-
+            // Sad, sad day.
         };
 
 
@@ -78,10 +67,7 @@ require([
 
             // TODO: Context sensitive date controls.
 
-            // with jQueryUI
-            //$(".datepicker").datepicker({
-            //    dateFormat: 'yy-mm-dd'
-            //});
+            // Here too...
 
         };
 
@@ -115,7 +101,7 @@ require([
             $("#submitbutton").click(function (evt) {
                 // TODO: Make this selector more robust (e.g., it will
                 // break if we add another form to the page).
-                var data = $(SEL_SEARCH).serialize();
+                var data = $(defs.sel.searchBox).serialize();
 
                 onSearch(data);
 
