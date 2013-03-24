@@ -85,14 +85,19 @@ class Engineer {
 
 
 
-	function db_query_Yearly($apt,$table,$Year,$column)
-	{
-	           
-			   
+	public function db_query_Yearly($apt,$table,$Year,$column,$Phase=null)
+	{  
 			    $result =array();
 			    $table .= '_Yearly';
-				$conn=new Connection ();
-		      $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year ") ;
+		        $conn=new Connection ();
+				if ($Phase == null ){
+		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year ") ;
+				}else{
+				if ($Phase == 'A' || 'B')
+				{
+			    $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Phase= :PS") ;
+				$Query->bindValue(":PS",$Phase);
+				}}
 				$Query->bindValue(":Apt_Num",$apt);
 				$Query->bindValue(":Year",$Year);
 				$Query->execute();
@@ -102,16 +107,22 @@ class Engineer {
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
-				$conn->close();
 				return $result;
 	}
 	
-function db_query_Monthly($apt,$table,$Year,$Month,$column)
+public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	{
 			    $result =array();
 			    $table .= '_Monthly';
-				$conn=new Connection ();
-		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month ") ;
+		        $conn=new Connection ();
+				if ($Phase ==null ){
+		       $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month ") ;
+				}else{
+				if ($Phase == 'A' || 'B')
+				{
+		       $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month AND Phase= :PS ") ;
+			   $Query->bindValue(":PS",$Phase);
+				}}
 				$Query->bindValue(":Apt_Num",$apt);
 				$Query->bindValue(":Year",$Year);
 				$Query->bindValue(":Month",$Month);
@@ -122,15 +133,21 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
-				$conn->close();
 				return $result;
 	}
-	function db_query_Weekly($apt,$table,$Year,$Week,$column)
+	public function db_query_Weekly($apt,$table,$Year,$Week,$column,$Phase=null)
 	{
 			    $result =array();
 			    $table .= '_Weekly';
-				$conn=new Connection ();
-		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
+		        $conn=new Connection ();
+					if ($Phase ==null ){
+		       $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
+				}else{
+				if ($Phase == 'A' || 'B')
+				{
+		       $Query=$conn->connect()->prepare("select  ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week AND Phase= :PS") ;
+			   $Query->bindValue(":PS",$Phase);
+				}}
 				$Query->bindValue(":Apt_Num",$apt);
 				$Query->bindValue(":Year",$Year);
 				$Query->bindValue(":Week",$Week);
@@ -141,17 +158,24 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
-				$conn->close();
 				return $result;
 	}
-	function db_query_Daily($apt,$table,$date,$column)
+	public function db_query_Daily($apt,$table,$date,$column,$Phase=null)
 	{
 	           
-			   
-				$result =array();
-				$table .= '_Daily';
-				$conn=new Connection ();
-		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date") ;
+			   //$starttime = microtime(true);
+
+			    $result =array();
+			    $table .= '_Daily';
+		        $conn=new Connection ();
+				if ($Phase ==null ){
+		       $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date ") ;
+				}else{
+				if ($Phase == 'A' || 'B')
+				{
+		       $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Phase= :PS") ;
+			   $Query->bindValue(":PS",$Phase);
+				}}
 				$Query->bindValue(":Apt_Num",$apt);
 				$Query->bindValue(":Date",$date);
 				$Query->execute();
@@ -161,17 +185,69 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
-				$conn->close();
+				//$endtime = microtime(true);
+				//$duration = $endtime - $starttime;
+
 				return $result;
 	}
-	function db_query_Hourly($apt,$table,$date,$Hour,$column)
+	//Function to get the Max and Min
+	public function db_query_Extrema($apt,$column,$table,$startdate,$enddate,$EX,$Phase=null)
+	{
+			    $result =array();
+			    $table .= '_Hourly';
+				$conn=new Connection ();
+				if ($EX==1)
+		       { 
+			   if ($Phase==null){
+			   $Query=$conn->connect()->prepare("select MAX(".$column."),Hour from ".$table." where Apt= :Apt_Num AND Date between :SD AND :ED") ;
+			   }else{
+			   if ($Phase == 'A' || 'B')
+				{
+							   $Query=$conn->connect()->prepare("select MAX(".$column."),Hour from ".$table." where Apt= :Apt_Num AND Phase= :PS AND Date between :SD AND :ED") ;
+				               $Query->bindValue(":PS",$Phase);
+
+				}
+				}}
+				if ($EX==2)
+			   		       { 
+			   if ($Phase==null){
+			   $Query=$conn->connect()->prepare("select MIN(".$column."),Hour from ".$table." where Apt= :Apt_Num AND Date between :SD AND :ED") ;
+			   }else{
+			   if ($Phase == 'A' || 'B')
+				{
+							   $Query=$conn->connect()->prepare("select MIN(".$column."),Hour from ".$table." where Apt= :Apt_Num AND Phase= :PS AND Date between :SD AND :ED") ;
+				               $Query->bindValue(":PS",$Phase);
+
+				}
+				}}
+				$Query->bindValue(":Apt_Num",$apt);
+				$Query->bindValue(":SD",$startdate);
+				$Query->bindValue(":ED",$enddate);
+				$Query->execute();
+				$row_count= $Query->rowCount();
+				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+				{
+				$result[]=(array)$row;
+				}
+				//$a= $Query->rowCount();
+				return $result;
+	}
+	public function db_query_Hourly($apt,$table,$date,$Hour,$column,$Phase=null)
 	{
 	           
-
+			   
 			    $result =array();
-				$table .= '_Hourly';
+			    $table .= '_Hourly';
 				$conn=new Connection ();
+				if ($Phase==null){
 		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour ") ;
+				}else{
+				if ($Phase == 'A' || 'B')
+				{
+				$Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour AND Phase= :PS") ;
+		        $Query->bindValue(":PS",$Phase);
+
+				}}
 				$Query->bindValue(":Apt_Num",$apt);
 				$Query->bindValue(":Date",$date);
 				$Query->bindValue(":Hour",$Hour);
@@ -182,7 +258,6 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
-				$conn->close();
 				return $result;
 	}
          	public function db_air_Period($apt,$datefrom,$dateto,$hourfrom,$hourto,$type)
@@ -299,7 +374,7 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 			 return $result;
 				$conn->close();
 	}
-	
+	///The Type is binded with Month and Date //I don't think this Function is needed  because it will return the Electricity History\\\\\\ 
 	public 	function Utilities_getAllOfType	($Type)
 	{
 		$conn=new Connection ();
@@ -312,8 +387,8 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 				$conn->close();
 		return $result;
 	}
-	
-	public 	function Utilities_getAll	()
+	//Why We need That??????????????????????
+	public 	function Utilities_getAll()
 	{
 		$conn=new Connection ();
 		$Query=$conn->connect()->prepare("select price from Utilities_Prices");
@@ -322,6 +397,23 @@ function db_query_Monthly($apt,$table,$Year,$Month,$column)
 		$result=(array)$row;
 			$conn->close();
 		return $result;
+	}
+		//Hour in 00:00 Format so 01:00 23:00,no Minutes ..
+	public function Weather_DB_getData ($Year,$Month,$Day,$Hour)
+	{
+	$conn=new Connection ();
+		      $Query=$conn->connect()->prepare("select External_Temperature ,External_Relative_Humidity 
+			  ,Wind_Speed ,Wind_Direction from Weather_Forecast  
+		        where Year= :YR AND Month= :MT and Day= :DY And Hour= :HR") ;
+			$Query->bindValue(":YR",$Year);
+			$Query->bindValue(":MT",$Month);
+			$Query->bindValue(":DY",$Day);
+			$Query->bindValue(":HR",$Hour);
+			$Query->execute();
+			$row = $Query->fetch(PDO::FETCH_ASSOC);
+			$result=(array)$row;
+			 return $result;
+	
 	}
 
 

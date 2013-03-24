@@ -3,6 +3,35 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__. '/Database/Engineer.php';
 
+define("DBVARS", serialize(array(
+    "air_co2" => "CO2",
+    "air_humidity" => "Relative_Humidity",
+    "air_temperature" => "Temperature",
+    "elec_ch1" => "Ch1",
+    "elec_ch2" => "Ch2",
+    "elec_aux1" => "AUX1",
+    "elec_aux2" => "AUX2",
+    "elec_aux3" => "AUX3",
+    "elec_aux4" => "AUX4",
+    "elec_aux5" => "AUX5",
+    "heat_energy" => "Total_Energy",
+    "heat_volume" => "Total_Volume",
+    "heat_mass" => "Total_Mass",
+    "heat_flow" => "Current_Flow",
+    "heat_temp1" => "Current_Temperature_1",
+    "heat_temp2" => "Current_Temperature_2",
+    "heatflux_stud" => "Stud",
+    "heatflux_insul" => "Insulation",
+    "water_hot" => "Hot_Water",
+    "water_total" => "Total_Water",
+    //TODO: add weather functions in database
+    "weather_temp" => "External_Temperature",
+    "weather_humidity" => "External_Relative_Humidity",
+    "weather_windspeed" => "Wind_Speed",
+    "weather_winddirection" => "Wind_Direction"
+)));
+
+
 class EquationParser
 {
 
@@ -36,6 +65,7 @@ class EquationParser
         $data = array();
         $finalGraphData = array();
         $evaluator = new EvalMath();
+        $db_vars = unserialize(DBVARS);
 
         $pieces = explode("$", $function);
 
@@ -46,33 +76,10 @@ class EquationParser
 
         for($i=1; $i<count($pieces); $i+=2) {
 
-            switch($pieces[$i]) {
-                case "air_temperature":
-                    $data["air_temperature"] = \Engineer::db_pull_query(
-                               $input["apartment"], "Temperature",
-                               $input["startdate"], $input["enddate"],
-                               $input["granularity"]);
-                    break;
-
-                case "air_humidity":
-                    $data["air_humidity"] = \Engineer::db_pull_query(
-                               $input["apartment"], "Relative_Humidity",
-                               $input["startdate"], $input["enddate"],
-                               $input["granularity"]);
-                    break;
-
-                case "air_co2":
-                    $data["air_co2"] = \Engineer::db_pull_query(
-                               $input["apartment"], "CO2",
-                               $input["startdate"], $input["enddate"],
-                               $input["granularity"]);
-                    break;
-
-                default:
-                    echo "invalid variable " . $pieces[$i] . " in equation\n";
-                    return null;
-
-            }
+            $data[$pieces[$i]] = \Engineer::db_pull_query(
+                       $input["apartment"], $db_vars[$pieces[$i]],
+                       $input["startdate"], $input["enddate"],
+                       $input["granularity"]);
 
         }
 
