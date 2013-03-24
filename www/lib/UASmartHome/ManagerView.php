@@ -20,6 +20,7 @@ class ManagerView
 	public function getUtilityContracts()
 	{
 		$contracts = $this->controller->getUtilityContracts();
+		return $contracts;
 	}
 	
 	public function submitContract($Type, $Price, $Start_Date, $End_Date)

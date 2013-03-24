@@ -46,7 +46,7 @@ $W_PER_KW = 1000;
 
 //Testing data for when not hooked up to the front end
 if ($test) {
-	$graph = array("startdate"=>"2012-02-29", "enddate"=>"2012-03-01", "xaxis" => "CO2 (ppm)", "x"=>array("CO2", "Temperature"), "xtype"=>"sensorarray", "yaxis" => "Total_Water", "y" => array("Total_Water"), "ytype"=> "sensorarray", "period"=>"Hourly", "apartments" => array(1, 2)) ;
+	$graph = array("startdate"=>"2012-02-29", "enddate"=>"2012-03-01", "xaxis" => "CO2 (ppm)", "x"=>"CO2", "xtype"=>"sensorarray", "yaxis" => "Total_Water", "y" => array("Total_Water"), "ytype"=> "sensorarray", "period"=>"Hourly", "apartments" => array(1, 2)) ;
 	$message = "";
 	$finances = true;
 	$price_per_kwh = 1;
@@ -66,6 +66,7 @@ if ($test) {
 	$yaxis = $graph['yaxis'];
 	$x = $graph['x'];
 	$y = $graph['y'];
+	$phase = null;
 	$xdata = array();
 	$ydata = array();
 
@@ -133,7 +134,34 @@ if ($test) {
 
 	//Necessary to append :0 to these strings so that the hours line up nicely
 
+/*
+    "A ch1":    "Mains (Phase A)",
+    "A ch2":    "Bedroom and hot water tank (Phase A)",
+    "A aux1":   "Oven (Phase A) and range hood",
+    "A aux2":   "Microwave and ERV controller",
+    "A aux3":   "Electrical duct heating",
+    "A aux4":   "Kitchen plugs (Phase A) and bathroom lighting",
+    "A aux5":   "Energy recovery ventilation",
 
+    "B ch1":    "Mains (Phase B)",
+    "B ch2":    "Kitchen plugs (Phase B) and kitchen counter",
+    "B aux1":   "Oven (Phase B)",
+    "B aux2":   "Bathroom",
+    "B aux3":   "Living room and balcony",
+    "B aux4":   "Hot water tank (phase b)",
+    "B aux5":   "Refridgerator"
+
+	"External Temperature": "External_Temperature",
+	"External Humidity" : "External_Relative_Humidity",
+	"Wind Speed" : "Wind_Speed",
+	"Wind Direction" : "Wind_Direction"
+
+
+*/
+
+	$phaseMapping = array("Mains (Phase A)" => "A", "Bedroom and hot water tank (Phase A)" => "A", "Oven (Phase A) and range hood" => "A", "Microwave and ERV controller" => "A", "Electrical duct heating" => "A", "Kitchen plugs (Phase A) and bathroom lighting" => "A", "Energy recovery ventilation" => "A", "Mains (Phase B)" => "B", "Kitchen plugs (Phase B) and kitchen counter" => "B", "Oven (Phase B)" => "B", "Bathroom" => "B", "Living room and balcony" => "B",  "Hot water tank (Phase B)" => "B", "Refrigerator" => "B");
+	$frontEndNameMapping = array("Mains (Phase A)" => "ch.1", "Bedroom and hot water tank (Phase A)" => "ch.2", "Oven (Phase A) and range hood" => "aux1", "Microwave and ERV controller" => "aux", "Electrical duct heating" => "aux3", "Kitchen plugs (Phase A) and bathroom lighting" => "aux4", "Energy recovery ventilation" => "aux5", "Mains (Phase B)" => "ch.1", "Kitchen plugs (Phase B) and kitchen counter" => "ch.2", "Oven (Phase B)" => "aux1", "Bathroom" => "aux2", "Living room and balcony" => "aux3",  "Hot water tank (Phase B)" => "aux4", "Refrigerator" => "aux5", "External Temperature" => "External_Temperature");
+	//TODO: EDDIE FINISH THIS ARRAY WITH THE VALUES FOR EVERY SENSOR
 	
 	$bigArray["x-axis"] = $xaxis;
 	$bigArray["y-axis"] = $yaxis;
@@ -141,7 +169,18 @@ if ($test) {
 	foreach ($apartments as $apartment) {
 		if ($ytype == "sensorarray") {
 			foreach ($y as $sensor) {
-				$ydata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period);
+
+				if ($phaseMapping[$sensor]) {
+					$phase = $phaseMapping[$sensor];
+				} else {
+					$phase = null;
+				}
+
+				if ($frontEndNameMapping[$sensor]) {
+					$sensor = $frontEndNameMapping[$sensor];
+				}
+	
+				$ydata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period, $phase);
 			}
 				foreach ($ydata as $date=>$yd) {
 				if ($yd[$sensor] == null) {
@@ -162,7 +201,19 @@ if ($test) {
 		
 	
 		if ($xtype == "sensorarray") {
-			foreach ($x as $sensor) {
+	
+
+				if ($phaseMapping[$x]) {
+					$phase = $phaseMapping[$x];
+				} else {
+					$phase = null;
+				}
+
+				if ($frontEndNameMapping[$x]) {
+					$sensor = $frontEndNameMapping[$x];
+				}
+
+
 				$xdata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period);
 				foreach ($xdata as $date=>$xd) {
 					if ($xd[$sensor] == null) {
@@ -170,9 +221,9 @@ if ($test) {
 					}
 					$bigArray['values'][$apartment][$date][$sensor]['x'] = $xd[$sensor];
 				}
-			}
+			
 		} else if ($xtype == "function") {
-			$function = parseFunctionToJson($xdata, $startdate, $enddate, $period, $apartment);
+			$function = parseFunctionToJson($xdata, $startdate, $enddate, $period, $apartment, $phase);
 			$xdata = EquationParser::getData($function);
 		} else {
 			//For "time" we do nothing
@@ -213,8 +264,10 @@ if ($test) {
  */
 
 
-function checkAlerts ($xdata, $ydata, $x, $y, $message, $apartment) {
+function checkAlerts ($xdata, $ydata, $x, $yarray, $message, $apartment) {
 	$alerts = array();
+
+foreach ($yarray as $y) {
 	$co2alert = "CO2 levels are extremely high in apartment $apartment! ";
 	foreach ($ydata as $yd) {
 		if ($y == "CO2" && $yd[$y] > 10) {
@@ -228,7 +281,7 @@ function checkAlerts ($xdata, $ydata, $x, $y, $message, $apartment) {
 			$alerts[$co2alert] = $co2alert;
 		}
 	}
-
+}
 	//echo var_dump($alerts);
 
 	foreach ($alerts as $alert) {

@@ -2,11 +2,13 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
+require_once "Connection.php";
+
 class EquationDB {
 
     public function fetchUserData()
     {
-        $con = new Connection();
+        $con = new \Connection();
         
         $userData['functions'] = EquationDB::fetchFunctions($con);
         $userData['constants'] = EquationDB::fetchConstants($con);
