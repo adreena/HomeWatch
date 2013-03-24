@@ -1,14 +1,11 @@
 /** Graph manager. */
-define(['jquery', 'underscore'],/* 'search/defines'],*/ function ($, _, D) {
+require(['jquery',
+        'underscore',
+        'search/defines',
+        'utils/TemplateManager'],
 
-    /* Each of these things should go in their own modules,
-     * probably. */
-    var render,
-        templateCache = {},
-        compileTemplate,
-        fetchTemplateText,
-
-        parseCategories,
+function ($, _, D, TemplateManager) {
+    var parseCategories, // TODO: Make a better name for this.
 
         parseGraphControls,
         parseGraphType,
@@ -17,53 +14,7 @@ define(['jquery', 'underscore'],/* 'search/defines'],*/ function ($, _, D) {
         graphControlAxes,
         graphCreateOptGroups,
 
-        __temp_hardCodedCategories;
-
-
-    /* This is an example of how the sensors will look. It's in simple JSON
-     * so that we can move this to a simple file if need be.
-     * If the value is a string, that is its display name.
-     * Otherwise, the value is an object that must contain the
-     * display name. It may also contain any axis constraints (by default, 'xy'), in
-     * "applicableAxes".
-     * Multiple values are specified as an array of value strings.
-     */
-    __temp_hardCodedCategories = {
-        "Time": {
-            "time": {
-                "displayName": "Time",
-                "applicableAxes": "x"
-            }
-        },
-
-        "Sensors": {
-            "CO2": "Carbon Dioxide (PPM)",
-            "all_electricity": {
-                "multiple": [
-                    "Mains (Phase A)",
-                    "Bedroom and hot water tank (Phase A)",
-                    "Oven (Phase A) and range hood",
-                    "Microwave and ERV controller",
-                    "Electrical duct heating",
-                    "Kitchen plugs (Phase A) and bathroom lighting",
-                    "Energy recovery ventilation",
-                    "Mains (Phase B)",
-                    "Kitchen plugs (Phase B) and kitchen counter",
-                    "Oven (Phase B)",
-                    "Bathroom",
-                    "Living room and balcony",
-                    "Hot water tank (Phase B)",
-                    "Refrigerator"],
-                "applicableAxes": "y",
-                "displayName": "All electricity"
-            }
-        },
-
-        "Formulae": {
-            "waffles": "Waffles"
-        }
-    };
-
+        tman = new TemplateManager();
 
     /*
      * GRAPH CONTROLLER STUFF
@@ -176,7 +127,7 @@ define(['jquery', 'underscore'],/* 'search/defines'],*/ function ($, _, D) {
      * <option>/<optgroup> elements out of it.
      */
     graphCreateOptGroups = function (categories) {
-        return render('graph-optgroup', {categories : categories });
+        return tman.render('graph-optgroup', {categories : categories });
     };
 
     /**
@@ -188,15 +139,15 @@ define(['jquery', 'underscore'],/* 'search/defines'],*/ function ($, _, D) {
         var cats, content;
 
         /* DEBUG! */
-        cats = parseCategories(__temp_hardCodedCategories);
+        cats = parseCategories(D.exampleCategories);
 
-        content = render('graph-control-axes', {
+        content = tman.render('graph-control-axes', {
             /* The content is just the two optgroups appended. */
             xAxis: graphCreateOptGroups(cats.x),
             yAxis: graphCreateOptGroups(cats.y)
         });
 
-        return render('graph-control-li', {
+        return tman.render('graph-control-li', {
             header: 'Axes', /* Probably would want this to be i18n safe.. */
             content: content
         });
@@ -219,7 +170,7 @@ define(['jquery', 'underscore'],/* 'search/defines'],*/ function ($, _, D) {
 
         renderedElements = elements.join('');
 
-        rendered = render('graph-group', {
+        rendered = tman.render('graph-group', {
             graphID: graphID,
             graphControls: renderedElements
         });
@@ -232,34 +183,7 @@ define(['jquery', 'underscore'],/* 'search/defines'],*/ function ($, _, D) {
 
 
 
-    /*
-     * TEMPLATE MANAGMENT AND RENDERING STUFF.
-     */
 
-
-    /**
-     * Gets template text from the page. Should be
-     * a callback, but currently hard-coded.
-     */
-    fetchTemplateText = function (templateName) {
-        return $('#_t-' + templateName).html();
-    };
-
-    /** Underscore template manager. */
-    render = function (templateName, parameters, options) {
-        var templateText, template;
-
-        /* If the template has not been compiled yet, compile it
-         * and add it to the cache. */
-        if (!templateCache.hasOwnProperty(templateName)) {
-            templateText = fetchTemplateText(templateName);
-            templateCache[templateName] = _.template(templateText);
-        }
-
-        template = templateCache[templateName];
-
-        return template(parameters, options);
-    };
 
 
     /**
@@ -270,9 +194,5 @@ define(['jquery', 'underscore'],/* 'search/defines'],*/ function ($, _, D) {
     $(function () {
         addGraph($('ul#graphs'), undefined);
     });
-
-    return {
-        render: render
-    };
 
 });
