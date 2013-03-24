@@ -1,0 +1,6 @@
+{
+	"External Temperature": "External_Temperature",
+	"External Humidity" : "External_Relative_Humidity",
+	"Wind Speed" : "Wind_Speed",
+	"Wind Direction" : "Wind_Direction"
+}
