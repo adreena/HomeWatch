@@ -260,6 +260,32 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				$a= $Query->rowCount();
 				return $result;
 	}
+	//Alert Function Between Date and Hours\\\
+	public function db_query_Alert ($apt,$column,$table,$StartDate,$EndDate,$StartHour,$EndHour)
+	{
+	$result =array();
+	$table .= '_Alert';
+	$conn=new Connection ();
+	$Query=$conn->connect()->prepare("select ".$column.",Date,Hour from ".$table." where Apt= :Apt_Num AND Date Between :SD and :ED AND Hour Between :SH AND :EH ") ;
+	$Query->bindValue(":Apt_Num",$apt);
+    $Query->bindValue(":SD",$StartDate);
+	$Query->bindValue(":ED",$EndDate);
+	$Query->bindValue(":SH",$StartHour);
+	$Query->bindValue(":EH",$EndHour);
+	$Query->execute();
+	while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+		     {
+				$result[]=(array)$row;
+		      }
+				
+				
+	//$a= $Query->rowCount();
+				
+				
+	return $result;
+	
+	
+	}
          	public function db_air_Period($apt,$datefrom,$dateto,$hourfrom,$hourto,$type)
 	{
 			    $result =array();
