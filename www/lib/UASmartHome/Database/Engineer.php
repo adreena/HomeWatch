@@ -1,4 +1,4 @@
-<?php
+<?php namespace UASmartHome; 
 
 include ('Connection.php');
 
@@ -102,7 +102,7 @@ class Engineer {
 				$Query->bindValue(":Year",$Year);
 				$Query->execute();
 				$row_count= $Query->rowCount();
-				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+				while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
@@ -128,7 +128,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				$Query->bindValue(":Month",$Month);
 				$Query->execute();
 				$row_count= $Query->rowCount();
-				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+				while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
@@ -153,7 +153,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				$Query->bindValue(":Week",$Week);
 				$Query->execute();
 				$row_count= $Query->rowCount();
-				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+				while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
@@ -180,7 +180,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				$Query->bindValue(":Date",$date);
 				$Query->execute();
 				$row_count= $Query->rowCount();
-				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+				while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
@@ -225,7 +225,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				$Query->bindValue(":ED",$enddate);
 				$Query->execute();
 				$row_count= $Query->rowCount();
-				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+				while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
@@ -253,7 +253,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				$Query->bindValue(":Hour",$Hour);
 				$Query->execute();
 				$row_count= $Query->rowCount();
-				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+				while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
@@ -314,7 +314,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				array_push($result,$errinf[0]);
 				array_push($result,$errinf[1]);
 				array_push($result,$errinf[2]);
-				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+				while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
 				{
 					array_push($result,$row);
 				}
@@ -369,7 +369,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 			$Query->bindValue(":ED",$End_Date);
 			$Query->bindValue(":TP",$Type);
 			$Query->execute();
-			$row = $Query->fetch(PDO::FETCH_ASSOC);
+			$row = $Query->fetch(\PDO::FETCH_ASSOC);
 			 $result=(array)$row;
 			 return $result;
 				$conn->close();
@@ -382,7 +382,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 		        where Type= :TP");
 		$Query->bindValue(":TP",$Type);
 		$Query->execute();
-		$row = $Query->fetch(PDO::FETCH_ASSOC);
+		$row = $Query->fetch(\PDO::FETCH_ASSOC);
 		$result=(array)$row;
 				$conn->close();
 		return $result;
@@ -393,7 +393,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 		$conn=new Connection ();
 		$Query=$conn->connect()->prepare("select price from Utilities_Prices");
 		$Query->execute();
-		$row = $Query->fetch(PDO::FETCH_ASSOC);
+		$row = $Query->fetch(\PDO::FETCH_ASSOC);
 		$result=(array)$row;
 			$conn->close();
 		return $result;
@@ -410,7 +410,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 			$Query->bindValue(":DY",$Day);
 			$Query->bindValue(":HR",$Hour);
 			$Query->execute();
-			$row = $Query->fetch(PDO::FETCH_ASSOC);
+			$row = $Query->fetch(\PDO::FETCH_ASSOC);
 			$result=(array)$row;
 			 return $result;
 	
