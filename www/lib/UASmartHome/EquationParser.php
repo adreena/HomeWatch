@@ -3,9 +3,7 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__. '/Database/Engineer.php';
 
-$debug = False;
-
-class parser
+class EquationParser
 {
 
     public function __construct() {
@@ -35,11 +33,16 @@ class parser
 
         $input = json_decode($input, true);
         $function = $input["function"];
-        $cleaned_funcs = array();
         $data = array();
         $finalGraphData = array();
+        $evaluator = new EvalMath();
 
         $pieces = explode("$", $function);
+
+        if(count($pieces) === 0) {
+            echo "there are no database variables in the equation\n";
+            return null;
+        }
 
         for($i=1; $i<count($pieces); $i+=2) {
 
@@ -49,7 +52,6 @@ class parser
                                $input["apartment"], "Temperature",
                                $input["startdate"], $input["enddate"],
                                $input["granularity"]);
-                    //var_dump($data);
                     break;
 
                 case "air_humidity":
@@ -68,68 +70,42 @@ class parser
 
                 default:
                     echo "invalid variable " . $pieces[$i] . " in equation\n";
+                    return null;
 
             }
 
         }
 
         $rand_data = current($data);
+
+        if (!$rand_data) {
+            echo "no database variable found in equation\n";
+            return null;
+        }
+
         $num_points = count($rand_data);
 
-        // fill the $cleaned_funcs array with as many copies of the function
-        // as needed
-        while ($point = current($rand_data)) {
-            $cleaned_funcs[key($rand_data)] = $function;
-            next($rand_data);
-        }
-
         // replace all the variables in the array of functions
-        while ($cur_data = current($data)) {
-            if(count($cur_data) != $num_points) {
-                echo "not all data have the same number of points\n";
-            }
+        for ($i = 0; $i < $num_points; ++$i) {
 
-            while($value = current($cur_data)) {
-                switch(key($data)) {
-                    case "air_temperature":
-                        $cleaned_funcs[key($cur_data)] = str_replace("\$air_temperature$", $value["Temperature"], $cleaned_funcs[key($cur_data)]);
-                        break;
-                    case "air_humidity":
-                        $cleaned_funcs[key($cur_data)] = str_replace("\$air_humidity$", $value["Relative_Humidity"], $cleaned_funcs[key($cur_data)]);
-                        break;
-                    case "air_co2":
-                        $cleaned_funcs[key($cur_data)] = str_replace("\$air_co2$", $value["CO2"], $cleaned_funcs[key($cur_data)]);
-                        break;
-                    default:
-                        echo "invalid variable " . key($data) . " in equation\n";
+            reset($data);
+            while ($cur_data = current($data)) {
+                $date = array_keys($cur_data)[$i];
+                if(count($cur_data) != $num_points) {
+                    echo "not all data have the same number of points\n";
+                    return null;
                 }
+                $evaluator->evaluate(key($data) . " = " . end(array_values($cur_data)[$i]));
 
-                next($cur_data);
+                next($data);
             }
 
-            next($data);
+            $finalGraphData[$date] = $evaluator->evaluate(str_replace("$", "", $function)) . "\n";
         }
 
-        // evaluate the functions and store them in $finalGraphData
-        while ($func = current($cleaned_funcs)) {
-            $finalGraphData[key($cleaned_funcs)] = parser::evalEquation($func);
-            next($cleaned_funcs);
-        }
-
-
-        //var_dump($finalGraphData);
         return $finalGraphData;
 
     }
 
-    private static function evalEquation($equation) {
-
-        $evaluator = new EvalMath();
-        return $evaluator->evaluate($equation);
-
-
-    }
-
-
-
 }
+
