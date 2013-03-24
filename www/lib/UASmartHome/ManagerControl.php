@@ -46,7 +46,7 @@ class ManagerControl
 
 	public function getUtilityContracts	($Type)
 	{
-		return Engineer::Utilities_getAll()
+		return Engineer::Utilities_getAll();
 	}
 	
 	public function submitContract($Type, $Price, $Start_Date, $End_Date)
