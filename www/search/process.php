@@ -46,7 +46,7 @@ $W_PER_KW = 1000;
 
 //Testing data for when not hooked up to the front end
 if ($test) {
-	$graph = array("startdate"=>"2012-02-29", "enddate"=>"2012-03-01", "xaxis" => "CO2 (ppm)", "x"=>"CO2", "xtype"=>"sensorarray", "yaxis" => "Total_Water", "y" => array("Total_Water"), "ytype"=> "sensorarray", "period"=>"Hourly", "apartments" => array(1, 2)) ;
+	$graph = array("startdate"=>"2012-03-01", "enddate"=>"2012-03-02", "xaxis" => "CO2 (ppm)", "x"=>"CO2", "xtype"=>"sensorarray", "yaxis" => "Water_Usage", "y" => array("Total_Water", "Hot_Water"), "ytype"=> "sensorarray", "period"=>"Daily", "apartments" => array(1, 2)) ;
 	$message = "";
 	$finances = true;
 	$price_per_kwh = 1;
@@ -170,26 +170,33 @@ if ($test) {
 		if ($ytype == "sensorarray") {
 			foreach ($y as $sensor) {
 
-				if ($phaseMapping[$sensor]) {
+
+				//echo var_dump($sensor);
+
+				if (ISSET($phaseMapping[$sensor])) {
 					$phase = $phaseMapping[$sensor];
 				} else {
 					$phase = null;
 				}
-
-				if ($frontEndNameMapping[$sensor]) {
+/*
+				if (ISSET($frontEndNameMapping[$sensor])) {
 					$sensor = $frontEndNameMapping[$sensor];
 				}
-	
+*/	
 				$ydata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period, $phase);
-			}
+				//echo var_dump($ydata);
 				foreach ($ydata as $date=>$yd) {
-				if ($yd[$sensor] == null) {
-					$message .= "No data found for apartment $apartment on the y-axis at time $date";
-				}
 
-				$bigArray['values'][$apartment][$date][$sensor]["y"] = $yd[$sensor];
-				if ($xtype == "time") {
-					$xdata[$date]['time'] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
+					//echo "***$apartment $date $sensor $yd[$sensor]***";
+					if ($yd[$sensor] == null) {
+						$message .= "No data found for apartment $apartment on the y-axis at time $date";
+					}
+					//echo var_dump ($date);
+					//echo var_dump($yd);
+					$bigArray['values'][$apartment][$date][$sensor]["y"] = $yd[$sensor];
+					if ($xtype == "time") {
+						$xdata[$date]['time'] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
+					}
 				}
 			}
 
@@ -201,26 +208,30 @@ if ($test) {
 		
 	
 		if ($xtype == "sensorarray") {
-	
+			if (ISSET($phaseMapping[$x])) {
+				$phase = $phaseMapping[$x];
+			} else {
+				$phase = null;
+			}
 
-				if ($phaseMapping[$x]) {
-					$phase = $phaseMapping[$x];
-				} else {
-					$phase = null;
+/*
+			if (ISSET($frontEndNameMapping[$x])) {
+				$sensor = $frontEndNameMapping[$x];
+			}
+*/
+			$xdata = Engineer::db_pull_query($apartment, $x, $startdate, $enddate, $period);
+			foreach ($xdata as $date=>$xd) {
+				if ($xd[$x] == null) {
+					$message .= "No data found for apartment $apartment on the x-axis at time $date";
 				}
 
-				if ($frontEndNameMapping[$x]) {
-					$sensor = $frontEndNameMapping[$x];
+				foreach ($bigArray['values'][$apartment][$date] as $sensor=>$sensordata) {
+					//echo var_dump ($sensor);		
+					//echo var_dump ($sensordata);		
+					$sensordata["x"] = $xd[$x];
+					$bigArray['values'][$apartment][$date][$sensor] = $sensordata;
 				}
-
-
-				$xdata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period);
-				foreach ($xdata as $date=>$xd) {
-					if ($xd[$sensor] == null) {
-						$message .= "No data found for apartment $apartment on the x-axis at time $date";
-					}
-					$bigArray['values'][$apartment][$date][$sensor]['x'] = $xd[$sensor];
-				}
+			}
 			
 		} else if ($xtype == "function") {
 			$function = parseFunctionToJson($xdata, $startdate, $enddate, $period, $apartment, $phase);
@@ -229,7 +240,7 @@ if ($test) {
 			//For "time" we do nothing
 		}
 
-		$message = checkAlerts($xdata, $ydata, $x, $y, $message, $apartment);
+		//$message = checkAlerts($xdata, $ydata, $x, $y, $message, $apartment);
 
 	}
 
