@@ -3,7 +3,7 @@
  #
  # Data required: None (as of now).
  #
- #} 
+ #}
 
 
 {% extends 'manager/base.html' %}
@@ -13,214 +13,34 @@
 
 {# See below for the extra scripts. #}
 
+{% block requireMain '/js/temp' %}
+
 {% block content %}
-<nav class="search-controls menu-content">
-<form method="GET" action="/search/process.php">
-<ul class="spiffy-menus">
-  <li id="sensors" data-spiffy-show>
-    <h3>Sensors</h3>
-    <fieldset class="select-all-category">
-      <legend>All Data</legend>
-      <input type="checkbox" class="checkAllSensors"
-        value="select-all" id="allData">All Sensor Data</input>
-    </fieldset>  
-  </li>
 
-  <li id="apts">
-    <h3>Apartments</h3>
-    <fieldset class="apartment-group">
-        <legend>Unit Numbers</legend> 
-    <input type="checkbox" class="allApts" value="select-all" id="select-all">All Apartments 
-    </fieldset>
-  </li>
 
-  <li id="dates">
-    <h3>Dates</h3>
-    <fieldset>
-      <legend> Date range </legend>
-      <input type="text" name="datepicker" placeholder="Enter Date"/>
-    </fieldset>
-  </li>
-
-  <li id="graphs">
-    <h3>Graphs</h3>
-    <fieldset class="graph-group">
-        <legend>Graph Data</legend>
-        <input type="radio" name="charts" value="plainText">
-        <label for="plainText">Plain Text</label>
-        <input type="radio" name="charts" value="tabular">
-        <label for="tabular">Table</label>
-
-        <input type="radio" name="charts" value="pie">
-        <label for="pie">Pie Chart</label>
-        <input type="radio" name="charts" value="histo">
-        <label for="histo">Histogram</label>
-
-        <input type="radio" name="charts" value="line">
-        <label for="line">Line Graph</label>		               
-    </fieldset>
-  </li>	
+<ul id="graphs">
+	
 </ul>
-</form>
-<div id="icons">
-  <div class="images">
-  <input type="image" id="submitbutton" value="GenerateReport" src="search.png" alt="Generate Report">
-  <a href="#home"><img id="homebutton" src="home.png" alt="return home"></a>
-</div>
-</nav>{# .menu-contents #}
 
+<a id="addgraph" href="#">Add Graph</a>
 
-<div class="graph-container" id="results">
-  <div class="graph1"></div>
-  <div class="graph2"></div>  
-</div>
-
-{% endblock content %}
-
-
-
-{% block extraScripts %}
-{# The actual script. This should probably be loaded with requireJS. #}
-<script src="/js/jsearch.js"></script>
-<script src="/js/spiffy/spiffy.min.js"></script>
-{#
-  Embedded underscore templates:
-#}
-{# Sensor categories. #}
-<script id="_t-sensor-category" type="text/html">
-<fieldset class="sensor-group">
-  <legend><%- majesticTitle %></legend> 
-{# The sensor-checkbox template will be placed here. Probably more than once. #}
-</fieldset>	
+<script id="_t-graph-group" type="text/html">
+<li class = "graph-group">
+		<li class = "graph-controls">
+			<div class = "graph-controls-axis">
+				<h2>"AXIS"</h2>
+				<h3>"X-AXIS"</h3>
+					<select class="xaxis"><%= xaxis %></select>
+				<h3>"Y-AXIS"</h3>
+					<select class="yaxis"><%= yaxis %></select>
+			</div>
+			<div class = "graph-controls-axis">
+		</li>
+		
+		<div class = "graph-container">
+		</div>
+	</li>
 </script>
-{# Sensor checkbox inputs: #}
-<script id="_t-sensor-checkbox" type="text/html">
-<label>
-  <input type="checkbox" name="sensors[]" value="<%= id %>">
-  <%- name %>
-</label>
-</script>
-<script id="_t-apt-checkbox" type="text/html">
-<label>
-  <input type="checkbox name="apartments[]" value="apt<%= num %>">
-  Unit <%= num %>
-</label>
-</script>
-{# Experiment! Template for the ENTIRE category. #}
-<script id="_t-checkbox-category" type="text/html">
-{# Takes the following options:
 
-  * majesticTitle
-      The BIG title of the category
-  * paramName 
-      The parameter sent to the process script
-  * data
-      Object with whose keys are the values (this gets confusing, bear
-      with me) are sent to the process script. The values of the object
-      are the fancy name presented.
-  * checkAll
-      If set to true, shows a "check-all" text box.
-  
-#}
-<fieldset class="checkbox-group">
-  <legend><%= majesticTitle %></legend> 
-  <ul>
-  <% _.each(data, function (val, text) { %>
-  <li><label>
-    <input type="checkbox" name="<%- paramName %>[]" value="<%- val %>">
-    <%= text %>
-  </label></li>
-  <% }); %>
-  </ul>
-  <% if (checkAll !== undefined && checkAll === true) { %>
-    <input class="js-check-all" type="button" value="Check all">
-  <% } %>
-</fieldset>	
-</script>
-<script id="_t-display-text" type="text/html">
-{# Admitadly, this is a really ugly template. #}
-<h2>Apartment <%= aptNumber %></h2>
-<% $.each(dates, function(date, sensor) { %>
-<h4><%= date %></h4>
-<%  $.each(sensors, function(sensor, sensorData) { %>
-<%      if (_.isArray(val)) { %>
-<h5><%= sensor %></h5>
-<%          $.each(sensorData, function(hour, val) { %>
-<p>Hour <%= hour %></p>
-<%          }); %>
-<%      } else { %>
-<p><%= sensor %>: <%= sensorData %></p>
-<%      }
-    });
-}); %>
-</script>
-{#
-  Temporarily define all of the sensor data here.
 
-  This should *really* be created automatically by the server.
-#}
-<script id="__HACK-current-fields" type="application/json" >
-{# NOTE: This JSON is VERY ad-hoc and its schema may change at without warning. #}
-[
-  {# List of fields, in order. #}
-  {
-    "name": "Sensors",
-    "lookup": "sensor",
-    "categories": {
-
-      {# Title of the category to sensors. #}
-      "Air Data": {
-        {# value to display name #}
-        "CO2": "Carbon Dioxide",
-        "Temperature": "Temperature",
-        "Relative_Humidity": "Relative Humitidy"
-      },
-      "Water Data": {
-        "Hot_Water": "Hot Water",
-        "Total_Water": "Total Water"
-      },
-      "Heat Data": {
-        "Current_Flow": "Current Flow",
-        "Current_Temperature 1": "Current Temp",
-        "Total_Mass": "Total Mass",
-        "Total_Energy": "Total Energy",
-        "Total_Volume": "Total Volume"
-      },
-      "Heat Flux Data": {
-        "Insulation": "Insulation",
-        "Stud": "Stud",
-      },
-      "Electricity A": {
-        "Ch1": "Ch1",
-        "Ch2": "Ch2",
-        "AUX1": "AUX1",
-        "AUX2": "AUX2",
-        "AUX3": "AUX3",
-        "AUX4": "AUX4",
-        "AUX5": "AUX5"
-      },
-      "Electricity B": {
-        "Ch1": "Ch1",
-        "Ch2": "Ch2",
-        "AUX1": "AUX1",
-        "AUX2": "AUX2",
-        "AUX3": "AUX3",
-        "AUX4": "AUX4",
-        "AUX5": "AUX5"
-      }
-    }
-  },
-
-  {# This one MUST NOT be hard-coded! This will come from le datahbase. #}
-  {
-    "name": "Apartment",
-    "lookup": "apt",
-    "categories": {
-      "Unit Number": {
-        {# This will be inserted by some otherworldly function. #}
-      }
-    }
-  }
-]
-</script>
-{% endblock extraScripts %}
+{% endblock %}
