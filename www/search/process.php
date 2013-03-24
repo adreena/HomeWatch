@@ -1,4 +1,4 @@
-<?php
+<?php namespace UASmartHome;
 
 /*
  * @author Devin Hanchar
@@ -7,11 +7,14 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__. '/../lib/UASmartHome/Database/Engineer.php';
+require_once __DIR__. '/../lib/UASmartHome/EquationParser.php';
+require_once __DIR__. '/../lib/UASmartHome/Alerts.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
 //TESTING FLAG: SET TO FALSE TO USE DATA FROM SERVER
 $test = true;
+//$test = false;
 
 $sensors = array();
 $apartments = array();
@@ -37,7 +40,7 @@ if (ISSET($_GET['finances'])) {
 }
 
 if ($test == false && count($messages) > 0 ) {
-	echo json_encode(array("message"=>$message));
+	echo json_encode(array("messages"=>$messages));
 	exit();
 }
 
@@ -198,13 +201,17 @@ if ($test) {
 			//For "time" we do nothing
 		}
 
-		//$message = checkAlerts($xdata, $ydata, $x, $y, $message, $apartment);
+		$alerts = checkAlerts($startdate, $enddate, $x, $y, $apartment);
+		//echo var_dump($alerts);
+		$messages = array_merge($messages, $alerts);
 
 	}
 
 
 
 
+
+	
 
 
 	if (count($messages) == 0) {
@@ -233,30 +240,33 @@ if ($test) {
  */
 
 
-function checkAlerts ($xdata, $ydata, $x, $yarray, $message, $apartment) {
-	$alerts = array();
+function checkAlerts ($startdate, $enddate, $x, $yarray, $apartment) {
 
-foreach ($yarray as $y) {
-	$co2alert = "CO2 levels are extremely high in apartment $apartment! ";
-	foreach ($ydata as $yd) {
-		if ($y == "CO2" && $yd[$y] > 10) {
-			//echo var_dump ($yd[$y]);
-			$alerts[$co2alert] = $co2alert;
+	$listOfAlerts = array("CO2" => '$air_co2$ > 1000');
+
+	$triggeredAlerts = array();
+
+	array_push ($yarray, $x);
+
+
+	foreach ($yarray as $y) {
+		if ($y == "CO2") {
+			$alertJson = parseAlertToJson($listOfAlerts[$y], $startdate, $enddate, $apartment);
+	
+			echo var_dump($alertJson);
+
+			$alerts = Alerts::getAlerts($alertJson);
+				foreach ($alerts as $alertTime => $alertValue) {
+					array_push($triggeredAlerts, "Apartment $apartment triggered alert $listOfAlerts[$y] at time $alertTime with value $alertValue");
+				}
+
+			//array_push($triggeredAlerts, Alerts::getAlerts($alertJson));
 		}
 	}
-	foreach ($xdata as $xd) {
-		if ($x == "CO2" && $xd[$x] > 10) {
-			//echo var_dump ($xd[$x]);
-			$alerts[$co2alert] = $co2alert;
-		}
-	}
-}
-	//echo var_dump($alerts);
 
-	foreach ($alerts as $alert) {
-		$message .= $alert;
-	}
-	return $message;
+
+
+	return $triggeredAlerts;
 }
 
 /*
@@ -277,6 +287,16 @@ function parseFormulaToJson ($data, $startdate, $enddate, $period, $apartment) {
 	//$functionArray["functionname"] = $name;
 	
 	return json_encode($functionArray);
+}
+
+function parseAlertToJson ($alertString, $startdate, $enddate, $apartment) {
+	$alertArray = array();
+	$alertArray["startdate"] = $startdate;
+	$alertArray["enddate"] = $enddate;
+	$alertArray["alert"] = $alertString;
+	$alertArray["apartment"] = $apartment;
+
+	return json_encode($alertArray);
 }
 
 
