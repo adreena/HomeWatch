@@ -46,17 +46,17 @@ class ManagerControl
 
 	public function getUtilityContracts	($Type)
 	{
-		return Engineer::Utilities_getAll();
+		return \Engineer::Utilities_getAll();
 	}
 	
 	public function submitContract($Type, $Price, $Start_Date, $End_Date)
 	{
-		Engineer::Utilities_Insert($Type, $Start_Date, $End_Date, $Price);
+		\Engineer::Utilities_Insert($Type, $Start_Date, $End_Date, $Price);
 	}
 	
 	public function editContract($Type, $Price, $Start_Date, $End_Date)
 	{
-		Engineer::Utilities_Insert($Start_Date, $End_Date, $Price, $Type);
+		\Engineer::Utilities_Insert($Start_Date, $End_Date, $Price, $Type);
 	}
 
 }

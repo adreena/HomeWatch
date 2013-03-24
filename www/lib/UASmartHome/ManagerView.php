@@ -19,7 +19,7 @@ class ManagerView
 	
 	public function getUtilityContracts()
 	{
-		$contracts = $this->controller->getUtilityContracts();
+		$contracts = $this->controller->getUtilityContracts("All");
 		return $contracts;
 	}
 	
