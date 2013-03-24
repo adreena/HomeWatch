@@ -64,6 +64,19 @@
     </div>
   </script>
 
+  <!-- Parameters
+    categories: categories in the special format...
+  -->
+  <script id="_t-graph-optgroup" type="text/html">
+    <% _.each(categories, function (elements, categoryName) { %>
+    <optgroup label="<%- categoryName %>">
+    <% _.each(elements, function (displayName, valueID) { %>
+      <option value="<%= valueID %>"><%- displayName %></option>
+      <% }); %>
+    </optgroup>
+    <% }); %>
+  </script>
+
 </head>
 <body>
   <div id="wrapper">
@@ -117,16 +130,16 @@
               <div class="graph-controls-axes">
                 <label><span class="the-actual-gorram-label">X Axis</span>
                   <select data-gc name="xaxis">
-                    <optgroup label="Sensors">
-                      <option value="CO2">Carbon Dioxide (PPM)</option>
+                    <optgroup label="Time">
+                      <option value="time">Time</option>
                     </optgroup>
                   </select>
                 </label>
 
                 <label><span class="the-actual-gorram-label">Y Axis</span>
                   <select data-gc name="yaxis">
-                    <optgroup label="Time">
-                      <option value="time">Time</option>
+                    <optgroup label="Sensors">
+                      <option value="CO2">Carbon Dioxide (PPM)</option>
                     </optgroup>
                   </select>
                 </label>

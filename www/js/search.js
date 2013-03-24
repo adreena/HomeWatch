@@ -31,11 +31,14 @@ define(['jquery',
          */
         __temp_hardCodedCategories = {
             "Time": {
-                "time": "Time"
+                "time": {
+                    "displayName": "Time",
+                    "applicableAxes": "x"
+                }
             },
             
             "Sensors": {
-                "CO2": "CO2 (PPM)",
+                "CO2": "Carbon Dioxide (PPM)",
                 "all_electricity": {
                     "multiple": [
                         "Mains (Phase A)",
@@ -54,8 +57,9 @@ define(['jquery',
                         "Refrigerator"],
                     "applicableAxes": "y",
                     "displayName": "All electricity"
-                },
+                }
             },
+
             "Formulae": {
                 "waffles": "Waffles"
             }
@@ -72,9 +76,15 @@ define(['jquery',
          *      x: { 'group1' : { "Display Name": ["One value"] },
          *      y: { 'group1' : { "Display Name": ["One value"] }
          * }
+         *
+         * Might want to change this so that values is a key-value
+         * array of unique ids for values that we can later
+         * serialize.
          */
         parseCategories = function (categories) {
             var x = {}, y = {};
+
+            // TODO: Make a value ID thingy mobobber?
 
             /* Parse the category names. */
             _.each(categories, function (elements, catName) {
@@ -107,12 +117,6 @@ define(['jquery',
                             : [name];
 
                         if (info.hasOwnProperty('applicableAxes')) {
-                            console.log({
-                                msg: "applicable axes found",
-                                name: displayName,
-                                val: info.applicableAxes
-                            });
-
                             forX = /x/.test(info.applicableAxes);
                             forY =  /y/.test(info.applicableAxes);
                         }
@@ -137,10 +141,6 @@ define(['jquery',
             };
 
         };
-
-        /* DEBUG! */
-        window.pc = parseCategories;
-        window.td = __temp_hardCodedCategories;
 
         /**
          * Given a graph HTML thing (ID? Element?) will
@@ -167,17 +167,25 @@ define(['jquery',
          * MY STUFF THAT RENDERS TEMPLATES
          */
 
+        graphCreateOptGroups = function (categories) {
+            return render('graph-optgroup', {categories : categories });
+        }
+
         /**
          * Creates the content for the axes graph controls thing.
          *
          * Needs data to make the axes optgroups.
          */
         graphControlAxes = function (_unused) {
-        
+            var cats;
+            
+            /* TESTING! */
+            cats = parseCategories(__temp_hardCodedCategories);
 
-            return render('graph-controls-li', {
-                header: 'Generic header',
-                content: '<div>hello</div>'
+            return render('graph-control-axes', {
+                /* The content is just the two optgroups appended. */
+                xAxis: graphCreateOptGroups(cats.x),
+                yAxis: graphCreateOptGroups(cats.y)
             });
         };
 
@@ -191,10 +199,12 @@ define(['jquery',
         addGraph = function (place, data) {
             var elements,
                 rendered,
-                graphID = 'graph' + _.uniqueId(),
+                graphID = _.uniqueId('graph'),
                 renderedElements;
 
             elements = [graphControlAxes()];
+
+            console.log(elements);
 
             renderedElements = elements.join('');
 
