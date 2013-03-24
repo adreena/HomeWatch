@@ -42,12 +42,42 @@
         </li>
         
         <li>
-          <label for="role">Role ID</label>
-          <input id="role" type="role" name="role" value="{{ account.roleID }}" />
+          <label for="role">Role</label>
+          <select id="role" name="role" value="{{ account.roleID }}" onChange="onRoleChanged(this)">
+            <option value="0"></option>
+            <option value="5">Resident</option>
+            <option value="4">Engineer</option>
+            <option value="3">Manager</option>
+            <option value="2">Admin</option>
+            <option value="1">Developer</option>
+          </select>
           <div id="register-form_role_errorloc" class="error-string"></div>
         </li>
       </ul>
 
+      <div id="residentInfo" style="display:none;">
+        <p>Resident Info</p>
+        <ul class="list-form">
+          <li>
+            <label for="name">Resident Name</label>
+            <input id="resident-name" type="text" name="resident-name" />
+          </li>
+          
+          <li>
+            <label for="resident-room-number">Room Number</label>
+            <input id="resident-room-number" type="text"  name="resident-room-number" />
+          </li>
+          
+          <li>
+            <label for="building-location">Building Location</label>
+            <select id="building-location" name="building-location">
+              <option value="NE">NE</label>
+              <option value="SW">SW</label>
+            </select>
+          </li>
+        </ul>
+      </div>
+      
       <input type="submit" name="submit" value="Register"/>
       
       {% if result.isBad %}
@@ -57,6 +87,21 @@
     </form>
 
     <script type="text/javascript">
+      function onRoleChanged(roleElement) {
+        
+        // TODO: Need to add logic to fully register residents before this is relevant
+        /*
+        switch (roleElement.value) {
+          case "5":
+            //document.getElementById("residentInfo").style.display = 'block';
+            break;
+          default:
+            document.getElementById("residentInfo").style.display = 'none';
+            break;
+        }
+        */
+      }
+        
       var v = new Validator("register-form");
       v.EnableOnPageErrorDisplay();
       v.EnableMsgsTogether();
@@ -72,7 +117,6 @@
     
     <nav class="extra-items">
       <ul class="inline-nav-list">
-        <li><a href="/auth/login.php">Login</a></li>
       </ul>
     </nav>
   </div>{# .register-box #}

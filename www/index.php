@@ -30,6 +30,8 @@ if ($user != null) {
         case User::ROLE_RESIDENT:
             $homepage = 'resident/home.html';
             break;
+        case User::ROLE_DEV:
+        case User::ROLE_ADMIN:
         case User::ROLE_MANAGER:
             $homepage = 'manager/home.html';
             break;

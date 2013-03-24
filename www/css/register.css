@@ -38,7 +38,7 @@ body {
   width: 160px;
 }
 
-.list-form li input {
+.list-form li input, li select {
   display: inline-block;
   box-sizing: border-box;
   margin-left: 20px;
