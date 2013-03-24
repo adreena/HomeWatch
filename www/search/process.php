@@ -156,7 +156,7 @@ if ($test) {
 
 		} else if ($ytype == "function") {
 			$function = parseFunctionToJson($ydata, $startdate, $enddate, $period, $apartment);
-			$ydata = parser::getData($function);
+			$ydata = EquationParser::getData($function);
 		}
 
 		
@@ -173,7 +173,7 @@ if ($test) {
 			}
 		} else if ($xtype == "function") {
 			$function = parseFunctionToJson($xdata, $startdate, $enddate, $period, $apartment);
-			$xdata = parser::getData($function);
+			$xdata = EquationParser::getData($function);
 		} else {
 			//For "time" we do nothing
 		}
