@@ -1,20 +1,25 @@
 /*
  * Template managment and rendering class.
  */
-define(['jquery', 'underscore'], function ($, _) {
-    var TemplateManager,
-        defaultFetchTemplateText;
+define("utils/TemplateManager", ['jquery', 'underscore'], function ($, _) {
+    "use strict";
 
-    TemplateManager = function (templateTextFetcher) {
+    var defaultFetchTemplateText;
+
+    /**
+     * Construct a template manager with an optional function
+     * that will fetch templates.
+     */
+    function TemplateManager(templateTextFetcher) {
         /* Start with an empty template cache. */
-        this.templateCache = {},
+        this.templateCache = {};
 
         /* templateTextFetcher is an optional parameter.
          * Set its default value here. */
-        this.fetchTemplate = (typeof templateTextFetcher === "undefined")
+        this.fetchTemplate = (templateTextFetcher === undefined)
             ? defaultFetchTemplateText
             : templateTextFetcher;
-    };
+    }
 
     /**
      * Gets template text from the page. Should be
@@ -24,8 +29,12 @@ define(['jquery', 'underscore'], function ($, _) {
         return $('#_t-' + templateName).html();
     };
 
-    /** Underscore template manager. */
-    TemplateManager.prototype.render = function (templateName, parameters, options) {
+    /**
+     * Renders the template given by templateName.
+     * Optional template parameters can be used, as well
+     * as any underscore template settings.
+     * */
+    TemplateManager.prototype.render = function (templateName, parameters, settings) {
         var templateText, template;
 
         /* If the template has not been compiled yet, compile it
@@ -33,14 +42,14 @@ define(['jquery', 'underscore'], function ($, _) {
         if (!this.templateCache.hasOwnProperty(templateName)) {
             templateText = this.fetchTemplate(templateName);
 
-            template =  _.template(templateText);
+            template = _.template(templateText);
             this.templateCache[templateName] = template;
 
         } else {
             template = this.templateCache[templateName];
         }
 
-        return template(parameters, options);
+        return template(parameters, settings);
     };
 
 

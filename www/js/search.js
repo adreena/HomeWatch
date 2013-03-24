@@ -5,14 +5,19 @@ require(['jquery',
         'utils/TemplateManager'],
 
 function ($, _, D, TemplateManager) {
-    var parseCategories, // TODO: Make a better name for this.
+    var makeCategories, // TODO: Make a better name for this.
 
         parseGraphControls,
         parseGraphType,
 
         addGraph,
+
+        /* Element renderers. */
         graphControlAxes,
         graphCreateOptGroups,
+        graphControlDateTime,
+        graphControlApartments,
+        graphControlDisplayType,
 
         tman = new TemplateManager();
 
@@ -20,7 +25,8 @@ function ($, _, D, TemplateManager) {
      * GRAPH CONTROLLER STUFF
      */
 
-    /* Takes that category array and converts it into things
+    /**
+     * Takes that category array and converts it into things
      * that can be converted into optgroups for x and y.
      * Additionally, includes a value ID to values array thing.
      *
@@ -30,11 +36,8 @@ function ($, _, D, TemplateManager) {
      *      values: { "v123": ["One value"] }
      * }
      *
-     * Might want to change this so that values is a key-value
-     * array of unique ids for values that we can later
-     * serialize.
      */
-    parseCategories = function (categories) {
+    makeCategories = function (categories) {
         var x = {}, y = {}, values = {};
 
         /* Parse the category names. */
@@ -90,10 +93,7 @@ function ($, _, D, TemplateManager) {
 
         });
 
-        return {
-            x: x,
-            y: y
-        };
+        return { x: x, y: y, values: values };
 
     };
 
@@ -135,23 +135,30 @@ function ($, _, D, TemplateManager) {
      *
      * Needs data to make the axes optgroups.
      */
-    graphControlAxes = function (_unused) {
-        var cats, content;
-
-        /* DEBUG! */
-        cats = parseCategories(D.exampleCategories);
-
-        content = tman.render('graph-control-axes', {
+    graphControlAxes = function (x, y) {
+        return tman.render('graph-control-axes', {
             /* The content is just the two optgroups appended. */
-            xAxis: graphCreateOptGroups(cats.x),
-            yAxis: graphCreateOptGroups(cats.y)
-        });
-
-        return tman.render('graph-control-li', {
-            header: 'Axes', /* Probably would want this to be i18n safe.. */
-            content: content
+            xAxis: graphCreateOptGroups(x),
+            yAxis: graphCreateOptGroups(y)
         });
     };
+
+    /** Creates the content for the ffjhdksahfkhds. */
+    graphControlDateTime = function () {
+        //return tman.render('graph-control-date-time', {
+        //    
+        //});
+        return '<div>Not implemented</div>';
+    };
+
+    graphControlApartments = function () {
+        return '<div>Not implemented</div>';
+    };
+
+    graphControlDisplayType = function () {
+        return '<div>Not implemented</div>';
+    };
+
 
     /**
      * Adds a graph to the page. Where?
@@ -164,11 +171,25 @@ function ($, _, D, TemplateManager) {
         var elements,
             rendered,
             graphID = _.uniqueId('graph'),
-            renderedElements;
+            renderedElements,
+            cats;
 
-        elements = [graphControlAxes()];
+        /* DEBUG! */
+        cats = makeCategories(D.exampleCategories);
 
-        renderedElements = elements.join('');
+        elements = {
+            'Axes': graphControlAxes(cats.x, cats.y),
+            'Date/Time': graphControlDateTime(),
+            'Apartments': graphControlApartments(),
+            'Graph Type': graphControlDisplayType()
+        };
+
+        renderedElements = _.map(elements, function (content, title) {
+            return tman.render('graph-control-li', {
+                header: title,
+                content: content
+            });
+        }).join('');
 
         rendered = tman.render('graph-group', {
             graphID: graphID,
@@ -180,9 +201,6 @@ function ($, _, D, TemplateManager) {
         return graphID;
 
     };
-
-
-
 
 
 
