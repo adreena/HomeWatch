@@ -15,7 +15,7 @@ $test = true;
 
 $sensors = array();
 $apartments = array();
-$message = "";
+$messages = array();
 
 //If we are getting data from the front end, this flag will tell us to use that input instead of test data
 if (ISSET($_GET['notest'])) {
@@ -26,7 +26,7 @@ if (ISSET($_GET['notest'])) {
 if (ISSET($_GET['graph'])) {
 	$graph = $_GET['graph'];
 } else {
-	$message .= "No graph data received\n";
+	array_push($messages, "No graph data received\n");
 }
 
 //TODO: We might need to handle this differently
@@ -36,7 +36,7 @@ if (ISSET($_GET['finances'])) {
 	$finances = false;
 }
 
-if ($test == false && $message > "" ) {
+if ($test == false && count($messages) > 0 ) {
 	echo json_encode(array("message"=>$message));
 	exit();
 }
@@ -47,7 +47,6 @@ $W_PER_KW = 1000;
 //Testing data for when not hooked up to the front end
 if ($test) {
 	$graph = array("startdate"=>"2012-03-01", "enddate"=>"2012-03-02", "xaxis" => "CO2 (ppm)", "x"=>"CO2", "xtype"=>"sensorarray", "yaxis" => "Water_Usage", "y" => array("Total_Water", "Hot_Water"), "ytype"=> "sensorarray", "period"=>"Daily", "apartments" => array(1, 2)) ;
-	$message = "";
 	$finances = true;
 	$price_per_kwh = 1;
 	$price_per_gallon = 1.5;
@@ -118,6 +117,7 @@ if ($test) {
 
 	//Check to make sure the query is over a reasonable data set
 	if ($startdate != null && $enddate != null) {
+		//:0 is appended so that we can query hours as well
 		$startdate .= ":0";
 		$enddate .= ":0";
 		$error .= calculateRejection($startdate, $enddate, $period);	
@@ -125,43 +125,16 @@ if ($test) {
 
 	//If any errors have occurred at this point there's no way we can process the query, so we spit out the query data, any error messages, and die
 	if ($error != null) {
+		array_push($messages, $error);
 		$bigArray['granularity'] = $period;
-		$bigArray['message'] = $error;
+		$bigArray['message'] = $messages;
         	$json = json_encode($bigArray);
         	echo $json;
 		die;
 	}
 
-	//Necessary to append :0 to these strings so that the hours line up nicely
-
-/*
-    "A ch1":    "Mains (Phase A)",
-    "A ch2":    "Bedroom and hot water tank (Phase A)",
-    "A aux1":   "Oven (Phase A) and range hood",
-    "A aux2":   "Microwave and ERV controller",
-    "A aux3":   "Electrical duct heating",
-    "A aux4":   "Kitchen plugs (Phase A) and bathroom lighting",
-    "A aux5":   "Energy recovery ventilation",
-
-    "B ch1":    "Mains (Phase B)",
-    "B ch2":    "Kitchen plugs (Phase B) and kitchen counter",
-    "B aux1":   "Oven (Phase B)",
-    "B aux2":   "Bathroom",
-    "B aux3":   "Living room and balcony",
-    "B aux4":   "Hot water tank (phase b)",
-    "B aux5":   "Refridgerator"
-
-	"External Temperature": "External_Temperature",
-	"External Humidity" : "External_Relative_Humidity",
-	"Wind Speed" : "Wind_Speed",
-	"Wind Direction" : "Wind_Direction"
-
-
-*/
-
 	$phaseMapping = array("Mains (Phase A)" => "A", "Bedroom and hot water tank (Phase A)" => "A", "Oven (Phase A) and range hood" => "A", "Microwave and ERV controller" => "A", "Electrical duct heating" => "A", "Kitchen plugs (Phase A) and bathroom lighting" => "A", "Energy recovery ventilation" => "A", "Mains (Phase B)" => "B", "Kitchen plugs (Phase B) and kitchen counter" => "B", "Oven (Phase B)" => "B", "Bathroom" => "B", "Living room and balcony" => "B",  "Hot water tank (Phase B)" => "B", "Refrigerator" => "B");
-	$frontEndNameMapping = array("Mains (Phase A)" => "ch.1", "Bedroom and hot water tank (Phase A)" => "ch.2", "Oven (Phase A) and range hood" => "aux1", "Microwave and ERV controller" => "aux", "Electrical duct heating" => "aux3", "Kitchen plugs (Phase A) and bathroom lighting" => "aux4", "Energy recovery ventilation" => "aux5", "Mains (Phase B)" => "ch.1", "Kitchen plugs (Phase B) and kitchen counter" => "ch.2", "Oven (Phase B)" => "aux1", "Bathroom" => "aux2", "Living room and balcony" => "aux3",  "Hot water tank (Phase B)" => "aux4", "Refrigerator" => "aux5", "External Temperature" => "External_Temperature");
-	//TODO: EDDIE FINISH THIS ARRAY WITH THE VALUES FOR EVERY SENSOR
+
 	
 	$bigArray["x-axis"] = $xaxis;
 	$bigArray["y-axis"] = $yaxis;
@@ -170,29 +143,20 @@ if ($test) {
 		if ($ytype == "sensorarray") {
 			foreach ($y as $sensor) {
 
-
-				//echo var_dump($sensor);
-
 				if (ISSET($phaseMapping[$sensor])) {
 					$phase = $phaseMapping[$sensor];
 				} else {
 					$phase = null;
 				}
-/*
-				if (ISSET($frontEndNameMapping[$sensor])) {
-					$sensor = $frontEndNameMapping[$sensor];
-				}
-*/	
+
 				$ydata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period, $phase);
-				//echo var_dump($ydata);
+
 				foreach ($ydata as $date=>$yd) {
 
-					//echo "***$apartment $date $sensor $yd[$sensor]***";
 					if ($yd[$sensor] == null) {
-						$message .= "No data found for apartment $apartment on the y-axis at time $date";
+						array_push ($messages, "No data found for apartment $apartment on the y-axis at time $date");
 					}
-					//echo var_dump ($date);
-					//echo var_dump($yd);
+
 					$bigArray['values'][$apartment][$date][$sensor]["y"] = $yd[$sensor];
 					if ($xtype == "time") {
 						$xdata[$date]['time'] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
@@ -200,8 +164,8 @@ if ($test) {
 				}
 			}
 
-		} else if ($ytype == "function") {
-			$function = parseFunctionToJson($ydata, $startdate, $enddate, $period, $apartment);
+		} else if ($ytype == "formula") {
+			$function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment);
 			$ydata = EquationParser::getData($function);
 		}
 
@@ -214,27 +178,21 @@ if ($test) {
 				$phase = null;
 			}
 
-/*
-			if (ISSET($frontEndNameMapping[$x])) {
-				$sensor = $frontEndNameMapping[$x];
-			}
-*/
 			$xdata = Engineer::db_pull_query($apartment, $x, $startdate, $enddate, $period);
 			foreach ($xdata as $date=>$xd) {
 				if ($xd[$x] == null) {
-					$message .= "No data found for apartment $apartment on the x-axis at time $date";
+					array_push($messages, "No data found for apartment $apartment on the x-axis at time $date");
 				}
 
 				foreach ($bigArray['values'][$apartment][$date] as $sensor=>$sensordata) {
-					//echo var_dump ($sensor);		
-					//echo var_dump ($sensordata);		
+					//pushes the x data into each set of y values, because graphs need x,y pairs
 					$sensordata["x"] = $xd[$x];
 					$bigArray['values'][$apartment][$date][$sensor] = $sensordata;
 				}
 			}
 			
-		} else if ($xtype == "function") {
-			$function = parseFunctionToJson($xdata, $startdate, $enddate, $period, $apartment, $phase);
+		} else if ($xtype == "formula") {
+			$function = parseFormulaToJson($xdata, $startdate, $enddate, $period, $apartment, $phase);
 			$xdata = EquationParser::getData($function);
 		} else {
 			//For "time" we do nothing
@@ -249,12 +207,12 @@ if ($test) {
 
 
 
-	if ($message == "") {
-		$message = "Success!";
+	if (count($messages) == 0) {
+		array_push($messages, "Success!");
 	}
 
 	$bigArray['granularity'] = $period;
-	$bigArray['message'] = $message;
+	$bigArray['messages'] = $messages;
         $json = json_encode($bigArray);
         echo $json;
 
@@ -309,7 +267,7 @@ foreach ($yarray as $y) {
  * Data: The function to be parsed
  * Name: The name of the function (maybe unnecesary)?
  */
-function parseFunctionToJson ($data, $startdate, $enddate, $period, $apartment) {
+function parseFormulaToJson ($data, $startdate, $enddate, $period, $apartment) {
 	$functionArray = array();
 	$functionArray["startdate"] = $startdate;
 	$functionArray["enddate"] = $enddate;

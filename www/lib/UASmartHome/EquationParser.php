@@ -69,9 +69,8 @@ class EquationParser
 
         $pieces = explode("$", $function);
 
-        if(count($pieces) === 0) {
-            echo "there are no database variables in the equation\n";
-            return null;
+        if(count($pieces) === 1) {
+            return $evaluator->evaluate($function);
         }
 
         for($i=1; $i<count($pieces); $i+=2) {
@@ -95,6 +94,7 @@ class EquationParser
         // replace all the variables in the array of functions
         for ($i = 0; $i < $num_points; ++$i) {
 
+            $emptydata = false;
             reset($data);
             while ($cur_data = current($data)) {
                 $date = array_keys($cur_data)[$i];
@@ -102,12 +102,20 @@ class EquationParser
                     echo "not all data have the same number of points\n";
                     return null;
                 }
-                $evaluator->evaluate(key($data) . " = " . end(array_values($cur_data)[$i]));
+
+                if(!array_values($cur_data)[$i]) { //no db value for this time
+                    $emptydata = true;
+                }
+                else {
+                    $evaluator->evaluate(key($data) . " = " . end(array_values($cur_data)[$i]));
+                }
 
                 next($data);
             }
 
-            $finalGraphData[$date] = $evaluator->evaluate(str_replace("$", "", $function)) . "\n";
+            if (!$emptydata)
+                $finalGraphData[$date] = $evaluator->evaluate(str_replace("$", "", $function));
+            $emptydata = false;
         }
 
         return $finalGraphData;
