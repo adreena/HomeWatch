@@ -85,7 +85,7 @@ class Engineer {
 
 
 
-	public function db_query_Yearly($apt,$table,$Year,$column,$Phase)
+	public function db_query_Yearly($apt,$table,$Year,$column,$Phase=null)
 	{  
 			    $result =array();
 			    $table .= '_Yearly';
@@ -110,7 +110,7 @@ class Engineer {
 				return $result;
 	}
 	
-public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase)
+public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	{
 			    $result =array();
 			    $table .= '_Monthly';
@@ -135,7 +135,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase)
 				$a= $Query->rowCount();
 				return $result;
 	}
-	public function db_query_Weekly($apt,$table,$Year,$Week,$column,$Phase)
+	public function db_query_Weekly($apt,$table,$Year,$Week,$column,$Phase=null)
 	{
 			    $result =array();
 			    $table .= '_Weekly';
@@ -160,7 +160,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase)
 				$a= $Query->rowCount();
 				return $result;
 	}
-	public function db_query_Daily($apt,$table,$date,$column,$Phase)
+	public function db_query_Daily($apt,$table,$date,$column,$Phase=null)
 	{
 	           
 			   //$starttime = microtime(true);
@@ -191,7 +191,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase)
 				return $result;
 	}
 	//Function to get the Max and Min
-	public function db_query_Extrema($apt,$column,$table,$startdate,$enddate,$EX,$Phase)
+	public function db_query_Extrema($apt,$column,$table,$startdate,$enddate,$EX,$Phase=null)
 	{
 			    $result =array();
 			    $table .= '_Hourly';
@@ -232,7 +232,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase)
 				//$a= $Query->rowCount();
 				return $result;
 	}
-	public function db_query_Hourly($apt,$table,$date,$Hour,$column,$Phase)
+	public function db_query_Hourly($apt,$table,$date,$Hour,$column,$Phase=null)
 	{
 	           
 			   
