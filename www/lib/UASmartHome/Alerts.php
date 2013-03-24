@@ -48,23 +48,9 @@ class Alerts
      */
     public static function getAlerts($input) {
 
-        /* test data
-        $functionArray = array();
-        $functionArray["startdate"] = "2012-02-29:0";
-        $functionArray["enddate"] = "2012-03-01:0";
-        $functionArray["apartment"] = 1;
-        //$functionArray["alert"] = "\$air_co2$ > 1160";
-        $functionArray["alert"] = "\$air_co2$ > \$air_temperature$*1000";
-        $functionArray["alerttype"] = "CO2";
-
-        $input = json_encode($functionArray);
-        */
-
-
-
         $input = json_decode($input, true);
         $evaluator = new EvalMath();
-        $comparison = $functionArray["alert"];
+        $comparison = $input["alert"];
         $compare_types = array("<", ">", "!=", "==");
         $finalAlerts = array();
 
@@ -145,3 +131,15 @@ class Alerts
 
 }
 
+/* test data
+$functionArray = array();
+$functionArray["startdate"] = "2012-02-29:0";
+$functionArray["enddate"] = "2012-03-01:0";
+$functionArray["apartment"] = 1;
+//$functionArray["alert"] = "\$air_co2$ > 1160";
+$functionArray["alert"] = "\$air_co2$ > \$air_temperature$*1000";
+$functionArray["alerttype"] = "CO2";
+
+$input = json_encode($functionArray);
+var_dump(Alerts::getAlerts($input));
+*/
