@@ -1,6 +1,6 @@
 <?php namespace UASmartHome;
 
-include ('Engineer.php');
+include_once "Database/Engineer.php";
 
 class ManagerControl
 {
@@ -10,7 +10,7 @@ class ManagerControl
 
     public function __construct() {
         $this->model = new Database\ResidentDB();
-        $this->connection = new Database\Connection();
+        $this->connection = new \Connection();
         $this->connection->Connect();
     }
 
