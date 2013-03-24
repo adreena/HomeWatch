@@ -1,13 +1,14 @@
 /** Graph manager. */
 define(['jquery',
-        'underscore',
-        'search/defines'],
+        'underscore'],
+        //'search/defines'],
 
     function ($, _, D) {
         
         var render,
             templateCache = {},
             compileTemplate,
+            fetchTemplateText,
 
             parseGraphControls,
             parseGraphType;
@@ -31,12 +32,20 @@ define(['jquery',
             // TODO: parse the graph type!
         };
 
+
+        fetchTemplateText = function (templateName) {
+            var element = $('_t-' + templateName);
+
+            return element.html();
+
+        };
+
         /** Underscore template manager. */
         render = function (templateName, parameters, options) {
             var templateText, template;
             
             /* If the template has not be compiled yet, compile it. */
-            if (typeof(templateCache[templateName] === "undefined") {
+            if (typeof(templateCache[templateName] === "undefined")) {
                 templateText = fetchTemplateText(templateName);
                 templateCache[templateName] = compileTemplate(templateText);
             }
