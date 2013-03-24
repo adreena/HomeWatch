@@ -45,8 +45,23 @@
   </script>
 
   <!-- Parameters
+    xAxis:  a series of options/optgroups
+    yAxis:  a series of options/optgroups
   -->
-  <script id="_t-graph-" type="text/html">
+  <script id="_t-graph-control-axes" type="text/html">
+    <div class="graph-control-axes">
+      <label><span class="the-actual-gorram-label">X Axis</span>
+        <select data-gc name="xaxis">
+          <%= xAxis %>
+        </select>
+      </label>
+
+      <label><span class="the-actual-gorram-label">Y Axis</span>
+        <select data-gc name="yaxis">
+          <%= yAxis %>
+        </select>
+      </label>
+    </div>
   </script>
 
 </head>
@@ -99,7 +114,7 @@
             <li>
               <h3>Axes</h3>
 
-              <div class="graph-control-axes">
+              <div class="graph-controls-axes">
                 <label><span class="the-actual-gorram-label">X Axis</span>
                   <select data-gc name="xaxis">
                     <optgroup label="Sensors">
@@ -123,17 +138,17 @@
             <li>
               <h3>Date/Time</h3>
 
-              <div class="graph-controller-datetime">
+              <div class="graph-controls-datetime">
 
                 <!-- There'll be different inputs for different displays. -->
-                <div style="display: none;" class="graph-controller-hourly">
+                <div style="display: none;" class="graph-controls-hourly">
                   <label><span class="the-actual-gorram-label"> Day </span>
                     <!-- All inputs that should not be enabled at once! -->
                     <input data-gc data-input-disabled type="date" />
                   </label>
                 </div>
 
-                <div class="graph-controller-daily">
+                <div class="graph-controls-daily">
                   <p class="informative"> Ranges are inclusive. </p>
 
                   <label><span class="the-actual-gorram-daily"> Start Day </span>
@@ -164,7 +179,7 @@
             <li>
               <h3> Graph Type </h3>
 
-              <ul data-graph data-name="graph-type">
+              <ul class="graph-controls-type" data-graph data-name="graph-type">
                 <li><label><input checked type="radio" name="graph-type" value="bar" />
                     <span class="graph-preview"> Bar graph</span>
                   </label></li>
