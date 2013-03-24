@@ -37,7 +37,7 @@
     content:    The FULL HTML content (including any wrapping). Must be one
                 element.
   -->
-  <script id="_t-graph-controls-li" type="text/html">
+  <script id="_t-graph-control-li" type="text/html">
     <li>
       <h3><%- header %></h3>
       <%= content %>
@@ -65,12 +65,14 @@
   </script>
 
   <!-- Parameters
-    categories: categories in the special format...
+    categories: an object of category name to elements.
+                `elements` is an object of display name to value Id.
   -->
   <script id="_t-graph-optgroup" type="text/html">
-    <% _.each(categories, function (elements, categoryName) { %>
+    <% _.each(categories, function (elements, categoryName) {
+          if (_.isEmpty(elements)) { return; } %>
     <optgroup label="<%- categoryName %>">
-    <% _.each(elements, function (displayName, valueID) { %>
+    <% _.each(elements, function (valueID, displayName) { %>
       <option value="<%= valueID %>"><%- displayName %></option>
       <% }); %>
     </optgroup>

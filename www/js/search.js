@@ -72,9 +72,12 @@ define(['jquery',
 
         /* Takes that category array and converts it into things
          * that can be converted into optgroups for x and y.
+         * Additionally, includes a value ID to values array thing.
+         *
          * Returns {
-         *      x: { 'group1' : { "Display Name": ["One value"] },
-         *      y: { 'group1' : { "Display Name": ["One value"] }
+         *      x: { 'group1' : { "Display Name": "v123" },
+         *      y: { 'group1' : { "Display Name": "v123" },
+         *      values: { "v123": ["One value"] }
          * }
          *
          * Might want to change this so that values is a key-value
@@ -82,9 +85,7 @@ define(['jquery',
          * serialize.
          */
         parseCategories = function (categories) {
-            var x = {}, y = {};
-
-            // TODO: Make a value ID thingy mobobber?
+            var x = {}, y = {}, values = {};
 
             /* Parse the category names. */
             _.each(categories, function (elements, catName) {
@@ -94,7 +95,7 @@ define(['jquery',
                 y[catName] = {};
 
                 _.each(elements, function (info, name) {
-                    var displayName, value, forX, forY;
+                    var displayName, value, valueID, forX, forY;
 
                     /* Assume the value is applicable for both axes. */
                     forX = true;
@@ -121,14 +122,18 @@ define(['jquery',
                             forY =  /y/.test(info.applicableAxes);
                         }
                     }
+
+                    /* Create a value ID for the value. */
+                    valueID = _.uniqueId();
+                    values[valueID] = value;
                     
                     /* Place in the appropriate parsed value. */
                     if (forX) {
-                        x[catName][displayName] = value;
+                        x[catName][displayName] = valueID;
                     }
 
                     if (forY) {
-                        y[catName][displayName] = value;
+                        y[catName][displayName] = valueID;
                     }
 
                 });
@@ -177,15 +182,20 @@ define(['jquery',
          * Needs data to make the axes optgroups.
          */
         graphControlAxes = function (_unused) {
-            var cats;
+            var cats, content;
             
-            /* TESTING! */
+            /* DEBUG! */
             cats = parseCategories(__temp_hardCodedCategories);
 
-            return render('graph-control-axes', {
+            content = render('graph-control-axes', {
                 /* The content is just the two optgroups appended. */
                 xAxis: graphCreateOptGroups(cats.x),
                 yAxis: graphCreateOptGroups(cats.y)
+            });
+
+            return render('graph-control-li', {
+                header: 'Axes', /* Probably would want this to be i18n safe.. */
+                content: content
             });
         };
 
@@ -203,8 +213,6 @@ define(['jquery',
                 renderedElements;
 
             elements = [graphControlAxes()];
-
-            console.log(elements);
 
             renderedElements = elements.join('');
 
