@@ -153,7 +153,6 @@ if ($test) {
 
 				foreach ($ydata as $date=>$yd) {
 
-
 					if ($yd[$sensor] == null) {
 						array_push ($messages, "No data found for apartment $apartment on the y-axis at time $date");
 					}
@@ -213,7 +212,7 @@ if ($test) {
 	}
 
 	$bigArray['granularity'] = $period;
-	$bigArray['message'] = $messages;
+	$bigArray['messages'] = $messages;
         $json = json_encode($bigArray);
         echo $json;
 
