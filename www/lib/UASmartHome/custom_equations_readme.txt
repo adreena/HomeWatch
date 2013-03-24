@@ -1,6 +1,6 @@
 How to use:
 
-database variables:
+database variables (you must include at least one of these in your equation!):
     $air_co2$
     $air_humidity$
     $air_temperature$
