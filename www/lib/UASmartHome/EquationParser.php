@@ -75,7 +75,7 @@ class EquationParser
 
         for($i=1; $i<count($pieces); $i+=2) {
 
-            $data[$pieces[$i]] = \Engineer::db_pull_query(
+            $data[$pieces[$i]] = Engineer::db_pull_query(
                        $input["apartment"], $db_vars[$pieces[$i]],
                        $input["startdate"], $input["enddate"],
                        $input["granularity"]);

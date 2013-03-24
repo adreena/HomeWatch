@@ -1,4 +1,4 @@
-<?php //namespace UASmartHome\Database;
+<?php namespace UASmartHome;
 
 class Connection {
 	 

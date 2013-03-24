@@ -1,6 +1,6 @@
 <?php namespace UASmartHome;
 
-include ('Engineer.php');
+include_once "Database/Engineer.php";
 
 class ManagerControl
 {
@@ -10,7 +10,7 @@ class ManagerControl
 
     public function __construct() {
         $this->model = new Database\ResidentDB();
-        $this->connection = new Database\Connection();
+        $this->connection = new \Connection();
         $this->connection->Connect();
     }
 
@@ -46,7 +46,7 @@ class ManagerControl
 
 	public function getUtilityContracts	($Type)
 	{
-		return Engineer::Utilities_getAll()
+		return Engineer::Utilities_getAll();
 	}
 	
 	public function submitContract($Type, $Price, $Start_Date, $End_Date)
