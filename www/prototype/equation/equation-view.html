@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+</head>
+
+<body>
+
+<h3> Equation Configuration Test </h3>
+
+<form action="process-function.php" method="GET">
+    
+    <select id="function-selector" name="function" multiple="multiple">
+    </select>
+    
+    <input type="submit" value="Evaluate Equation"/>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var data;
+
+        $.ajax({
+            url: "../../search/equation-data.php",
+            type: 'GET',
+            data: data,
+            cache: false,
+            dataType: 'json',
+            success: function (result) {
+                var functions = result['functions'];
+                var constants = result['constants'];
+                
+                // Populate the function selector
+                var function_selector = $("#function-selector")[0];
+                function_selector.size = functions.length;
+                for (var i = 0; i < functions.length; ++i) {
+                    var option = new Option(functions[i]['Name'], functions[i]['Value']);
+                    function_selector.add(option, null);
+                }
+            },
+            error: function() {
+                console.debug("Request failed.");
+            }
+        });
+    });
+
+</script>
+
+</body>
+
+</html>
