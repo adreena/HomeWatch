@@ -6,7 +6,7 @@ require(['jquery',
         'vendor/json2'],
 
 function ($, _, D, TemplateManager) {
-    var makeCategories, // TODO: Make a better name for this.
+    var makeCategories,
 
         parseGraphControls,
         validateGraphRequest,

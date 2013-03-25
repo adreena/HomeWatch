@@ -5,43 +5,46 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use \UASmartHome\Database\Engineer;
 
-define("DBVARS", serialize(array(
-    "air_co2" => "CO2",
-    "air_humidity" => "Relative_Humidity",
-    "air_temperature" => "Temperature",
-    "elec_ch1" => "Ch1",
-    "elec_ch2" => "Ch2",
-    "elec_aux1" => "AUX1",
-    "elec_aux2" => "AUX2",
-    "elec_aux3" => "AUX3",
-    "elec_aux4" => "AUX4",
-    "elec_aux5" => "AUX5",
-    "heat_energy" => "Total_Energy",
-    "heat_volume" => "Total_Volume",
-    "heat_mass" => "Total_Mass",
-    "heat_flow" => "Current_Flow",
-    "heat_temp1" => "Current_Temperature_1",
-    "heat_temp2" => "Current_Temperature_2",
-    "heatflux_stud" => "Stud",
-    "heatflux_insul" => "Insulation",
-    "water_hot" => "Hot_Water",
-    "water_total" => "Total_Water",
-    //TODO: add weather functions in database
-    "weather_temp" => "External_Temperature",
-    "weather_humidity" => "External_Relative_Humidity",
-    "weather_windspeed" => "Wind_Speed",
-    "weather_winddirection" => "Wind_Direction"
-)));
-
 
 class EquationParser
 {
+
+    /** Mapping of stuff to things. */
+    public static $DBVARS = array(
+        "air_co2" => "CO2",
+        "air_humidity" => "Relative_Humidity",
+        "air_temperature" => "Temperature",
+        "elec_ch1" => "Ch1",
+        "elec_ch2" => "Ch2",
+        "elec_aux1" => "AUX1",
+        "elec_aux2" => "AUX2",
+        "elec_aux3" => "AUX3",
+        "elec_aux4" => "AUX4",
+        "elec_aux5" => "AUX5",
+        "heat_energy" => "Total_Energy",
+        "heat_volume" => "Total_Volume",
+        "heat_mass" => "Total_Mass",
+        "heat_flow" => "Current_Flow",
+        "heat_temp1" => "Current_Temperature_1",
+        "heat_temp2" => "Current_Temperature_2",
+        "heatflux_stud" => "Stud",
+        "hotflex_stud" => "Stud",
+        "heatflux_insul" => "Insulation",
+        "water_hot" => "Hot_Water",
+        "water_total" => "Total_Water",
+        //TODO: add weather functions in database
+        "weather_temp" => "External_Temperature",
+        "weather_humidity" => "External_Relative_Humidity",
+        "weather_windspeed" => "Wind_Speed",
+        "weather_winddirection" => "Wind_Direction"
+    );
 
     public function __construct() {
 
     }
 
-    /* given the equation from the config file, replace all the values
+    /**
+     * Given the equation from the config file, replace all the values
      * specified by $variables$ by the values in the database and calculate
      * the value of the function.
      *
@@ -67,7 +70,7 @@ class EquationParser
         $data = array();
         $finalGraphData = array();
         $evaluator = new EvalMath();
-        $db_vars = unserialize(DBVARS);
+        $db_vars = self::$DBVARS;
 
         $pieces = explode("$", $function);
 
