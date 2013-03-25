@@ -11,6 +11,7 @@ function ($, _, D, TemplateManager) {
         parseGraphType,
 
         addGraph,
+        bindWeirdDateEvents,
 
         /* Element renderers. */
         graphControlAxes,
@@ -143,12 +144,10 @@ function ($, _, D, TemplateManager) {
         });
     };
 
-    /** Creates the content for the ffjhdksahfkhds. */
+    /** Creates the content for the date time controller thing. */
     graphControlDateTime = function () {
-        //return tman.render('graph-control-date-time', {
-        //    
-        //});
-        return '<div>Not implemented</div>';
+        /* This one takes no parameters... for now. */
+        return tman.render('graph-control-datetime', {});
     };
 
     graphControlApartments = function () {
@@ -158,6 +157,7 @@ function ($, _, D, TemplateManager) {
     graphControlDisplayType = function () {
         return '<div>Not implemented</div>';
     };
+
 
 
     /**
@@ -172,7 +172,8 @@ function ($, _, D, TemplateManager) {
             rendered,
             graphID = _.uniqueId('graph'),
             renderedElements,
-            cats;
+            cats,
+            placed;
 
         /* DEBUG! */
         cats = makeCategories(D.exampleCategories);
@@ -196,9 +197,46 @@ function ($, _, D, TemplateManager) {
             graphControls: renderedElements
         });
 
+        /* HACK! Create a temporary div to conver the
+         * text element into a jQuery element. */
+        rendered = $('<div>').html(rendered).children().first();
+
+        bindWeirdDateEvents(rendered);
+
         place.append(rendered);
 
         return graphID;
+
+    };
+
+    /**
+     * Graph controller is a jQuery which we can bind events to.
+     * Yay!
+     */
+    bindWeirdDateEvents = function (graphController) {
+        var dateThing, granularityChooser, hideAll, onChange;
+
+        /* Get the date div and the drop down that will find the proper
+         * granularity. */
+        dateThing = graphController .find('.graph-controls-datetime').first();
+        granularityChooser = dateThing.find('[name=granularity]');
+
+        /* Hides all of the date/time category things. */
+        hideAll = function () {
+            dateThing.children('div').hide();
+        };
+
+        /* This will show only the proper granularity selector thing. */
+        onChange = function () {
+            var granularity = granularityChooser.val();
+            hideAll();
+            dateThing.children('.graph-controls-' + granularity).show();
+        };
+
+        granularityChooser.change(onChange);
+
+        /* Pretend it change for the first time. */
+        onChange();
 
     };
 

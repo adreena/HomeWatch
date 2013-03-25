@@ -79,6 +79,64 @@
     <% }); %>
   </script>
 
+  <!-- Parameters: None! -->
+  <script id="_t-graph-control-datetime" type="text/html">
+    <div class="graph-controls-datetime">
+      <label><span class="the-actual-gorram-label"> Granularity </span>
+        <select name="granularity">
+          <option value="hourly">Hourly</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </label>
+
+      <div class="graph-controls-hourly">
+        <label><span class="the-actual-gorram-label"> Day </span>
+          <input data-gc type="date" />
+        </label>
+      </div>
+
+      <div data-selected class="graph-controls-daily">
+        <p class="informative"> Ranges are inclusive. </p>
+
+        <label><span class="the-actual-gorram-label"> Start Day </span>
+          <input data-gc type="date" />
+        </label>
+
+        <label><span class="the-actual-gorram-label"> End Day </span>
+          <input data-gc type="date" />
+        </label>
+      </div>
+
+      <div class="graph-controls-weekly">
+        <p class="informative"> Ranges are inclusive. </p>
+
+        <label><span class="the-actual-gorram-label"> Start Week </span>
+          <input data-gc type="date" />
+        </label>
+
+        <label><span class="the-actual-gorram-label"> End Week </span>
+          <input data-gc type="date" />
+        </label>
+      </div>
+
+      <div class="graph-controls-monthly">
+        <p class="informative"> Ranges are inclusive. </p>
+
+        <label><span class="the-actual-gorram-label"> Start Month </span>
+          <input data-gc type="date" />
+        </label>
+
+        <label><span class="the-actual-gorram-label"> End Month </span>
+          <input data-gc type="date" />
+        </label>
+      </div>
+
+    </div>
+  </script>
+
+
 </head>
 <body>
   <div id="wrapper">
