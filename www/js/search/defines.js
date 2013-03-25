@@ -8,7 +8,7 @@ define({
     uri: {
         /* URI to retrieve new graph data. */
         process: '/search/process.php'
-    }
+    },
     
     /*
      * This is an example of how the sensors will look. It's in simple
@@ -55,8 +55,9 @@ define({
         }
     },
 
-    /* This data structure is what Devin wants! */
-    exampleProcessParamaters: {
+    /* This data structure is what process.php takes in as its
+     * "graph" parameter. */
+    exampleProcessParameters: {
         "startdate": "2012-03-01", /* Includes this! */
         "enddate": "2012-03-02", /* Goes up to this! */
         /* This is the display name of the independent variable. */
@@ -69,7 +70,8 @@ define({
         "xtype": "sensorarray",
         /* This is the display name...? of the dependent variables. */
         "yaxis": "Water_Usage",
-        /* This is the list of depenedent variables. */
+        /* This is the list of depenedent variables. These can be a list of
+         * sensor names or a list of formulas (maybe?). */
         "y": ["Total_Water", "Hot_Water"],
         /* Can be "sensorarray" or "formula" */
         "ytype": "sensorarray", 
@@ -78,6 +80,15 @@ define({
         /* The selected apartments. */
         "apartments": [1, 2]
     },
+
+    /* This one is kind of hacky. Turns the category display name into the
+     * type that should be sent to process.php.
+     */
+    categoryNameToType: {
+        "Time": "time",
+        "Sensors": "sensorarray",
+        "Formulae": "formula"
+    }
 
 
 });

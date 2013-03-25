@@ -30,20 +30,25 @@ function ($, _, D, TemplateManager) {
     /**
      * Takes that category array and converts it into things
      * that can be converted into optgroups for x and y.
-     * Additionally, includes a value ID to values array thing.
+     *
+     * Also, creates an object that maps arbitrary value IDs to a
+     * metadata object that contains the information needed to
+     * send to process.php.
      *
      * Returns {
-     *      x: { 'group1' : { "Display Name": "v123" },
-     *      y: { 'group1' : { "Display Name": "v123" },
-     *      values: { "v123": ["One value"] }
+     *      x: { 'group1' : { "Display Name": "1" },
+     *      y: { 'group1' : { "Display Name": "1" },
+     *      values: { "1": {type: 'sensorarray', values: ["One value"]} }
      * }
      *
      */
     makeCategories = function (categories) {
         var x = {}, y = {}, values = {};
 
+
         /* Parse the category names. */
         _.each(categories, function (elements, catName) {
+            var valueType = D.categoryNameToType[catName];
 
             /* Initialize the category. */
             x[catName] = {};
@@ -78,11 +83,15 @@ function ($, _, D, TemplateManager) {
                     }
                 }
 
-                /* Create a value ID for the value. */
+                /* Create a value ID for the value and insert it into
+                 * the value array thing. */
                 valueID = _.uniqueId();
-                values[valueID] = value;
+                values[valueID] = {
+                    type: valueType,
+                    values: value
+                };
 
-                /* Place in the appropriate parsed value. */
+                /* Make sure we add to the applicable axes! */
                 if (forX) {
                     x[catName][displayName] = valueID;
                 }
@@ -247,7 +256,6 @@ function ($, _, D, TemplateManager) {
 
     $(function () {
         addGraph($('ul#graphs'), undefined);
-        console.log(parseGraphControls());
     });
 
 });
