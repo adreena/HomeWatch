@@ -9,6 +9,10 @@ define({
         /* URI to retrieve new graph data. */
         process: '/search/process.php'
     },
+
+    sel: {
+        graphList: 'ul#graphs'
+     },
     
     /*
      * This is an example of how the sensors will look. It's in simple
@@ -55,8 +59,10 @@ define({
         }
     },
 
-    /* This data structure is what process.php takes in as its
-     * "graph" parameter. */
+    /*
+     * This data structure is what process.php takes in as its
+     * "graph" parameter, serialized as JSON.
+     */
     exampleProcessParameters: {
         "startdate": "2012-03-01", /* Includes this! */
         "enddate": "2012-03-02", /* Goes up to this! */
@@ -81,8 +87,9 @@ define({
         "apartments": [1, 2]
     },
 
-    /* This one is kind of hacky. Turns the category display name into the
-     * type that should be sent to process.php.
+    /*
+     * This one is kind of hacky. Turns the category display name into the type
+     * that should be sent to process.php.
      */
     categoryNameToType: {
         "Time": "time",

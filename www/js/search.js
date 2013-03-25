@@ -114,7 +114,7 @@ function ($, _, D, TemplateManager) {
      * data need to pass to process.php.
      */
     parseGraphControls = function (graph) {
-        return JSON.stringify(D.exampleProcessParameters);
+        return D.exampleProcessParameters;
     };
 
     /**
@@ -158,11 +158,11 @@ function ($, _, D, TemplateManager) {
     };
 
     graphControlApartments = function () {
-        return '<div>Not implemented</div>';
+        return tman.render('graph-control-apartments', {});
     };
 
     graphControlDisplayType = function () {
-        return '<div>Not implemented</div>';
+        return tman.render('graph-control-types', {});
     };
 
 
@@ -255,7 +255,42 @@ function ($, _, D, TemplateManager) {
 
 
     $(function () {
-        addGraph($('ul#graphs'), undefined);
+        /* THIS IS ALL DEBUG! */
+
+        var grrid = addGraph($(D.sel.graphList), undefined),
+            theOneGraph = $('#' + grrid),
+            dump = theOneGraph.find('.debug-results');
+
+        theOneGraph.find('[href=#DEBUG]').click(function () {
+            var query;
+
+            query = {
+                /* Disable process.php's test thing... stuff. */
+                notest: true,
+                /* Serialize the example 'cause I ain't got notin' else. */
+                graph: JSON.stringify(parseGraphControls(grrid))
+            };
+
+            $.ajax({
+                url: D.uri.process,
+                type: 'GET',
+                data: query,
+
+                success: function (graphInfo) {
+                    var asText = JSON.stringify(graphInfo, null, true);
+                    dump.text(asText);
+                },
+
+                error: function () {
+                    dump.text('Something went wrong while contacting process.php')
+                }
+
+            });
+
+            return false;
+
+        });
+
     });
 
 });
