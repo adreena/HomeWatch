@@ -145,12 +145,12 @@
         
         $.post('/engineer/submit-function.php',
               {id: functionID, name: functionName, value: functionBody, description: functionDescription})
-        .done(function() {
+        .done(function(data) {
             functionEditor[0].reset();
             location.reload();
         })
-        .fail(function() {
-            alert("Error Submitting Function");
+        .fail(function(data) {
+            alert("Error Submitting Function: " + data.statusText);
         });
         
         return false;
@@ -166,12 +166,12 @@
         
         $.post('/engineer/submit-constant.php',
               {id: constantID, name: constantName, value: constantValue, description: constantDescription})
-        .done(function(data, textStatus) {
+        .done(function(data) {
             constantEditor[0].reset();
             location.reload();
         })
-        .fail(function() {
-            alert("Error Submitting Constant");
+        .fail(function(data) {
+            alert("Error Submitting Constant: " + data.statusText);
         });
         
         return false;
@@ -182,8 +182,8 @@
         var functionID = functionRow.attr('id').match(/\d+/)[0];
         
         $.post('/engineer/delete-function.php', {id: functionID})
-        .done(function() { window.location.reload(); })
-        .fail(function() { alert("Error deleting function"); });
+        .done(function(data) { window.location.reload(); })
+        .fail(function(data) { alert("Error deleting function: " + data.statusText); });
     }
     
     function deleteConstant(deleteButton) {
@@ -191,8 +191,8 @@
         var constantID = constantRow.attr('id').match(/\d+/)[0];
         
         $.post('/engineer/delete-constant.php', {id: constantID}, function(data) { window.location.reload(); })
-        .done(function() { window.location.reload(); })
-        .fail(function() { alert("Error deleting contant"); });
+        .done(function(data) { window.location.reload(); })
+        .fail(function(data) { alert("Error deleting contant: " + data.statusText); });
     }
     
 </script>

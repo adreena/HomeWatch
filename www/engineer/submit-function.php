@@ -1,7 +1,7 @@
 <?php
 
 ///
-/// Handles a request to insert a new function in the Equations table
+/// Handles a request to insert or edit a function in the Equations table
 ///
 
 ini_set('display_errors', 0); // Allows PHP to return response 500 on errors
@@ -25,6 +25,6 @@ $equation->body = $_POST['value'];
 $equation->description = $_POST['description'];
 
 if (!EquationDB::submitFunction($equation)) {
-    http_response_code(500);
+    http_response_code(400);
 }
 

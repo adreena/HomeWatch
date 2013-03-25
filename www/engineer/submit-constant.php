@@ -1,7 +1,7 @@
 <?php
 
 ///
-/// Handles a request to insert a new equation constant in the Constants table
+/// Handles a request to insert or edit an equation constant in the Constants table
 ///
 
 ini_set('display_errors', 0); // Allows PHP to return response 500 on errors
@@ -14,6 +14,7 @@ use \UASmartHome\Database\Constant;
 // Check that the request is valid
 if (!(isset($_POST['name']) && isset($_POST['value']) && isset($_POST['description']))) {
     http_response_code(400);
+    die;
 }
 
 // Submit the request
@@ -24,6 +25,6 @@ $constant->value = $_POST['value'];
 $constant->description = $_POST['description'];
 
 if (!EquationDB::submitConstant($constant)) {
-    http_response_code(500);
+    http_response_code(400);
 }
 

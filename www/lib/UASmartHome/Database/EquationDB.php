@@ -19,13 +19,13 @@ class EquationDB {
     
     public function submitFunction($function)
     {
-        if ($function == null)
+        if ($function == null || !$function->isValid())
             return false;
         
-        $con = new \UASmarthome\Connection();
+        $con = new Connection();
         $con = $con->connect();
         
-        if ($function->exists()) {
+        if ($function->hasID()) {
             $s = $con->prepare('UPDATE Equations
                                 SET Name=:Name, Value=:Value, Description=:Description
                                 WHERE Equation_ID=:Equation_ID');
@@ -50,7 +50,7 @@ class EquationDB {
     
     public function deleteFunction($functionID)
     {
-        $con = new \UASmarthome\Connection();
+        $con = new Connection();
         $con = $con->connect();
         
         $s = $con->prepare('DELETE FROM Equations
@@ -68,13 +68,13 @@ class EquationDB {
         
     public function submitConstant($constant)
     {
-        if ($constant == null)
+        if ($constant == null || !$constant->isValid())
             return false;
         
-        $con = new \UASmarthome\Connection();
+        $con = new Connection();
         $con = $con->connect();
         
-        if ($constant->exists()) {
+        if ($constant->hasID()) {
             $s = $con->prepare('UPDATE Constants
                                 SET Name=:Name, Value=:Value, Description=:Description
                                 WHERE Constant_ID=:Constant_ID');
@@ -99,7 +99,7 @@ class EquationDB {
     
     public function deleteConstant($constantID)
     {
-        $con = new \UASmarthome\Connection();
+        $con = new Connection();
         $con = $con->connect();
         
         $s = $con->prepare('DELETE FROM Constants
