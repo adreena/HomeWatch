@@ -2,13 +2,13 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-require_once "Connection.php";
+use \UASmartHome\Database\Connection;
 
 class EquationDB {
 
     public function fetchUserData()
     {
-        $con = new \UASmarthome\Connection();
+        $con = new Connection();
         $con = $con->connect();
         
         $userData['functions'] = EquationDB::fetchFunctions($con);

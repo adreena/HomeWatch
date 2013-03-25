@@ -1,7 +1,9 @@
 <?php namespace UASmartHome;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__. '/Database/Engineer.php';
+
+
+use \UASmartHome\Database\Engineer;
 
 define("DBVARS", serialize(array(
     "air_co2" => "CO2",

@@ -1,6 +1,4 @@
-<?php namespace UASmartHome; 
-
-include ('Connection.php');
+<?php namespace UASmartHome\Database; 
 
 class Engineer {
 
