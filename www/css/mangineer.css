@@ -63,3 +63,31 @@ body {
   left: 0;
 }
 
+div.config {
+  margin: 10px;
+}
+
+table.config {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.config td,
+table.config th
+{
+  border: 1px solid black;
+  margin: 5px;
+}
+
+table.config .name {
+  width: 10%;
+}
+
+table.config .value {
+  width: 40%;
+}
+
+table.config .description {
+  width: 40%;
+}
+
