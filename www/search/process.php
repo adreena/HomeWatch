@@ -49,7 +49,7 @@ $W_PER_KW = 1000;
 
 //Testing data for when not hooked up to the front end
 if ($test) {
-	$graph = array("startdate"=>"2012-03-01", "enddate"=>"2012-03-02", "xaxis" => "CO2 (ppm)", "x"=>"CO2", "xtype"=>"sensorarray", "yaxis" => "Water_Usage", "y" => array("Total_Water", "Hot_Water"), "ytype"=> "sensorarray", "period"=>"Daily", "apartments" => array(1, 2)) ;
+	$graph = array("startdate"=>"2012-03-01", "enddate"=>"2012-03-02", "xaxis" => "Time", "x"=>"Time", "xtype"=>"time", "yaxis" => "Water_Usage", "y" => array("Total_Water", "Hot_Water"), "ytype"=> "sensorarray", "period"=>"Daily", "apartments" => array(1, 2)) ;
 	$finances = true;
 	$price_per_kwh = 1;
 	$price_per_gallon = 1.5;
@@ -162,7 +162,7 @@ if ($test) {
 
 					$bigArray['values'][$apartment][$date][$sensor]["y"] = $yd[$sensor];
 					if ($xtype == "time") {
-						$xdata[$date]['time'] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
+						$bigArray['values'][$apartment][$date][$sensor]["x"] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
 					}
 				}
 			}
@@ -198,7 +198,7 @@ if ($test) {
 			$function = parseFormulaToJson($xdata, $startdate, $enddate, $period, $apartment, $phase);
 			$xdata = EquationParser::getData($function);
 		} else {
-			//For "time" we do nothing
+			//The xdata array for time was actually built when running y
 		}
 
 		$alerts = checkAlerts($startdate, $enddate, $x, $y, $apartment);
@@ -253,7 +253,7 @@ function checkAlerts ($startdate, $enddate, $x, $yarray, $apartment) {
 		if ($y == "CO2") {
 			$alertJson = parseAlertToJson($listOfAlerts[$y], $startdate, $enddate, $apartment);
 	
-			echo var_dump($alertJson);
+			//echo var_dump($alertJson);
 
 			$alerts = Alerts::getAlerts($alertJson);
 				foreach ($alerts as $alertTime => $alertValue) {
