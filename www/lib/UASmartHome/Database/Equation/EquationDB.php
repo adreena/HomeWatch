@@ -1,6 +1,6 @@
-<?php namespace UASmartHome\Database;
+<?php namespace UASmartHome\Database\Equation;
 
-require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use \UASmartHome\Database\Connection;
 

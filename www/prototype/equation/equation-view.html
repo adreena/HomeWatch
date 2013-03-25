@@ -34,13 +34,14 @@
                 // Populate the function selector
                 var function_selector = $("#function-selector")[0];
                 function_selector.size = functions.length;
+                console.debug("NUM FUNCTIONS: " + functions.length);
                 for (var i = 0; i < functions.length; ++i) {
-                    var option = new Option(functions[i]['Name'], functions[i]['Value']);
+                    var option = new Option(functions[i]['name'], functions[i]['value']);
                     function_selector.add(option, null);
                 }
             },
-            error: function() {
-                console.debug("Request failed.");
+            error: function(data) {
+                alert("Request failed: " + data.statusText);
             }
         });
     });

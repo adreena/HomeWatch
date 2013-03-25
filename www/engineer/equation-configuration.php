@@ -6,7 +6,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use \UASmartHome\Database\EquationDB;
+use \UASmartHome\Database\Equation\EquationDB;
 
 $equationData = EquationDB::fetchUserData();
 

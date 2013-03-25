@@ -1,19 +1,19 @@
-<?php namespace UASmartHome\Database;
+<?php namespace UASmartHome\Database\Equation;
 
-require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../../vendor/autoload.php';
 
-class Equation {
+class Constant {
 
     const INVALID_ID = -1;
     
     public $id;
     public $name;
-    public $body;
+    public $value;
     public $description;
     
     public function hasID()
     {
-        return $this->id != Equation::INVALID_ID;
+        return $this->id != Constant::INVALID_ID;
     }
     
     public function isValid()
@@ -21,10 +21,9 @@ class Equation {
         if (empty($this->name))
             return false;
         
-        if (empty($this->body))
+        if (empty($this->value))
             return false;
         
         return true;
     }
-    
 }
