@@ -9,6 +9,7 @@ function ($, _, D, TemplateManager) {
     var makeCategories, // TODO: Make a better name for this.
 
         parseGraphControls,
+        validateGraphRequest,
         parseGraphType,
 
         addGraph,
@@ -124,6 +125,21 @@ function ($, _, D, TemplateManager) {
         // TODO: parse the graph type!
     };
 
+    /**
+     * This one is mostly for debug: returns
+     * where the graph request contains all the keys it
+     * needs in order to make process.php happy.
+     */
+    validateGraphRequest = function (graphObject) {
+        var requiredKeys = [
+            "startdate", "enddate", "xaxis", "x", "xtype", "yaxis", "y",
+            "ytype", "period", "apartments"
+        ];
+
+        return _.all(requiredKeys, function (key) {
+            return graphObject.hasOwnProperty(key);
+        });
+    };
 
 
     /*
