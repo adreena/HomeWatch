@@ -65,13 +65,15 @@ in the command line (e.g.,  `phpunit tests/DummyTest.php`).
 
 # EXPERIMENTAL: r.js
 
-We can use [r.js] to optimize the ENTIRE web site -- basically, it
+We can use [r.js][] to optimize the ENTIRE web site -- basically, it
 merges and minifies a bunch of JavaScript and CSS. 
 
 This would recreate the `www/` directory into a `build/` directory. 
 
 It's kind of crazy, and I wouldn't recommend trying it right now, but
 it's all set up and pretty nifty.
+
+[r.js]: http://requirejs.org/docs/optimization.html
 
 # Credits
 

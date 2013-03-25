@@ -15,6 +15,9 @@
         //included since it is already in require-jquery.js
         {
             name: "jSearch"
+        },
+        {
+            name: "search"
         }
     ]
 })

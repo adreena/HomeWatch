@@ -1,3 +1,7 @@
+@charset "UTF-8";
+/*@import url("reset.css");*/
+@import url("common.css");
+
 body {
     background-color: #fff;
     margin: 0;
@@ -91,3 +95,35 @@ table.config .description {
   width: 40%;
 }
 
+
+/* Simple styles for the graph search stuff.
+ * Auto-generated using Chrome inspector stylesheets. */
+#graphs, .graph-controls {
+    list-style: none;
+    padding-left: 0;
+}
+.graph-controls {
+    width: 240px;
+    background-color: rgb(252, 251, 248);
+    display: inline-block;
+}
+.graph-controls li {
+    padding: 2px 12px;
+}
+.the-actual-gorram-label {
+    display: block;
+}
+.graph-container {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 720px;
+}
+.graph-group {
+    position: relative;
+}
+.informative {
+    font-size: smaller;
+    font-style: italic;
+    color: #111;
+}
