@@ -4,6 +4,11 @@
  * Includes jQuery selectors (sel), AJAX URIs (uri), and other debug stuff.
  */
 define({
+
+    uri: {
+        /* URI to retrieve new graph data. */
+        process: '/search/process.php'
+    }
     
     /*
      * This is an example of how the sensors will look. It's in simple
@@ -50,10 +55,29 @@ define({
         }
     },
 
-    uri: {
-        /* URI to retrieve new graph data. */
-        process: '/search/process.php'
-    }
+    /* This data structure is what Devin wants! */
+    exampleProcessParamaters: {
+        "startdate": "2012-03-01", /* Includes this! */
+        "enddate": "2012-03-02", /* Goes up to this! */
+        /* This is the display name of the independent variable. */
+        "xaxis": "CO2 (ppm)",
+        /* This is either the formula name or the sensor name. This field
+         * doesn't matter when xtype is time. */
+        "x": "CO2",
+        /* Type of the independent variable. Can be "time", "sensorarray", or
+         * "formula". */
+        "xtype": "sensorarray",
+        /* This is the display name...? of the dependent variables. */
+        "yaxis": "Water_Usage",
+        /* This is the list of depenedent variables. */
+        "y": ["Total_Water", "Hot_Water"],
+        /* Can be "sensorarray" or "formula" */
+        "ytype": "sensorarray", 
+        /* The granularity. */
+        "period": "Daily",
+        /* The selected apartments. */
+        "apartments": [1, 2]
+    },
 
 
 });

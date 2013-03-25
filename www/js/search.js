@@ -2,7 +2,8 @@
 require(['jquery',
         'underscore',
         'search/defines',
-        'utils/TemplateManager'],
+        'utils/TemplateManager',
+        'vendor/json2'],
 
 function ($, _, D, TemplateManager) {
     var makeCategories, // TODO: Make a better name for this.
@@ -104,10 +105,7 @@ function ($, _, D, TemplateManager) {
      * data need to pass to process.php.
      */
     parseGraphControls = function (graph) {
-        // TODO: write this...
-
-        // By the way, I don't need to return
-        // the graph type.
+        return JSON.stringify(D.exampleProcessParameters);
     };
 
     /**
@@ -228,7 +226,7 @@ function ($, _, D, TemplateManager) {
 
         /* This will show only the proper granularity selector thing. */
         onChange = function () {
-            var granularity = granularityChooser.val();
+            var granularity = granularityChooser.val().toLowerCase();
             hideAll();
             dateThing.children('.graph-controls-' + granularity).show();
         };
@@ -249,6 +247,7 @@ function ($, _, D, TemplateManager) {
 
     $(function () {
         addGraph($('ul#graphs'), undefined);
+        console.log(parseGraphControls());
     });
 
 });
