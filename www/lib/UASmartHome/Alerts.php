@@ -39,6 +39,27 @@ class Alerts
 
     }
 
+    /* given startdate, enddate, apartment, and alerttype, get any values
+     * which fit the alerttype and return them as an array of key=>value,
+     * where key is date and value is the alerttype value which has
+     * exceeded some threshold
+     *
+     * alerttypes so far: Temperature, CO2, Relative_Humidity
+     */
+    public static function getDefaultAlerts($input) {
+
+        $input = json_decode($input, true);
+        $finalAlerts = array();
+
+        $data = Engineer::db_query_Alert(
+                   $input["apartment"], $input["alerttype"],
+                   $input["startdate"], $input["enddate"]);
+
+        return $data;
+        var_dump($data);
+
+    }
+
     /* given the comparison string, split it into left and right and
      * call parser on each piece, then do the comparisons on the values
      * for left and right.
@@ -131,7 +152,19 @@ class Alerts
 
 }
 
-/* test data
+/* test data for getDefaultAlerts
+$functionArray = array();
+$functionArray["startdate"] = "2012-02-29:0";
+$functionArray["enddate"] = "2012-03-02:0";
+$functionArray["apartment"] = 1;
+//$functionArray["alert"] = "\$air_co2$ > 1160";
+$functionArray["alerttype"] = "Temperature";
+
+$input = json_encode($functionArray);
+var_dump(Alerts::getDefaultAlerts($input));
+*/
+
+/* test data for getAlerts
 $functionArray = array();
 $functionArray["startdate"] = "2012-02-29:0";
 $functionArray["enddate"] = "2012-03-01:0";

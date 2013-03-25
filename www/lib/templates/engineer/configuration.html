@@ -1,0 +1,199 @@
+{% extends 'engineer/base.html' %}
+
+{% block content %}
+
+<div class="config functions">
+    <table class="config functions">
+        <tr class="header">
+            <th class="name">Name</th>
+            <th class="value">Body</th>
+            <th class="description">Description</th>
+            <th colspan="2"></th>
+        </tr>
+        
+        {% for function in equationData['functions'] %}
+        <tr id="function_{{ function['id'] }}" class="body">
+            <td class="name">{{ function['name'] }}</td>
+            <td class="value">{{ function['value'] }}</td>
+            <td class="description">{{ function['description'] }}</td>
+            <td><button onClick="editFunction(this)">Edit</button></td>
+            <td><button onClick="deleteFunction(this)">Delete</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="config constants">
+    <table class="config constants">
+        <tr class="header">
+            <th class="name">Name</th>
+            <th class="value">Value</th>
+            <th class="description">Description</th>
+            <th colspan="2"></th>
+        </tr>
+        
+        {% for constant in equationData['constants'] %}
+        <tr id="constant_{{ constant['id'] }}" class="body">
+            <td class="name">{{ constant['name'] }}</td>
+            <td class="value">{{ constant['value'] }}</td>
+            <td class="description">{{ constant['description'] }}</td>
+            <td><button onClick="editConstant(this)">Edit</button></td>
+            <td><button onClick="deleteConstant(this)">Delete</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div>
+    <p>Function Editor</p>
+    
+    <form id="function-editor" onsubmit="return submitFunction()">
+        <table>
+            <tr>
+                <td><label for="name">Name</label></td>
+                <td><input name="name" type="text" /></td>
+            </tr>
+            
+            <tr>
+                <td><label for="value">Body</label></td>
+                <td><input name="value" type="text" /></td>
+            </tr>
+            
+            <tr>
+                <td><label for="description">Description</label></td>
+                <td><input name="description" type="text" /></td>
+            </tr>
+            
+            <tr>
+                <td><input name="submit-function" type="submit" value="Submit"/></td>
+            </tr>
+            
+            <input name="id" type="hidden" value="-1" />
+        </table>
+    </form>
+</div>
+
+<div>
+    <p>Constant Editor</p>
+    
+    <form id="constant-editor" onsubmit="return submitConstant()">
+        <table>
+            <tr>
+                <td><label for="name">Name</label></td>
+                <td><input name="name" type="text" /></td>
+            </tr>
+            
+            <tr>
+                <td><label for="value">Value</label></td>
+                <td><input name="value" type="text" /></td>
+            </tr>
+            
+            <tr>
+                <td><label for="description">Description</label></td>
+                <td><input name="description" type="text" /></td>
+            </tr>
+            
+            <tr>
+                <td><input name="submit-constant" type="submit" value="Submit"/></td>
+            </tr>
+            
+            <input name="id" type="hidden" value="-1" />
+        </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+
+    function editFunction(editButton) {
+        var functionRow = $(editButton).closest("tr");
+        var functionID = functionRow.attr('id').match(/\d+/)[0];
+        var functionName = functionRow.children(".name")[0].innerHTML;
+        var functionBody = functionRow.children(".value")[0].innerHTML;
+        var functionDescription = functionRow.children(".description")[0].innerHTML;
+        
+        var functionEditorContents = $("#function-editor").contents();
+        functionEditorContents.find('input[name=name]').val(functionName);
+        functionEditorContents.find('input[name=value]').val(functionBody);
+        functionEditorContents.find('input[name=description]').val(functionDescription);
+        functionEditorContents.find('input[name=id]').val(functionID);
+    }
+    
+    function editConstant(editButton) {
+        var constantRow = $(editButton).closest("tr");
+        var constantID = constantRow.attr('id').match(/\d+/)[0];
+        var constantName = constantRow.children(".name")[0].innerHTML;
+        var constantValue = constantRow.children(".value")[0].innerHTML;
+        var constantDescription = constantRow.children(".description")[0].innerHTML;
+        
+        var constantEditorContents = $("#constant-editor").contents();
+        constantEditorContents.find('input[name=name]').val(constantName);
+        constantEditorContents.find('input[name=value]').val(constantValue);
+        constantEditorContents.find('input[name=description]').val(constantDescription);
+        constantEditorContents.find('input[name=id]').val(constantID);
+    }
+    
+    function submitFunction() {
+        var functionEditor = $("#function-editor");
+        var functionEditorContents = functionEditor.contents();
+        var functionName = functionEditorContents.find('input[name=name]').val();
+        var functionBody = functionEditorContents.find('input[name=value]').val();
+        var functionDescription = functionEditorContents.find('input[name=description]').val();
+        var functionID = functionEditorContents.find('input[name=id]').val();
+        
+        $.post('/engineer/submit-function.php',
+              {id: functionID, name: functionName, value: functionBody, description: functionDescription})
+        .done(function() {
+            functionEditor[0].reset();
+            location.reload();
+        })
+        .fail(function() {
+            alert("Error Submitting Function");
+        });
+        
+        return false;
+    }
+    
+    function submitConstant() {
+        var constantEditor = $("#constant-editor");
+        var constantEditorContents = constantEditor.contents();
+        var constantName = constantEditorContents.find('input[name=name]').val();
+        var constantValue = constantEditorContents.find('input[name=value]').val();
+        var constantDescription = constantEditorContents.find('input[name=description]').val();
+        var constantID = constantEditorContents.find('input[name=id]').val();
+        
+        $.post('/engineer/submit-constant.php',
+              {id: constantID, name: constantName, value: constantValue, description: constantDescription})
+        .done(function(data, textStatus) {
+            constantEditor[0].reset();
+            location.reload();
+        })
+        .fail(function() {
+            alert("Error Submitting Constant");
+        });
+        
+        return false;
+    }
+    
+    function deleteFunction(deleteButton) {
+        var functionRow = $(deleteButton).closest("tr");
+        var functionID = functionRow.attr('id').match(/\d+/)[0];
+        
+        $.post('/engineer/delete-function.php', {id: functionID})
+        .done(function() { window.location.reload(); })
+        .fail(function() { alert("Error deleting function"); });
+    }
+    
+    function deleteConstant(deleteButton) {
+        var constantRow = $(deleteButton).closest("tr");
+        var constantID = constantRow.attr('id').match(/\d+/)[0];
+        
+        $.post('/engineer/delete-constant.php', {id: constantID}, function(data) { window.location.reload(); })
+        .done(function() { window.location.reload(); })
+        .fail(function() { alert("Error deleting contant"); });
+    }
+    
+</script>
+
+{% endblock content %}
+
+

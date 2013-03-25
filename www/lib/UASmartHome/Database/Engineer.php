@@ -261,28 +261,34 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				return $result;
 	}
 	//Alert Function Between Date and Hours\\\
-	public function db_query_Alert ($apt,$column,$table,$StartDate,$EndDate,$StartHour,$EndHour)
+	public function db_query_Alert ($apt,$column,$StartDate,$EndDate)
 	{
-	$result =array();
-	$table .= '_Alert';
+		$tables = array("CO2"=>"Air_CO2_Alert", "Relative_Humidity" => "Air_Relative_Humidity_Alert", "Temperature"=>"Air_Temperature_Alert"); 
+
+		$table = $tables[$column];
+
+		$results = array();
+		$StartDate = date_create_from_Format('Y-m-d:G', $StartDate);
+		$EndDate = date_create_from_Format('Y-m-d:G', $EndDate);
+
 	$conn=new Connection ();
 	$Query=$conn->connect()->prepare("select ".$column.",Date,Hour from ".$table." where Apt= :Apt_Num AND Date Between :SD and :ED AND Hour Between :SH AND :EH ") ;
 	$Query->bindValue(":Apt_Num",$apt);
-    $Query->bindValue(":SD",$StartDate);
-	$Query->bindValue(":ED",$EndDate);
-	$Query->bindValue(":SH",$StartHour);
-	$Query->bindValue(":EH",$EndHour);
+    $Query->bindValue(":SD",$StartDate->format('Y-m-d'));
+	$Query->bindValue(":ED",$EndDate->format('Y-m-d'));
+	$Query->bindValue(":SH",$StartDate->format('G'));
+	$Query->bindValue(":EH",$EndDate->format('G'));
 	$Query->execute();
-	while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+	while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
 		     {
-				$result[]=(array)$row;
+                $results[$row["Date"] . ":" . $row["Hour"]] = $row[$column];
 		      }
 				
 				
 	//$a= $Query->rowCount();
 				
 				
-	return $result;
+	return $results;
 	
 	
 	}
