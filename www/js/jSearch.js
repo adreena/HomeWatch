@@ -7,6 +7,10 @@ require([
     'flot-axislabels/jquery.flot.axislabels', // Extra flot plugins
     'flot-orderbars/jquery.flot.orderBars'],
 
+    // needed additions
+    //flot/jquery.flot.navigate.js
+    // flot-axislabels/jquery.flot.axislabels this needs a patch
+
     /*
      * jSearch.js
      *
@@ -280,395 +284,384 @@ require([
                 );
         };
 
-        var render_graph = function (selectedValue, result) {
-            var granularity = result.query.granularity,
+        var render_graph = function (graphtype, result, element, callback) {
+         console.log("granularity is " + result.granularity);
 
-                data_and_opts = format_data(selectedValue, result),
+        // test for graphtypes
+	if(graphtype === "plainText") {
+	    displayText(result)
+	} else {
+	    var meta_data = create_metadata_object(graphtype, result);
+	    var results = result["values"]
+            var data_and_opts = format_data(meta_data, results);
+	    var data = data_and_opts["data"];
+	    var options = data_and_opts["options"];
 
-                data = data_and_opts.data,
-                options = data_and_opts.options;
+	    // element needs to be substituted here
+	    $.plot($(".graph1"), data, options);
 
+	    if(meta_data.granularity !== "Hourly") {
+	        bind_plotclick(meta_data.granularity);
+	    }
+        }
+    };
 
-            // Empty the results div and add a div to place our wonderful graph.
-            $('#results').empty().append(
-                $('<div>').attr('id', 'graph1').addClass('graph')
-            );
+    var create_metadata_object = function (graphtype, result) {
+	return 	{
+                graphtype: graphtype,
+                granularity: result.granularity,
+		xtype: result["x-axis"],
+		ytype: result["y-axis"],
+		millisecond_hour: 3600000,
+		millisecond_day: 86400000,
+            	}
+    };
 
-            // Might want to consider _.uniqueid to make ID
-            $.plot($("#graph1"), data, options);
-
-            bind_plotclick(granularity);
-
-        };
-
-        var bind_plotclick = function (granularity) {
-            var drill_granularity;
-            var date_from;
-            var date_to;
-            var data = $(defs.sel.searchForm).serialize();
-
-            $("#graph1").bind("plotclick", function (event, pos, item) {
-                if (item) {
-                    var offset = (new Date(item.datapoint[0])).getTimezoneOffset() * 60 * 1000;
-                    var data_pointUTC = item.datapoint[0] + offset;
-                    var date = new Date(data_pointUTC);
-                    date_from = format_date(date, "true");
-
-                    if (granularity === "Hourly") {
-                        // cannot drill down further
-                        return;
-                    } else if (granularity === "Daily") {
-                        drill_granularity = "Hourly";
-                        date_to = date_from;
-                    } else if (granularity === "Weekly") {
-                        drill_granularity = "Daily";
-                        date_to = get_date_to(data_pointUTC, drill_granularity);
-                    } else if (granularity === "Monthly") {
-                        drill_granularity = "Weekly";
-                        date_to = get_date_to(data_pointUTC, drill_granularity);
-                    }
-
-                    data = data.replace(/(granularity=)([a-zA-Z]+)/, '$1' + drill_granularity);
-                    data = data.replace(/(from=)([0-9][0-9]%2F[0-9][0-9]%2F[0-9][0-9][0-9][0-9])/, '$1' + encodeURIComponent(date_from));
-                    data = data.replace(/(to=)([0-9][0-9]%2F[0-9][0-9]%2F[0-9][0-9][0-9][0-9])/, '$1' + encodeURIComponent(date_to));
-
-                    onSearch(data, true);
-                } // if statement
-            }); // end plotclick
-        };
-
-        var get_days_in_month = function (month, year) {
-            month = parseInt(month);
-            year = parseInt(year);
-            return (32 - new Date(year, month, 32).getDate());
-        };
-
-        var get_date_to = function (date, drill_granularity) {
-            var millisecond_day = 86400000;
-            var millisecond_week = 6 * millisecond_day;
-
-            if (drill_granularity === "Daily") {
-                var date_to = date + millisecond_week;
-                date_to = new Date(date_to);
-                return date_to = format_date(date_to, true);
-            }
-
-            if (drill_granularity === "Weekly") {
-                var temp_date = new Date(date);
-                var month = temp_date.getUTCMonth();
-                var year = temp_date.getUTCFullYear();
-                var num_days = get_days_in_month(month, year);
-                date_to = date + (num_days - 1) * millisecond_day;
-                date_to = new Date(date_to);
-                return date_to = format_date(date_to, true);
-            }
-        };
-
-        var format_date = function (date, bool) {
-            if (bool === "false") {
-                return (date.getUTCMonth() + 1) + '/' + date.getUTCFullYear();
-            } else {
-                return add_leading_zero(date.getUTCMonth() + 1) + '/' + add_leading_zero(date.getUTCDate()) + '/' + date.getUTCFullYear();
-            }
-        };
-
-        var add_leading_zero = function (date) {
-            return date < 10 ? '0' + date : '' + date;
-        };
-
-        /*
-         * Parses the data retrieved from the server, into something usable by
-         * Flot.
+    	/*
+         * Parses the data retrieved from the server, into something 
+         * usable by Flot.
          */
-        var format_data = function (selectedValue, result) {
-            var clean_data,
-                sensor_data = [],
-                series_data = [],
-                data_and_options = {},
-                graphname = [], // Not sure what this is for..
-                apartments = [],
-                millisecond_multiplier = 3600000,
-                millisecond_day = 86400000,
-                graphname_flag = false,
-                granularity,
-                min_date,
-                max_date;
+    var format_data = function (meta_data, result) {
+	var sensor_data = [];
+	var series_data = [];
+	var data_and_options = [];
+	var graphname = [];
+	var apartments = [];
+	var graphname_flag = "false";
+	var min_x, max_x;
+	var apartment, sensor, timestamp;
+	
+        $.each(result, function (key, value) {
+            apartment = key;
+            apartments.push(apartment);
+            console.assert(sensor_data[apartment] === undefined);
+            sensor_data[apartment] = [];
 
-            // First thing's first: Preprocess the data.
-            clean_data = preprocessData(result.data);
+            $.each(value, function (key, value) {
+		// key = date stamp                   
+		time_stamp = DateToUTC(key);
 
-            granularity = result.query.granularity;
+                if (graphname.length !== 0) {
+                    graphname_flag = "true";
+                }
 
-            // This massive block of code parses the elaborate, nested
-            // structure of the input JSON into an eleaborate, nested
-            // structure that we can later use with Flot.
-            $.each(clean_data, function (apartment, time_data) {
+                $.each(value, function (key, value) {
+                    // key = sensor names
+                    sensor = key;
 
-                // Add each apartment to the array of apartment.s
-                apartments.push(apartment);
-                // Assuming that each apartment ID is unique.
-                console.assert(sensor_data[apartment] === undefined);
-                sensor_data[apartment] = [];
+                    if (graphname_flag === "false" && sensor !== "time") {
+			graphname.push(sensor);			  
+                    }
 
-                $.each(time_data, function (date, sensors) {
-                    var x_tick, offset;
+                    if (sensor_data[apartment][sensor] === undefined) {
+                        sensor_data[apartment][sensor] = [];
+                    }
 
-                    if (granularity === "Hourly") {
-                        x_tick = parseInt(date, 10);
-                        // Convert from UTC to localtime.
-                        // Not sure if this is really necessary...
-                        offset = (new Date(x_tick)).getTimezoneOffset() * 60 * 1000;
-                        x_tick = x_tick - offset;
+                    if (series_data.length === 0) {
+                        tuple = [];
                     } else {
-                        x_tick = parseInt(date, 10);
+                        tuple.length = 0;
                     }
 
-                    // This will happen on the first iteration, assuming the
-                    // list is in monotonically increasing date.
-                    if (min_date === undefined) {
-                        min_date = x_tick;
-                        max_date = min_date;
-                    }
+                    if(meta_data.xtype === "time") {
+		    	if(min_x === undefined) {
+			    min_x = time_stamp;
+			    max_x = min_x;
+		        }
+				
+		        if(time_stamp >= max_x) {
+                            if(meta_data.granularity === "Hourly") {
+		                max_x = time_stamp + meta_data.millisecond_day;
+		            } else {
+			        max_x = time_stamp;
+			    }
+		        }
 
-                    if (x_tick > max_date) {
-                        if (granularity === "Hourly") {
-                            max_date = x_tick + millisecond_day;
-                        } else {
-                            max_date = x_tick;
-                        }
-                    }
+                        var tick_size = time_stamp;
+		    } else {
+			if(value["x"]) {
+			    var tick_size = parseFloat(value["x"]);
 
-                    if (graphname.length !== 0) {
-                        graphname_flag = true;
-                    }
+			    if(min_x === undefined || min_x > tick_size) {
+				min_x = tick_size;
+			    }
 
-                    $.each(sensors, function (sensor, sensor_reading) {
-                        var tuple = [];
+			    if(max_x === undefined || max_x < tick_size) {
+				max_x = tick_size;
+			    }
 
-                        // Note that sensor readings can be null!
-
-                        if (graphname_flag === false) {
-                            graphname.push(sensor);
-                        }
-
-                        // Initialize the sensor_data for this particular
-                        // apartment.
-                        if (sensor_data[apartment][sensor] === undefined) {
-                            sensor_data[apartment][sensor] = [];
-                        }
-
-                        if ($.isArray(sensor_reading)) {
-
-                            // Handle several sensor readings for this date.
-
-                            $.each(sensor_reading, function (i, value) {
-                                var tick_size;
-
-                                if (series_data.length === 0) {
-                                    tuple = [];
-                                } else {
-                                    tuple.length = 0;
-                                }
-
-                                // Make the apropriate tick size.
-                                tick_size = (i === 0)
-                                    ? x_tick
-                                    : x_tick + millisecond_multiplier * i;
-
-                                tuple[0] = tick_size;
-                                tuple[1] = value;
-
-                                // Append the datum to the current reading.
-                                sensor_data[apartment][sensor].push(tuple);
-                            });
-
-                        } else if (sensor_reading !== null) {
-
-                            // Handle one sensor reading for this date.
-
-                            if (series_data.length === 0) {
-                                tuple = [];
-                            } else {
-                                tuple.length = 0;
-                            }
-
-                            tuple[0] = x_tick;
-                            tuple[1] = sensor_reading;
-
-                            // Append the datum to the current reading.
-                            sensor_data[apartment][sensor].push(tuple);
-
-                        } else {
+			} else {
                             console.log({
                                 msg: "Got null value in sensor reading!",
                                 apt: apartment,
-                                date: date,
+                                date: time_stamp,
                                 sensor: sensor
                             });
-                        }
+			}
+		    }                              
 
-                    });
+                    tuple[0] = tick_size;
+                    tuple[1] = value["y"];
+                    sensor_data[apartment][sensor].push(tuple);
                 });
             });
+        });
 
-            // Converts the above thing into something flot can deal with.
-            for (var i = 0; i < apartments.length; ++i) {
-                for (var j = 0; j < graphname.length; ++j) {
-                    var label = "Apartment " + apartments[i] + " " + graphname[j];
-                    series_length = series_data.length;
-                    if (series_length === 0) {
-                        series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
-                    } else {
-                        series_data[series_length] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
-                    }
-                }
-            }
+	meta_data["min_x"] = min_x;
+	meta_data["max_x"] = max_x;
 
-            var options = set_all_options(selectedValue, graphname, granularity, min_date, max_date);
-            data_and_options.data = series_data;
-            data_and_options.options = options;
+        for(var i = 0; i < apartments.length; ++i) {
+	    for(var j = 0; j < graphname.length; ++j) {
+		var label = "Apartment " + apartments[i] + " " + graphname[j];
+		series_length = series_data.length;
+		if(series_length === 0) {
+		    series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
+			
+		} else {
+		    series_data[series_length] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
+		}
+	    }
+	}
 
-            return data_and_options;
-        };
 
-        var set_all_options = function (graphtype, graphname, granularity, min_date, max_date) {
-            var x_axis = get_x_axis(granularity, min_date, max_date);
-            var y_axis = get_y_axis(graphname);
-            var grid = get_grid();
-            var series_opts = get_series_options(graphtype);
-            var options = $.extend({}, x_axis, y_axis, grid, series_opts);
-            return options;
-        };
+        var options = set_all_options(meta_data);
+	data_and_options["data"] = series_data;
+	data_and_options["options"] = options;
+	return data_and_options;
+    };
 
-        var get_x_axis = function (granularity, min_date, max_date) {
-            var base_x = {
-                xaxis: {
-                    mode: "time",
-                    timezone: "local",
-                    axisLabelUseCanvas: true,
-                    axisLabelFontSizePixels: 12,
-                    axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-                    axisLabelPadding: 5,
-                    autoscaleMargin: .50
-                }
-            };
+    var set_all_options = function (meta_data) {
+	var x_axis = get_x_axis(meta_data);
+	var y_axis = get_y_axis(meta_data);
+	var grid = get_grid();
+	var series_opts = get_series_options(meta_data);
+	var legend = get_legend();
 
-            base_x.xaxis["min"] = min_date;
-            base_x.xaxis["max"] = max_date;
+	if(meta_data.granularity === "Hourly") {
+	    var zoom = get_zoom_options();	
+	} else {
+	    var zoom = {};
+	}
 
-            if (granularity === "Hourly") {
-                base_x.xaxis["tickSize"] = [1, "hour"];
-                var date = new Date(min_date);
-                var label = date.getUTCDay();
-                base_x.xaxis["axisLabel"] = label;
+	var options = $.extend({}, x_axis, y_axis, grid, series_opts, legend, zoom);
+	return options;
+    };
 
-            } else if (granularity === "Daily") {
-                base_x.xaxis["timeformat"] = "%m/%d/%y";
-                base_x.xaxis["tickSize"] = [1, "day"];
-                var date = new Date(min_date);
-                var date_from = date.getUTCDay();
-                var date = new Date(max_date);
-                var date_to = date.getUTCDay();
-                base_x.xaxis["axisLabel"] = date_from + " - " + date_to;
+    var get_x_axis = function(meta_data) {
+	var granularity = meta_data.granularity;
+	var xtype = meta_data.xtype;
+	var min_x = meta_data.min_x;
+	var max_x = meta_data.max_x;
+	var min_date = new Date(min_x);
+	var max_date = new Date(max_x);
+        var base_x = {
+	    xaxis: 	
+		{ 
+		  axisLabelUseCanvas: true, axisLabelFontSizePixels: 12,
+                  axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif', axisLabelPadding: 5,
+		  autoscaleMargin: .50
+		}		 
+	};
 
+	base_x.xaxis["min"] = min_x;
+	base_x.xaxis["max"] = max_x;
+
+	if(xtype === "time") {
+	    base_x.xaxis["mode"] = "time";
+
+            if(granularity === "Hourly") {
+	        base_x.xaxis["tickSize"] = [1, "hour"];
+	        var label = min_date.getUTCDay();
+	        base_x.xaxis["axisLabel"] = label;
+            } else if(granularity === "Daily") {
+		base_x.xaxis["timeformat"] = "%a %d";
+		base_x.xaxis["tickSize"] = [1, "day"];
+		base_x.xaxis["dayNames"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+		var date_from = date.getUTCDay();
+		var date_to = date.getUTCDay();
+		base_x.xaxis["axisLabel"] = min_date.getUTCMonth() + ' ' + min_date.getUTCDay() + "-" + 
+						max_date.getUTCMonth() + ' ' + max_date.getUTCDay();
             } else if (granularity === "Weekly") {
-                // TODO
-            } else if (granularity === "Monthly") {
-                // override min date so that January label shows on graph
-                base_x.xaxis["min"] = min_date - 25200000;
-                base_x.xaxis["timeformat"] = "%b";
-                base_x.xaxis["tickSize"] = [1, "month"];
-                base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                var date = new Date(min_date);
-                var label = date.getFullYear();
-                base_x.xaxis["axisLabel"] = 'Year: ' + label;
+		base_x.xaxis["tickSize"] = [1, "week"];
+		base_x.xaxis["weekNames"] = ["1", "2", "3", "4", "5"];
+            } else if(granularity === "Monthly") {
+		base_x.xaxis["timeformat"] = "%b";
+		base_x.xaxis["tickSize"] = [1, "month"];
+		base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		var label = min_date.getUTCFullYear(); 
+		base_x.xaxis["axisLabel"] = 'Year: ' + label;
+	    }
+	} else {
+	     base_x.xaxis["axisLabel"] = xtype;
+	}
 
-            }
-            return base_x;
-        };
+	if(granularity === "Hourly") {
+	    base_x.xaxis["zoomRange"] = [0.1, 3600000];
+	    var pan_range = max_x * 1.5;
+	    base_x.xaxis["panRange"] = [-100, pan_range];
+	}
 
-        var get_y_axis = function (graphname) {
-            var base_y = {
-                yaxis: {
-                    axisLabelUseCanvas: true,
-                    axisLabelFontSizePixels: 12,
-                    axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-                    axisLabelPadding: 5
+	return base_x;	    
+    };
+
+    var get_y_axis = function (meta_data) {
+        var base_y = {
+            yaxis: 
+		{
+                  axisLabelUseCanvas: true,
+                  axisLabelFontSizePixels: 12,
+                  axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                  axisLabelPadding: 5
                 }
             };
 
-            for (var i = 0; i < graphname.length; ++i) {
-                base_y.yaxis["axisLabel"] = graphname[i];
-            }
+        base_y.yaxis["axisLabel"] = meta_data.ytype;
 
-            return base_y;
+	if(meta_data.granularity === "Hourly") {
+	    base_y.yaxis["zoomRange"] = [0.1, 3600000];
+	    base_y.yaxis["panRange"] = [-100, 1000];
+	}
+
+        return base_y;
+    };
+
+    var get_grid = function () {
+	return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};     
+    };
+
+    var get_series_options = function (meta_data, order) {
+	var graphtype = meta_data.graphtype;
+
+	var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true }}};
+	var bars = {series: {bars: { show: true, barWidth: 1000*60*60*0.25, fill: true, lineWidth: 1, clickable: true,
+    			hoverable: true, order: order}}};
+
+	if(graphtype === "line") {
+	    return line;
+	} else if(graphtype === "histo") {
+	    return bars;
+	}
+    };
+
+    var get_legend = function () {
+        return {
+	    legend: 
+		{
+    		  show: true,
+		  labelBoxBorderColor: "rgb(51, 204, 204)",
+		  backgroundColor: "rgb(255, 255, 204)",
+    		  margin: [10, 300],
+    		  backgroundOpacity: .75
+  		}
+        }
+    };
+
+    var get_zoom_options = function () {
+        return {
+            zoom: 
+		{
+                interactive: true
+            	},
+
+            pan: 
+		{
+                interactive: true
+            	}
+	}
+    };
+
+    var create_series_object = function (label, data) {
+        return {
+                 label: label,
+                 data: data,
+               }
         };
 
-        var get_grid = function () {
-            return base_grid = {
-                grid: {
-                    hoverable: true,
-                    clickable: true,
-                    borderWidth: 3,
-                    labelMargin: 3
+    var bind_plotclick = function (granularity) {
+        var drill_granularity;
+        var date_from;
+        var date_to;
+        var data = $(defs.sel.searchForm).serialize();
+
+        $("#graph1").bind("plotclick", function (event, pos, item) {
+            if (item) {
+                //var offset = (new Date(item.datapoint[0])).getTimezoneOffset() * 60 * 1000;
+                var data_pointUTC = item.datapoint[0] + offset;
+                var date = new Date(data_pointUTC);
+                date_from = format_date(date, "true");
+
+                if (granularity === "Hourly") {
+                    // cannot drill down further
+                    return;
+                } else if (granularity === "Daily") {
+                    drill_granularity = "Hourly";
+                    date_to = date_from;
+                } else if (granularity === "Weekly") {
+                    drill_granularity = "Daily";
+                    date_to = get_date_to(data_pointUTC, drill_granularity);
+                } else if (granularity === "Monthly") {
+                    drill_granularity = "Weekly";
+                    date_to = get_date_to(data_pointUTC, drill_granularity);
                 }
-            };
-        };
 
-        var get_series_options = function (graphtype) {
-            var line = {
-                series: {
-                    lines: {
-                        show: true
-                    },
-                    points: {
-                        radius: 3,
-                        show: true,
-                        fill: true
-                    }
-                }
-            };
+                data = data.replace(/(granularity=)([a-zA-Z]+)/, '$1' + drill_granularity);
+                data = data.replace(/(from=)([0-9][0-9]%2F[0-9][0-9]%2F[0-9][0-9][0-9][0-9])/, '$1' + encodeURIComponent(date_from));
+                data = data.replace(/(to=)([0-9][0-9]%2F[0-9][0-9]%2F[0-9][0-9][0-9][0-9])/, '$1' + encodeURIComponent(date_to));
 
-            var bars = {
-                series: {
-                    bars: {
-                        show: true,
-                        barWidth: 1000 * 60 * 60 * 0.25,
-                        fill: true,
-                        lineWidth: 1,
-                        clickable: true,
-                        hoverable: true
-                    }
-                }
-            };
+                onSearch(data, true);
+            } // if statement
+        }); // end plotclick
+    };
 
-            if (graphtype === "line") {
-                return line;
-            } else if (graphtype === "histo") {
-                return bars;
-            }
-        };
+    var get_days_in_month = function (month, year) {
+        month = parseInt(month);
+        year = parseInt(year);
+        return (32 - new Date(year, month, 32).getDate());
+    };
 
-        var create_series_object = function (label, data) {
-            return {
-                label: label,
-                data: data
-            }
-        };
+    var get_date_to = function (date, drill_granularity) {
+        var millisecond_day = 86400000;
+        var millisecond_week = 6 * millisecond_day;
 
+        if (drill_granularity === "Daily") {
+            var date_to = date + millisecond_week;
+            date_to = new Date(date_to);
+            return date_to = format_date(date_to, true);
+        }
+
+        if (drill_granularity === "Weekly") {
+            var temp_date = new Date(date);
+            var month = temp_date.getUTCMonth();
+            var year = temp_date.getUTCFullYear();
+            var num_days = get_days_in_month(month, year);
+            date_to = date + (num_days - 1) * millisecond_day;
+            date_to = new Date(date_to);
+            return date_to = format_date(date_to, true);
+        }
+    };
+
+    var format_date = function (date, bool) {
+        if (bool === "false") {
+            return (date.getUTCMonth() + 1) + '/' + date.getUTCFullYear();
+        } else {
+            return add_leading_zero(date.getUTCMonth() + 1) + '/' + add_leading_zero(date.getUTCDate()) + '/' + date.getUTCFullYear();
+        }
+    };
+
+    var add_leading_zero = function (date) {
+        return date < 10 ? '0' + date : '' + date;
+    };
 
 
         /*
          * UTILITIES!
          */
 
-
-
         /* Converts a date in YYYY-MM-DD:hh format into milliseconds since the
          * UNIX epoch. Assumes everything is using the same timezone.  If the
          * input cannot be parsed, returns undefined.
          */
-        devinDateToUTC = function (dateString) {
+        DateToUTC = function (dateString) {
             var dateRegex = /(\d+)-(\d+)-(\d+):(\d+)/,
                 m, // m for match
                 UTCTime;
