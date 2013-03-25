@@ -27,7 +27,9 @@ if (ISSET($_GET['notest'])) {
 
 //We need to grab all of this data from the request header to correctly handle it
 if (ISSET($_GET['graph'])) {
-	$graph = $_GET['graph'];
+    /* ALL of the information is just passed as a JSON object -- convert it 
+     * into an associative array. */
+	$graph = json_decode($_GET['graph'], true);
 } else {
 	array_push($messages, "No graph data received\n");
 }
