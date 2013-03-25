@@ -477,8 +477,6 @@ require([
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-		var date_from = date.getUTCDay();
-		var date_to = date.getUTCDay();
 		base_x.xaxis["axisLabel"] = min_date.getUTCMonth() + ' ' + min_date.getUTCDay() + "-" + 
 						max_date.getUTCMonth() + ' ' + max_date.getUTCDay();
             } else if (granularity === "Weekly") {
