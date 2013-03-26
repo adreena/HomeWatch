@@ -12,9 +12,9 @@ $context["granularity"] = "Daily";
 $context["function"] = "9 * (3+pi) * \$air_temperature$ + \$air_co2$ / 4";       //$_GET['function'];
 $context["functionname"] = "functionname";
 
-json_encode($context);
+$json = json_encode($context);
 
-$result = EquationParser::getData($context);
+$result = EquationParser::getData($json);
 
-echo "RESULT: " . $result;
+var_dump($result);
 
