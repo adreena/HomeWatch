@@ -457,6 +457,8 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	$table = $tables[$column];
 	$conn=new Connection ();
 	if ($between ==1){
+	try
+			{ 
 	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$column."_Alert
 							AS select `".$table."`.`Apt` AS `Apt`,
                            avg(`".$table."`.`".$column."`) AS `".$column."`,
@@ -465,8 +467,16 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 							from `".$table."` group by `".$table."`.`Apt`,`".$table."`.`Date`,`".$table."`.`Hour`	
                            having avg(`".$table."`.`".$column."`) ".$sign1." ".$value1."");
 						   $Query->execute();
+						   return "Success";
 						   }
+						   catch (PDOException $e)
+			{
+				return "Fail";
+			}	
+			}
 	if ($between ==2){
+	try
+			{ 
 	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$column."_Alert
 							AS select `".$table."`.`Apt` AS `Apt`,
                            avg(`".$table."`.`".$column."`) AS `".$column."`,
@@ -475,19 +485,16 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 							from `".$table."` group by `".$table."`.`Apt`,`".$table."`.`Date`,`".$table."`.`Hour`	
                            having avg(`".$table."`.`".$column."`) ".$sign1." ".$value1." ".$condition." avg(`".$table."`.`".$column."`) ".$sign2." ".$value2." ");
 						   $Query->execute();
+						   return "Success";
 						   }
-			
-		   
-		try
-			{    
-				$Query=$conn->connect()->prepare("select * from ".$colum."_Alert");
-				$Query->execute();
-				return "Success";
-				}
-			catch (PDOException $e)
+						   catch (PDOException $e)
 			{
 				return "Fail";
-			}		
+			}	
+			}
+						   
+			
+		
 	}
 	public function db_check_Alert($view)
 	{
