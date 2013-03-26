@@ -467,11 +467,11 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 							from `".$table."` group by `".$table."`.`Apt`,`".$table."`.`Date`,`".$table."`.`Hour`	
                            having avg(`".$table."`.`".$column."`) ".$sign1." ".$value1."");
 						   $Query->execute();
-						   return "Success";
+						   return true;
 						   }
-						   catch (PDOException $e)
+						   catch ( \PDOException $e)
 			{
-				return "Fail";
+				return false;
 			}	
 			}
 	if ($between ==2){
@@ -485,11 +485,11 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 							from `".$table."` group by `".$table."`.`Apt`,`".$table."`.`Date`,`".$table."`.`Hour`	
                            having avg(`".$table."`.`".$column."`) ".$sign1." ".$value1." ".$condition." avg(`".$table."`.`".$column."`) ".$sign2." ".$value2." ");
 						   $Query->execute();
-						   return "Success";
+						   return true;
 						   }
-						   catch (PDOException $e)
+						   catch ( \PDOException $e)
 			{
-				return "Fail";
+				return false;
 			}	
 			}
 						   
@@ -505,11 +505,11 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				{    
 				$Query=$conn->connect()->prepare("select * from ".$view."");
 				$Query->execute();
-				return "Success";
+				return true;
 				}
-			catch (PDOException $e)
+			catch ( \PDOException $e)
 			{
-				return "Fail";
+				return false;
 			}
 			
 	}
