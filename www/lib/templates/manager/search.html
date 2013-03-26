@@ -10,37 +10,152 @@
 
 {% block title 'Search' %}
 
+{% block requireMain '/js/search' %}
 
-{# See below for the extra scripts. #}
-
-{% block requireMain '/js/temp' %}
+{# See below for the templates within the templates. #}
 
 {% block content %}
+<ul id="graphs" />
+{% endblock content %}
+
+{#
+ # Yes! That really is all to it!
+ #
+ # The real magic exists in the underscore templates.
+ #
+ # By the way:
+ # > Yo dawg, I heard you like templates, so we put a a template in your
+ # > template so you can decouple while you decouple.
+ #}
 
 
-<ul id="graphs">
-	
-</ul>
 
-<a id="addgraph" href="#">Add Graph</a>
-
+{% block extraScripts %}
+{# Parameters:
+  id:             arbitrary, identifying graph ID
+  graphControls:  Provide your own <li>s for the controls.
+#}
 <script id="_t-graph-group" type="text/html">
-<li class = "graph-group">
-		<li class = "graph-controls">
-			<div class = "graph-controls-axis">
-				<h2>"AXIS"</h2>
-				<h3>"X-AXIS"</h3>
-					<select class="xaxis"><%= xaxis %></select>
-				<h3>"Y-AXIS"</h3>
-					<select class="yaxis"><%= yaxis %></select>
-			</div>
-			<div class = "graph-controls-axis">
-		</li>
-		
-		<div class = "graph-container">
-		</div>
-	</li>
+  <li class="graph-group" id="<%= graphID %>">
+    <ul class="graph-controls"><%= graphControls %></ul>
+    <div class="graph-container">
+      <a href="#DEBUG"> Update </a>
+      <pre class="debug-results"></pre>
+    </div>
+  </li>
 </script>
+{# Parameters
+  header:     The title of the field
+  content:    The FULL HTML content (including any wrapping). Must be one
+              element.
+#}
+<script id="_t-graph-control-li" type="text/html">
+  <li>
+    <h3><%- header %></h3>
+    <%= content %>
+  </li>
+</script>
+{# Parameters
+  xAxis:  a series of options/optgroups
+  yAxis:  a series of options/optgroups
+#}
+<script id="_t-graph-control-axes" type="text/html">
+  <div class="graph-control-axes">
+    <label><span class="the-actual-gorram-label">X Axis</span>
+      <select data-gc name="xaxis">
+        <%= xAxis %>
+      </select>
+    </label>
 
+    <label><span class="the-actual-gorram-label">Y Axis</span>
+      <select data-gc name="yaxis">
+        <%= yAxis %>
+      </select>
+    </label>
+  </div>
+</script>
+{# Parameters
+  categories: an object of category name to elements.
+              `elements` is an object of display name to value Id.
+#}
+<script id="_t-graph-optgroup" type="text/html">
+  <% _.each(categories, function (elements, categoryName) {
+        if (_.isEmpty(elements)) { return; } %>
+  <optgroup label="<%- categoryName %>">
+  <% _.each(elements, function (valueID, displayName) { %>
+    <option value="<%= valueID %>"><%- displayName %></option>
+    <% }); %>
+  </optgroup>
+  <% }); %>
+</script>
+{#
+  No parameters.
+#}
+<script id="_t-graph-control-datetime" type="text/html">
+  <div class="graph-controls-datetime">
+    <label><span class="the-actual-gorram-label"> Granularity </span>
+      <select name="granularity">
+        <option value="Hourly">Hourly</option>
+        <option value="Daily">Daily</option>
+        <option value="Weekly">Weekly</option>
+        <option value="Monthly">Monthly</option>
+      </select>
+    </label>
 
-{% endblock %}
+    <div class="graph-controls-hourly">
+      <label><span class="the-actual-gorram-label"> Day </span>
+        <input data-gc type="date" />
+      </label>
+    </div>
+
+    <div data-selected class="graph-controls-daily">
+      <p class="informative"> Ranges are inclusive. </p>
+
+      <label><span class="the-actual-gorram-label"> Start Day </span>
+        <input data-gc type="date" />
+      </label>
+
+      <label><span class="the-actual-gorram-label"> End Day </span>
+        <input data-gc type="date" />
+      </label>
+    </div>
+
+    <div class="graph-controls-weekly">
+      <p class="informative"> Ranges are inclusive. </p>
+
+      <label><span class="the-actual-gorram-label"> Start Week </span>
+        <input data-gc type="date" />
+      </label>
+
+      <label><span class="the-actual-gorram-label"> End Week </span>
+        <input data-gc type="date" />
+      </label>
+    </div>
+
+    <div class="graph-controls-monthly">
+      <p class="informative"> Ranges are inclusive. </p>
+
+      <label><span class="the-actual-gorram-label"> Start Month </span>
+        <input data-gc type="date" />
+      </label>
+
+      <label><span class="the-actual-gorram-label"> End Month </span>
+        <input data-gc type="date" />
+      </label>
+    </div>
+
+  </div>
+</script>
+{# Parameters
+  Not implemented!
+#}
+<script id="_t-graph-control-apartments" type="text/html">
+  <div>Not implemented</div>
+</script>
+{# Parameters
+  Not implemented!
+#}
+<script id="_t-graph-control-types" type="text/html">
+  <div>Not implemented</div>
+</script>
+{% endblock extraScripts %}

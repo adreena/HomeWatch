@@ -3,6 +3,7 @@ require(['jquery',
         'underscore',
         'search/defines',
         'utils/TemplateManager',
+        'spiffy/spiffy',
         'vendor/json2'],
 
 function ($, _, D, TemplateManager) {
@@ -273,6 +274,7 @@ function ($, _, D, TemplateManager) {
     $(function () {
         /* THIS IS ALL DEBUG! */
 
+
         var grrid = addGraph($(D.sel.graphList), undefined),
             theOneGraph = $('#' + grrid),
             dump = theOneGraph.find('.debug-results');
@@ -306,6 +308,10 @@ function ($, _, D, TemplateManager) {
             return false;
 
         });
+
+        /* TEMPORARY: Trying out spiffy because why not? */
+        $('.graph-controls').spiffy();
+        $('.graph-controls > li > h3').addClass('spiffy-header');
 
     });
 

@@ -4,6 +4,7 @@
  */
 
 body {
+  /* The font family for the entire site. */
   font-family: "Helvetica Neue", Helvetica, "FreeSans", Arial, sans-serif;
 }
 
@@ -12,6 +13,7 @@ body {
   color:#AA0000;
 }
 
+/* Er... this is probably useful for something. */
 .inline-nav-list {
   list-style: none;
   padding: 0;
@@ -24,4 +26,29 @@ body {
   padding: 0;
   margin: 0;
   display: inline;
+}
+
+/* I removed these with the reset stylesheet... */
+cite, em, var, address, dfn {
+    font-style: italic;
+}
+em, h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+pre {
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+/* I'm adding the heading styles on "as-needed" basis. */
+h3 {
+    font-size: larger;
+}
+
+/* Temporary: spiffy headers! */
+.spiffy-header {
+    /* Emulate link to give affordance of something you can click. */
+    cursor: pointer;
+}
+.spiffy-header:hover {
+    color: #444;
 }
