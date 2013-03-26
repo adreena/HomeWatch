@@ -2,6 +2,11 @@
 
 {% block content %}
 
+<link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
+
+<script src="/js/vendor/jquery-ui.js"></script>
+<script src="/js/equation.js"></script>
+
 <div class="config-display-container">
     <div class="config-display functions">
         <p class="title">Functions</p>
@@ -61,7 +66,7 @@
                 <br>
                 
                 <label for="value">Body</label>
-                <input name="value" type="text" />
+                <input name="value" type="text" onkeyup="onFunctionTextChanged(this)" />
                 <br>
                 
                 <label for="description">Description</label>
@@ -103,100 +108,5 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    $("#function-editor")[0].reset();
-    $("#constant-editor")[0].reset();
-    
-    function editFunction(editButton) {
-        var functionRow = $(editButton).closest("tr");
-        var functionID = functionRow.attr('id').match(/\d+/)[0];
-        var functionName = functionRow.children(".name")[0].innerHTML;
-        var functionBody = functionRow.children(".value")[0].innerHTML;
-        var functionDescription = functionRow.children(".description")[0].innerHTML;
-        
-        var functionEditorContents = $("#function-editor").contents();
-        functionEditorContents.find('input[name=name]').val(functionName);
-        functionEditorContents.find('input[name=value]').val(functionBody);
-        functionEditorContents.find('input[name=description]').val(functionDescription);
-        functionEditorContents.find('input[name=id]').val(functionID);
-    }
-    
-    function editConstant(editButton) {
-        var constantRow = $(editButton).closest("tr");
-        var constantID = constantRow.attr('id').match(/\d+/)[0];
-        var constantName = constantRow.children(".name")[0].innerHTML;
-        var constantValue = constantRow.children(".value")[0].innerHTML;
-        var constantDescription = constantRow.children(".description")[0].innerHTML;
-        
-        var constantEditorContents = $("#constant-editor").contents();
-        constantEditorContents.find('input[name=name]').val(constantName);
-        constantEditorContents.find('input[name=value]').val(constantValue);
-        constantEditorContents.find('input[name=description]').val(constantDescription);
-        constantEditorContents.find('input[name=id]').val(constantID);
-    }
-    
-    function submitFunction() {
-        var functionEditor = $("#function-editor");
-        var functionEditorContents = functionEditor.contents();
-        var functionName = functionEditorContents.find('input[name=name]').val();
-        var functionBody = functionEditorContents.find('input[name=value]').val();
-        var functionDescription = functionEditorContents.find('input[name=description]').val();
-        var functionID = functionEditorContents.find('input[name=id]').val();
-        
-        $.post('/engineer/submit-function.php',
-              {id: functionID, name: functionName, value: functionBody, description: functionDescription})
-        .done(function(data) {
-            functionEditor[0].reset();
-            location.reload();
-        })
-        .fail(function(data) {
-            alert("Error Submitting Function: " + data.statusText);
-        });
-        
-        return false;
-    }
-    
-    function submitConstant() {
-        var constantEditor = $("#constant-editor");
-        var constantEditorContents = constantEditor.contents();
-        var constantName = constantEditorContents.find('input[name=name]').val();
-        var constantValue = constantEditorContents.find('input[name=value]').val();
-        var constantDescription = constantEditorContents.find('input[name=description]').val();
-        var constantID = constantEditorContents.find('input[name=id]').val();
-        
-        $.post('/engineer/submit-constant.php',
-              {id: constantID, name: constantName, value: constantValue, description: constantDescription})
-        .done(function(data) {
-            constantEditor[0].reset();
-            location.reload();
-        })
-        .fail(function(data) {
-            alert("Error Submitting Constant: " + data.statusText);
-        });
-        
-        return false;
-    }
-    
-    function deleteFunction(deleteButton) {
-        var functionRow = $(deleteButton).closest("tr");
-        var functionID = functionRow.attr('id').match(/\d+/)[0];
-        
-        $.post('/engineer/delete-function.php', {id: functionID})
-        .done(function(data) { window.location.reload(); })
-        .fail(function(data) { alert("Error deleting function: " + data.statusText); });
-    }
-    
-    function deleteConstant(deleteButton) {
-        var constantRow = $(deleteButton).closest("tr");
-        var constantID = constantRow.attr('id').match(/\d+/)[0];
-        
-        $.post('/engineer/delete-constant.php', {id: constantID}, function(data) { window.location.reload(); })
-        .done(function(data) { window.location.reload(); })
-        .fail(function(data) { alert("Error deleting contant: " + data.statusText); });
-    }
-    
-</script>
-
 {% endblock content %}
-
 
