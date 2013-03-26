@@ -445,6 +445,49 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 			 return $result;
 	
 	}
+		public function db_create_Alert ($column,$value1,$sign1,$between,$value2=null,$sign2=null,$condition=null)
+	{
+	$Flag;
+	$tables = array("Relative_Humidity"=>"v0_air", "Temperature" => "v0_air", "CO2"=>"v0_air", 
+	"Hot_Water"=>"v0_water", "Total_Water"=>"v0_water", "Insulation"=>"v0_heat_flux", 
+	"Stud"=>"v0_heat_flux", "Current_Flow"=>"v0_heating", "Current_Temperature_1"=>"v0_heating", 
+	"Current_Temperature_2"=>"v0_heating",  "Total_Mass"=>"v0_heating", "Total_Energy"=>"v0_heating", 
+	"Total_Volume"=>"v0_heating", "Phase"=>"v0_el_energy", "Ch1"=>"v0_el_energy", "Ch2"=>"v0_el_energy", "AUX1"=>"v0_el_energy", 
+	"AUX2"=>"v0_el_energy", "AUX3"=>"v0_el_energy", "AUX3"=>"v0_el_energy", "AUX4"=>"v0_el_energy", "AUX5"=>"v0_el_energy");
+	$table = $tables[$column];
+	$conn=new Connection ();
+	if ($between ==1){
+	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$column."_Alert
+							AS select `".$table."`.`Apt` AS `Apt`,
+                           avg(`".$table."`.`".$column."`) AS `".$column."`,
+							`".$table."`.`Date` AS `Date`,
+							`".$table."`.`Hour` AS `Hour`
+							from `".$table."` group by `".$table."`.`Apt`,`".$table."`.`Date`,`".$table."`.`Hour`	
+                           having avg(`".$table."`.`".$column."`) ".$sign1." ".$value1."");
+						   $Query->execute();
+						   }
+	if ($between ==2){
+	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$column."_Alert
+							AS select `".$table."`.`Apt` AS `Apt`,
+                           avg(`".$table."`.`".$column."`) AS `".$column."`,
+							`".$table."`.`Date` AS `Date`,
+							`".$table."`.`Hour` AS `Hour`
+							from `".$table."` group by `".$table."`.`Apt`,`".$table."`.`Date`,`".$table."`.`Hour`	
+                           having avg(`".$table."`.`".$column."`) ".$sign1." ".$value1." ".$condition." avg(`".$table."`.`".$column."`) ".$sign2." ".$value2." ");
+						   $Query->execute();
+						   }
+			
+		   
+	$Check=$conn->connect()->prepare("select * from ".$column."_Alert");
+	if ($Check->execute())
+	{
+	$Flag="Success";
+	}else 
+	{
+	$Flag="Failed";
+	}
+	return $Flag;		
+	}
 
 
 
