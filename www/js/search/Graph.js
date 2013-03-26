@@ -1,5 +1,7 @@
-/*
+/**
  * Graph class skeleton.
+ *
+ * Manages the rendering of data as graphs.
  */
 define([
     'jquery',
@@ -18,6 +20,7 @@ function ($, _) {
 
         this.graphType = initialData.graphType;
 
+        // Initial update of the graph.
         this.update(initialData);
     }
 
