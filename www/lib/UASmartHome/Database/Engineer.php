@@ -478,15 +478,16 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 						   }
 			
 		   
-	$Check=$conn->connect()->prepare("select * from ".$column."_Alert");
-	if ($Check->execute())
-	{
-	$Flag="Success";
-	}else 
-	{
-	$Flag="Failed";
-	}
-	return $Flag;		
+		try
+			{    
+				$Query=$conn->connect()->prepare("select * from ".$colum."_Alert");
+				$Query->execute();
+				return "Success";
+				}
+			catch (PDOException $e)
+			{
+				return "Fail";
+			}		
 	}
 	public function db_check_Alert($view)
 	{
