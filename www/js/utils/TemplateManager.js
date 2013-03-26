@@ -1,7 +1,7 @@
 /*
  * Template managment and rendering class.
  */
-define("utils/TemplateManager", ['jquery', 'underscore'], function ($, _) {
+define(['jquery', 'underscore'], function ($, _) {
     "use strict";
 
     var defaultFetchTemplateText;

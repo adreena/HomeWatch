@@ -3,7 +3,7 @@ require(['jquery',
         'underscore',
         'search/defines',
         'utils/TemplateManager',
-        'spiffy/spiffy',
+        'spiffy/spiffy.min',
         'vendor/json2'],
 
 function ($, _, D, TemplateManager) {

@@ -1,8 +1,8 @@
 /*
  * Graph class skeleton.
  */
-define("search/Graph",
-    ['jquery',
+define([
+    'jquery',
     'underscore'
     // TODO: add all of the Flot includes here!
     ],

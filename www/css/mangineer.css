@@ -70,14 +70,6 @@ body {
     padding-top: 8px;
 }
 
-.search-controls {
-  /* Make the controls a little thing to the right. */
-  width: 220px;
-  margin: 0 10px;
-  position: absolute;
-  left: 0;
-}
-
 div.config-display {
   margin: 10px;
 }
