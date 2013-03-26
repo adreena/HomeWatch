@@ -127,5 +127,10 @@ class EquationParser
 
     }
 
+    public static function getVariables()
+    {
+        return self::$DBVARS;
+    }
+    
 }
 
