@@ -259,11 +259,14 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				return $result;
 	}
 	//Alert Function Between Date and Hours\\\
-	public function db_query_Alert ($apt,$column,$StartDate,$EndDate)
+	public function db_query_Alert ($apt,$column,$StartDate,$EndDate,$alertTable = null)
 	{
 		$tables = array("CO2"=>"Air_CO2_Alert", "Relative_Humidity" => "Air_Relative_Humidity_Alert", "Temperature"=>"Air_Temperature_Alert"); 
 
-		$table = $tables[$column];
+        if(!array_key_exists($column, $tables))
+            $table = $alertTable;
+        else
+            $table = $tables[$column];
 
 		$results = array();
 		$StartDate = date_create_from_Format('Y-m-d:G', $StartDate);
