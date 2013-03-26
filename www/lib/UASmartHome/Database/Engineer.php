@@ -488,6 +488,23 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	}
 	return $Flag;		
 	}
+	public function db_check_Alert($view)
+	{
+
+				$view .= '_Alert';
+				$conn=new Connection ();
+				try
+				{    
+				$Query=$conn->connect()->prepare("select * from ".$view."");
+				$Query->execute();
+				return "Success";
+				}
+			catch (PDOException $e)
+			{
+				return "Fail";
+			}
+			
+	}
 
 
 
