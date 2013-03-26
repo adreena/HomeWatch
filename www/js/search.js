@@ -15,6 +15,7 @@ function ($, _, D, TemplateManager) {
 
         addGraph,
         bindWeirdDateEvents,
+        bindSelectAlls,
 
         /* Element renderers. */
         graphControlAxes,
@@ -174,10 +175,14 @@ function ($, _, D, TemplateManager) {
         return tman.render('graph-control-datetime', {});
     };
 
+    /** Creates the content for the appartment picker. */
     graphControlApartments = function () {
-        return tman.render('graph-control-apartments', {});
+        return tman.render('graph-control-apartments', {
+            apartments: [1,2,3,4,5,6]
+        });
     };
 
+    /** Creates the content for the graph type picker. */
     graphControlDisplayType = function () {
         return tman.render('graph-control-types', {});
     };
@@ -226,6 +231,7 @@ function ($, _, D, TemplateManager) {
         rendered = $('<div>').html(rendered).children().first();
 
         bindWeirdDateEvents(rendered);
+        bindSelectAlls(rendered);
 
         place.append(rendered);
 
@@ -264,6 +270,18 @@ function ($, _, D, TemplateManager) {
 
     };
 
+    bindSelectAlls = function (element) {
+        var selectToggler = element.find('[data-select-all]'),
+            parent = selectToggler.parent(),
+            checkboxes = parent.children('input[type=checkbox]');
+
+        /* Should find parent with checkboxes. */
+
+        selectToggler.click(function (event) {
+            event.preventDefault();
+        });
+    };
+
 
 
     /**
@@ -273,7 +291,6 @@ function ($, _, D, TemplateManager) {
 
     $(function () {
         /* THIS IS ALL DEBUG! */
-
 
         var grrid = addGraph($(D.sel.graphList), undefined),
             theOneGraph = $('#' + grrid),

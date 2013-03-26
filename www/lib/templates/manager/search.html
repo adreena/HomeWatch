@@ -147,15 +147,34 @@
   </div>
 </script>
 {# Parameters
-  Not implemented!
+  apartments  List of apartment numbers/IDs
 #}
 <script id="_t-graph-control-apartments" type="text/html">
-  <div>Not implemented</div>
+  <ul data-select-boundary data-name="apts">
+    <% _.each(apartments, function (number) { %>
+    <li><label><input name="apts" type="checkbox" value="<%= number %>" />
+        <span class="postfix-label">
+          Apartment <%= number %>
+    </span> </li>
+    <% }); %>
+    <li class="select-all"><label><input data-select-all type="checkbox" />
+      <span class="postfix-label"> Select all
+    </span> </li>
+  </ul>
 </script>
-{# Parameters
-  Not implemented!
+{# Parameters: None
 #}
 <script id="_t-graph-control-types" type="text/html">
-  <div>Not implemented</div>
+  <ul class="graph-controls-type" data-graph data-name="graph-type">
+    <li><label><input checked type="radio" name="graph-type" value="bar" />
+        <span class="graph-preview"> Bar graph</span>
+      </label></li>
+    <li><label><input type="radio" name="graph-type" value="line" />
+        <span class="graph-preview"> Line graph</span>
+      </label></li>
+    <li><label><input type="radio" name="graph-type" value="pie" />
+        <span class="graph-preview"> Pie chart</span>
+      </label></li>
+  </ul>
 </script>
 {% endblock extraScripts %}
