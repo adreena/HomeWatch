@@ -2,33 +2,14 @@
 require(['jquery',
         'underscore',
         'search/defines',
-        'utils/TemplateManager',
+        'search/GraphManager',
         'spiffy/spiffy.min',
         'vendor/json2'],
 
-function ($, _, D, TemplateManager) {
-    var makeCategories,
+function ($, _, D, GraphManager) {
+    "use strict";
 
-        parseGraphControls,
-        validateGraphRequest,
-        parseGraphType,
-
-        addGraph,
-        bindWeirdDateEvents,
-        bindSelectAlls,
-
-        /* Element renderers. */
-        graphControlAxes,
-        graphCreateOptGroups,
-        graphControlDateTime,
-        graphControlApartments,
-        graphControlDisplayType,
-
-        tman = new TemplateManager();
-
-    /*
-     * GRAPH CONTROLLER STUFF
-     */
+    var makeCategories;
 
     /**
      * Takes that category array and converts it into things
@@ -111,188 +92,18 @@ function ($, _, D, TemplateManager) {
 
     };
 
-    /**
-     * Given a graph HTML thing (ID? Element?) will
-     * parse its HTML controller and return the
-     * data need to pass to process.php.
-     */
-    parseGraphControls = function (graph) {
-        return D.exampleProcessParameters;
-    };
-
-    /**
-     * Gets the graph type from the graph controls.
-     */
-    parseGraphType = function (graph) {
-        // TODO: parse the graph type!
-    };
-
-    /**
-     * This one is mostly for debug: returns
-     * where the graph request contains all the keys it
-     * needs in order to make process.php happy.
-     */
-    validateGraphRequest = function (graphObject) {
-        var requiredKeys = [
-            "startdate", "enddate", "xaxis", "x", "xtype", "yaxis", "y",
-            "ytype", "period", "apartments"
-        ];
-
-        return _.all(requiredKeys, function (key) {
-            return graphObject.hasOwnProperty(key);
-        });
-    };
-
-
-    /*
-     * MY STUFF THAT RENDERS TEMPLATES
-     */
-
-    /**
-     * Given a categories object, returns an HTML string that makes
-     * <option>/<optgroup> elements out of it.
-     */
-    graphCreateOptGroups = function (categories) {
-        return tman.render('graph-optgroup', {categories : categories });
-    };
-
-    /**
-     * Creates the content for the axes graph controls thing.
-     *
-     * Needs data to make the axes optgroups.
-     */
-    graphControlAxes = function (x, y) {
-        return tman.render('graph-control-axes', {
-            /* The content is just the two optgroups appended. */
-            xAxis: graphCreateOptGroups(x),
-            yAxis: graphCreateOptGroups(y)
-        });
-    };
-
-    /** Creates the content for the date time controller thing. */
-    graphControlDateTime = function () {
-        /* This one takes no parameters... for now. */
-        return tman.render('graph-control-datetime', {});
-    };
-
-    /** Creates the content for the appartment picker. */
-    graphControlApartments = function () {
-        return tman.render('graph-control-apartments', {
-            apartments: [1,2,3,4,5,6]
-        });
-    };
-
-    /** Creates the content for the graph type picker. */
-    graphControlDisplayType = function () {
-        return tman.render('graph-control-types', {});
-    };
-
-
-
-    /**
-     * Adds a graph to the page. Where?
-     * It's appended to 'place' (jQuery element).
-     * Data is { axes: {}, apartments: {} }.
-     *
-     * Returns the graph ID.
-     */
-    addGraph = function (place, data) {
-        var elements,
-            rendered,
-            graphID = _.uniqueId('graph'),
-            renderedElements,
-            cats,
-            placed;
-
-        /* DEBUG! */
-        cats = makeCategories(D.exampleCategories);
-
-        elements = {
-            'Axes': graphControlAxes(cats.x, cats.y),
-            'Date/Time': graphControlDateTime(),
-            'Apartments': graphControlApartments(),
-            'Graph Type': graphControlDisplayType()
-        };
-
-        renderedElements = _.map(elements, function (content, title) {
-            return tman.render('graph-control-li', {
-                header: title,
-                content: content
-            });
-        }).join('');
-
-        rendered = tman.render('graph-group', {
-            graphID: graphID,
-            graphControls: renderedElements
-        });
-
-        /* HACK! Create a temporary div to conver the
-         * text element into a jQuery element. */
-        rendered = $('<div>').html(rendered).children().first();
-
-        bindWeirdDateEvents(rendered);
-        bindSelectAlls(rendered);
-
-        place.append(rendered);
-
-        return graphID;
-
-    };
-
-    /**
-     * Graph controller is a jQuery which we can bind events to.
-     * Yay!
-     */
-    bindWeirdDateEvents = function (graphController) {
-        var dateThing, granularityChooser, hideAll, onChange;
-
-        /* Get the date div and the drop down that will find the proper
-         * granularity. */
-        dateThing = graphController .find('.graph-controls-datetime').first();
-        granularityChooser = dateThing.find('[name=granularity]');
-
-        /* Hides all of the date/time category things. */
-        hideAll = function () {
-            dateThing.children('div').hide();
-        };
-
-        /* This will show only the proper granularity selector thing. */
-        onChange = function () {
-            var granularity = granularityChooser.val().toLowerCase();
-            hideAll();
-            dateThing.children('.graph-controls-' + granularity).show();
-        };
-
-        granularityChooser.change(onChange);
-
-        /* Pretend it change for the first time. */
-        onChange();
-
-    };
-
-    bindSelectAlls = function (element) {
-        var selectToggler = element.find('[data-select-all]'),
-            parent = selectToggler.parent(),
-            checkboxes = parent.children('input[type=checkbox]');
-
-        /* Should find parent with checkboxes. */
-
-        selectToggler.click(function (event) {
-            event.preventDefault();
-        });
-    };
-
 
 
     /**
      * ON DOCUMENT LOAD
      */
 
-
     $(function () {
-        /* THIS IS ALL DEBUG! */
 
-        var grrid = addGraph($(D.sel.graphList), undefined),
+        /* THIS IS ALL DEBUG! */
+        var cats = makeCategories(D.exampleCategories),
+            graphMan = new GraphManager(D.sel.graphList, cats),
+            grrid = graphMan.add(undefined),
             theOneGraph = $('#' + grrid),
             dump = theOneGraph.find('.debug-results');
 
@@ -303,7 +114,7 @@ function ($, _, D, TemplateManager) {
                 /* Disable process.php's test thing... stuff. */
                 notest: true,
                 /* Serialize the example 'cause I ain't got notin' else. */
-                graph: JSON.stringify(parseGraphControls(grrid))
+                graph: JSON.stringify(D.exampleProcessParameters)
             };
 
             $.ajax({
@@ -317,7 +128,7 @@ function ($, _, D, TemplateManager) {
                 },
 
                 error: function () {
-                    dump.text('Something went wrong while contacting process.php')
+                    dump.text('Something went wrong while contacting process.php');
                 }
 
             });

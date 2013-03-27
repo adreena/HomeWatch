@@ -6,14 +6,17 @@ define([
     './GraphControl'],
 
 function ($, GraphControl) {
+    "use strict";
 
     /**
-     * Instantiate a new GraphManager, using the
-     * given element to place graphs in.
+     * Instantiate a new GraphManager, using the given element to place graphs
+     * in, and the data (x, y, values, apartments, etc.).
      */
-    function GraphManager(element) {
+    function GraphManager(element, data) {
         /** Graphs are appended in the given element. */
-        this.masterGraphList = element;
+        this.masterGraphList = $(element);
+        this.data = data;
+        this.values = data.values;
 
         /** List of managed graphs. */
         this.graphs = {};
@@ -21,11 +24,14 @@ function ($, GraphControl) {
 
     /** Adds a new graph and returns its ID. */
     GraphManager.prototype.add = function () {
-        var newGraph = new GraphControl(),
+        var newGraph = new GraphControl(this, this.data),
             graphID = newGraph.id;
 
         /* Start tracking the given graph. */
         this.graphs[graphID] = newGraph;
+
+        /* Append the element to the div. */
+        this.masterGraphList.append(newGraph.element);
 
         return graphID;
     };
