@@ -87,6 +87,42 @@ define({
         "apartments": [1, 2]
     },
 
+    /**
+     * This is an example of what process.php currently spits out.
+     */
+    exampleProcessResponse: {
+        "x-axis": "Time",
+        "y-axis": "Water_Usage",
+        "values": {
+            "1": {
+                "2012-03-01:0": {
+                    "Total_Water": {
+                        "y": "124",
+                        "x": "2012-03-01:0"
+                    },
+                    "Hot_Water": {
+                        "y": "65",
+                        "x": "2012-03-01:0"
+                    }
+                }
+            },
+            "2": {
+                "2012-03-01:0": {
+                    "Total_Water": {
+                        "y": "16",
+                        "x": "2012-03-01:0"
+                    },
+                    "Hot_Water": {
+                        "y": "9",
+                        "x": "2012-03-01:0"
+                    }
+                }
+            }
+        },
+        "granularity": "Daily",
+        "messages": ["No graph data received\n"]
+    },
+
     /*
      * This one is kind of hacky. Turns the category display name into the type
      * that should be sent to process.php.
