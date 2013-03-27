@@ -168,6 +168,26 @@ class EquationDB {
         
         return $functions;
     }
+
+    public function fetchFunction($function_name)
+    {
+        $con = new Connection();
+        $con = $con->connect();
+        $s = $con->prepare("SELECT Equation_ID, Name, Value, Description
+                                   FROM Equations WHERE Name=:Equation_Name");
+
+        $s->bindParam(':Equation_Name', $function_name);
+        $s->execute();
+
+        if ($s->errorCode() != 0) {
+            trigger_error("Failed to fetch functions: " . $s->errorInfo(), E_USER_WARNING);
+            return null;
+        }
+
+        $function = $s->fetch(\PDO::FETCH_ASSOC);
+
+        return $function;
+    }
     
 }
 
