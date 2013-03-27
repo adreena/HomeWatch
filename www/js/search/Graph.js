@@ -3,19 +3,47 @@
  *
  * Manages the rendering of data as graphs.
  */
+
+requirejs.config({
+    
+    /* Have to explicitly specify dependencies of flot and its plugins. */
+    shim: {
+        'flot': { deps: ['jquery'] },
+        'flot-orderbars': { deps: ['flot'] },
+        'flot-axislabels': { deps: ['flot'] },
+        'flot-time': { deps: ['flot'] },
+        'flot-navigate':  { deps: ['flot'] },
+        'flot-pie':  { deps: ['flot'] },
+    },
+
+    paths: {
+        'flot': 'flot/jquery.flot',
+        'flot-orderbars': 'flot-orderbars/jquery.flot.orderBars',
+        'flot-axislabels': 'flot-axislabels/jquery.flot.axislabels',
+        'flot-time': 'flot/jquery.flot.time',
+        'flot-navigate': 'flot/jquery.flot.navigate',
+        'flot-pie': 'flot/jquery.flot.pie'
+   }
+
+});
+
 define([
     'jquery',
-    'underscore'
-    // TODO: add all of the Flot includes here!
-    //<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="flot/excanvas.min.js"></script><![endif]--> how do you define this??
-    //'flot/jquery.flot.js'
-    //'flot/jquery.flot.time.js'
-    //'flot/jquery.flot.orderBars.js'
-    //'flot/jquery.flot.axislabels.js'
-    //'flot/jquery.flot.navigate.js'
-    //'flot/jquery.flot.pie.js'
-    ],
-function ($, _) {
+    'underscore',
+    'utils/getInternetExplorerVersion',
+    'flot',
+    'flot-orderbars',
+    'flot-axislabels',
+    'flot-time',
+    'flot-navigate',
+    'flot-pie'],
+
+function ($, _, getInternetExplorerVersion) {
+
+    // Use Excanvas if on inferior browsers.
+    if (getInternetExplorerVersion() <= 8.0) {
+        require("flot/excanvas.min.js");
+    }
 
     /**
      * Constructor for a graph.
