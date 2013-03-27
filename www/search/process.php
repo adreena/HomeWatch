@@ -6,9 +6,10 @@
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__. '/../lib/UASmartHome/Database/Engineer.php';
 require_once __DIR__. '/../lib/UASmartHome/EquationParser.php';
 require_once __DIR__. '/../lib/UASmartHome/Alerts.php';
+use \UASmartHome\Database\Engineer;
+use \UASmartHome\Database\Equation\EquationDB;
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -170,8 +171,23 @@ if ($test) {
 			}
 
 		} else if ($ytype == "formula") {
-			$function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment);
-			$ydata = EquationParser::getData($function);
+            //get the actual function body from the function name
+            $ydata = EquationDB::fetchFunction($yaxis);
+
+            // if fetchFunction returns false, this name doesn't exist in db
+            if (!$ydata)
+                array_push($messages, "No equation with the name $yaxis found");
+            else {
+                $ydata = $ydata["Value"];
+                $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment);
+
+                $ydata = EquationParser::getData($function);
+                foreach($ydata as $date=>$value) {
+                    $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
+                    $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
+                }
+                //var_dump($bigArray);
+            }
 		}
 
 		
