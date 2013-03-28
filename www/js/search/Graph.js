@@ -53,7 +53,7 @@ function ($, _, getInternetExplorerVersion) {
 	// object to keep graph state for a particular instance
 	this.graphState = 
 	{
-	    callback: _clickCallBack,
+	    callback: _clickCallback,
 	    graphType: initialData.graphType,
      	    element: element,
 	    granularity: initialData.granularity,
@@ -90,7 +90,7 @@ function ($, _, getInternetExplorerVersion) {
 	    $.plot($(element), data, options);
 
 	    if(granularity !== "Hourly") {
-	        bind_plotclick();
+	        this.bind_plotclick();
 	    }
 
 	    bind_plothover();
@@ -432,12 +432,12 @@ function ($, _, getInternetExplorerVersion) {
         });
     };
 
-    Graph.prototype bind_plotclick = function() {
+    Graph.prototype.bind_plotclick = function() {
 	var drill_granularity;
 	var date_from;
 	var date_to;
 
-    	$(graphState.element).bind("plotclick", function (event, pos, item) {
+    	$(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {	
 
 		console.log("you clicked!");	
@@ -474,7 +474,7 @@ function ($, _, getInternetExplorerVersion) {
      */
 
     DateToUTC = function (dateString) {
-        var dateRegex = /(\d+)-(\d+)-(\d+):(\d+)/,
+        var dateRegex = /(\d+)-(\d+)-(\d+)(?::(\d+))?/,
             m, // m for match
             UTCTime;
 
@@ -489,10 +489,13 @@ function ($, _, getInternetExplorerVersion) {
            m[1],     // Year
            m[2] - 1, // Month (WHY IS THIS ZERO-INDEXED?!)
            m[3],     // Day
-           m[4]);    // Hour
+           // Hour may not be present; use 0 in this case.
+           m[4] ? m[4] : 0);
 
         return UTCTime;
     };
+
+    window.dc = DateToUTC;
 
     var get_days_in_month = function (month, year) {
         month = parseInt(month);
