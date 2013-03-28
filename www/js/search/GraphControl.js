@@ -24,7 +24,7 @@ function ($, _, Graph, TemplateManager) {
 
         /* Element fetchers. */
         fetchAxes,
-        fetchAparements,
+        fetchApartments,
         fetchDateTime,
 
         /* Binds events for the elements. */
@@ -85,6 +85,8 @@ function ($, _, Graph, TemplateManager) {
 
         fetches = [
             fetchAxes(this.element, this.data.values), // Get the axes info.
+            fetchApartments(this.element),
+            fetchDateTime(this.element),
         ];
 
         _.each(fetches, function (partial) {
@@ -290,6 +292,8 @@ function ($, _, Graph, TemplateManager) {
 
     };
 
+    /* Fetchers. Note that these are ridiculously hard-coded for
+     * the template given. */
 
     /**
      * Fetches the partial query for X and Y information from the
@@ -311,12 +315,36 @@ function ($, _, Graph, TemplateManager) {
 
             /* Set the values in the partial tuple. */
             partialQuery[v + 'type'] = valueTuple.type;
-            partialQuery[v + 'values'] = valueTuple.values
+            partialQuery[v] = (v == 'x') ? valueTuple.type[0] : valueTuple.type ;
+            partialQuery[v + 'axis'] = valueTuple.values
 
         });
         
         return partialQuery;
     };
+
+    fetchApartments = function (controlElement) {
+        var checkboxList, apartments;
+
+        checkboxList = controlElement.find("[data-name=apts] input:checked");
+        apartments = $.map(checkboxList, function (el) {
+            return $(el).val();
+        });
+
+        return {
+            apartments: apartments.length ? apartments : []
+        };
+    };
+
+    fetchDateTime = function (controlElement) {
+        return {
+            startdate: '2038-3-5',
+            enddate: '2144-2-18',
+            period: 'Yearly'
+        };
+
+    };
+
 
     /*
      * "Public static methods"
