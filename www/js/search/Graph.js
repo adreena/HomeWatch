@@ -447,11 +447,9 @@ function ($, _, getInternetExplorerVersion) {
 	var date_to;
 	var granularity = this.graphState.granularity;
 
-	console.log("granularity is : " + this.graphState.granularity);
-
     	$(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {	
-
+		console.log("granularity is : " + this.graphState.granularity);
 		console.log("you clicked!");	
 	        var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
 	        var data_pointUTC = item.datapoint[0] + offset;		
