@@ -6,14 +6,14 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use \UASmartHome\Database\Equation\EquationDB;
-use \UASmartHome\EquationParser;
+use \UASmartHome\Database\Configuration\ConfigurationDB;
+//use \UASmartHome\EquationParser;
 
-$equationData = EquationDB::fetchUserData();
+$configData = ConfigurationDB::fetchConfigData();
 
 $twig = \UASmartHome\TwigSingleton::getInstance();
 echo $twig->render('engineer/configuration.html', array(
-    "equationData" => $equationData/*,
+    "configData" => $configData/*,
     // STEVEN, IS THIS WHAT YOU WANTED?
     "sensors" => EquationParser::$DBVARS*/
 ));

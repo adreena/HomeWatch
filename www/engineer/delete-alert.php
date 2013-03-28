@@ -1,7 +1,7 @@
 <?php
 
 ///
-/// Handles a request to delete a function from the Equations table
+/// Handles a request to delete an alert
 ///
 
 ini_set('display_errors', 0); // Allows PHP to return response 500 on errors
@@ -13,11 +13,10 @@ use \UASmartHome\Database\Configuration\ConfigurationDB;
 // Check that the request is valid
 if (!isset($_POST['id'])) {
     http_response_code(400);
-    die;
 }
 
 // Perform the deletion
-if (!ConfigurationDB::deleteFunction($_POST['id'])) {
+if (!ConfigurationDB::deleteAlert($_POST['id'])) {
     http_response_code(500);
 }
 

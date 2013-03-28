@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import url("reset.css");
 @import url("common.css");
+@import url("configuration.css");
 
 /**
  * MANGINEER STYLES!
@@ -68,78 +69,6 @@ body {
     margin: auto;
     position: relative;
     padding-top: 8px;
-}
-
-div.config-display {
-  margin: 10px;
-}
-
-div.config-display .title {
-  font-weight: bold;
-  font-size: 150%;
-  margin: 5px;
-  margin-left: 0px;
-}
-
-div.config-display table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-div.config-display table th {
-  border: 2px solid black;
-  background: #CCCCCC;
-}
-
-div.config-display table td,
-div.config-display table th
-{
-  border: 1px solid #CCCCCC;
-  margin: 5px;
-}
-
-div.config-display table .name {
-  width: 10%;
-}
-
-div.config-display table .value {
-  width: 40%;
-}
-
-div.config-display table .description {
-  width: 40%;
-}
-
-div.config-editor-container {
-  text-align: center;
-}
-
-div.config-editor {
-  margin-left: 2%;
-  margin-right: 2%;
-  display: inline-block;
-}
-
-div.config-editor label {
-  float: left;
-  text-align: right;
-  width: 5em;
-  margin-right: 1em;
-}
-
-div.config-editor input {
-  width: 60%;
-}
-
-div.config-editor .button {
-  width: 45%;
-}
-
-div.config-editor legend {
-  font-weight: bold;
-  font-size: 150%;
-  margin: 5px;
-  text-align: left;
 }
 
 /* Simple styles for the graph search stuff.
