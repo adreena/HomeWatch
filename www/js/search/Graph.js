@@ -445,6 +445,7 @@ function ($, _, getInternetExplorerVersion) {
 	var drill_granularity;
 	var date_from;
 	var date_to;
+	var granularity = this.graphState.granularity;
 
     	$(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {	
