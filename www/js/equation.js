@@ -257,8 +257,10 @@ function getRowData(rowButton) {
 function editConfig(editor, data) {
     $.scrollTo(editor, SCROLL_SPEED, SCROLL_OPTIONS);
     
+    // Make the legend red and add (EDITING "NAME") to text
     var legend = $(editor).find("legend")[0];
     legend.style.color = 'red';
+    legend.innerHTML = legend.innerHTML.replace(/\(.*$/, ""); // Remove any existing (EDITING "NAME") text
     legend.innerHTML += " (EDITING \"" + data.name + "\")";
 }
 
