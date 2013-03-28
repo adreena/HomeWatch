@@ -36,7 +36,7 @@ $(window).load(function() {
         addDBVarAutoComplete($(functionEditorID + " input[name=value]")[0]);
         addDBVarAutoComplete($(alertEditorID + " input[name=value]")[0]);
     })
-    .error(function() {
+    .error(function(data) {
         alert("Failed to get equation variables: " + data.statusText);
     });
 }); // window load
