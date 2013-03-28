@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 
 use \UASmartHome\Database\Engineer;
+use \UASmartHome\Database\Configuration\ConfigurationDB;
 
 
 class EquationParser
@@ -14,6 +15,7 @@ class EquationParser
         "air_co2" => "CO2",
         "air_humidity" => "Relative_Humidity",
         "air_temperature" => "Temperature",
+        "elec_total" => "Total_Electricity",
         "elec_ch1" => "Ch1",
         "elec_ch2" => "Ch2",
         "elec_aux1" => "AUX1",
@@ -56,10 +58,10 @@ class EquationParser
         /* test data
         $functionArray = array();
         $functionArray["startdate"] = "2012-02-29:0";
-        $functionArray["enddate"] = "2012-03-01:0";
+        $functionArray["enddate"] = "2012-03-02:0";
         $functionArray["apartment"] = 1;
-        $functionArray["granularity"] = "Daily";
-        $functionArray["function"] = "9 * (3+pi) * \$air_temperature$ + \$air_co2$ / 4";
+        $functionArray["granularity"] = "Hourly";
+        $functionArray["function"] = "9 * (3+pi) * \$elec_total$ + \$air_co2$ / 4";
         $functionArray["functionname"] = "functionname";
 
         $input = json_encode($functionArray);
@@ -72,18 +74,40 @@ class EquationParser
         $evaluator = new EvalMath();
         $db_vars = self::$DBVARS;
 
+        // Manually replace constants outside of the evaluator
+        // NOTE: This should be done before exploding the function string
+        $function = EquationParser::replaceConstants($function);
+        
         $pieces = explode("$", $function);
 
         if(count($pieces) === 1) {
             return $evaluator->evaluate($function);
         }
 
-        for($i=1; $i<count($pieces); $i+=2) {
+	for($i=1; $i<count($pieces); $i+=2) {
 
-            $data[$pieces[$i]] = Engineer::db_pull_query(
-                       $input["apartment"], $db_vars[$pieces[$i]],
-                       $input["startdate"], $input["enddate"],
-                       $input["granularity"]);
+            if($pieces[$i] === "elec_total") {
+                $data[$pieces[$i]] = Engineer::db_pull_query(
+                           $input["apartment"], "Ch1",
+                           $input["startdate"], $input["enddate"],
+                           $input["granularity"], "A");
+                $elecBdata = Engineer::db_pull_query(
+                           $input["apartment"], "Ch1",
+                           $input["startdate"], $input["enddate"],
+                           $input["granularity"], "B");
+                foreach($elecBdata as $date=>$value) {
+                    if($data["elec_total"][$date] === 0 && $value === 0)
+                        $data["elec_total"][$date] = 0;
+                    else
+                        $data["elec_total"][$date]["Ch1"] += $value["Ch1"];
+                }
+            }
+            else {
+                $data[$pieces[$i]] = Engineer::db_pull_query(
+                           $input["apartment"], $db_vars[$pieces[$i]],
+                           $input["startdate"], $input["enddate"],
+                           $input["granularity"]);
+            }
 
         }
 
@@ -131,6 +155,20 @@ class EquationParser
     {
         return self::$DBVARS;
     }
-    
+
+    private static function replaceConstants($string)
+    {
+        $constants = ConfigurationDB::fetchConstants(null); // TODO: Can these be cached?
+        
+        // Replace the name of each constant with its value
+        // Note that constant names have presendence over variable names
+        foreach ($constants as $constant) {
+            // TODO: Can this regex be compiled?
+            $string = preg_replace('/\$' . $constant['name'] . '\$/', $constant['value'], $string);
+        }
+        
+        return $string;
+    }
+
 }
 

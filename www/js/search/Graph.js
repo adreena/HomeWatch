@@ -80,6 +80,9 @@ function ($, _, getInternetExplorerVersion) {
 	var element = graphState.element;
 	var granularity = graphState.granularity;
 
+	console.log("granularity is: " + granularity);
+	console.log("graphtypes is: " + graphType);
+
         // test for graphtypes
 	if(graphType === "plainText") {
 	    displayText(graphState, graphData);
@@ -94,7 +97,7 @@ function ($, _, getInternetExplorerVersion) {
 	        this.bind_plotclick();
 	    }
 
-	    this.bind_plothover();
+	    bind_plothover(element);
         }        
     };
 
@@ -207,7 +210,7 @@ function ($, _, getInternetExplorerVersion) {
 
                     tuple[0] = tick_size;
                     tuple[1] = value.y;
-		    console.log("y value is: " + value.y);
+		    console.log("y value is: " + tuple[1]);
                     sensor_data[apartment][sensor].push(tuple);
                 });
             });
@@ -274,6 +277,7 @@ function ($, _, getInternetExplorerVersion) {
 	};
 
 	base_x.xaxis["min"] = min_x;
+console.log("start date is : " + base_x.xaxis["min"]);
 
 	if(xtype === "Time") {
 	    base_x.xaxis["mode"] = "time";
@@ -412,10 +416,10 @@ function ($, _, getInternetExplorerVersion) {
         }).appendTo("body").fadeIn(200);
     };
 
-    Graph.prototype. bind_plothover = function () {
+    bind_plothover = function (element) {
         var previousPoint = null;
 
-        $(this.graphState.element).bind("plothover", function (event, pos, item) {
+        $(element).bind("plothover", function (event, pos, item) {
             $("#x").text(pos.x.toFixed(2));
             $("#y").text(pos.y.toFixed(2));
        
@@ -442,10 +446,11 @@ function ($, _, getInternetExplorerVersion) {
 	var drill_granularity;
 	var date_from;
 	var date_to;
+	var granularity = this.graphState.granularity;
 
     	$(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {	
-
+		console.log("granularity is : " + this.graphState.granularity);
 		console.log("you clicked!");	
 	        var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
 	        var data_pointUTC = item.datapoint[0] + offset;		

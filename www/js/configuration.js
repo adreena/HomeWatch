@@ -15,7 +15,7 @@ var functionEditor;
 var constantEditor;
 var alertEditor;
 
-var dbvars;
+var equationAutoCompleteData;
 var autoCompleteOpen = false;
 
 $(window).load(function() {
@@ -29,22 +29,22 @@ $(window).load(function() {
     alertEditor.reset();
 
     // TODO: Can this be cached? (Create a dynamic json on the server?)
-    $.get("/search/equation-variables.php")
+    $.get("/search/autocomplete-data.php")
     .done(function(data) {
-        dbvars = $.map(data, function (value, key) { return "$" + key + '$'; });
+        equationAutoCompleteData = $.map(data, function (value, key) { return "$" + key + '$'; });
         
-        addDBVarAutoComplete($(functionEditorID + " input[name=value]")[0]);
-        addDBVarAutoComplete($(alertEditorID + " input[name=value]")[0]);
+        addEquationAutoComplete($(functionEditorID + " input[name=value]")[0]);
+        addEquationAutoComplete($(alertEditorID + " input[name=value]")[0]);
     })
-    .error(function() {
+    .error(function(data) {
         alert("Failed to get equation variables: " + data.statusText);
     });
 }); // window load
 
-function addDBVarAutoComplete(textbox)
+function addEquationAutoComplete(textbox)
 {
     $(textbox).autocomplete(
-        { source: dbvars,
+        { source: equationAutoCompleteData,
           autoFocus: false,
           disabled: true,
           focus: function(event, ui) {
@@ -60,7 +60,7 @@ function addDBVarAutoComplete(textbox)
               
               // Set the caret position to the end of the replaced text
               textbox.selectionStart = textbox.selectionEnd = replaceText.length;
-
+              
               // Let jquery-ui know that the event has been handled
               event.preventDefault();
           },
