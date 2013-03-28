@@ -73,8 +73,8 @@ class EquationParser
         $evaluator = new EvalMath();
         $db_vars = self::$DBVARS;
 
-        $function = EquationParser::replaceConstants($function);
-        
+        EquationParser::evaluateUserConstants($evaluator);
+
         $pieces = explode("$", $function);
 
         if(count($pieces) === 1) {
@@ -134,19 +134,15 @@ class EquationParser
     {
         return self::$DBVARS;
     }
-    
-    private static function replaceConstants($string)
+
+    private static function evaluateUserConstants($evaluator)
     {
         $constants = ConfigurationDB::fetchConstants(null); // TODO: Can these be cached?
-        
-        // Replace the name of each constant with its value provided it is not within a DVBVar (ex. $air$)
-        // TODO: Can this regex be compiled?
+
         foreach ($constants as $constant) {
-            $string = preg_replace('/(^|[^$])'.$constant['name'].'([^$]|$)/', '${1}'.$constant['value'].'${2}', $string);
+            $evaluator->evaluate($constant['name'] . ' = ' . $constant['value']);
         }
-        
-        return $string;
     }
-    
+
 }
 
