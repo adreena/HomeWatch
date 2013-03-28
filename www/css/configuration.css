@@ -83,3 +83,7 @@ div.config-editor .button {
   width: 10em;
 }
 
+div.config-editor .id {
+  display: none;
+}
+
