@@ -315,7 +315,7 @@ function ($, _, Graph, TemplateManager) {
 
             /* Set the values in the partial tuple. */
             partialQuery[v + 'type'] = valueTuple.type;
-            partialQuery[v] = (v == 'x') ? valueTuple.type[0] : valueTuple.type ;
+            partialQuery[v] = (v == 'x') ? valueTuple.values[0] : valueTuple.values ;
             partialQuery[v + 'axis'] = valueTuple.values
 
         });
@@ -337,12 +337,52 @@ function ($, _, Graph, TemplateManager) {
     };
 
     fetchDateTime = function (controlElement) {
-        return {
-            startdate: '2038-3-5',
-            enddate: '2144-2-18',
-            period: 'Yearly'
+        var granularity, subfetchers, chosenControls, range;
+        
+        /* Get the granularity/period value. */
+        granularity = controlElement.find('select[name=granularity]').val();
+        /* ...and get the applicable control. */
+        chosenControls = controlElement.find('.graph-controls-' +
+                granularity.toLowerCase());
+
+        /* TODO: Make these subfetchers less terrible. */
+        subfetchers = {
+            Hourly: function () {
+                var theONLYDate = chosenControls.find('input[name=start]').val();
+                return {
+                    start: theONLYDate,
+                    end: theONLYDate
+                };
+            },
+            Daily: function () {
+                /* This is the only one for which these controls are actually
+                 * applicable for... */
+                return {
+                    start: chosenControls.find('input[name=start]').val(),
+                    end: chosenControls.find('input[name=end]').val(),
+                };
+            },
+            Weekly: function () {
+                return {
+                    start: chosenControls.find('input[name=start]').val(),
+                    end: chosenControls.find('input[name=end]').val(),
+                };
+            },
+            Monthly: function () {
+                return {
+                    start: chosenControls.find('input[name=start]').val(),
+                    end: chosenControls.find('input[name=end]').val(),
+                };
+            }
         };
 
+        range = subfetchers[granularity]();
+
+        return {
+            startdate: range.start,
+            enddate: range.end,
+            period: granularity
+        };
     };
 
 
