@@ -1,4 +1,4 @@
-<?php namespace UASmartHome\Database\Equation;
+<?php namespace UASmartHome\Database\Configuration;
 
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 

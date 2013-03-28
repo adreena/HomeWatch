@@ -9,7 +9,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__. '/../lib/UASmartHome/EquationParser.php';
 require_once __DIR__. '/../lib/UASmartHome/Alerts.php';
 use \UASmartHome\Database\Engineer;
-use \UASmartHome\Database\Equation\EquationDB;
+use \UASmartHome\Database\Configuration\ConfigurationDB;
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -172,7 +172,7 @@ if ($test) {
 
 		} else if ($ytype == "formula") {
             //get the actual function body from the function name
-            $ydata = EquationDB::fetchFunction($yaxis);
+            $ydata = ConfigurationDB::fetchFunction($yaxis);
 
             // if fetchFunction returns false, this name doesn't exist in db
             if (!$ydata)

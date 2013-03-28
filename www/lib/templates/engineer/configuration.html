@@ -5,108 +5,161 @@
 <link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
 
 <script src="/js/vendor/jquery-ui.js"></script>
+<script src="/js/vendor/jquery.scrollTo-min.js"></script>
 <script src="/js/equation.js"></script>
 
-<div class="config-display-container">
-    <div class="config-display functions">
-        <p class="title">Functions</p>
-        
-        <table>
-            <tr class="header">
-                <th class="name">Name</th>
-                <th class="value">Body</th>
-                <th class="description">Description</th>
-                <th colspan="2"></th>
-            </tr>
-            
-            {% for function in equationData['functions'] %}
-            <tr id="function_{{ function['id'] }}" class="body">
-                <td class="name">{{ function['name'] }}</td>
-                <td class="value">{{ function['value'] }}</td>
-                <td class="description">{{ function['description'] }}</td>
-                <td><button onClick="editFunction(this)">Edit</button></td>
-                <td><button onClick="deleteFunction(this)">Delete</button></td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+<div class="configs">
 
-    <div class="config-display constants">
-        <p class="title">Constants</p>
-        <table>
-            <tr class="header">
-                <th class="name">Name</th>
-                <th class="value">Value</th>
-                <th class="description">Description</th>
-                <th colspan="2"></th>
-            </tr>
-            
-            {% for constant in equationData['constants'] %}
-            <tr id="constant_{{ constant['id'] }}" class="body">
-                <td class="name">{{ constant['name'] }}</td>
-                <td class="value">{{ constant['value'] }}</td>
-                <td class="description">{{ constant['description'] }}</td>
-                <td><button onClick="editConstant(this)">Edit</button></td>
-                <td><button onClick="deleteConstant(this)">Delete</button></td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</div>
-
-<div class="config-editor-container">
-    <div class="config-editor">
-        <form id="function-editor" onsubmit="return submitFunction()">
-            <fieldset>
-
-                <legend>Function Editor</legend>
+    <!-- Alert Config -->
+    <div class="config">
+        <div class="config-display constants">
+            <p class="title">Alerts</p>
+            <table>
+                <tr class="header">
+                    <th class="name">Name</th>
+                    <th class="value">Value</th>
+                    <th class="description">Description</th>
+                    <th colspan="2"></th>
+                </tr>
                 
-                <label for="name">Name</label>
-                <input name="name" type="text" />
-                <br>
-                
-                <label for="value">Body</label>
-                <input name="value" type="text" onkeyup="onFunctionTextChanged(this)" />
-                <br>
-                
-                <label for="description">Description</label>
-                <input name="description" type="text" />
-                <br>
-                
-                <button class="button" type="button" tabindex="-1" onclick='$("#function-editor")[0].reset()'>Clear</button>
-                <input class="button" name="submit-function" type="submit" value="Submit"/>
-                
-                <input name="id" type="hidden" value="-1" />
-
-            </fieldset>
-        </form>
-    </div>
-
-    <div class="config-editor">
-        <form id="constant-editor" onsubmit="return submitConstant()">
-            <fieldset>
-                <legend>Constant Editor</legend>
-                
-                <label for="name">Name</label>
-                <input name="name" type="text" />
-                <br>
-                
-                <label for="value">Value</label>
-                <input name="value" type="text" />
-                <br>
-                
-                <label for="description">Description</label>
-                <input name="description" type="text" />
-                <br>
-                
-                <button class="button" type="button" tabindex="-1" onclick='$("#constant-editor")[0].reset()'>Clear</button>
-                <input class="button" name="submit-constant" type="submit" value="Submit"/>
-                
-                <input name="id" type="hidden" value="-1" />
+                {% for alert in configData['alerts'] %}
+                <tr id="alert_{{ alert['id'] }}" class="body">
+                    <td class="name">{{ alert['name'] }}</td>
+                    <td class="value">{{ alert['value'] }}</td>
+                    <td class="description">{{ alert['description'] }}</td>
+                    <td><button onClick="editAlert(this)">Edit</button></td>
+                    <td><button onClick="deleteAlert(this)">Delete</button></td>
+                </tr>
+                {% endfor %}
             </table>
-        </form>
-    </div>
-</div>
+        </div>
+        
+        <div class="config-editor">
+            <form id="alert-editor" onsubmit="return submitAlert()">
+                <fieldset>
+                    <legend>Alert Editor</legend>
+                                        
+                    <label for="name">Name</label><br>
+                    <input name="name" type="text" /><br>
+                    
+                    <label for="value">Value</label><br>
+                    <input name="value" type="text" /><br>
+                    
+                    <label for="description">Description</label><br>
+                    <input name="description" type="text" /><br>
+                    
+                    <div class="footer">
+                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Clear</button>
+                        <input class="button" name="submit" type="submit" value="Submit"/>
+                    </div>
+                    
+                    <input name="id" type="hidden" value="-1" />
+                </fieldset>
+            </form>
+        </div>
+    </div> <!-- Alert Config -->
+
+    <!-- Function Config -->
+    <div class="config">
+        <div class="config-display functions">
+            <p class="title">Functions</p>
+            
+            <table>
+                <tr class="header">
+                    <th class="name">Name</th>
+                    <th class="value">Body</th>
+                    <th class="description">Description</th>
+                    <th colspan="2"></th>
+                </tr>
+                
+                {% for function in configData['functions'] %}
+                <tr id="function_{{ function['id'] }}" class="body">
+                    <td class="name">{{ function['name'] }}</td>
+                    <td class="value">{{ function['value'] }}</td>
+                    <td class="description">{{ function['description'] }}</td>
+                    <td><button onClick="editFunction(this)">Edit</button></td>
+                    <td><button onClick="deleteFunction(this)">Delete</button></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+        <div class="config-editor">
+            <form id="function-editor" onsubmit="return submitFunction()">
+                <fieldset>
+                    <legend>Function Editor</legend>
+                    
+                    <label for="name">Name</label><br>
+                    <input name="name" type="text" /><br>
+
+                    <label for="value">Body</label><br>
+                    <input name="value" type="text"/><br> <!-- DO NOT PUT SPACE BEFORE THIS BR -->
+                    
+                    <label for="description">Description</label><br>
+                    <input name="description" type="text" /><br>
+                    
+                    <div class="footer">
+                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Clear</button>
+                        <input class="button" name="submit" type="submit" value="Submit"/>
+                    </div>
+                    
+                    <input name="id" type="hidden" value="-1" />
+                </fieldset>
+            </form>
+        </div>
+    </div> <!-- Function Config -->
+
+    <!-- Constant Config -->
+    <div class="config">
+        <div class="config-display constants">
+            <p class="title">Constants</p>
+            <table>
+                <tr class="header">
+                    <th class="name">Name</th>
+                    <th class="value">Value</th>
+                    <th class="description">Description</th>
+                    <th colspan="2"></th>
+                </tr>
+                
+                {% for constant in configData['constants'] %}
+                <tr id="constant_{{ constant['id'] }}" class="body">
+                    <td class="name">{{ constant['name'] }}</td>
+                    <td class="value">{{ constant['value'] }}</td>
+                    <td class="description">{{ constant['description'] }}</td>
+                    <td><button onClick="editConstant(this)">Edit</button></td>
+                    <td><button onClick="deleteConstant(this)">Delete</button></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+        <div class="config-editor">
+            <form id="constant-editor" onsubmit="return submitConstant()">
+                <fieldset>
+                    <legend>Constant Editor</legend>
+                    
+                    <label for="name">Name</label><br>
+                    <input name="name" type="text" /><br>
+                    
+                    <label for="value">Value</label><br>
+                    <input name="value" type="text" /><br>
+                    
+                    <label for="description">Description</label><br>
+                    <input name="description" type="text" /><br>
+                    
+                    <div class="footer">
+                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Clear</button>
+                        <input class="button" name="submit" type="submit" value="Submit"/>
+                    </div>
+                    
+                    <input name="id" type="hidden" value="-1" />
+                </fieldset>
+            </form>
+        </div>
+    </div> <!-- Constant Config -->
+    
+</div> <!-- Configs -->
+
 
 {% endblock content %}
 

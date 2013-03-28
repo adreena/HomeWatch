@@ -8,8 +8,8 @@ ini_set('display_errors', 0); // Allows PHP to return response 500 on errors
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use \UASmartHome\Database\Equation\EquationDB;
-use \UASmartHome\Database\Equation\Equation;
+use \UASmartHome\Database\Configuration\ConfigurationDB;
+use \UASmartHome\Database\Configuration\Equation;
 
 // Check that the request is valid
 if (!(isset($_POST['name']) && isset($_POST['value']) && isset($_POST['description']))) {
@@ -24,7 +24,7 @@ $equation->name = $_POST['name'];
 $equation->body = $_POST['value'];
 $equation->description = $_POST['description'];
 
-if (!EquationDB::submitFunction($equation)) {
+if (!ConfigurationDB::submitFunction($equation)) {
     http_response_code(400);
 }
 
