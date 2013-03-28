@@ -301,7 +301,7 @@ function ($, _, Graph, TemplateManager) {
 
         // The  "v" is for "variable variable"! 
         _.each(['x', 'y'], function (v) {
-            var select = controlElement.find('graph-control-axes-' + v),
+            var select = controlElement.find('select[name=' + v + 'axis]'),
                 valueID,
                 valueTuple;
 
