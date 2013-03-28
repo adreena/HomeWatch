@@ -69,12 +69,13 @@ function ($, _, getInternetExplorerVersion) {
         //this.graphType = initialData.graphType;
 
         // Initial update of the graph.
-        this.update(initialData.values, this.graphState);
+        this.update(initialData.values);
     }
 
     /** Update method. Provide new data to update the graph. */
-    Graph.prototype.update = function (graphData, graphState) {
+    Graph.prototype.update = function (graphData) {
         // Actually graphs the data!
+	var graphState = this.graphState;
 	var graphType = graphState.graphType;
 	var element = graphState.element;
 	var granularity = graphState.granularity;
@@ -214,6 +215,8 @@ function ($, _, getInternetExplorerVersion) {
 
 	graphState.startdate = min_x;
 	graphState.enddate = max_x;
+
+	console.log("start date is: " + graphState.startdate);
 
         for(var i = 0; i < apartments.length; ++i) {
 	    for(var j = 0; j < graphname.length; ++j) {
