@@ -30,13 +30,13 @@
             success: function (result) {
                 var functions = result['functions'];
                 var constants = result['constants'];
+                var alerts = result['alerts'];
                 
                 // Populate the function selector
                 var function_selector = $("#function-selector")[0];
                 function_selector.size = functions.length;
-                console.debug("NUM FUNCTIONS: " + functions.length);
                 for (var i = 0; i < functions.length; ++i) {
-                    var option = new Option(functions[i]['name'], functions[i]['value']);
+                    var option = new Option(functions[i]['name'], functions[i]['name']);
                     function_selector.add(option, null);
                 }
             },

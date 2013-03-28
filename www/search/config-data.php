@@ -7,14 +7,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use \UASmartHome\Auth\Firewall;
 Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MANAGER);
 
-use \UASmartHome\Database\Equation\EquationDB;
+use \UASmartHome\Database\Configuration\ConfigurationDB;
 
 header('Content-Type: application/json; charset=utf-8');
 
-$equationData = EquationDB::fetchUserData();
+$configData = ConfigurationDB::fetchConfigData();
 
-$jsonEquationData = json_encode($equationData);
+$jsonConfigData = json_encode($configData);
 
-echo $jsonEquationData;
+echo $jsonConfigData;
 
 die;
