@@ -97,7 +97,7 @@ function ($, _, getInternetExplorerVersion) {
 	        this.bind_plotclick();
 	    }
 
-	    this.bind_plothover();
+	    bind_plothover(element);
         }        
     };
 
@@ -415,10 +415,10 @@ function ($, _, getInternetExplorerVersion) {
         }).appendTo("body").fadeIn(200);
     };
 
-    Graph.prototype. bind_plothover = function () {
+    bind_plothover = function (element) {
         var previousPoint = null;
 
-        $(this.graphState.element).bind("plothover", function (event, pos, item) {
+        $(element).bind("plothover", function (event, pos, item) {
             $("#x").text(pos.x.toFixed(2));
             $("#y").text(pos.y.toFixed(2));
        
