@@ -49,46 +49,60 @@ function ($, _, getInternetExplorerVersion) {
      * Constructor for a graph.
      */
     function Graph(element, _clickCallback, initialData) {
-        // initialData will have .graphType appended to it.
-        this.clickCallback = _clickCallback;
-        this.element = element;
-        this.graphType = initialData.graphType;
+
+	// object to keep graph state for a particular instance
+	this.graphState = 
+	{
+	    callback: _clickCallBack,
+	    graphType: initialData.graphType,
+     	    element: element,
+	    granularity: initialData.granularity,
+	    xtype: initialData["x-axis"],
+	    ytype: initialData["y-axis"],
+	    startdate: null,
+	    enddate: null,
+	    sensors: null
+	};
+
+        //this.clickCallback = _clickCallback;
+        //this.element = element;
+        //this.graphType = initialData.graphType;
 
         // Initial update of the graph.
-        this.update(initialData);
+        this.update(initialData.values, this.graphState);
     }
 
     /** Update method. Provide new data to update the graph. */
-    Graph.prototype.update = function (graphData) {
+    Graph.prototype.update = function (graphData, graphState) {
         // Actually graphs the data!
-	var graphType = graphData.graphType
+	var graphType = graphState.graphType;
+	var element = graphState.element;
+	var granularity = graphState.granularity;
 
         // test for graphtypes
 	if(graphType === "plainText") {
-	    displayText(graphData)
+	    displayText(graphState, graphData);
 	} else {
-	    var meta_data = create_metadata_object(graphType, graphData);
-	    var datapoints = graphData["values"]
-            var data_and_opts = format_data(meta_data, datapoints);
+            var data_and_opts = format_data(graphState, graphData);
 	    var data = data_and_opts["data"];
 	    var options = data_and_opts["options"];
 
-	    //$.plot($(".graph1"), data, options);
-	    $.plot($(this.element), data, options);
+	    $.plot($(element), data, options);
 
-	    if(meta_data.granularity !== "Hourly") {
-	        bind_plotclick(meta_data.granularity);
+	    if(granularity !== "Hourly") {
+	        bind_plotclick();
 	    }
 
 	    bind_plothover();
         }        
     };
 
-    var displayText = function (result) {
+    var displayText = function (graphState, graphData) {
         var display_text = "";
-	var xtype = result["x-axis"];
+	var xtype = graphState.xtype;
+	var element = graphState.element;
 		
-	$.each(result["values"], function(key, value) {
+	$.each(graphData, function(key, value) {
             display_text += "<h2><i>Apartment " + key + ": </i></h2>";
 	    		
 	    $.each(value, function(key, value) {	
@@ -104,25 +118,14 @@ function ($, _, getInternetExplorerVersion) {
 	    });
 	});
 
-        $(this.element).html(display_text);
-    	};
-
-    var create_metadata_object = function (graphtype, datapoints) {
-	return 	{
-                graphtype: graphtype,
-                granularity: datapoints.granularity,
-		xtype: datapoints["x-axis"],
-		ytype: datapoints["y-axis"],
-		millisecond_hour: 3600000,
-		millisecond_day: 86400000,
-            	}
+        $(element).html(display_text);
     };
 
     /*
     * Parses the data retrieved from the server, into something 
     * usable by Flot.
     */
-    var format_data = function (meta_data, datapoints) {
+    var format_data = function (graphState, graphData) {
 	var sensor_data = [];
 	var series_data = [];
 	var data_and_options = [];
@@ -132,7 +135,7 @@ function ($, _, getInternetExplorerVersion) {
 	var min_x, max_x;
 	var apartment, sensor, timestamp;
 	
-        $.each(datapoints, function (key, value) {
+        $.each(graphData, function (key, value) {
             apartment = key;
             apartments.push(apartment);
             console.assert(sensor_data[apartment] === undefined);
@@ -164,15 +167,15 @@ function ($, _, getInternetExplorerVersion) {
                         tuple.length = 0;
                     }
 
-                    if(meta_data.xtype === "Time") {
+                    if(graphState.xtype === "Time") {
 		    	if(min_x === undefined) {
 			    min_x = time_stamp;
 			    max_x = min_x;
 		        }
 				
 		        if(time_stamp >= max_x) {
-                            if(meta_data.granularity === "Hourly") {
-		                max_x = time_stamp + meta_data.millisecond_day;
+                            if(graphState.granularity === "Hourly") {
+		                max_x = min_x + get_millisecond_interval("day");
 		            } else {
 			        max_x = time_stamp;
 			    }
@@ -180,8 +183,8 @@ function ($, _, getInternetExplorerVersion) {
 
                         var tick_size = time_stamp;
 		    } else {
-			if(value["x"]) {
-			    var tick_size = parseFloat(value["x"]);
+			if(value.x) {
+			    var tick_size = parseFloat(value.x);
 
 			    if(min_x === undefined || min_x > tick_size) {
 				min_x = tick_size;
@@ -202,14 +205,14 @@ function ($, _, getInternetExplorerVersion) {
 		    }                              
 
                     tuple[0] = tick_size;
-                    tuple[1] = value["y"];
+                    tuple[1] = value.y;
                     sensor_data[apartment][sensor].push(tuple);
                 });
             });
         });
 
-	meta_data["min_x"] = min_x;
-	meta_data["max_x"] = max_x;
+	graphState.startdate = min_x;
+	graphState.enddate = max_x;
 
         for(var i = 0; i < apartments.length; ++i) {
 	    for(var j = 0; j < graphname.length; ++j) {
@@ -224,20 +227,20 @@ function ($, _, getInternetExplorerVersion) {
 	    }
 	}
 
-        var options = set_all_options(meta_data);
+        var options = set_all_options(graphState);
 	data_and_options["data"] = series_data;
 	data_and_options["options"] = options;
 	return data_and_options;
     };
 
-    var set_all_options = function (meta_data) {
-	var x_axis = get_x_axis(meta_data);
-	var y_axis = get_y_axis(meta_data);
+    var set_all_options = function (graphState) {
+	var x_axis = get_x_axis(graphState);
+	var y_axis = get_y_axis(graphState);
 	var grid = get_grid();
-	var series_opts = get_series_options(meta_data);
+	var series_opts = get_series_options(graphState);
 	var legend = get_legend();
 
-	if(meta_data.granularity === "Hourly") {
+	if(graphState.granularity === "Hourly") {
 	    var zoom = get_zoom_options();	
 	} else {
 	    var zoom = {};
@@ -247,11 +250,11 @@ function ($, _, getInternetExplorerVersion) {
 	return options;
     };
 
-    var get_x_axis = function (meta_data) {
-	var granularity = meta_data.granularity;
-	var xtype = meta_data.xtype;
-	var min_x = meta_data.min_x;
-	var max_x = meta_data.max_x;
+    var get_x_axis = function (graphState) {
+	var granularity = graphState.granularity;
+	var xtype = graphState.xtype;
+	var min_x = graphState.startdate;
+	var max_x = graphState.enddate;
 	var min_date = new Date(min_x);
 	var max_date = new Date(max_x);
 
@@ -267,16 +270,17 @@ function ($, _, getInternetExplorerVersion) {
 	};
 
 	base_x.xaxis["min"] = min_x;
-	base_x.xaxis["max"] = max_x;
 
 	if(xtype === "Time") {
 	    base_x.xaxis["mode"] = "time";
 
             if(granularity === "Hourly") {
+		base_x.xaxis["max"] = max_x;
 	        base_x.xaxis["tickSize"] = [1, "hour"];
 	        var label = get_month_and_day(min_date);
 	        base_x.xaxis["axisLabel"] = label;
             } else if(granularity === "Daily") {
+		base_x.xaxis["max"] = min_x + get_millisecond_interval("week");
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];	
@@ -290,11 +294,14 @@ function ($, _, getInternetExplorerVersion) {
 		base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 		var label = min_date.getUTCFullYear(); 
 		base_x.xaxis["axisLabel"] = 'Year: ' + label;
+		var year_end = label + "-12-31:0";
+		base_x.xaxis["max"] = DateToUTC(year_end);
 	    } else {
 		// multiple years?
 	    }
 	} else {
-	     base_x.xaxis["axisLabel"] = xtype;
+	    base_x.xaxis["max"] = max_x;
+	    base_x.xaxis["axisLabel"] = xtype;
 	}
 
 	if(granularity === "Hourly") {
@@ -303,10 +310,13 @@ function ($, _, getInternetExplorerVersion) {
 	    base_x.xaxis["panRange"] = [-100, pan_range];
 	}
 
+        // we can now change start/end dates back to strings needed later for drill down
+	graphState.startdate = min_date.getUTCFullYear() + '-' + add_leading_zero(min_date.getUTCMonth() + 1) + '-' + add_leading_zero(min_date.getUTCDate());
+
 	return base_x;	    
     };
 
-    var get_y_axis = function (meta_data) {
+    var get_y_axis = function (graphState) {
         var base_y = {
             yaxis: 
 		{
@@ -317,9 +327,9 @@ function ($, _, getInternetExplorerVersion) {
                 }
             };
 
-        base_y.yaxis["axisLabel"] = meta_data.ytype;
+        base_y.yaxis["axisLabel"] = graphState.ytype;
 
-	if(meta_data.granularity === "Hourly") {
+	if(graphState.granularity === "Hourly") {
 	    base_y.yaxis["zoomRange"] = [0.1, 3600000];
 	    base_y.yaxis["panRange"] = [-100, 1000];
 	}
@@ -331,8 +341,8 @@ function ($, _, getInternetExplorerVersion) {
 	return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};     
     };
 
-    var get_series_options = function (meta_data, order) {
-	var graphtype = meta_data.graphtype;
+    var get_series_options = function (graphState, order) {
+	var graphtype = graphState.graphtype;
 
 	var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true }}};
 	var bars = {series: {bars: { show: true, barWidth: 1000*60*60*0.25, fill: true, lineWidth: 1, clickable: true,
@@ -396,10 +406,10 @@ function ($, _, getInternetExplorerVersion) {
         }).appendTo("body").fadeIn(200);
     };
 
-    var bind_plothover = function () {
+    Graph.prototype. bind_plothover = function () {
         var previousPoint = null;
 
-        $(this.element).bind("plothover", function (event, pos, item) {
+        $(graphState.element).bind("plothover", function (event, pos, item) {
             $("#x").text(pos.x.toFixed(2));
             $("#y").text(pos.y.toFixed(2));
        
@@ -422,13 +432,15 @@ function ($, _, getInternetExplorerVersion) {
         });
     };
 
-    var bind_plotclick = function(granularity) {
+    Graph.prototype bind_plotclick = function() {
 	var drill_granularity;
 	var date_from;
 	var date_to;
 
-    	$(this.element).bind("plotclick", function (event, pos, item) {
-            if (item) {		
+    	$(graphState.element).bind("plotclick", function (event, pos, item) {
+            if (item) {	
+
+		console.log("you clicked!");	
 	        var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
 	        var data_pointUTC = item.datapoint[0] + offset;		
 	        var date = new Date(data_pointUTC);
@@ -526,8 +538,14 @@ function ($, _, getInternetExplorerVersion) {
 	return months[date.getUTCMonth()] + ' ' + date.getUTCDate() + ' ' + date.getUTCFullYear();
     };
 
-    Graph.prototype.method = function (vars) {
+    var get_millisecond_interval = function (interval) {
+	var base = 3600000;
 
+	if(interval === "day") {
+	    return base * 23;
+	} else if(interval === "week") {
+	    return base * 24 * 6;
+	}
     };
 
 
