@@ -95,7 +95,7 @@ function ($, _, getInternetExplorerVersion) {
 		display_text += "<h4>" + "Date: " + key + "</h4>";					
 		 			
 		$.each(value, function(key, value) {
-		    if(xtype === "time") {
+		    if(xtype === "Time") {
 			display_text += "Sensor " + key + ": " + value.y + "<br />";			
 		    } else {			
 			display_text += "Sensor " + key + " against " + xtype + ": " + value.y + " against " + value.x + "<br />";"<br />";
@@ -150,7 +150,7 @@ function ($, _, getInternetExplorerVersion) {
                     // key = sensor names
                     sensor = key;
 
-                    if (graphname_flag === "false" && sensor !== "time") {
+                    if (graphname_flag === "false" && sensor !== "Time") {
 			graphname.push(sensor);			  
                     }
 
@@ -164,7 +164,7 @@ function ($, _, getInternetExplorerVersion) {
                         tuple.length = 0;
                     }
 
-                    if(meta_data.xtype === "time") {
+                    if(meta_data.xtype === "Time") {
 		    	if(min_x === undefined) {
 			    min_x = time_stamp;
 			    max_x = min_x;
@@ -269,7 +269,7 @@ function ($, _, getInternetExplorerVersion) {
 	base_x.xaxis["min"] = min_x;
 	base_x.xaxis["max"] = max_x;
 
-	if(xtype === "time") {
+	if(xtype === "Time") {
 	    base_x.xaxis["mode"] = "time";
 
             if(granularity === "Hourly") {
