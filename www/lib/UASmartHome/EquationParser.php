@@ -74,8 +74,10 @@ class EquationParser
         $evaluator = new EvalMath();
         $db_vars = self::$DBVARS;
 
-        EquationParser::evaluateUserConstants($evaluator);
-
+        // Manually replace constants outside of the evaluator
+        // NOTE: This should be done before exploding the function string
+        $function = EquationParser::replaceConstants($function);
+        
         $pieces = explode("$", $function);
 
         if(count($pieces) === 1) {
@@ -154,13 +156,18 @@ class EquationParser
         return self::$DBVARS;
     }
 
-    private static function evaluateUserConstants($evaluator)
+    private static function replaceConstants($string)
     {
         $constants = ConfigurationDB::fetchConstants(null); // TODO: Can these be cached?
-
+        
+        // Replace the name of each constant with its value
+        // Note that constant names have presendence over variable names
         foreach ($constants as $constant) {
-            $evaluator->evaluate($constant['name'] . ' = ' . $constant['value']);
+            // TODO: Can this regex be compiled?
+            $string = preg_replace('/\$' . $constant['name'] . '\$/', $constant['value'], $string);
         }
+        
+        return $string;
     }
 
 }
