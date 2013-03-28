@@ -412,7 +412,7 @@ function ($, _, getInternetExplorerVersion) {
     Graph.prototype. bind_plothover = function () {
         var previousPoint = null;
 
-        $(graphState.element).bind("plothover", function (event, pos, item) {
+        $(this.graphState.element).bind("plothover", function (event, pos, item) {
             $("#x").text(pos.x.toFixed(2));
             $("#y").text(pos.y.toFixed(2));
        
