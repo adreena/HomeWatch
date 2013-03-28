@@ -43,13 +43,6 @@ function ($, _, Graph, TemplateManager) {
         this.manager = graphManager;
         this.data = data;
 
-        /* TEMPRORARY */
-        element.find('a[href=#query]').click(function (evt) {
-            evt.preventDefault();
-
-            self.getQuery();
-        });
-
         /** The following are shortcuts to jQuery of elements. */
         this.el = {};
         this.element = element;
@@ -93,9 +86,9 @@ function ($, _, Graph, TemplateManager) {
             _(query).extend(partial);
         });
 
-        console.log("Asserting whether the query is valid: ",
-                GraphControl.validateGraphRequest(query));
-        console.log(query);
+        //console.log("Asserting whether the query is valid: ",
+        //        GraphControl.validateGraphRequest(query));
+        //console.log(query);
 
         return query;
     };

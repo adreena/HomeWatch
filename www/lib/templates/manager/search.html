@@ -41,8 +41,6 @@
     <div class="graph-container">
       <div class="graph" />
       <div class="graph-legend" />
-
-      <a href="#query">Query that sucka!</a>
     </div>
   </li>
 </script>
@@ -62,7 +60,7 @@
   yAxis:  a series of options/optgroups
 #}
 <script id="_t-graph-control-axes" type="text/html">
-  <div class="graph-control-axes">
+  <div data-for-process class="graph-control-axes">
     <label><span class="the-actual-gorram-label">X Axis</span>
       <select class="graph-control-axis-x" name="xaxis">
         <%= xAxis %>
@@ -94,7 +92,7 @@
   No parameters.
 #}
 <script id="_t-graph-control-datetime" type="text/html">
-  <div class="graph-controls-datetime">
+  <div data-for-process class="graph-controls-datetime">
     <label><span class="the-actual-gorram-label"> Granularity </span>
       <select name="granularity">
         <option value="Hourly">Hourly</option>
@@ -152,7 +150,7 @@
   apartments  List of apartment numbers/IDs
 #}
 <script id="_t-graph-control-apartments" type="text/html">
-  <ul data-select-boundary data-name="apts">
+  <ul data-for-process data-select-boundary data-name="apts">
     <% _.each(apartments, function (number) { %>
     <li><label><input name="apts" type="checkbox" value="<%= number %>" />
         <span class="postfix-label">
@@ -167,7 +165,7 @@
 {# Parameters: None
 #}
 <script id="_t-graph-control-types" type="text/html">
-  <ul class="graph-controls-type" data-graph data-name="graph-type">
+  <ul data-for-internal class="graph-controls-type" data-graph data-name="graph-type">
     <li><label><input checked type="radio" name="graph-type" value="bar" />
         <span class="graph-preview"> Bar graph</span>
       </label></li>
