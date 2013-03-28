@@ -3,10 +3,13 @@
  */
 define([
     'jquery',
+    'search/defines',
     './GraphControl'],
 
-function ($, GraphControl) {
+function ($, D, GraphControl) {
     "use strict";
+
+    var makeCategories;
 
     /**
      * Instantiate a new GraphManager, using the given element to place graphs
@@ -20,6 +23,8 @@ function ($, GraphControl) {
 
         /** List of managed graphs. */
         this.graphs = {};
+
+        window.graphs = this.graphs;
     }
 
     /** Adds a new graph and returns its ID. */
@@ -48,6 +53,87 @@ function ($, GraphControl) {
     GraphManager.prototype.remove = function (id) {
         this.graphs[id].destroy();
     };
+
+    /**
+     * Takes that category array and converts it into things
+     * that can be converted into optgroups for x and y.
+     *
+     * Also, creates an object that maps arbitrary value IDs to a
+     * metadata object that contains the information needed to
+     * send to process.php.
+     *
+     * Returns {
+     *      x: { 'group1' : { "Display Name": "1" },
+     *      y: { 'group1' : { "Display Name": "1" },
+     *      values: { "1": {type: 'sensorarray', values: ["One value"]} }
+     * }
+     */
+    GraphManager.makeCategories = function (categories) {
+        var x = {}, y = {}, values = {};
+
+
+        /* Parse the category names. */
+        _.each(categories, function (elements, catName) {
+            var valueType = D.categoryNameToType[catName];
+
+            /* Initialize the category. */
+            x[catName] = {};
+            y[catName] = {};
+
+            _.each(elements, function (info, name) {
+                var displayName, value, valueID, forX, forY;
+
+                /* Assume the value is applicable for both axes. */
+                forX = true;
+                forY = true;
+
+                if (_.isString(info)) {
+                    /* Use the defaults with this as the display name. */
+                    displayName = info;
+                    value = [name];
+
+                } else {
+                    /* It's a big scary object. */
+
+                    displayName = info.displayName;
+
+                    /* Check if it has multiple values, else just use the
+                     * name as the value. */
+                    value = (info.hasOwnProperty('multiple'))
+                        ? info.multiple
+                        : [name];
+
+                    if (info.hasOwnProperty('applicableAxes')) {
+                        forX = /x/.test(info.applicableAxes);
+                        forY =  /y/.test(info.applicableAxes);
+                    }
+                }
+
+                /* Create a value ID for the value and insert it into
+                 * the value array thing. */
+                valueID = _.uniqueId();
+                values[valueID] = {
+                    type: valueType,
+                    values: value
+                };
+
+                /* Make sure we add to the applicable axes! */
+                if (forX) {
+                    x[catName][displayName] = valueID;
+                }
+
+                if (forY) {
+                    y[catName][displayName] = valueID;
+                }
+
+            });
+
+        });
+
+        return { x: x, y: y, values: values };
+
+    };
+
 
 
     /* Export the class. */

@@ -10,10 +10,10 @@ define([
 function ($, _, Graph, TemplateManager) {
     "use strict";
 
-    var parseGraphControls,
-        validateGraphRequest,
-        parseGraphType,
 
+    var tman = new TemplateManager(),
+
+        /* Create the graph-group element and bind all of its events. */
         makeGraphGroup,
 
         /* Element renderers. */
@@ -25,23 +25,51 @@ function ($, _, Graph, TemplateManager) {
 
         /* Binds events for the elements. */
         bindWeirdDateEvents,
-        bindSelectAlls,
+        bindSelectAlls;
 
-        tman = new TemplateManager();
 
-    /** Creates a new graph control. */
+    /** Creates a new GraphControl. A GraphController has data. */
     function GraphControl(graphManager, data) {
-        var id;
+        var id, element;
+
         id = _.uniqueId('graph');
         this.manager = graphManager;
+        element = $(makeGraphGroup(id, data));
 
-        /* TEMPORARY: */
-        data.apartments = [1,2,3,4,5,6];
+        /* The following are shortcuts to jQuery objects. */
+        this.el = {};
+        this.element = element;
+        /* The control panel. */
+        this.el.controls = element.find('.graph-controls');
+        /* The graph panel. */
+        this.el.graph = element.find('.graph-container');
 
-        this.element = makeGraphGroup(id, data);
         this.id = id;
 
     }
+
+
+
+    /* Parsing and retrieving data. */
+
+    /**
+     * Given a graph HTML thing (ID? Element?) will
+     * parse its HTML controller and return the
+     * data need to pass to process.php.
+     */
+    GraphControl.prototype.parseGraphControls = function (graph) {
+        // Look INSIDE the element
+    };
+
+    /**
+     * Gets the graph type from the graph controls.
+     */
+    GraphControl.prototype.getGraphType = function () {
+        var checkedRadio = this.el.controls.find('input[type=radio]:checked'),
+            graphType = checkedRadio.val();
+
+        return graphType;
+    };
 
 
     /*
@@ -50,8 +78,8 @@ function ($, _, Graph, TemplateManager) {
 
     /**
      * Vaguely complete graph group creating function.
-     * DATA: not sure what this will be yet. Right now, it's just a x category
-     * and a y category, plus apartment numbers.
+     * DATA: not sure what this will be yet. Right now, it's just a x
+     * category and a y category, plus apartment numbers.
      *
      * Returns a graph group jQuery element.
      */
@@ -62,19 +90,28 @@ function ($, _, Graph, TemplateManager) {
             placed;
 
         /* Make all of the elements. */
-        elements = {
-            'Axes': graphControlAxes(data.x, data.y),
-            'Date/Time': graphControlDateTime(),
-            'Apartments': graphControlApartments(data.apartments),
-            'Graph Type': graphControlDisplayType()
-        };
+        elements = [
+            {
+                header: 'Axes',
+                content:  graphControlAxes(data.x, data.y)
+            },
+            {
+                header: 'Date/Time',
+                content:  graphControlDateTime()
+            },
+            {
+                header: 'Apartments',
+                content:  graphControlApartments(data.apartments)
+            },
+            {
+                header: 'Graph Type',
+                content:  graphControlDisplayType()
+            }
+        ];
 
         /* Place 'em in the appropriate container. */
-        renderedElements = _.map(elements, function (content, title) {
-            return tman.render('graph-control-li', {
-                header: title,
-                content: content
-            });
+        renderedElements = _.map(elements, function (params) {
+            return tman.render('graph-control-li', params);
         }).join('');
 
         /* Render the ENTIRE graph group. */
@@ -93,6 +130,7 @@ function ($, _, Graph, TemplateManager) {
         return rendered;
 
     };
+
 
 
     /**
@@ -162,7 +200,6 @@ function ($, _, Graph, TemplateManager) {
 
         /* Pretend it change for the first time. */
         onChange();
-
     };
 
     /* Binds select all. Doesn't really work yet. */
@@ -179,43 +216,29 @@ function ($, _, Graph, TemplateManager) {
     };
 
 
-    /* Parsing and retrieving data. */
 
+
+    /*
+     * "Public static methods"
+     * These functions are exported, but are useless on a single
+     * instance. Regardless, they belong to this "class".
+     */
 
     /**
-     * Given a graph HTML thing (ID? Element?) will
-     * parse its HTML controller and return the
-     * data need to pass to process.php.
+     * Returns whether or not the graph request contains all the keys
+     * it needs in order to make process.php happy. This is mostly for
+     * debug and sanity checking.
      */
-    parseGraphControls = function (graph) {
-        return D.exampleProcessParameters;
-    };
-
-    /**
-     * Gets the graph type from the graph controls.
-     */
-    parseGraphType = function (graph) {
-        // TODO: parse the graph type!
-    };
-
-    /**
-     * This one is mostly for debug: returns
-     * where the graph request contains all the keys it
-     * needs in order to make process.php happy.
-     */
-    validateGraphRequest = function (graphObject) {
+    GraphControl.validateGraphRequest = function (graphRequest) {
         var requiredKeys = [
             "startdate", "enddate", "xaxis", "x", "xtype", "yaxis", "y",
             "ytype", "period", "apartments"
         ];
 
         return _.all(requiredKeys, function (key) {
-            return graphObject.hasOwnProperty(key);
+            return _(graphRequest).has(key);
         });
     };
-
-
-
 
     /* Export the class. */
     return GraphControl;
