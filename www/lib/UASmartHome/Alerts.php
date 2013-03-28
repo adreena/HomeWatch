@@ -53,7 +53,7 @@ class Alerts
         $input = json_decode($input, true);
         $finalAlerts = array();
 
-        $data = Engineer::db_query_Alert(
+        $data = Engineer::db_query_default_Alert(
                    $input["apartment"], $input["alerttype"],
                    $input["startdate"], $input["enddate"]);
 
