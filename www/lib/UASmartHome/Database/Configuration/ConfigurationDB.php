@@ -26,10 +26,10 @@ class ConfigurationDB {
         $s = $connection->prepare("SELECT Constant_ID, Name, Value, Description
                                    FROM Constants");
         
-        $s->execute();
-
-        if ($s->errorCode() != 0) {
-            trigger_error("Failed to fetch constants: " . $s->errorInfo(), E_USER_WARNING);
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to fetch constants: " . $e->getMessage(), E_USER_WARNING);
             return null;
         }
 
@@ -56,10 +56,10 @@ class ConfigurationDB {
         $s = $connection->prepare("SELECT Equation_ID, Name, Value, Description
                                    FROM Equations");
         
-        $s->execute();
-
-        if ($s->errorCode() != 0) {
-            trigger_error("Failed to fetch functions: " . $s->errorInfo(), E_USER_WARNING);
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to fetch functions: " . $e->getMessage(), E_USER_WARNING);
             return null;
         }
 
@@ -86,14 +86,14 @@ class ConfigurationDB {
         $s = $connection->prepare("SELECT Alert_ID, Name, Value, Description
                                    FROM Alerts");
         
-        $s->execute();
-
-        if ($s->errorCode() != 0) {
-            trigger_error("Failed to fetch alerts: " . $s->errorInfo(), E_USER_WARNING);
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to fetch alerts: " . $e->getMessage(), E_USER_WARNING);
             return null;
         }
 
-        $alerts = array();        
+        $alerts = array();
         while ($alert = $s->fetch(\PDO::FETCH_ASSOC)) {
             array_push($alerts, array(
                 'id' => $alert['Alert_ID'],
@@ -114,10 +114,11 @@ class ConfigurationDB {
                                    FROM Equations WHERE Name=:Equation_Name");
 
         $s->bindParam(':Equation_Name', $function_name);
-        $s->execute();
 
-        if ($s->errorCode() != 0) {
-            trigger_error("Failed to fetch functions: " . $s->errorInfo(), E_USER_WARNING);
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to fetch function: " . $e->getMessage(), E_USER_WARNING);
             return null;
         }
 
@@ -148,9 +149,11 @@ class ConfigurationDB {
         $s->bindParam(':Name', $function->name);
         $s->bindParam(':Value', $function->body);
         $s->bindParam(':Description', $function->description);
-        $s->execute();
         
-        if ($s->errorCode() != 0) {
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to submit function: " . $e->getMessage(), E_USER_WARNING);
             return false;
         }
         
@@ -166,9 +169,11 @@ class ConfigurationDB {
                             WHERE Equation_ID=:Equation_ID');
         
         $s->bindParam(':Equation_ID', $functionID);
-        $s->execute();
         
-        if ($s->errorCode() != 0) {
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to delete function: " . $e->getMessage(), E_USER_WARNING);
             return false;
         }
         
@@ -197,12 +202,14 @@ class ConfigurationDB {
         $s->bindParam(':Name', $constant->name);
         $s->bindParam(':Value', $constant->value);
         $s->bindParam(':Description', $constant->description);
-        $s->execute();
         
-        if ($s->errorCode() != 0) {
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to submit constant: " . $e->getMessage(), E_USER_WARNING);
             return false;
         }
-        
+
         return true;
     }
     
@@ -215,9 +222,11 @@ class ConfigurationDB {
                             WHERE Constant_ID=:Constant_ID');
         
         $s->bindParam(':Constant_ID', $constantID);
-        $s->execute();
-        
-        if ($s->errorCode() != 0) {
+
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to delete constant: " . $e->getMessage(), E_USER_WARNING);
             return false;
         }
         
@@ -246,9 +255,11 @@ class ConfigurationDB {
         $s->bindParam(':Name', $alert->name);
         $s->bindParam(':Value', $alert->value);
         $s->bindParam(':Description', $alert->description);
-        $s->execute();
-        
-        if ($s->errorCode() != 0) {
+
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to submit alert: " . $e->getMessage(), E_USER_WARNING);
             return false;
         }
         
@@ -264,9 +275,11 @@ class ConfigurationDB {
                             WHERE Alert_ID=:Alert_ID');
         
         $s->bindParam(':Alert_ID', $alertID);
-        $s->execute();
-        
-        if ($s->errorCode() != 0) {
+
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to submit alert: " . $e->getMessage(), E_USER_WARNING);
             return false;
         }
         
