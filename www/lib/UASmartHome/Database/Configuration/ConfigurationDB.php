@@ -106,6 +106,27 @@ class ConfigurationDB {
         return $alerts;
     }
 
+    public function fetchAlert($alert_name)
+    {
+        $con = new Connection();
+        $con = $con->connect();
+        $s = $con->prepare("SELECT Alert_ID, Name, Value, Description
+                                   FROM Alerts WHERE Name=:Alert_Name");
+
+        $s->bindParam(':Alert_Name', $alert_name);
+
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to fetch function: " . $e->getMessage(), E_USER_WARNING);
+            return null;
+        }
+
+        $alert = $s->fetch(\PDO::FETCH_ASSOC);
+
+        return $alert;
+    }
+
     public function fetchFunction($function_name)
     {
         $con = new Connection();
