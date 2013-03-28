@@ -21,7 +21,7 @@ class Equation {
         if (empty($this->name))
             return false;
         
-        if (empty($this->body))
+        if (!isset($this->body))
             return false;
         
         return true;

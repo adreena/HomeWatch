@@ -21,7 +21,7 @@ class Constant {
         if (empty($this->name))
             return false;
         
-        if (empty($this->value))
+        if (!isset($this->value))
             return false;
         
         return true;
