@@ -18,17 +18,34 @@ class Engineer {
 		$enddate = date_create_from_Format('Y-m-d:G', $enddate);
 	
 			if ($period == "Hourly") {
-				while ($startdate < $enddate) {
-					$temp = Engineer::db_query_Hourly($apt,$table,$startdate->format('Y-m-d'), $startdate->format('G'), $column);
-					
-					if (ISSET($temp[0])) {
-						$results[$startdate->format('Y-m-d:G')] = $temp[0];
-					} else {
-						$results[$startdate->format('Y-m-d:G')] = 0;
-					}
-					$startdate->add(date_interval_create_from_date_string('1 hour'));
+                $table .= '_Hourly';
+                $result =array();
+                $conn=new Connection ();
 
-				}	
+                $Query=$conn->connect()->prepare("select ".$column.", Date, Hour from ".$table." where Apt= :Apt_Num AND Date between :startdate and :enddate") ;
+                $Query->bindValue(":Apt_Num",$apt);
+                $Query->bindValue(":startdate",$startdate->format('Y-m-d'));
+                $Query->bindValue(":enddate",$enddate->format('Y-m-d'));
+                $Query->execute();
+
+                while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
+                {
+                    if ($row["Date"] < $enddate->format('Y-m-d') ||
+                        ($row["Date"] == $enddate->format('Y-m-d') &&
+                         $row["Hour"] <= $enddate->format('G'))) {
+                            $results[$row["Date"] . ":" . $row["Hour"]] = array($column => $row[$column]);
+                    }
+                }
+
+                $date = $startdate;
+
+                while ($date < $enddate) {
+                    if (!array_key_exists($date->format('Y-m-d:G'), $results)) {
+                        $results[$date->format('Y-m-d:G')] = 0;
+                    }
+                    $date->add(date_interval_create_from_date_string('1 hour'));
+                }
+
 			} else if ($period == "Daily") {
 				while ($startdate < $enddate) {
 					$temp = Engineer::db_query_Daily($apt, $table, $startdate->format('Y-m-d'), $column); 
