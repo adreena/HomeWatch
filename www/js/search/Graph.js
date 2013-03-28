@@ -450,7 +450,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 
     	$(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {	
-		console.log("granularity is : " + this.graphState.granularity);
+		console.log("granularity is : " + granularity);
 		console.log("you clicked!");	
 	        var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
 	        var data_pointUTC = item.datapoint[0] + offset;		
