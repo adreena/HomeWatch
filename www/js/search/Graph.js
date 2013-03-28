@@ -277,6 +277,7 @@ function ($, _, getInternetExplorerVersion) {
 	};
 
 	base_x.xaxis["min"] = min_x;
+console.log("start date is : " + base_x.xaxis["min"]);
 
 	if(xtype === "Time") {
 	    base_x.xaxis["mode"] = "time";
