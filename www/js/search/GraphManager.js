@@ -3,13 +3,12 @@
  */
 define([
     'jquery',
+    'underscore',
     'search/defines',
     './GraphControl'],
 
-function ($, D, GraphControl) {
+function ($, _, D, GraphControl) {
     "use strict";
-
-    var makeCategories;
 
     /**
      * Instantiate a new GraphManager, using the given element to place graphs

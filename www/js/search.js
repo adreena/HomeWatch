@@ -24,9 +24,9 @@ function ($, _, D, GraphManager) {
             dump;
 
         data.apartments = _.range(1, 6 + 1); // Just like Python's range()...
-        graphMan = new GraphManager(D.sel.graphList, data),
-        grrid = graphMan.add(),
-        theOneGraph = $('#' + grrid),
+        graphMan = new GraphManager(D.sel.graphList, data);
+        grrid = graphMan.add();
+        theOneGraph = $('#' + grrid);
         dump = theOneGraph.find('.debug-results');
 
         theOneGraph.find('[href=#DEBUG]').click(function () {

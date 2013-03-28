@@ -10,6 +10,8 @@ define([
 function ($, _, Graph, TemplateManager) {
     "use strict";
 
+    // TODO: USE Graph!
+
 
     var tman = new TemplateManager(),
 
@@ -57,7 +59,7 @@ function ($, _, Graph, TemplateManager) {
      * parse its HTML controller and return the
      * data need to pass to process.php.
      */
-    GraphControl.prototype.parseGraphControls = function (graph) {
+    GraphControl.prototype.getQuery = function () {
         // Look INSIDE the element
     };
 
@@ -85,9 +87,9 @@ function ($, _, Graph, TemplateManager) {
      */
     makeGraphGroup = function (graphID, data) {
         var elements,
-            rendered,
+            asText,
             renderedElements,
-            placed;
+            rendered;
 
         /* Make all of the elements. */
         elements = [
@@ -115,14 +117,14 @@ function ($, _, Graph, TemplateManager) {
         }).join('');
 
         /* Render the ENTIRE graph group. */
-        rendered = tman.render('graph-group', {
+        asText = tman.render('graph-group', {
             graphID: graphID,
             graphControls: renderedElements
         });
 
         /* Create a temporary div to convert the text element into a jQuery
          * element. */
-        rendered = $('<div>').html(rendered).children().first();
+        rendered = $('<div>').html(asText).children().first();
 
         bindWeirdDateEvents(rendered);
         bindSelectAlls(rendered);
@@ -208,7 +210,8 @@ function ($, _, Graph, TemplateManager) {
             parent = selectToggler.parent(),
             checkboxes = parent.children('input[type=checkbox]');
 
-        /* Should find parent with checkboxes. */
+        // TODO: Should find parent with checkboxes.
+
 
         selectToggler.click(function (event) {
             event.preventDefault();
