@@ -93,7 +93,7 @@ function ($, _, getInternetExplorerVersion) {
 	        this.bind_plotclick();
 	    }
 
-	    bind_plothover();
+	    this.bind_plothover();
         }        
     };
 
@@ -206,6 +206,7 @@ function ($, _, getInternetExplorerVersion) {
 
                     tuple[0] = tick_size;
                     tuple[1] = value.y;
+		    console.log("y value is: " + value.y);
                     sensor_data[apartment][sensor].push(tuple);
                 });
             });
@@ -312,6 +313,8 @@ function ($, _, getInternetExplorerVersion) {
 
         // we can now change start/end dates back to strings needed later for drill down
 	graphState.startdate = min_date.getUTCFullYear() + '-' + add_leading_zero(min_date.getUTCMonth() + 1) + '-' + add_leading_zero(min_date.getUTCDate());
+
+        graphState.enddate = max_date.getUTCFullYear() + '-' + add_leading_zero(min_date.getUTCMonth() + 1) + '-' + add_leading_zero(min_date.getUTCDate());
 
 	return base_x;	    
     };
