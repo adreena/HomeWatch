@@ -10,20 +10,22 @@ define([
 function ($, _, Graph, TemplateManager) {
     "use strict";
 
-    // TODO: USE Graph!
-
-
     var tman = new TemplateManager(),
 
         /* Create the graph-group element and bind all of its events. */
         makeGraphGroup,
 
         /* Element renderers. */
-        graphCreateOptGroups,
-        graphControlAxes,
-        graphControlDateTime,
-        graphControlApartments,
-        graphControlDisplayType,
+        renderOptGroups,
+        renderControlAxes,
+        renderControlDateTime,
+        renderControlApartments,
+        renderControlDisplayType,
+
+        /* Element fetchers. */
+        fetchAxes,
+        fetchAparements,
+        fetchDateTime,
 
         /* Binds events for the elements. */
         bindWeirdDateEvents,
@@ -32,19 +34,36 @@ function ($, _, Graph, TemplateManager) {
 
     /** Creates a new GraphControl. A GraphController has data. */
     function GraphControl(graphManager, data) {
-        var id, element;
+        var id, element, graph, self = this;
 
         id = _.uniqueId('graph');
-        this.manager = graphManager;
         element = $(makeGraphGroup(id, data));
 
-        /* The following are shortcuts to jQuery objects. */
+        /** The GraphManager. */
+        this.manager = graphManager;
+        this.data = data;
+
+        /* TEMPRORARY */
+        element.find('a[href=#query]').click(function (evt) {
+            evt.preventDefault();
+
+            self.getQuery();
+        });
+
+        /** The following are shortcuts to jQuery of elements. */
         this.el = {};
         this.element = element;
-        /* The control panel. */
+        /** The control panel. */
         this.el.controls = element.find('.graph-controls');
-        /* The graph panel. */
+        /** The graph panel. */
         this.el.graph = element.find('.graph-container');
+
+        /* This should actually put a placeholder there until the
+         * data is valid. */
+        //this.graph = new Graph(this.el.graph, function (newRequest) {
+        //    self.onGranularityChange(newRequest);
+        //});
+        this.graph = undefined;
 
         this.id = id;
 
@@ -52,7 +71,9 @@ function ($, _, Graph, TemplateManager) {
 
 
 
-    /* Parsing and retrieving data. */
+    /*
+     * Parsing and retrieving data.
+     */
 
     /**
      * Given a graph HTML thing (ID? Element?) will
@@ -60,18 +81,68 @@ function ($, _, Graph, TemplateManager) {
      * data need to pass to process.php.
      */
     GraphControl.prototype.getQuery = function () {
-        // Look INSIDE the element
+        var query = {}, fetches;
+
+        fetches = [
+            fetchAxes(this.element, this.data.values), // Get the axes info.
+        ];
+
+        _.each(fetches, function (partial) {
+            _(query).extend(partial);
+        });
+
+        console.log("Asserting whether the query is valid: ",
+                GraphControl.validateGraphRequest(query));
+        console.log(query);
+
+        return query;
     };
 
     /**
      * Gets the graph type from the graph controls.
      */
     GraphControl.prototype.getGraphType = function () {
-        var checkedRadio = this.el.controls.find('input[type=radio]:checked'),
-            graphType = checkedRadio.val();
+        var checkedRadio = this.el.controls.find('input[type=radio]:checked');
 
-        return graphType;
+        return checkedRadio.val();
     };
+
+
+
+    /*
+     * Updating the view.
+     */
+
+    /**
+     * This is to be called when the graph thinks its parameters has changed
+     * (e.g., when it has been clicked).
+     */
+    GraphControl.prototype.onGranularityChange = function (newRequest) {
+        var requestFromPicker, fullRequest;
+
+        requestFromPicker = this.getQuery();
+        fullRequest = _(requestFromPicker).extend(newRequest);
+
+        this.makeRequest(fullRequest);
+    };
+
+
+    /** Politely asks the manager to fetch new data for us. */
+    GraphControl.prototype.makeRequest = function (newData) {
+        this.manager.makeRequest(this, newData);
+    };
+
+    /**
+     * Should be called (probably by the GraphManager) when new
+     * plottable data arrives.
+     */
+    GraphControl.prototype.onNewData = function  (newData) {
+        /* Delegate this to update the data on the graph. */
+        var withGraphType = _(newData).extend(this.getGraphType());
+
+        this.graph.update(withGraphType);
+    };
+
 
 
     /*
@@ -95,19 +166,19 @@ function ($, _, Graph, TemplateManager) {
         elements = [
             {
                 header: 'Axes',
-                content:  graphControlAxes(data.x, data.y)
+                content:  renderControlAxes(data.x, data.y)
             },
             {
                 header: 'Date/Time',
-                content:  graphControlDateTime()
+                content:  renderControlDateTime()
             },
             {
                 header: 'Apartments',
-                content:  graphControlApartments(data.apartments)
+                content:  renderControlApartments(data.apartments)
             },
             {
                 header: 'Graph Type',
-                content:  graphControlDisplayType()
+                content:  renderControlDisplayType()
             }
         ];
 
@@ -129,6 +200,7 @@ function ($, _, Graph, TemplateManager) {
         bindWeirdDateEvents(rendered);
         bindSelectAlls(rendered);
 
+
         return rendered;
 
     };
@@ -139,7 +211,7 @@ function ($, _, Graph, TemplateManager) {
      * Given a categories object, returns an HTML string that makes
      * <option>/<optgroup> elements out of it.
      */
-    graphCreateOptGroups = function (categories) {
+    renderOptGroups = function (categories) {
         return tman.render('graph-optgroup', {categories : categories });
     };
 
@@ -148,29 +220,29 @@ function ($, _, Graph, TemplateManager) {
      *
      * Needs data to make the axes optgroups.
      */
-    graphControlAxes = function (x, y) {
+    renderControlAxes = function (x, y) {
         return tman.render('graph-control-axes', {
             /* The content is just the two optgroups appended. */
-            xAxis: graphCreateOptGroups(x),
-            yAxis: graphCreateOptGroups(y)
+            xAxis: renderOptGroups(x),
+            yAxis: renderOptGroups(y)
         });
     };
 
     /** Creates the content for the date time controller thing. */
-    graphControlDateTime = function () {
+    renderControlDateTime = function () {
         /* This one takes no parameters... for now. */
         return tman.render('graph-control-datetime', {});
     };
 
     /** Creates the content for the appartment picker. */
-    graphControlApartments = function (apartments) {
+    renderControlApartments = function (apartments) {
         return tman.render('graph-control-apartments', {
             apartments: apartments
         });
     };
 
     /** Creates the content for the graph type picker. */
-    graphControlDisplayType = function () {
+    renderControlDisplayType = function () {
         return tman.render('graph-control-types', {});
     };
 
@@ -212,14 +284,39 @@ function ($, _, Graph, TemplateManager) {
 
         // TODO: Should find parent with checkboxes.
 
-
         selectToggler.click(function (event) {
             event.preventDefault();
         });
+
     };
 
 
+    /**
+     * Fetches the partial query for X and Y information from the
+     * '.graph-control-axes-{x,y}' elements contained within the given
+     * subelement.
+     */
+    fetchAxes = function (controlElement, values) {
+        var partialQuery =  {};
 
+        // The  "v" is for "variable variable"! 
+        _.each(['x', 'y'], function (v) {
+            var select = controlElement.find('graph-control-axes-' + v),
+                valueID,
+                valueTuple;
+
+            /* Assumes a single select. */
+            valueID = select.val();
+            valueTuple = values[valueID];
+
+            /* Set the values in the partial tuple. */
+            partialQuery[v + 'type'] = valueTuple.type;
+            partialQuery[v + 'values'] = valueTuple.values
+
+        });
+        
+        return partialQuery;
+    };
 
     /*
      * "Public static methods"

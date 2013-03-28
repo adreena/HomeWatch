@@ -7,7 +7,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use \UASmartHome\Auth\Firewall;
-Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MANAGER);
+//Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MANAGER);
 
 $twig = \UASmartHome\TwigSingleton::getInstance();
 

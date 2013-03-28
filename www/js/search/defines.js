@@ -91,8 +91,8 @@ define({
      * This is an example of what process.php currently spits out.
      */
     exampleProcessResponse: {
-        "x-axis": "Time",
-        "y-axis": "Water_Usage",
+        "xaxis": "time",
+        "yaxis": "Water_Usage",
         "values": {
             "1": {
                 "2012-03-01:0": {

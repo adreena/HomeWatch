@@ -39,8 +39,10 @@
   <li class="graph-group" id="<%= graphID %>">
     <ul class="graph-controls"><%= graphControls %></ul>
     <div class="graph-container">
-      <a href="#DEBUG"> Update </a>
-      <pre class="debug-results"></pre>
+      <div class="graph" />
+      <div class="graph-legend" />
+
+      <a href="#query">Query that sucka!</a>
     </div>
   </li>
 </script>
@@ -62,13 +64,13 @@
 <script id="_t-graph-control-axes" type="text/html">
   <div class="graph-control-axes">
     <label><span class="the-actual-gorram-label">X Axis</span>
-      <select data-gc name="xaxis">
+      <select class="graph-control-axes-y" name="xaxis">
         <%= xAxis %>
       </select>
     </label>
 
     <label><span class="the-actual-gorram-label">Y Axis</span>
-      <select data-gc name="yaxis">
+      <select class="graph-control-axes-y" name="yaxis">
         <%= yAxis %>
       </select>
     </label>

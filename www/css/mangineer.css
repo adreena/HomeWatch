@@ -88,14 +88,22 @@ body {
     padding: 8px 10px;
 }
 
+/* Might contain additional controls to the graph... */
 .graph-container {
     display: inline-block;
     position: absolute;
     top: 0;
     width: 720px;
     right: 0;
-    min-height: 320px;
 }
+
+/* Flot needs a height and a width to graph! */
+.graph {
+    margin: 8px 10px;
+    width: 700px;
+    min-height: 437px;
+}
+
 .graph-group {
     position: relative;
     margin: 10px 0;
