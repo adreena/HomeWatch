@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 
 use \UASmartHome\Database\Engineer;
+use \UASmartHome\Database\Configuration\ConfigurationDB;
 
 
 class EquationParser
@@ -72,6 +73,8 @@ class EquationParser
         $evaluator = new EvalMath();
         $db_vars = self::$DBVARS;
 
+        $function = EquationParser::replaceConstants($function);
+        
         $pieces = explode("$", $function);
 
         if(count($pieces) === 1) {
@@ -130,6 +133,19 @@ class EquationParser
     public static function getVariables()
     {
         return self::$DBVARS;
+    }
+    
+    private static function replaceConstants($string)
+    {
+        $constants = ConfigurationDB::fetchConstants(null); // TODO: Can these be cached?
+        
+        // Replace the name of each constant with its value provided it is not within a DVBVar (ex. $air$)
+        // TODO: Can this regex be compiled?
+        foreach ($constants as $constant) {
+            $string = preg_replace('/(^|[^$])'.$constant['name'].'([^$]|$)/', '${1}'.$constant['value'].'${2}', $string);
+        }
+        
+        return $string;
     }
     
 }
