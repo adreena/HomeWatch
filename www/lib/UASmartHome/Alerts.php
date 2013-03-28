@@ -69,7 +69,7 @@ class Alerts
         $rightpieces = explode("$", $right);
         $numleftpieces = count($leftpieces);
         $numrightpieces = count($rightpieces);
-        $db_vars = EquationParser::$DBVARS;
+        $db_vars = EquationParser::getVariables();
         $db_compare_vals = array();
 
         if($numleftpieces === 1 && $numrightpieces === 1) {
@@ -89,7 +89,10 @@ class Alerts
 
         if ($numleftpieces === 3) {
             // there is one variable on the left side
-            $db_compare_vals["left"] = $db_vars[$leftpieces[1]];
+            if(trim($leftpieces[0]) == "" && trim($leftpieces[2]) == "")
+                $db_compare_vals["left"] = $db_vars[$leftpieces[1]];
+            else
+                return false;
         }
         else {
             if(!is_numeric($left)) return false;
@@ -97,7 +100,10 @@ class Alerts
 
         if ($numrightpieces === 3) {
             // there is one variable on the right side
-            $db_compare_vals["right"] = $db_vars[$rightpieces[1]];
+            if(trim($rightpieces[0]) == "" && trim($rightpieces[2]) == "")
+                $db_compare_vals["right"] = $db_vars[$rightpieces[1]];
+            else
+                return false;
         }
         else {
             if(!is_numeric($right)) return false;
@@ -148,7 +154,7 @@ class Alerts
          * 3 => stuff after the operator
          */
         if(!preg_match("/(.*)(<|>|!=|==)(.*)/", $formula, $pieces)) {
-            echo "no comparison operator found in $pieces\n";
+            echo "no comparison operator found in $formula\n";
             return null;
         }
 
@@ -163,8 +169,6 @@ class Alerts
 
         $input = json_decode($input, true);
         $comparison = $input["alert"];
-        $finalAlerts = array();
-
 
         if(preg_match("/(.*)(AND|OR)(.*)/", $comparison, $bool_pieces)) {
             $leftbool = trim($bool_pieces[1]);
@@ -186,6 +190,7 @@ class Alerts
                 $leftcompare = Alerts::rearrangeComparison($useDBCacheLeft, $leftpieces);
                 $rightcompare = Alerts::rearrangeComparison($useDBCacheRight, $rightpieces);
 
+
                 if($leftcompare["left"] != $rightcompare["left"]) {
                     echo "different variables are not supported right now\n";
                     return null;
@@ -197,62 +202,57 @@ class Alerts
                 $value2 = $rightcompare["right"];
                 $sign2 = $rightcompare["operator"];
 
-
                 $username = Auth\User::getSessionUser()->getUsername();
 
                 // check if the view already exists under the name username_variable
                 if(!Engineer::db_check_Alert($username . "_" . $column)) {
-                    if(!Engineer::db_create_Alert($username,$column, $value1, $leftpieces[2], 2, $value2, $sign2, $bool_pieces[2]))
+                    if(!Engineer::db_create_Alert($username,$column, $value1, $sign1, 2, $value2, $sign2, $bool_pieces[2])) {
                         echo "could not create alert\n";
                         return null;
+                    }
                 }
+
                 $data = Engineer::db_query_Alert(
                            $input["apartment"], $column,
                            $input["startdate"], $input["enddate"], $username . "_" . $column . "_Alert");
 
                 return $data;
             }
+            else {
+                echo "syntax error in the alert\n";
+                return null;
+            }
         }
         else {
             $finalAlerts = array();
 
-            if(!preg_match("/(.*)(<|>|!=|==)(.*)/", $comparison, $pieces)) {
-                echo "no comparison operator found\n";
-                return null;
-            }
-
-            $pieces[1] = trim($pieces[1]);
-            $pieces[3] = trim($pieces[3]);
+            $pieces = Alerts::getPieces($comparison);
 
             $useDBCache = Alerts::checkUseDBCache($pieces[1], $pieces[3]);
+
             if(is_null($useDBCache))
                 return null;
 
             if($useDBCache) {
-                if(array_key_exists("left", $useDBCache)) {
-                    $left = $useDBCache["left"];
-                    $right = $pieces[3];
-                }
-                else {
-                    $left = $useDBCache["right"];
-                    $right = $pieces[1];
+                $compare = alerts::rearrangeComparison($useDBCache, $pieces);
 
-                    //reverse comparison operator because variable is on the right side
-                    if ($pieces[2] == ">")
-                        $pieces[2] = "<";
-                    else if ($pieces[2] == "<")
-                        $pieces[2] = ">";
-                }
+                $column = $compare["left"];
+                $value1 = $compare["right"];
+                $sign1 = $compare["operator"];
 
                 $username = Auth\User::getSessionUser()->getUsername();
 
                 // check if the view already exists under the name username_variable
-                if(!Engineer::db_check_Alert($username . "_" . $left)) {
-                    Engineer::db_create_Alert($username,$left, $right, $pieces[2], 1);
+                if(!Engineer::db_check_Alert($username . "_" . $column)) {
+                    if(!Engineer::db_create_Alert($username,$column, $value1, $sign1, 1)) {
+                        echo "could not create alert\n";
+                        return null;
+                    }
                 }
+
                 $data = Engineer::db_query_Alert(
-                           $input["apartment"], $left,
-                           $input["startdate"], $input["enddate"], $username . "_" . $left . "_Alert");
+                           $input["apartment"], $column,
+                           $input["startdate"], $input["enddate"], $username . "_" . $column . "_Alert");
 
                 return $data;
             }
@@ -315,7 +315,6 @@ class Alerts
 
             }
 
-
             return $finalAlerts;
 
         }
@@ -327,7 +326,7 @@ class Alerts
 /* test data for getDefaultAlerts
 $functionArray = array();
 $functionArray["startdate"] = "2012-02-29:0";
-$functionArray["enddate"] = "2012-03-02:0";
+$functionArray["enddate"] = "2012-03-02:23";
 $functionArray["apartment"] = 1;
 //$functionArray["alert"] = "\$air_co2$ > 1160";
 $functionArray["alerttype"] = "Temperature";
@@ -341,7 +340,7 @@ $functionArray = array();
 $functionArray["startdate"] = "2012-02-29:0";
 $functionArray["enddate"] = "2012-03-01:23";
 $functionArray["apartment"] = 1;
-$functionArray["alert"] = "\$heatflux_insul$ > 10";
+$functionArray["alert"] = "\$air_co2$ > 1250";
 //$functionArray["alert"] = "10 < \$heatflux_insul$ OR \$heatflux_insul$ < 7";
 //$functionArray["alert"] = "\$air_co2$ > \$air_temperature$*1000";
 $functionArray["alerttype"] = "CO2";
