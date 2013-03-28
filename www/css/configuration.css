@@ -31,19 +31,21 @@ div.config-display table th
 {
   border: 2px solid #CCCCCC;
   margin: 5px;
-  padding: 3px;
 }
 
 div.config-display table .name {
   width: 20%;
+  padding: 5px;
 }
 
 div.config-display table .value {
-  width: 50%;
+  width: 40%;
+  padding: 5px;
 }
 
 div.config-display table .description {
-  width: 30%;
+  width: 40%;
+  padding: 5px;
 }
 
 div.config-editor {
@@ -88,3 +90,8 @@ div.config-editor .id {
   display: none;
 }
 
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 20px;
+}
