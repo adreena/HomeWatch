@@ -6,4 +6,4 @@
 	url = git@github.com:flot/flot.git
 [submodule "www/js/flot-axislabels"]
 	path = www/js/flot-axislabels
-	url = git@github.com:xuanluo/flot-axislabels.git
+	url = git@github.com:markrcote/flot-axislabels.git
