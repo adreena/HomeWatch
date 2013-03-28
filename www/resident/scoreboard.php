@@ -2,6 +2,9 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use \UASmartHome\Auth\Firewall;
+Firewall::instance()->restrictAccess(Firewall::ROLE_RESIDENT, Firewall::ROLE_MANAGER);
+
 /* Setup Twig environment. */
 $twig = \UASmartHome\TwigSingleton::getInstance();
 

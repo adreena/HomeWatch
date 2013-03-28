@@ -2,6 +2,9 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use \UASmartHome\Auth\Firewall;
+Firewall::instance()->restrictAccess(Firewall::ROLE_MANAGER);
+
 $view = new \UASmartHome\ManagerView();
 
 if($_POST['formSubmit'] == "Submit New" || $_POST['formSubmit'] == "Submit Edit")

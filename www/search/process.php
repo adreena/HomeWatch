@@ -8,6 +8,11 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__. '/../lib/UASmartHome/EquationParser.php';
 require_once __DIR__. '/../lib/UASmartHome/Alerts.php';
+require_once __DIR__ . '/../lib/UASmartHome/Auth/Firewall.php';
+
+use \UASmartHome\Auth\Firewall;
+Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MANAGER);
+
 use \UASmartHome\Database\Engineer;
 use \UASmartHome\Database\Configuration\ConfigurationDB;
 
