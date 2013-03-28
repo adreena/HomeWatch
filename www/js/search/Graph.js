@@ -80,6 +80,9 @@ function ($, _, getInternetExplorerVersion) {
 	var element = graphState.element;
 	var granularity = graphState.granularity;
 
+	console.log("granularity is: " + granularity);
+	console.log("graphtypes is: " + graphType);
+
         // test for graphtypes
 	if(graphType === "plainText") {
 	    displayText(graphState, graphData);
@@ -207,7 +210,7 @@ function ($, _, getInternetExplorerVersion) {
 
                     tuple[0] = tick_size;
                     tuple[1] = value.y;
-		    console.log("y value is: " + value.y);
+		    console.log("y value is: " + tuple[1]);
                     sensor_data[apartment][sensor].push(tuple);
                 });
             });
