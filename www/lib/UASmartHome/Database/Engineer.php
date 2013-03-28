@@ -19,7 +19,7 @@ class Engineer {
 		$enddate = date_create_from_Format('Y-m-d:G', $enddate);
 
         if (!is_null($Phase))
-            $phasestring = " AND Phase = " . $Phase;
+            $phasestring = " AND Phase = :phase";
 	
 			if ($period == "Hourly") {
                 $table .= '_Hourly';
@@ -30,6 +30,8 @@ class Engineer {
                 $Query->bindValue(":Apt_Num",$apt);
                 $Query->bindValue(":startdate",$startdate->format('Y-m-d'));
                 $Query->bindValue(":enddate",$enddate->format('Y-m-d'));
+		if (!is_null($Phase))
+			$Query->bindValue(":phase",$Phase);
                 $Query->execute();
 
                 while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
