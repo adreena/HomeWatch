@@ -57,11 +57,12 @@ function ($, _, getInternetExplorerVersion) {
 	    graphType: initialData.graphType,
      	    element: element,
 	    granularity: initialData.granularity,
-	    xtype: initialData["x-axis"],
-	    ytype: initialData["y-axis"],
+	    xtype: initialData.xaxis,
+	    ytype: initialData.yaxis,
 	    startdate: null,
 	    enddate: null,
-	    sensors: null
+	    min_x: null,
+	    max_x: null
 	};
 
         //this.clickCallback = _clickCallback;
@@ -113,7 +114,7 @@ function ($, _, getInternetExplorerVersion) {
 		display_text += "<h4>" + "Date: " + key + "</h4>";					
 		 			
 		$.each(value, function(key, value) {
-		    if(xtype === "Time") {
+		    if(xtype === "time") {
 			display_text += "Sensor " + key + ": " + value.y + "<br />";			
 		    } else {			
 			display_text += "Sensor " + key + " against " + xtype + ": " + value.y + " against " + value.x + "<br />";"<br />";
@@ -138,6 +139,7 @@ function ($, _, getInternetExplorerVersion) {
 	var graphname_flag = "false";
 	var min_x, max_x;
 	var apartment, sensor, timestamp;
+	var startdate, enddate;
 	
         $.each(graphData, function (key, value) {
             apartment = key;
@@ -157,7 +159,7 @@ function ($, _, getInternetExplorerVersion) {
                     // key = sensor names
                     sensor = key;
 
-                    if (graphname_flag === "false" && sensor !== "Time") {
+                    if (graphname_flag === "false" && sensor !== "time") {
 			graphname.push(sensor);			  
                     }
 
@@ -171,18 +173,18 @@ function ($, _, getInternetExplorerVersion) {
                         tuple.length = 0;
                     }
 
-                    if(graphState.xtype === "Time") {
+                    if(graphState.xtype === "time") {
 		    	if(min_x === undefined) {
 			    min_x = time_stamp;
 			    max_x = min_x;
 		        }
 				
-		        if(time_stamp >= max_x) {
-                            if(graphState.granularity === "Hourly") {
-		                max_x = min_x + get_millisecond_interval("day");
-		            } else {
+		        if(time_stamp > max_x) {
+                            //if(graphState.granularity === "Hourly") {
+		                //max_x = min_x + get_millisecond_interval("day");
+		            //} else {
 			        max_x = time_stamp;
-			    }
+			    //}
 		        }
 
                         var tick_size = time_stamp;
@@ -216,11 +218,11 @@ function ($, _, getInternetExplorerVersion) {
             });
         });
 
-	graphState.startdate = min_x;
-	graphState.enddate = max_x;
+	graphState.min_x = min_x;
+	graphState.max_x = max_x;
 
 	console.log("start date is: " + graphState.startdate);
-
+	console.log("end date is: " + graphState.enddate);
         for(var i = 0; i < apartments.length; ++i) {
 	    for(var j = 0; j < graphname.length; ++j) {
 		var label = "Apartment " + apartments[i] + " " + graphname[j];
@@ -260,8 +262,8 @@ function ($, _, getInternetExplorerVersion) {
     var get_x_axis = function (graphState) {
 	var granularity = graphState.granularity;
 	var xtype = graphState.xtype;
-	var min_x = graphState.startdate;
-	var max_x = graphState.enddate;
+	var min_x = graphState.min_x;
+	var max_x = graphState.max_x;
 	var min_date = new Date(min_x);
 	var max_date = new Date(max_x);
 
@@ -279,16 +281,17 @@ function ($, _, getInternetExplorerVersion) {
 	base_x.xaxis["min"] = min_x;
 console.log("start date is : " + base_x.xaxis["min"]);
 
-	if(xtype === "Time") {
+	if(xtype === "time") {
 	    base_x.xaxis["mode"] = "time";
 
             if(granularity === "Hourly") {
-		base_x.xaxis["max"] = max_x;
+		base_x.xaxis["max"] = min_x + get_millisecond_interval("day");
 	        base_x.xaxis["tickSize"] = [1, "hour"];
 	        var label = get_month_and_day(min_date);
 	        base_x.xaxis["axisLabel"] = label;
             } else if(granularity === "Daily") {
 		base_x.xaxis["max"] = min_x + get_millisecond_interval("week");
+		console.log("max is : " + base_x.xaxis["max"]);
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];	
@@ -317,11 +320,6 @@ console.log("start date is : " + base_x.xaxis["min"]);
 	    var pan_range = max_x * 1.5;
 	    base_x.xaxis["panRange"] = [-100, pan_range];
 	}
-
-        // we can now change start/end dates back to strings needed later for drill down
-	graphState.startdate = min_date.getUTCFullYear() + '-' + add_leading_zero(min_date.getUTCMonth() + 1) + '-' + add_leading_zero(min_date.getUTCDate());
-
-        graphState.enddate = max_date.getUTCFullYear() + '-' + add_leading_zero(min_date.getUTCMonth() + 1) + '-' + add_leading_zero(min_date.getUTCDate());
 
 	return base_x;	    
     };
