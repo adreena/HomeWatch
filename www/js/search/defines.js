@@ -90,7 +90,7 @@ define({
     /**
      * This is an example of what process.php currently spits out.
      */
-    /*exampleProcessResponse: {
+    exampleProcessResponse: {
         "xaxis": "time",
         "yaxis": "Water_Usage",
         "values": {
@@ -104,6 +104,46 @@ define({
                         "y": "65",
                         "x": "2012-03-01:0"
                     }
+                },
+		"2012-03-01:1": {
+                    "Total_Water": {
+                        "y": "120",
+                        "x": "2012-03-01:1"
+                    },
+                    "Hot_Water": {
+                        "y": "60",
+                        "x": "2012-03-01:1"
+                    }
+                },
+		"2012-03-01:2": {
+                    "Total_Water": {
+                        "y": "129",
+                        "x": "2012-03-01:2"
+                    },
+                    "Hot_Water": {
+                        "y": "70",
+                        "x": "2012-03-01:2"
+                    }
+                },
+		"2012-03-01:3": {
+                    "Total_Water": {
+                        "y": "100",
+                        "x": "2012-03-01:3"
+                    },
+                    "Hot_Water": {
+                        "y": "55",
+                        "x": "2012-03-01:3"
+                    }
+                },
+		"2012-03-01:4": {
+                    "Total_Water": {
+                        "y": "115",
+                        "x": "2012-03-01:4"
+                    },
+                    "Hot_Water": {
+                        "y": "72",
+                        "x": "2012-03-01:4"
+                    }
                 }
             },
             "2": {
@@ -116,14 +156,52 @@ define({
                         "y": "9",
                         "x": "2012-03-01:0"
                     }
+                },
+		"2012-03-01:1": {
+                    "Total_Water": {
+                        "y": "25",
+                        "x": "2012-03-01:1"
+                    },
+                    "Hot_Water": {
+                        "y": "59",
+                        "x": "2012-03-01:1"
+                    }
+                },
+		"2012-03-01:2": {
+                    "Total_Water": {
+                        "y": "110",
+                        "x": "2012-03-01:2"
+                    },
+                    "Hot_Water": {
+                        "y": "70",
+                        "x": "2012-03-01:2"
+                    }
+                },
+		"2012-03-01:3": {
+                    "Total_Water": {
+                        "y": "105",
+                        "x": "2012-03-01:3"
+                    },
+                    "Hot_Water": {
+                        "y": "50",
+                        "x": "2012-03-01:3"
+                    }
+                },
+		"2012-03-01:4": {
+                    "Total_Water": {
+                        "y": "99",
+                        "x": "2012-03-01:4"
+                    },
+                    "Hot_Water": {
+                        "y": "86",
+                        "x": "2012-03-01:4"
+                    }
                 }
             }
         },
         "granularity": "Daily",
         "messages": ["No graph data received\n"]
-    },*/
-
-    exampleProcessResponse: {"xaxis":"time","yaxis":"Total_Water","values":{"1":{"2012-02-29:0":{"Total_Water":{"y":"100","x":"2012-02-29:0"}},"2012-02-29:1":{"Total_Water":{"y":"105","x":"2012-02-29:1"}},"2012-02-29:2":{"Total_Water":{"y":"101","x":"2012-02-29:2"}},"2012-02-29:3":{"Total_Water":{"y":"99","x":"2012-02-29:3"}},"2012-02-29:4":{"Total_Water":{"y":"100","x":"2012-02-29:4"}},"2012-02-29:5":{"Total_Water":{"y":"95","x":"2012-02-29:5"}},"2012-02-29:6":{"Total_Water":{"y":"110","x":"2012-02-29:6"}},"2012-02-29:7":{"Total_Water":{"y":"115","x":"2012-02-29:7"}},"2012-02-29:8":{"Total_Water":{"y":"112","x":"2012-02-29:8"}},"2012-02-29:9":{"Total_Water":{"y":"120","x":"2012-02-29:9"}},"2012-02-29:10":{"Total_Water":{"y":"118","x":"2012-02-29:10"}}}}, "granularity":"Hourly", "messages": ["No graph data received\n"]},
+    },
 
     /*
      * This one is kind of hacky. Turns the category display name into the type
