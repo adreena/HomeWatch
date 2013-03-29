@@ -53,8 +53,8 @@ function ($, _, D, GraphControl) {
         this.graphs[id].destroy();
     };
 
-    /** Handle a request to the controller. */
-    GraphManager.prototype.makeRequest = function (control, newData) {
+    /** Makes a request an AJAX request immediately. */
+    GraphManager.prototype._makeImmediateRequest = function (control, newData) {
         $.ajax({
             url: D.uri.process,
             type: 'GET',
@@ -65,8 +65,16 @@ function ($, _, D, GraphControl) {
                 console.log("Error fetching info from process.");
            }
         });
-
     };
+
+    /**
+     * Makes an AJAX request, but no more than once every
+     * MinRequestDelay miliseconds. 
+     */
+    GraphManager.prototype.makeRequest = _.debounce(
+        GraphManager.prototype._makeImmediateRequest,
+        D.MinRequestDelay
+    );
 
     /**
      * Takes that category array and converts it into things

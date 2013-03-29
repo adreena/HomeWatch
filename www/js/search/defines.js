@@ -13,6 +13,12 @@ define({
     sel: {
         graphList: 'ul#graphs'
      },
+
+    /**
+     * This is the minimum period between requests to process.
+     * An HTTP request is not made within this period.
+     */
+    MinRequestDelay: 750,
     
     /*
      * This is an example of how the sensors will look. It's in simple

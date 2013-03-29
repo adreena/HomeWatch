@@ -128,7 +128,6 @@ function ($, _, Graph, TemplateManager) {
         controls.find('input, select').change(function () {
             var updatedData = self.getQuery();
 
-            console.log("Makin' dat request.");
             self.makeRequest(updatedData);
 
         });
