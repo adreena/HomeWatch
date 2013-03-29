@@ -80,6 +80,8 @@ function ($, _, getInternetExplorerVersion) {
                 ytype: initialData.yaxis,
             });
 
+	console.log("graphtype is " + this.graphState.granularity);
+
             this.update(initialData.values);
 
         }
