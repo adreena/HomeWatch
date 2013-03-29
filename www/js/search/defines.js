@@ -96,7 +96,7 @@ define({
     /**
      * This is an example of what process.php currently spits out.
      */
-    exampleProcessResponse: {
+    /*exampleProcessResponse: {
         "xaxis": "time",
         "yaxis": "Water_Usage",
         "values": {
@@ -586,6 +586,159 @@ define({
             }
         },
         "granularity": "Hourly",
+        "messages": ["No graph data received\n"]
+    },*/
+
+exampleProcessResponse: {
+        "xaxis": "CO2",
+        "yaxis": "Total_Water",
+        "values": {
+            "1": {
+                "2012-03-01:0": {
+                    "Total_Water": {
+                        "y": "124",
+                        "x": "900"
+                    },
+                    "Hot_Water": {
+                        "y": "65",
+                        "x": "900"
+                    }
+                },
+		"2012-03-02:0": {
+                    "Total_Water": {
+                        "y": "120",
+                        "x": "905.5"
+                    },
+                    "Hot_Water": {
+                        "y": "60",
+                        "x": "905.5"
+                    }
+                },
+		"2012-03-03:0": {
+                    "Total_Water": {
+                        "y": "129",
+                        "x": "910"
+                    },
+                    "Hot_Water": {
+                        "y": "70",
+                        "x": "910"
+                    }
+                },
+		"2012-03-04:0": {
+                    "Total_Water": {
+                        "y": "100",
+                        "x": "902.6"
+                    },
+                    "Hot_Water": {
+                        "y": "55",
+                        "x": "902.6"
+                    }
+                },
+		"2012-03-05:0": {
+                    "Total_Water": {
+                        "y": "115",
+                        "x": "918"
+                    },
+                    "Hot_Water": {
+                        "y": "72",
+                        "x": "918"
+                    }
+                },
+		"2012-03-06:0": {
+                    "Total_Water": {
+                        "y": "96",
+                        "x": "895.3"
+                    },
+                    "Hot_Water": {
+                        "y": "60",
+                        "x": "895.3"
+                    }
+                },
+		"2012-03-07:0": {
+                    "Total_Water": {
+                        "y": "115",
+                        "x": "892"
+                    },
+                    "Hot_Water": {
+                        "y": "45",
+                        "x": "892"
+                    }
+                }
+	    },
+            "2": {
+                "2012-03-01:0": {
+                    "Total_Water": {
+                        "y": "120",
+                        "x": "900"
+                    },
+                    "Hot_Water": {
+                        "y": "65",
+                        "x": "900"
+                    }
+                },
+		"2012-03-02:0": {
+                    "Total_Water": {
+                        "y": "108",
+                        "x": "905.5"
+                    },
+                    "Hot_Water": {
+                        "y": "77",
+                        "x": "905.5"
+                    }
+                },
+		"2012-03-03:0": {
+                    "Total_Water": {
+                        "y": "145",
+                        "x": "910"
+                    },
+                    "Hot_Water": {
+                        "y": "70",
+                        "x": "910"
+                    }
+                },
+		"2012-03-04:0": {
+                    "Total_Water": {
+                        "y": "85",
+                        "x": "902.6"
+                    },
+                    "Hot_Water": {
+                        "y": "40",
+                        "x": "902.6"
+                    }
+                },
+		"2012-03-05:0": {
+                    "Total_Water": {
+                        "y": "125",
+                        "x": "918"
+                    },
+                    "Hot_Water": {
+                        "y": "70",
+                        "x": "918"
+                    }
+                },
+		"2012-03-06:0": {
+                    "Total_Water": {
+                        "y": "100",
+                        "x": "895.3"
+                    },
+                    "Hot_Water": {
+                        "y": "54",
+                        "x": "895.3"
+                    }
+                },
+		"2012-03-07:0": {
+                    "Total_Water": {
+                        "y": "110",
+                        "x": "892"
+                    },
+                    "Hot_Water": {
+                        "y": "49",
+                        "x": "892"
+                    }
+                }
+            }
+        },
+        "granularity": "Daily",
         "messages": ["No graph data received\n"]
     },
 
