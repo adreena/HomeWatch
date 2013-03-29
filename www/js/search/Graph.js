@@ -272,7 +272,10 @@ function ($, _, getInternetExplorerVersion) {
 	var y_axis = get_y_axis(graphState);
 	var grid = get_grid();
 	var series_opts = get_series_options(graphState);
-	console.log("points opt is " + series_opts.series.points.show);
+
+	if(graphState.graphType === "line") {
+	    console.log("points opt is " + series_opts.series.points.show);
+	}
 	var legend = get_legend();
 
 	if(graphState.granularity === "Hourly" && graphState.xtype !== "time") {
@@ -282,6 +285,13 @@ function ($, _, getInternetExplorerVersion) {
 	}
 
 	var options = $.extend({}, x_axis, y_axis, grid, series_opts, legend, zoom);
+	if(graphState.graphType === "line") {
+	    if(series_opts.series.points.show !== undefined) {
+	        console.log("points opt is " + series_opts.series.points.show);
+	    } else {
+	        console.log("points is undefined");
+	    }
+	}
 	//console.log("points opt is " + options.series.points.show);
 	return options;
     };
