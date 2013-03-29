@@ -389,12 +389,11 @@ console.log("start date is : " + base_x.xaxis["min"]);
 	return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};
     };
 
-    var get_series_options = function (graphState) {
+    var get_series_options = function (graphState, order) {
 	var graphType = graphState.graphType;
 
 	var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true}}};
-	var bars = {series: {bars: { show: true, barWidth: 1000*60*60*0.25, fill: true, lineWidth: 1, clickable: true,
-    			hoverable: true, order: order}}};
+	var bars = {series: {bars: { show: true, barWidth: 1000*60*60*0.25, fill: true, lineWidth: 1, clickable: true, hoverable: true, order: order}}};
 	var pie =  {series: {pie: {show: true, radius: 1}}};
 
 	if(graphType === "line") {
