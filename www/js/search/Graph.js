@@ -59,7 +59,7 @@ function ($, _, getInternetExplorerVersion) {
 	    enddate: null,
 	    min_x: null,
 	    max_x: null,
-            graphType: "bar",
+            graphType: "line",
             granularity: "Hourly",
             xtype: "time",
             ytype: null,
@@ -272,7 +272,7 @@ function ($, _, getInternetExplorerVersion) {
 	var series_opts = get_series_options(graphState);
 	var legend = get_legend();
 
-	if(graphState.granularity === "Hourly") {
+	if(graphState.granularity === "Hourly" && graphState.xtype !== "time") {
 	    var zoom = get_zoom_options();
 	} else {
 	    var zoom = {};
