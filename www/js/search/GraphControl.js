@@ -40,10 +40,11 @@ function ($, _, Graph, TemplateManager) {
         element = $(makeGraphGroup(id, data));
 
         /** The GraphManager. */
+        this.id = id;
         this.manager = graphManager;
         this.data = data;
 
-        /** The following are shortcuts to jQuery of elements. */
+        /** The following are shortcuts to jQuery elements. */
         this.el = {};
         this.element = element;
         /** The control panel. */
@@ -56,9 +57,8 @@ function ($, _, Graph, TemplateManager) {
         this.graph = new Graph(this.el.graph, function (newRequest) {
             self.onGranularityChange(newRequest);
         });
-        this.graph = undefined;
 
-        this.id = id;
+        this._bindOnChange();
 
     }
 
@@ -121,6 +121,18 @@ function ($, _, Graph, TemplateManager) {
         this.makeRequest(fullRequest);
     };
 
+    /** Binds the update handlers. */
+    GraphControl.prototype._bindOnChange = function () {
+        var controls = this.el.controls, self = this;
+
+        controls.find('input, select').change(function () {
+            var updatedData = self.getQuery();
+
+            console.log("Makin' dat request.");
+            self.makeRequest(updatedData);
+
+        });
+    };
 
     /** Politely asks the manager to fetch new data for us. */
     GraphControl.prototype.makeRequest = function (newData) {

@@ -497,7 +497,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 		    date_to = get_date_to(data_pointUTC, drill_granularity);
 		}
 
-                /* Tell whatever hnadler we've got that there's new data. */
+                /* Tell whatever handler we've got that there's new data. */
                 handleChangedData({
                     startdate: date_from,
                     enddate: date_to,

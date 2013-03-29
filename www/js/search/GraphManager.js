@@ -53,6 +53,21 @@ function ($, _, D, GraphControl) {
         this.graphs[id].destroy();
     };
 
+    /** Handle a request to the controller. */
+    GraphManager.prototype.makeRequest = function (control, newData) {
+        $.ajax({
+            url: D.uri.process,
+            type: 'GET',
+            success: function (newData) {
+                control.onNewData(newData);
+            },
+            error: function () {
+                console.log("Error fetching info from process.");
+           }
+        });
+
+    };
+
     /**
      * Takes that category array and converts it into things
      * that can be converted into optgroups for x and y.
