@@ -59,7 +59,7 @@ function ($, _, getInternetExplorerVersion) {
 	    enddate: null,
 	    min_x: null,
 	    max_x: null,
-            graphType: "line",
+            graphType: "bar",
             granularity: "Hourly",
             xtype: "time",
             ytype: null,
