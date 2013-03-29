@@ -327,7 +327,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 		base_x.xaxis["max"] = startdate + get_millisecond_interval("day");
 	        base_x.xaxis["tickSize"] = [2, "hour"];
 	        var label = get_month_and_day(min_date);
-	        //base_x.xaxis["axisLabel"] = label;
+	        base_x.xaxis["axisLabel"] = label;
             } else if(granularity === "Daily") {
 		base_x.xaxis["max"] = startdate + get_millisecond_interval("week");
 		console.log("max is : " + base_x.xaxis["max"]);
@@ -375,7 +375,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
                 }
             };
 
-        //base_y.yaxis["axisLabel"] = graphState.ytype;
+        base_y.yaxis["axisLabel"] = graphState.ytype;
 
 	if(graphState.granularity === "Hourly") {
 	    base_y.yaxis["zoomRange"] = [0.1, 3600000];
