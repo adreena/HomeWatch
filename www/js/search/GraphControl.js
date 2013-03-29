@@ -53,9 +53,9 @@ function ($, _, Graph, TemplateManager) {
 
         /* This should actually put a placeholder there until the
          * data is valid. */
-        //this.graph = new Graph(this.el.graph, function (newRequest) {
-        //    self.onGranularityChange(newRequest);
-        //});
+        this.graph = new Graph(this.el.graph, function (newRequest) {
+            self.onGranularityChange(newRequest);
+        });
         this.graph = undefined;
 
         this.id = id;
