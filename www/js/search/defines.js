@@ -205,7 +205,7 @@ define({
                 }
             }
         },
-        "granularity": "Daily",
+        "granularity": "Hourly",
         "messages": ["No graph data received\n"]
     },
 
