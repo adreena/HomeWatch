@@ -5,7 +5,7 @@
  */
 
 requirejs.config({
-    
+
     /* Have to explicitly specify dependencies of flot and its plugins. */
     shim: {
         'flot': { deps: ['jquery'] },
@@ -51,32 +51,53 @@ function ($, _, getInternetExplorerVersion) {
     function Graph(element, _clickCallback, initialData) {
 
 	// object to keep graph state for a particular instance
-	this.graphState = 
+	this.graphState =
 	{
 	    callback: _clickCallback,
-	    graphType: initialData.graphType,
      	    element: element,
-	    granularity: initialData.granularity,
-	    xtype: initialData.xaxis,
-	    ytype: initialData.yaxis,
 	    startdate: null,
 	    enddate: null,
 	    min_x: null,
 	    max_x: null
+            graphType: "bar",
+            granularity: "Hourly",
+            xtype: "time",
+            ytype: null,
 	};
 
         //this.clickCallback = _clickCallback;
         //this.element = element;
         //this.graphType = initialData.graphType;
 
-        // Initial update of the graph.
-        this.update(initialData.values);
+        // Initial update of the graph, only if the intial data exists.
+        if (initialData !== undefined) {
+
+            // Add all of these to the graphState object
+            $.extend(this.graphState, {
+                graphType: initialData.graphType,
+                granularity: initialData.granularity,
+                xtype: initialData.xaxis,
+                ytype: initialData.yaxis,
+            });
+
+            this.update(initialData.values);
+
+        }
     }
 
     /** Update method. Provide new data to update the graph. */
     Graph.prototype.update = function (graphData) {
         // Actually graphs the data!
+
+        // Note that graphData contains the plotable data
+        // AND the graphType!
+
 	var graphState = this.graphState;
+        // Merge the new parameters to the current graph state.
+        //$.extend(graphState, graphData);
+        // Should manually merge things from the graphData object.
+
+
 	var graphType = graphState.graphType;
 	var element = graphState.element;
 	var granularity = graphState.granularity;
@@ -99,24 +120,24 @@ function ($, _, getInternetExplorerVersion) {
 	    }
 
 	    bind_plothover(element);
-        }        
+        }
     };
 
     var displayText = function (graphState, graphData) {
         var display_text = "";
 	var xtype = graphState.xtype;
 	var element = graphState.element;
-		
+
 	$.each(graphData, function(key, value) {
             display_text += "<h2><i>Apartment " + key + ": </i></h2>";
-	    		
-	    $.each(value, function(key, value) {	
-		display_text += "<h4>" + "Date: " + key + "</h4>";					
-		 			
+
+	    $.each(value, function(key, value) {
+		display_text += "<h4>" + "Date: " + key + "</h4>";
+
 		$.each(value, function(key, value) {
 		    if(xtype === "time") {
-			display_text += "Sensor " + key + ": " + value.y + "<br />";			
-		    } else {			
+			display_text += "Sensor " + key + ": " + value.y + "<br />";
+		    } else {
 			display_text += "Sensor " + key + " against " + xtype + ": " + value.y + " against " + value.x + "<br />";"<br />";
 		    }
              	});
@@ -127,7 +148,7 @@ function ($, _, getInternetExplorerVersion) {
     };
 
     /*
-    * Parses the data retrieved from the server, into something 
+    * Parses the data retrieved from the server, into something
     * usable by Flot.
     */
     var format_data = function (graphState, graphData) {
@@ -140,7 +161,7 @@ function ($, _, getInternetExplorerVersion) {
 	var min_x, max_x;
 	var apartment, sensor, timestamp;
 	var startdate, enddate;
-	
+
         $.each(graphData, function (key, value) {
             apartment = key;
             apartments.push(apartment);
@@ -148,7 +169,7 @@ function ($, _, getInternetExplorerVersion) {
             sensor_data[apartment] = [];
 
             $.each(value, function (key, value) {
-		// key = date stamp                   
+		// key = date stamp
 		time_stamp = DateToUTC(key);
 
 		if(startdate === undefined) {
@@ -169,7 +190,7 @@ function ($, _, getInternetExplorerVersion) {
                     sensor = key;
 
                     if (graphname_flag === "false" && sensor !== "time") {
-			graphname.push(sensor);			  
+			graphname.push(sensor);
                     }
 
                     if (sensor_data[apartment][sensor] === undefined) {
@@ -207,7 +228,7 @@ function ($, _, getInternetExplorerVersion) {
                                 sensor: sensor
                             });
 			}
-		    }                              
+		    }
 
 		    console.log("y value is: " + tuple[1]);
                     sensor_data[apartment][sensor].push(tuple);
@@ -227,7 +248,7 @@ function ($, _, getInternetExplorerVersion) {
 		series_length = series_data.length;
 		if(series_length === 0) {
 		    series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
-			
+
 		} else {
 		    series_data[series_length] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
 		}
@@ -248,7 +269,7 @@ function ($, _, getInternetExplorerVersion) {
 	var legend = get_legend();
 
 	if(graphState.granularity === "Hourly") {
-	    var zoom = get_zoom_options();	
+	    var zoom = get_zoom_options();
 	} else {
 	    var zoom = {};
 	}
@@ -266,14 +287,14 @@ function ($, _, getInternetExplorerVersion) {
 	var max_date = new Date(max_x);
 
         var base_x = {
-	    xaxis: 	
-		{ 
-		  axisLabelUseCanvas: true, 
+	    xaxis:
+		{
+		  axisLabelUseCanvas: true,
 		  axisLabelFontSizePixels: 12,
-                  axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif', 
+                  axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
 		  axisLabelPadding: 5,
 		  autoscaleMargin: .50
-		}		 
+		}
 	};
 
 	base_x.xaxis["min"] = min_x;
@@ -292,8 +313,8 @@ console.log("start date is : " + base_x.xaxis["min"]);
 		console.log("max is : " + base_x.xaxis["max"]);
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
-		base_x.xaxis["dayNames"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];	
-		base_x.xaxis["axisLabel"] = get_month_and_day(min_date) + " - " + get_month_and_day(max_date); 
+		base_x.xaxis["dayNames"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+		base_x.xaxis["axisLabel"] = get_month_and_day(min_date) + " - " + get_month_and_day(max_date);
             } else if (granularity === "Weekly") {
 		base_x.xaxis["tickSize"] = [1, "week"];
 		base_x.xaxis["weekNames"] = ["1", "2", "3", "4", "5"];
@@ -301,7 +322,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 		base_x.xaxis["timeformat"] = "%b";
 		base_x.xaxis["tickSize"] = [1, "month"];
 		base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-		var label = min_date.getUTCFullYear(); 
+		var label = min_date.getUTCFullYear();
 		base_x.xaxis["axisLabel"] = 'Year: ' + label;
 		var year_end = label + "-12-31:0";
 		base_x.xaxis["max"] = DateToUTC(year_end);
@@ -319,12 +340,12 @@ console.log("start date is : " + base_x.xaxis["min"]);
 	    base_x.xaxis["panRange"] = [-100, pan_range];
 	}
 
-	return base_x;	    
+	return base_x;
     };
 
     var get_y_axis = function (graphState) {
         var base_y = {
-            yaxis: 
+            yaxis:
 		{
                   axisLabelUseCanvas: true,
                   axisLabelFontSizePixels: 12,
@@ -344,7 +365,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
     };
 
     var get_grid = function () {
-	return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};     
+	return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};
     };
 
     var get_series_options = function (graphState, order) {
@@ -366,7 +387,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 
     var get_legend = function () {
         return {
-	    legend: 
+	    legend:
 		{
     		  show: true,
 		  labelBoxBorderColor: "rgb(51, 204, 204)",
@@ -379,12 +400,12 @@ console.log("start date is : " + base_x.xaxis["min"]);
 
     var get_zoom_options = function () {
         return {
-            zoom: 
+            zoom:
 		{
                 interactive: true
             	},
 
-            pan: 
+            pan:
 		{
                 interactive: true
             	}
@@ -418,22 +439,22 @@ console.log("start date is : " + base_x.xaxis["min"]);
         $(element).bind("plothover", function (event, pos, item) {
             $("#x").text(pos.x.toFixed(2));
             $("#y").text(pos.y.toFixed(2));
-       
+
             if (item) {
                 if (previousPoint != item.dataIndex) {
                     previousPoint = item.dataIndex;
-                    
+
                     $("#tooltip").remove();
                         var x = new Date(item.datapoint[0]);
 			x = get_month_and_day(x);
                         y = item.datapoint[1].toFixed(2);
-                    
+
                         show_tool_tip(item.pageX, item.pageY,
                                 item.series.label + " on " + x + " is " + y);
                 }
             } else {
                 $("#tooltip").remove();
-                previousPoint = null;            
+                previousPoint = null;
             }
         });
     };
@@ -443,13 +464,14 @@ console.log("start date is : " + base_x.xaxis["min"]);
 	var date_from;
 	var date_to;
 	var granularity = this.graphState.granularity;
+        var handleChangedData = this.graphState.callback;
 
     	$(this.graphState.element).bind("plotclick", function (event, pos, item) {
-            if (item) {	
+            if (item) {
 		console.log("granularity is : " + granularity);
-		console.log("you clicked!");	
+		console.log("you clicked!");
 	        var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
-	        var data_pointUTC = item.datapoint[0] + offset;		
+	        var data_pointUTC = item.datapoint[0] + offset;
 	        var date = new Date(data_pointUTC);
 	        date_from = format_date(date, "true");
 
@@ -461,11 +483,18 @@ console.log("start date is : " + base_x.xaxis["min"]);
 		   date_to = date_from;
 		} else if (granularity === "Weekly") {
 		    drill_granularity = "Daily";
-		    date_to = get_date_to(data_pointUTC, drill_granularity);		
+		    date_to = get_date_to(data_pointUTC, drill_granularity);
 		} else if(granularity === "Monthly") {
 		    drill_granularity = "Weekly";
 		    date_to = get_date_to(data_pointUTC, drill_granularity);
 		}
+
+                /* Tell whatever hnadler we've got that there's new data. */
+                handleChangedData({
+                    startdate: date_from,
+                    enddate: date_to,
+                    period: drill_granularity
+                });
        	    } // if statement
 	}); // end plotclick
     };
@@ -501,8 +530,6 @@ console.log("start date is : " + base_x.xaxis["min"]);
 
         return UTCTime;
     };
-
-    window.dc = DateToUTC;
 
     var get_days_in_month = function (month, year) {
         month = parseInt(month);
