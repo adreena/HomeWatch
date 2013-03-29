@@ -217,6 +217,21 @@ For this first pass, I have followed the Volere template for requirement analysi
     <td>As the building manager, I want to compare the cost of a particular utility over a given time period for unit X and unit Y.</td>
     <td>High</td>
   </tr>
+  <tr>
+    <td>2.6</td>
+    <td>As the building manager, I want to be able to register new residents and engineers to the service.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>2.7</td>
+    <td>As the building manager, I want to be able to specify what I am paying for a certain utility at a certain time.</td>
+    <td>High</td>
+  </tr>
+  <tr>
+    <td>2.8</td>
+    <td>As the building manager, I want to be able to see a general overview of the status of residents.</td>
+    <td>Low</td>
+  </tr>
 </table>
 
 <a name='us-engineer'/>
@@ -323,6 +338,41 @@ For this first pass, I have followed the Volere template for requirement analysi
     <td>As an Engineer, I want to visualize the total hot water usage (gallons) of a set of apartment groups over a given time range and granularity.</td>
     <td>Medium</td>
   </tr>
+  <tr>
+    <td>3.21</td>
+    <td>As an Engineer, I want to view the values at any specific point on the graph by hovering over that point.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.22</td>
+    <td>As an Engineer, I want to be able to drill down into more specific time slices when viewing a graph.</td>
+    <td>High</td>
+  </tr>
+  <tr>
+    <td>3.23</td>
+    <td>As an Engineer, I want to be able to drill up into less specific time slices when viewing a graph.</td>
+    <td>High</td>
+  </tr>
+  <tr>
+    <td>3.24</td>
+    <td>As an Engineer, I want to be able to specify my own forumai to graph.</td>
+    <td>High</td>
+  </tr>
+  <tr>
+    <td>3.25</td>
+    <td>As an Engineer, I want to be able to graph forumai defined by other engineers.</td>
+    <td>Medium</td>
+  </tr>
+  <tr>
+    <td>3.26</td>
+    <td>As an Engineer, I want to be able to name the formula I have defined.</td>
+    <td>Low</td>
+  </tr>
+  <tr>
+    <td>3.27</td>
+    <td>As an Engineer, I want to be able to view certain data trends as a floorplan visualization.</td>
+    <td>Medium</td>
+  </tr>
 </table>
 
 <a name='uc-resident'/>
@@ -356,7 +406,7 @@ For this first pass, I have followed the Volere template for requirement analysi
   </tr>
   <tr>
     <td>4.6</td>
-    <td>As a resident, I want to be able to view and specify my current average occupancy.</td>
+    <td>As a resident, I want to be able to view and specify my current occupancy status.</td>
     <td>Low</td>
   </tr>
 </table>
@@ -549,6 +599,61 @@ Exceptions:     8a. Same as for 2.1(7a)
                 9a. Same as for 2.1(8a)
 </pre>
 
+<pre>
+ID:              2.4
+Description:     Building manager registers new user
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  A new user is uploaded to the database for loging in
+Success Flow:
+                 1. Manager enters Register User page
+                 2. Page requests necessary data fields
+                 3. Manager supplies required data fields
+                 4. Manager submits registration request
+                 5. Page validates data fields
+                 6. Page sends registration request to database
+                 7. Database responds with success or failure
+                 8. Page notifies Manager with result
+
+Exceptions:     Manager enters username or email address that is registered to another user
+				Manager enters invalid data (password too short or email wihout at symbol)
+				Database fails to respond
+</pre>
+
+<pre>
+ID:              2.4
+Description:     Building manager adds a new contract
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  A new contract is available for cost calculations
+Success Flow:
+                 1. Manager enters Add Contract page
+                 2. Page requests necessary data fields
+                 3. Manager supplies required data fields
+                 4. Manager submits registration request
+                 5. Page validates data fields
+                 6. Page sends registration request to database
+                 7. Database responds with success or failure
+                 8. Page notifies Manager with result
+
+Exceptions:     Database fails to respond
+				There already exists a contract for the specified utility over the specified date
+</pre>
+
+<pre>
+ID:              2.4
+Description:     Building manager views an overview of resident data
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  A table containing relevent data is presented to the Manager
+Success Flow:
+                 1. Manager enters Resident View page
+                 2. Page submits request to the database
+                 3. Database responds with the relevent data
+                 4. Page creates a table out of the data
+                 5. Page presents table to the Manager
+
+Exceptions:     Database fails to respond
+				There already exists a contract for the specified utility over the specified date
+</pre>
+
 <a name="uc-engineer" />
 ##### Engineer
 <pre>
@@ -578,6 +683,7 @@ Variations:
                      8.  Electrical energy consumption (KWh)
                      9.  Total water consumption (gallons)
                      10. Hot water consumption (gallons)
+					 11. User defined function
                  2a. Visualization Methods:
                      1. Graph
                      2. Report
@@ -597,6 +703,112 @@ Exceptions:
                  8a. System fails to execute query
                      1. System provides explanation for why query failed
                      2. System displays failure information to engineer
+</pre>
+
+<pre>
+ID:              3.2
+Description:     Engineer requests to generate a text report of building data for set of apartment groups over a given time
+                 range and granularity. 
+Preconditions:   User is logged in as an Engineer
+Postconditions:  Engineer sees results in plain text
+Success Flow:
+                 1. Engineer selects the metrics they want visualize
+                 2. Engineer chooses to group the results
+                 3. Engineer enters the time granularity they want to see the results
+                 4. Engineer enters the date range for the results (default month)
+                 5. Engineer requests the results
+                 6. System client validates page
+                 7. System returns results to the client based on the given query
+Variations:
+                 1a. Metrics:
+                     1.  CO2 (ppm)
+                     2.  Humidity (%)
+                     3.  Temperature (C)
+                     4.  Heat flux through studs (W/m^2)
+                     5.  Heat flux through insulation (W/m^2)
+                     6.  Heating water energy consumption (Wh)
+                     7.  Heating water volume (L), mass (g), flow (L/s)
+                     8.  Electrical energy consumption (KWh)
+                     9.  Total water consumption (gallons)
+                     10. Hot water consumption (gallons)
+					 11. User defined function
+                 2a. Visualization Methods:
+                     1. Graph
+                     2. Report
+                     3. Building view
+                 3a. Grouping Methods:
+                     1. Apartment number (default)
+                     2. Apartment floor
+                     3. Apartment type
+                     4. Apartment facing direction
+                 4a. Time granularity:
+                     1. Hour (default)
+                     2. Day
+                     3. Month
+Exceptions:
+                 6a. System client validation detects problem
+                     1. System informs engineer of invalid input
+                 7a. System fails to execute query
+                     1. System provides explanation for why query failed
+                     2. System displays failure information to engineer
+</pre>
+
+<pre>
+ID:              3.3
+Description:     Engineer drills down to a more precise time slice.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  Engineer sees a graph with a lower level of time separation.
+Success Flow:
+                 1. Engineer generates a graph
+                 2. Engineer clicks a data point within the graph
+                 3. Page redoes the calculations required to display the graph at a lower time separation
+                 4. Page displays the new graph
+Variations:
+                 Years->Months
+				 Months->Weeks
+				 Weeks->Days
+				 Days->Hours
+Exceptions:
+				Cannot drill down from hours
+</pre>
+
+<pre>
+ID:              3.4
+Description:     Engineer drills up to a less precise time slice.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  Engineer sees a graph with a lower level of time separation.
+Success Flow:
+                 1. Engineer generates a graph
+                 2. Engineer clicks a drill up option
+                 3. Page redoes the calculations required to display the graph at a higher time separation
+                 4. Page displays the new graph
+Variations:
+                 Hours->Days
+				 Days->Weeks
+				 Weeks->Months
+				 Months->Years
+Exceptions:
+				Cannot drill up from years
+</pre>
+
+<pre>
+ID:              3.5
+Description:     Engineer registers a formula.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  Engineer can select the new formula to graph.
+Success Flow:
+                 1. Engineer locates the Engineer config file
+                 2. Engineer editsthe file, adding a line matching their formula to the required syntax
+                 3. Engineer saves their edit
+                 4. Service detects the change and commits it
+				 5. Engineer goes to graphing page
+				 6. Page detects a list of formulai
+				 7. Page displays the list along with the other options for the Engineer
+				 8. Engineer selects their formula for the data field they intend
+				 9. Page uses the formula rather than the raw data along that axis
+Exceptions:
+				The formula does not match the syntax
+				The formula is inteded to work in some way other than as an axis
 </pre>
 
 <a name="uc-resident" />
@@ -726,6 +938,12 @@ Our team has agreed to the software license we discussed in class, but we have n
 * **Sustainability Goal:** A goal based on reducing the consumption of utilities indicated by sensor data.
 * **Score:** The total number of points a resident has accumulated based on their utility usage over a certain time period.
 * **Scoreboard (ladder):** A webpage that shows the total score of every resident (by a chosen username) in the building.
+* **Occupancy:** the status of the resident as being on vacation or presently occupying the unit.
+
+**Graphing Terms**
+* **Hovering:** to rest the cursor on top of an element of the webpage. Generally used to bring up additional information relating to that element.
+* **Drill Up:** to request less specific information. Generally used to indicate using larger periods of time to average data.
+* **Drill Down:** to request more specific information. Genearlly used to indicate using shorter periods of time to average data.
 
 <a name='Competing Products'/>
 ## Competing Products

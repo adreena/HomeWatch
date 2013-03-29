@@ -1,0 +1,606 @@
+
+All tests need to be repeated for recent versions Firefox, Chrome and Internet Explorer
+Successful user registrations will cause future registrations of that username or email address to fail. Appending a number works for testing purposes.
+
+Login Testing
+	log in as resident
+		enter resident1 as username
+		enter password as password
+		press log in button
+		verify you have entered the resident home page
+	log out
+		press logout text (top right)
+		verify you have entered the login page
+		click the browsers back button
+		verify you are still on the login page
+
+	log in as engineer
+		enter engineer1 as username
+		enter password as password
+		press log in button
+		verify you have entered the engineer home page
+	log out
+		press logout text (top right)
+		verify you have entered the login page
+		click the browsers back button
+		verify you are still on the login page
+
+	log in as manager
+		enter manager1 as username
+		enter password as password
+		press log in button
+		verify you have entered the manager home page
+	log out
+		press logout text (top right)
+		verify you have entered the login page
+		click the browsers back button
+		verify you are still on the login page
+
+	log in as admin
+		enter admin1 as username
+		enter password as password
+		press log in button
+		verify you have entered the manager home page (there is no admin home page)
+	log out
+		press logout text (top right)
+		verify you have entered the login page
+		click the browsers back button
+		verify you are still on the login page
+
+	log in as developer
+		enter developer1 as username
+		enter password as password
+		press log in button
+		verify you have entered the manager home page (there is no developer home page)
+	log out
+		press logout text (top right)
+		verify you have entered the login page
+		click the browsers back button
+		verify you are still on the login page
+
+	log in with random data
+		enter asdfasdf as username
+		enter asdfasdf as password
+		press log in button
+		verify the "incorrect login information" alert
+		verify that you are still on the login page
+
+Registration testing
+	register with empty data
+		click register text
+		verify you have entered the registration page
+		click register button
+		verify that the registration process fails
+		verify the "Please enter a username" alert
+		verify the "Please enter a password" alert
+		verify the "Please confirm your password" alert
+		verify the "Please enter your email" alert
+
+	register with incomplete data
+		enter a username
+		click register
+		verify that the registration process fails
+		verify that the "Please enter a username" alert no longer displays
+		verify that the other alerts still display
+		enter password as password
+		click register
+		verify that the registration process fails
+		verify that the "Please enter a password" alert no longer displays
+		verify that the other alerts still display
+		enter password as confirm password
+		click register
+		verify that the registration process fails
+		verify that the "Please confirm your password" alert no longer displays
+		verify that the other alerts still display
+		enter test@email.com as email
+		click register
+		verify that the registration process fails
+		verify that the "Please enter your email" alert no longer displays
+		verify the "Failed to register user. Invalid info: role," alert
+		
+	register with improper data
+		enter a username
+		enter test as password
+		enter test as confirm password
+		enter an email as email
+		select a role
+		click register
+		verify that the registration process fails
+		verify the "Failed to register user. Invalid info: password," alert
+		enter a password of 8 characters of longer as password
+		enter a password of 8 characters of longer as confirm password
+		enter testing as email
+		click register
+		verify that the registration process fails
+		verify the "please enter an email address" alert
+	
+	register with duplicate data
+		enter resident1 as username
+		enter password as password
+		enter password as confirm password
+		enter waffles@hotmail.com as email
+		select resident as role
+		click register
+		verify that the registration process fails
+		verify the "Failed to register user. Taken: username," alert
+		enter resident123 as username
+		enter password as password
+		enter password as confirm password
+		enter sgdavis@ualberta.ca as email
+		select resident as role
+		click register
+		verify that the registration process fails
+		verify the "Failed to register user. Taken: email," alert
+
+	register a resident
+		enter resident123 as username
+		enter password as password
+		enter password as confirm password
+		enter resident123@hotmail.com as email
+		select resident as role
+		click register
+		verify that you are on the login page
+		enter resident123 as username
+		enter password as password
+		click login button
+		verify you are on the resident home page
+
+	register an engineer
+		enter engineer123 as username
+		enter password as password
+		enter password as confirm password
+		enter engineer123@hotmail.com as email
+		select engineer as role
+		click register
+		verify that you are on the login page
+		enter engineer123 as username
+		enter password as password
+		click login button
+		verify you are on the engineer home page
+
+	register a manager
+		enter manager123 as username
+		enter password as password
+		enter password as confirm password
+		enter manager123@hotmail.com as email
+		select manager as role
+		click register
+		verify that you are on the login page
+		enter manager123 as username
+		enter password as password
+		click login button
+		verify you are on the manager home page
+
+	register an admin
+		enter admin123 as username
+		enter password as password
+		enter password as confirm password
+		enter admin123@hotmail.com as email
+		select admin as role
+		click register
+		verify that you are on the login page
+		enter admin123 as username
+		enter password as password
+		click login button
+		verify you are on the manager home page (there is no admin home page)
+
+	register a developer
+		enter developer123 as username
+		enter password as password
+		enter password as confirm password
+		enter developer123@hotmail.com as email
+		select admin as role
+		click register
+		verify that you are on the login page
+		enter developer123 as username
+		enter password as password
+		click login button
+		verify you are on the manager home page (there is no developer home page)
+		
+Resident Testing
+	log in as resident1
+		enter resident1 as username
+		enter password as password
+		click login button
+		verify you are on the resident home page
+
+	verify resident home page data
+		verify that your rank is not blank
+		verify that your rank is not zero
+		verify that your rank is a reasonable number
+		verify that the ranking table is not empty
+		verify that the ranking table holds reasonable numbers
+
+	verify achievements page data
+		click the Achievements menu text
+		verify that you are on the achievements page
+		verify that the achievements array is not empty
+		verify that reasonable icons are displaying for each achievement
+		verify that one icon is not greyed out (pending)
+		verify achievement data
+			hover over an achievement icon
+			verify that a tooltip appears
+			verify that the tooltip is not empty
+			verify that the tooltip contains valid text
+			verify that the tooltip text roughly relates to the icon
+
+	verify the schoreboard page
+		click the Scoreboard menu text
+		verify that you are on the scoreboard page
+		(scoreboard not fully implemented - no further tests)
+
+	verify the advice page
+		click the Advice menu text
+		verify that you are on the advice page
+		(advice not fully implemented - no further tests)
+
+Manager Testing
+	log in as manager1
+		enter manager1 as username
+		enter password as password
+		click login button
+		verify you are on the manager home page
+
+	verify the overview page
+		(overview page not fully implemented - no further tests)
+
+	verify the graphs page
+		click the Graphs menu text	
+		verify that you are on the graphs page
+		(graphs page not fully implemented - no further tests)
+
+	verify the reports page
+		click the Reports menu text	
+		verify that you are on the reports page
+		(reports page not fully implemented - no further tests)
+
+	verify the residents page
+		click the Residents menu text	
+		verify that you are on the resident page
+		verify that the residents table is not empty
+		verify that the residents table does not contain duplicate data
+		verify that the residents table contains reasonable data
+		(residents page not fully implemented - no further tests)
+
+	verify the utility contracts page
+		click the Utility Contracts menu text	
+		verify that you are on the contracts page
+
+		verify main table
+			verify that the contracts table is not empty
+			verify that the contracts table does not contain duplicate data
+			verify that the contracts table contains reasonable data
+			verify that the contracts table contains contracts of various types
+		
+		verify electricity table
+			click the Electricity Contracts button
+			verify that the contracts table is not empty
+			verify that the contracts table does not contain duplicate data
+			verify that the contracts table contains reasonable data
+			verify that the contracts table contains only electricity contracts
+		
+		(other buttons pending)
+		
+		verify the add contract page
+			click the Add Contract button
+			verify that you are on the add contracts page
+			enter (pending date format) as End Date	
+			enter (pending date format) as Start Date
+			enter (pending data type) as Price
+			enter (pending data type) as Utility Type
+			click the Reset button
+			verify that all data fields are blank (pending specifying contracts to edit)
+			click the Submit New button
+			verify that you are on the failed submit page
+			click the Cancel button
+			verify that you are on the utilities contracts page
+			click the Add Contract button
+			click the Submit New button
+			verify the "you forgot to enter a type" alert appears
+			verify the "you forgot to enter a price" alert appears
+			verify the "you forgot to enter a start date" alert appears
+			verify the "you forgot to enter a end date" alert appears
+			click the Retry button
+			verify that you have been returned to the add contract page from the error page
+			enter (pending data type) as Utility Type
+			click the Submit New button
+			verify the "you forgot to enter a type" alert no longer appears
+			verify that other alerts still appear
+			click the Retry button
+			enter (pending data type) as Price
+			enter (pending data type) as Utility Type
+			click the Submit New button
+			verify the "you forgot to enter a price" alert no longer appears
+			verify that other alerts still appear
+			click the Retry button
+			enter (pending date format) as Start Date
+			enter (pending data type) as Price
+			enter (pending data type) as Utility Type
+			click the Submit New button
+			verify the "you forgot to enter a start date" alert no longer appears
+			verify that end date alert still appears
+			click the Retry button
+			enter (pending date format) as End Date	
+			enter (pending date format) as Start Date
+			enter (pending data type) as Price
+			enter (pending data type) as Utility Type
+			click the Submit New button
+			verify that you are now on the utilities contracts page
+			verify the success message appears
+			verify that the contract list contains the new contract
+
+		verify the edit contract page
+			make not of the data fields of an existing member of the contracts list
+			click the Edit Contract button
+			verify that you are on the edit contracts page
+			enter (pending date format) as End Date	
+			enter (pending date format) as Start Date
+			enter (pending data type) as Price
+			enter (pending data type) as Utility Type
+			click the Reset button
+			verify that all data fields are blank
+			click the Submit Edit button
+			verify that you are on the failed submit page
+			click the Cancel button
+			verify that you are on the utilities contracts page
+			click the Edit Contract button
+			click the Submit Edit button
+			verify the "you forgot to enter a type" alert appears
+			verify the "you forgot to enter a price" alert appears
+			verify the "you forgot to enter a start date" alert appears
+			verify the "you forgot to enter a end date" alert appears
+			click the Retry button
+			verify that you have been returned to the edit contract page from the error page
+			enter (pending data type) as Utility Type
+			click the Submit Edit button
+			verify the "you forgot to enter a type" alert no longer appears
+			verify that other alerts still appear
+			click the Retry button
+			enter (pending data type) as Price
+			enter (pending data type) as Utility Type
+			click the Submit Edit button
+			verify the "you forgot to enter a price" alert no longer appears
+			verify that other alerts still appear
+			click the Retry button
+			enter (pending date format) as Start Date
+			enter (pending data type) as Price
+			enter (pending data type) as Utility Type
+			click the Submit Edit button
+			verify the "you forgot to enter a start date" alert no longer appears
+			verify that end date alert still appears
+			click the Retry button
+			enter (pending date format) as End Date	
+			enter (pending date format) as Start Date
+			enter (pending data type) as Price
+			enter (pending data type) as Utility Type
+			click the Submit Edit button
+			verify that you are now on the utilities contracts page
+			verify the success message appears
+			verify that the contract list no longer contains a contract matching the original contract
+			verify that the contract list contains a contract matching the edited data	
+
+		verify the delete contract button
+			(pending)
+
+	verify the register new user page
+		register with empty data
+			click register text
+			verify you have entered the registration page
+			click register button
+			verify that the registration process fails
+			verify the "Please enter a username" alert
+			verify the "Please enter a password" alert
+			verify the "Please confirm your password" alert
+			verify the "Please enter your email" alert
+	
+		register with incomplete data
+			enter a username
+			click register
+			verify that the registration process fails
+			verify that the "Please enter a username" alert no longer displays
+			verify that the other alerts still display
+			enter password as password
+			click register
+			verify that the registration process fails
+			verify that the "Please enter a password" alert no longer displays
+			verify that the other alerts still display
+			enter password as confirm password
+			click register
+			verify that the registration process fails
+			verify that the "Please confirm your password" alert no longer displays
+			verify that the other alerts still display
+			enter test@email.com as email
+			click register
+			verify that the registration process fails
+			verify that the "Please enter your email" alert no longer displays
+			verify the "Failed to register user. Invalid info: role," alert
+		
+		register with improper data
+			enter a username
+			enter test as password
+			enter test as confirm password
+			enter an email as email
+			select a role
+			click register
+			verify that the registration process fails
+			verify the "Failed to register user. Invalid info: password," alert
+			enter a password of 8 characters of longer as password
+			enter a password of 8 characters of longer as confirm password
+			enter testing as email
+			click register
+			verify that the registration process fails
+			verify the "please enter an email address" alert
+		
+		register with duplicate data
+			enter resident1 as username
+			enter password as password
+			enter password as confirm password
+			enter waffles@hotmail.com as email
+			select resident as role
+			click register
+			verify that the registration process fails
+			verify the "Failed to register user. Taken: username," alert
+			enter resident123 as username
+			enter password as password
+			enter password as confirm password
+			enter sgdavis@ualberta.ca as email
+			select resident as role
+			click register
+			verify that the registration process fails
+			verify the "Failed to register user. Taken: email," alert	
+
+		register a resident
+			enter resident12345 as username
+			enter password as password
+			enter password as confirm password
+			enter resident12345@hotmail.com as email
+			select resident as role
+			click register
+			verify the success message displays (pending)
+			press the logout text
+			verify that you are on the login page
+			enter resident12345 as username
+			enter password as password
+			click login button
+			verify you are on the resident home page	
+			click the logout text
+			enter manager1 as username
+			enter password as password
+			click login button
+
+		register an engineer
+			enter engineer123 as username
+			enter password as password
+			enter password as confirm password
+			enter engineer123@hotmail.com as email
+			select engineer as role
+			click register
+			verify the success message displays (pending)
+			press the logout text
+			verify that you are on the login page
+			enter engineer123 as username
+			enter password as password
+			click login button
+			verify you are on the engineer home page	
+			click the logout text
+			enter manager1 as username
+			enter password as password
+			click login button
+
+		register a manager
+			enter manager123 as username
+			enter password as password
+			enter password as confirm password
+			enter manager123@hotmail.com as email
+			select manager as role
+			click register
+			verify the success message displays (pending)
+			press the logout text
+			verify that you are on the login page
+			enter manager123 as username
+			enter password as password
+			click login button
+			verify you are on the manager home page	
+			click the logout text
+			enter manager1 as username
+			enter password as password
+			click login button
+
+		register an admin
+			enter admin123 as username
+			enter password as password
+			enter password as confirm password
+			enter admin123@hotmail.com as email
+			select admin as role
+			click register
+			verify the success message displays (pending)
+			press the logout text
+			verify that you are on the login page
+			enter admin123 as username
+			enter password as password
+			click login button
+			verify you are on the manager home page (there is no admin home page)
+			click the logout text
+			enter manager1 as username
+			enter password as password
+			click login button
+
+		register a developer
+			enter developer123 as username
+			enter password as password
+			enter password as confirm password
+			enter developer123@hotmail.com as email
+			select admin as role
+			click register
+			verify the success message displays (pending)
+			press the logout text
+			verify that you are on the login page
+			enter developer123 as username
+			enter password as password
+			click login button
+			verify you are on the manager home page (there is no developer home page)	
+			
+	verify charts page
+		verify chart with invalid data
+			(pending)
+		
+		verify one chart
+			(pending)
+		
+		verify multiple charts
+			(pending)
+		
+		verify hiding charts
+			(pending)
+		
+		verify refreshing charts
+			(pending)
+			
+		verify multiple y axis charts
+			(pending)
+	
+	verify reports page
+		(pending)
+
+Engineer Testing
+	log in as engineer1
+		enter engineer1 as username
+		enter password as password
+		click login button
+		verify you are on the engineer home page
+		
+	verify adding custom equations
+		(pending)
+	
+	verify editing custom equations
+		(pending)
+	
+	verify deleting custom equations
+		(pending)
+	
+	verify charts page
+		verify chart with invalid data
+			(pending)
+		
+		verify one chart
+			(pending)
+		
+		verify multiple charts
+			(pending)
+		
+		verify hiding charts
+			(pending)
+		
+		verify refreshing charts
+			(pending)
+		
+		verify custom equations
+			(pending)
+			
+		verify multiple y axis charts
+			(pending)
+	
+	verify reports page
+		(pending)
+
+
