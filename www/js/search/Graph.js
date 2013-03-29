@@ -138,7 +138,7 @@ function ($, _, getInternetExplorerVersion) {
 	var apartments = [];
 	var graphname_flag = "false";
 	var min_x, max_x;
-	var apartment, sensor, timestamp;
+	var apartment, sensor, timestamp, tick_size;
 	var startdate, enddate;
 	
         $.each(graphData, function (key, value) {
@@ -152,7 +152,7 @@ function ($, _, getInternetExplorerVersion) {
 		time_stamp = DateToUTC(key);
 
 		if(startdate === undefined) {
-		    graphState.startdate = time_stamp;
+		    startdate = time_stamp;
 		    enddate = time_stamp;
 		}
 
@@ -183,13 +183,16 @@ function ($, _, getInternetExplorerVersion) {
                     }
 
                     if(graphState.xtype === "time") {
-			tuple[0] = time_stamp;
-                    	tuple[1] = value.y;
+			sensor_data[apartment][sensor].push([time_stamp, value.y]);
+			//tuple[0] = time_stamp;
+                    	//tuple[1] = value.y;
 
 		    } else {
 			if(value.x) {
-			    tuple[0] = parseFloat(value.x);
-                    	    tuple[1] = value.y;
+			    tick_size = parseFloat(value.x);
+			    sensor_data[apartment][sensor].push([tick_size, value.y]);
+			
+                    	    //tuple[1] = value.y;
 
 			    if(min_x === undefined || min_x > tick_size) {
 				min_x = tick_size;
@@ -209,12 +212,13 @@ function ($, _, getInternetExplorerVersion) {
 			}
 		    }                              
 
-		    console.log("y value is: " + tuple[1]);
-                    sensor_data[apartment][sensor].push(tuple);
+		    //console.log("y value is: " + tuple[1]);
+                    //sensor_data[apartment][sensor].push(tuple);
                 });
             });
         });
 
+	graphState.startdate = startdate;
 	graphState.enddate = enddate;
 	graphState.min_x = min_x;
 	graphState.max_x = max_x;
@@ -260,10 +264,12 @@ function ($, _, getInternetExplorerVersion) {
     var get_x_axis = function (graphState) {
 	var granularity = graphState.granularity;
 	var xtype = graphState.xtype;
+	var startdate = graphState.startdate;
+	var enddate = graphState.enddate;
 	var min_x = graphState.min_x;
 	var max_x = graphState.max_x;
-	var min_date = new Date(min_x);
-	var max_date = new Date(max_x);
+	var min_date = new Date(startdate);
+	var max_date;
 
         var base_x = {
 	    xaxis: 	
@@ -276,19 +282,20 @@ function ($, _, getInternetExplorerVersion) {
 		}		 
 	};
 
-	base_x.xaxis["min"] = min_x;
+	
 console.log("start date is : " + base_x.xaxis["min"]);
 
 	if(xtype === "time") {
 	    base_x.xaxis["mode"] = "time";
+	     base_x.xaxis["min"] = startdate;
 
             if(granularity === "Hourly") {
-		base_x.xaxis["max"] = min_x + get_millisecond_interval("day");
+		base_x.xaxis["max"] = startdate + get_millisecond_interval("day");
 	        base_x.xaxis["tickSize"] = [1, "hour"];
 	        var label = get_month_and_day(min_date);
 	        base_x.xaxis["axisLabel"] = label;
             } else if(granularity === "Daily") {
-		base_x.xaxis["max"] = min_x + get_millisecond_interval("week");
+		base_x.xaxis["max"] = startdate + get_millisecond_interval("week");
 		console.log("max is : " + base_x.xaxis["max"]);
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
@@ -309,6 +316,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 		// multiple years?
 	    }
 	} else {
+	    base_x.xaxis["min"] = min_x;
 	    base_x.xaxis["max"] = max_x;
 	    base_x.xaxis["axisLabel"] = xtype;
 	}
