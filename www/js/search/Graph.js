@@ -279,6 +279,7 @@ function ($, _, getInternetExplorerVersion) {
 	}
 
 	var options = $.extend({}, x_axis, y_axis, grid, series_opts, legend, zoom);
+	console.log("points opt is " + options.series.points.show);
 	return options;
     };
 
@@ -378,12 +379,13 @@ console.log("start date is : " + base_x.xaxis["min"]);
     var get_series_options = function (graphState, order) {
 	var graphtype = graphState.graphtype;
 
-	var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true }}};
+	var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true}}};
 	var bars = {series: {bars: { show: true, barWidth: 1000*60*60*0.25, fill: true, lineWidth: 1, clickable: true,
     			hoverable: true, order: order}}};
 	var pie =  {series: {pie: {show: true, radius: 1}}};
 
 	if(graphtype === "line") {
+	console.log("line opt is " + line.series.points.show);
 	    return line;
 	} else if(graphtype === "histo") {
 	    return bars;
