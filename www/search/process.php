@@ -57,7 +57,7 @@ $W_PER_KW = 1000;
 
 //Testing data for when not hooked up to the front end
 if ($test) {
-	$graph = array("startdate"=>"2012-03-01", "enddate"=>"2012-03-02", "xaxis" => "Time", "x"=>"Time", "xtype"=>"time", "yaxis" => "Water_Usage", "y" => array("Total_Water", "Hot_Water"), "ytype"=> "sensorarray", "period"=>"Daily", "apartments" => array(1, 2)) ;
+	$graph = array("startdate"=>"2012-03-01", "enddate"=>"2012-03-02", "xaxis" => "Time", "x"=>"time", "xtype"=>"time", "yaxis" => "Water_Usage", "y" => array("Total_Water", "Hot_Water"), "ytype"=> "sensorarray", "period"=>"Daily", "apartments" => array(1, 2)) ;
 	$finances = true;
 	$price_per_kwh = 1;
 	$price_per_gallon = 1.5;
@@ -147,8 +147,8 @@ if ($test) {
 	$phaseMapping = array("Mains (Phase A)" => "A", "Bedroom and hot water tank (Phase A)" => "A", "Oven (Phase A) and range hood" => "A", "Microwave and ERV controller" => "A", "Electrical duct heating" => "A", "Kitchen plugs (Phase A) and bathroom lighting" => "A", "Energy recovery ventilation" => "A", "Mains (Phase B)" => "B", "Kitchen plugs (Phase B) and kitchen counter" => "B", "Oven (Phase B)" => "B", "Bathroom" => "B", "Living room and balcony" => "B",  "Hot water tank (Phase B)" => "B", "Refrigerator" => "B");
 
 	
-	$bigArray["x-axis"] = $xaxis;
-	$bigArray["y-axis"] = $yaxis;
+	$bigArray["xaxis"] = $xaxis;
+	$bigArray["yaxis"] = $yaxis;
 
 	foreach ($apartments as $apartment) {
 		if ($ytype == "sensorarray") {
