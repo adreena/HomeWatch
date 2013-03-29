@@ -151,6 +151,15 @@ function ($, _, getInternetExplorerVersion) {
 		// key = date stamp                   
 		time_stamp = DateToUTC(key);
 
+		if(startdate === undefined) {
+		    graphState.startdate = time_stamp;
+		    enddate = time_stamp;
+		}
+
+		if(time_stamp > enddate) {
+		    enddate = time_stamp;
+		}
+
                 if (graphname.length !== 0) {
                     graphname_flag = "true";
                 }
@@ -174,23 +183,13 @@ function ($, _, getInternetExplorerVersion) {
                     }
 
                     if(graphState.xtype === "time") {
-		    	if(min_x === undefined) {
-			    min_x = time_stamp;
-			    max_x = min_x;
-		        }
-				
-		        if(time_stamp > max_x) {
-                            //if(graphState.granularity === "Hourly") {
-		                //max_x = min_x + get_millisecond_interval("day");
-		            //} else {
-			        max_x = time_stamp;
-			    //}
-		        }
+			tuple[0] = time_stamp;
+                    	tuple[1] = value.y;
 
-                        var tick_size = time_stamp;
 		    } else {
 			if(value.x) {
-			    var tick_size = parseFloat(value.x);
+			    tuple[0] = parseFloat(value.x);
+                    	    tuple[1] = value.y;
 
 			    if(min_x === undefined || min_x > tick_size) {
 				min_x = tick_size;
@@ -210,14 +209,13 @@ function ($, _, getInternetExplorerVersion) {
 			}
 		    }                              
 
-                    tuple[0] = tick_size;
-                    tuple[1] = value.y;
 		    console.log("y value is: " + tuple[1]);
                     sensor_data[apartment][sensor].push(tuple);
                 });
             });
         });
 
+	graphState.enddate = enddate;
 	graphState.min_x = min_x;
 	graphState.max_x = max_x;
 
