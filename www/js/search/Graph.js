@@ -311,7 +311,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 
             if(granularity === "Hourly") {
 		base_x.xaxis["max"] = startdate + get_millisecond_interval("day");
-	        base_x.xaxis["tickSize"] = [1, "hour"];
+	        base_x.xaxis["tickSize"] = [2, "hour"];
 	        var label = get_month_and_day(min_date);
 	        //base_x.xaxis["axisLabel"] = label;
             } else if(granularity === "Daily") {
