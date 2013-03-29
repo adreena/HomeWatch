@@ -272,6 +272,7 @@ function ($, _, getInternetExplorerVersion) {
 	var y_axis = get_y_axis(graphState);
 	var grid = get_grid();
 	var series_opts = get_series_options(graphState);
+	console.log("points opt is " + series_opts.series.points.show);
 	var legend = get_legend();
 
 	if(graphState.granularity === "Hourly" && graphState.xtype !== "time") {
@@ -281,7 +282,7 @@ function ($, _, getInternetExplorerVersion) {
 	}
 
 	var options = $.extend({}, x_axis, y_axis, grid, series_opts, legend, zoom);
-	console.log("points opt is " + options.series.points.show);
+	//console.log("points opt is " + options.series.points.show);
 	return options;
     };
 
@@ -378,7 +379,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 	return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};
     };
 
-    var get_series_options = function (graphState, order) {
+    var get_series_options = function (graphState) {
 	var graphtype = graphState.graphtype;
 
 	var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true}}};
@@ -389,7 +390,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 	if(graphtype === "line") {
 	console.log("line opt is " + line.series.points.show);
 	    return line;
-	} else if(graphtype === "histo") {
+	} else if(graphtype === "bar") {
 	    return bars;
 	} else if(graphtype === "pie") {
 	    return pie;
