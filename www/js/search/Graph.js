@@ -476,12 +476,12 @@ function ($, _, getInternetExplorerVersion) {
 			y = item.datapoint[1].toFixed(2);
 
 			if(xtype === "time") {
-			    if(granularity === "Monthly") {
+			    //if(granularity === "Monthly") {
                                 //var x = new Date(item.datapoint[0]);
-				var x = get_month_day_year(new Date(item.datapoint[0]), "Monthly");
-			    } else if(granularity === "Weekly") {
-
-			    }
+				var x = get_month_day_year(new Date(item.datapoint[0]), granularity);
+			    //} else if(granularity === "Weekly") {
+				//var x = get_month_day_year(new Date(item.datapoint[0]), "Weekly");
+			    //}
 
                                 show_tool_tip(item.pageX, item.pageY,
                                     item.series.label + " for " + x + " is " + y);
@@ -616,10 +616,10 @@ function ($, _, getInternetExplorerVersion) {
 
 	console.log("gran is " + granularity);
 	var tool_tip_output = {
-	    "Hourly": month + ' ' + day + ' ' + year,
-	    "Daily": month + ' ' + day + ' ' + year,
-	    "Weekly": month + ' ' + year,
-	    "Monthly": month + ' ' + year
+	    Hourly: month + ' ' + day + ' ' + year,
+	    Daily: month + ' ' + day + ' ' + year,
+	    Weekly: month + ' ' + year,
+	    Monthly: month + ' ' + year
 	};
 
 	console.log("this is new");
