@@ -59,22 +59,24 @@ function ($, _, D, GraphControl) {
     GraphManager.prototype._makeImmediateRequest = function (control, newRequest) {
         var graphParams = JSON.stringify(newRequest),
             onSuccess;
-
-        onSuccess = function (newData) {
-            /* Stuff the successful request into the cache. */
-            this.cache[graphParams] = newData;
-            control.onNewData(newData);
-        };
         
         /* Fetch the request out of the cache, if it's found. */
-        if (_(this.cache).has(graphParams)) {
+        if (_(this.resultCache).has(graphParams)) {
             console.log("Getting request from the cache.");
             /* setTimeout to run this function outside of the
              * current call stack to emulate how jQuery's success
              * callback would be called. */
-            setTimeout(onSuccess, 0);
+            setTimeout(function () {
+                // Do things with stuff.
+                control.onNewData(this.resultCache[graphParams]);
+            }, 0);
             return;
         }
+
+        onSuccess = function (newData) {
+            /* Stuff the successful request into the cache. */
+            this.resultCache[graphParams] = newData;
+        };
 
         $.ajax({
             url: D.uri.process,
