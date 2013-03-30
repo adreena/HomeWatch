@@ -625,10 +625,10 @@ function ($, _, getInternetExplorerVersion) {
 
 	console.log("gran is " + granularity);
 	var tool_tip_output = {
-	    Hourly: month + ' ' + day + ' ' + year,
-	    Daily: month + ' ' + day + ' ' + year,
-	    Weekly: month + ' ' + year,
-	    Monthly: year
+	    "Hourly": month + ' ' + day + ' ' + year,
+	    "Daily": month + ' ' + day + ' ' + year,
+	    "Weekly": month + ' ' + year,
+	    "Monthly": year
 	};
 
 	/*return*/ console.log(tool_tip_output.granularity);
