@@ -561,8 +561,12 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 			
 	}
 
-
-
+    public function db_Delete_Alert($viewname)
+	{			
+				$conn=new Connection ();  
+				$Query=$conn->connect()->prepare("Drop view ".$viewname." ");
+				$Query->execute();
+	}
 
 
 }
