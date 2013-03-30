@@ -15,7 +15,11 @@ define({
         flotGraph: '.graph',
         graphControls: '.graph-controls',
         graphContainer: '.graph-container',
-        addGraphButton: 'a[href=#add-graph]'
+        addGraphButton: 'a[href=#add-graph]',
+        graphVisibilityControls: '.graph-vis-controls',
+        graphDestroyButton: 'a[href=#destroy-graph]',
+        graphMinifyButton: 'a[href=#minify-graph]',
+        graphHideButton: 'a[href=#hide-graph]'
      },
 
     /**

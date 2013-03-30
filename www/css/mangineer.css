@@ -92,7 +92,7 @@ body {
 .graph-container {
     display: inline-block;
     position: absolute;
-    top: 0;
+    /*top: 0;*/
     width: 720px;
     right: 0;
 }
@@ -107,6 +107,30 @@ body {
 .graph-group {
     position: relative;
     margin: 10px 0;
+}
+
+/* Graph visibility controls */
+.graph-vis-controls li {
+    display: inline;
+    float: right;
+    clear: left;
+    margin: 0px 4px;
+}
+.graph-vis-controls {
+    width: 100%;
+    height: 24px;
+}
+
+/* The destroy button. */
+.graph-vis-controls li a[href='#destroy-graph'] {
+  color: #C03030;
+  font-weight: bold;
+  margin-left: 12px;
+}
+
+/* The show button -- by default a graph is showing, so hide the show button! */
+.graph-vis-controls li a[href='#show-graph'] {
+  display: none;
 }
 
 .the-actual-gorram-label {

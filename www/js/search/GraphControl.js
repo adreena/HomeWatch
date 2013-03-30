@@ -30,7 +30,8 @@ function ($, _, D, Graph, TemplateManager) {
 
         /* Binds events for the elements. */
         bindWeirdDateEvents,
-        bindSelectAlls;
+        bindSelectAlls,
+        prevDef;
 
 
     /** Creates a new GraphControl. A GraphController has data. */
@@ -53,6 +54,8 @@ function ($, _, D, Graph, TemplateManager) {
         /** The graph panel. */
         this.el.graph = element.find(D.sel.flotGraph);
         this.el.info = element.find(D.sel.graphContainer);
+        /* The top visibility controls. */
+        this.el.visControls = element.find(D.sel.graphVisibilityControls);
 
         /* This should actually put a placeholder there until the
          * data is valid. */
@@ -60,9 +63,28 @@ function ($, _, D, Graph, TemplateManager) {
             self.onGranularityChange(newRequest);
         });
 
+        this.hidden = false;
+        this.minified = false;
+
         this._bindOnChange();
+        this._bindVisibilityControls();
 
     }
+
+
+
+    /*
+     * Utility functions, used throughout the file.
+     */
+
+    /** Wrapper. Calls event.preventDefault() for the given event handler. */
+    prevDef = function (wrappedFunction) {
+        return function (event) {
+            event.preventDefault();
+            console.log("`this` in prevDef:", this);
+            return wrappedFunction.apply(this, arguments);
+        };
+    };
 
 
 
@@ -107,6 +129,21 @@ function ($, _, D, Graph, TemplateManager) {
 
 
     /*
+     * Common methods.
+     */
+
+    GraphControl.prototype.destroy = function () {
+        /* Tell our manager to stop tracking us. */
+        this.manager.untrack(this.id);
+
+        this.element.remove();
+
+        /* And now wait for the garbage collector to pick us up... */
+    };
+
+
+
+    /*
      * Updating the view.
      */
 
@@ -142,7 +179,7 @@ function ($, _, D, Graph, TemplateManager) {
 
     /**
      * Should be called (probably by the GraphManager) when new
-     * plottable data arrives.
+     * plotable data arrives.
      */
     GraphControl.prototype.onNewData = function  (newData) {
         /* Delegate this to update the data on the graph. */
@@ -151,6 +188,20 @@ function ($, _, D, Graph, TemplateManager) {
         this.graph.update(newData.values);
     };
 
+
+    /*
+     * Additional event bindings.
+     */
+
+    /** Binds the hide, show, destroy buttons to do the right thing. */
+    GraphControl.prototype._bindVisibilityControls = function () {
+        var visControls = this.el.visControls, self = this;
+
+        visControls.find(D.sel.graphDestroyButton).click(prevDef(function () {
+            self.destroy();
+        }));
+
+    };
 
 
     /*
@@ -284,7 +335,7 @@ function ($, _, D, Graph, TemplateManager) {
         onChange();
     };
 
-    /* Binds select all. Doesn't really work yet. */
+    /** Binds select all. Doesn't really work yet. */
     bindSelectAlls = function (element) {
         var selectToggler = element.find('[data-select-all]'),
             parent = selectToggler.parent(),
@@ -298,6 +349,8 @@ function ($, _, D, Graph, TemplateManager) {
 
     };
 
+
+
     /* Fetchers. Note that these are ridiculously hard-coded for
      * the template given. */
 
@@ -309,7 +362,7 @@ function ($, _, D, Graph, TemplateManager) {
     fetchAxes = function (controlElement, values) {
         var partialQuery =  {};
 
-        // The  "v" is for "variable variable"! 
+        // The  "v" is for "variable variable"!
         _.each(['x', 'y'], function (v) {
             var select = controlElement.find('select[name=' + v + 'axis]'),
                 valueID,
@@ -325,7 +378,7 @@ function ($, _, D, Graph, TemplateManager) {
             partialQuery[v + 'axis'] = valueTuple.values
 
         });
-        
+
         return partialQuery;
     };
 
@@ -344,7 +397,7 @@ function ($, _, D, Graph, TemplateManager) {
 
     fetchDateTime = function (controlElement) {
         var granularity, subfetchers, chosenControls, range;
-        
+
         /* Get the granularity/period value. */
         granularity = controlElement.find('select[name=granularity]').val();
         /* ...and get the applicable control. */

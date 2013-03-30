@@ -26,13 +26,10 @@ function ($, _, D, GraphManager) {
 
         /* Trying out spiffy because why not? */
         $(D.sel.graphControls).spiffy();
-        $('.graph-controls > li > h3').addClass('spiffy-header');
-
 
         /* Herp derp derp. */
         $(D.sel.addGraphButton).click(function (event) {
             event.preventDefault();
-
             graphMan.add();
         });
 

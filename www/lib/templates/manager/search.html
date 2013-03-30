@@ -38,6 +38,14 @@
 #}
 <script id="_t-graph-group" type="text/html">
   <li class="graph-group" id="<%= graphID %>">
+    <ul class="graph-vis-controls">
+      <li><a href="#destroy-graph">Destroy</a></li>
+      <!--
+      <li><a href="#minify-graph">Minify</a></li>
+      <li><a href="#hide-graph">Hide</a></li>
+      <li><a href="#show-graph">Show</a></li>
+      -->
+    </ul>
     <ul class="graph-controls"><%= graphControls %></ul>
     <div class="graph-container">
       <div class="graph" />
@@ -52,7 +60,7 @@
 #}
 <script id="_t-graph-control-li" type="text/html">
   <li>
-    <h3><%- header %></h3>
+    <h3 class="spiffy-header"><%- header %></h3>
     <%= content %>
   </li>
 </script>
@@ -151,32 +159,38 @@
   apartments  List of apartment numbers/IDs
 #}
 <script id="_t-graph-control-apartments" type="text/html">
-  <ul data-for-process data-select-boundary data-name="apts">
-    <% _.each(apartments, function (number) { %>
-    <li><label><input name="apts" type="checkbox" value="<%= number %>" />
-        <span class="postfix-label">
-          Apartment <%= number %>
-    </span> </li>
-    <% }); %>
-    <li class="select-all"><label><input data-select-all type="checkbox" />
-      <span class="postfix-label"> Select all
-    </span> </li>
-  </ul>
+  <div data-select-boundary class="graph-controls-apartment">
+    <ul data-for-process data-name="apts">
+      <% _.each(apartments, function (number) { %>
+      <li><label><input name="apts" type="checkbox" value="<%= number %>" />
+          <span class="postfix-label">
+            Apartment <%= number %>
+      </label> </span> </li>
+      <% }); %>
+
+    </ul>
+    <label><input class="select-all" value="Select all" type="button" />
+      <!--span class="postfix-label"> Select all </span--> </label>
+    <label><input class="select-none" value="Select none" type="button" />
+      <!--span class="postfix-label"> Select all </span--> </label>
+  </div>
 </script>
 {# Parameters: None
 #}
 <script id="_t-graph-control-types" type="text/html">
+  <form>{# This form is here so that the radio buttons work properly... #}
   <ul data-for-internal class="graph-controls-type" data-graph data-name="graph-type">
-    <li><label><input checked type="radio" name="graph-type" value="line" />
-        <span class="graph-preview"> Line graph</span>
-      </label></li>
-    <li><label><input type="radio" name="graph-type" value="bar" />
-        <span class="graph-preview"> Bar graph</span>
-      </label></li>
-    <li><label><input type="radio" name="graph-type" value="pie" />
-        <span class="graph-preview"> Pie chart</span>
-      </label></li>
-  </ul>
+      <li><label><input checked type="radio" name="graph-type" value="line" />
+          <span class="graph-preview">Line graph</span>
+        </label></li>
+      <li><label><input type="radio" name="graph-type" value="bar" />
+          <span class="graph-preview">Bar graph</span>
+        </label></li>
+      <li><label><input type="radio" name="graph-type" value="pie" />
+          <span class="graph-preview">Pie chart</span>
+        </label></li>
+    </ul>
+  </form>
 </script>
 {# Flot compatibility for Internet Explorer users... sigh :/ #}
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="flot/excanvas.min.js"></script><![endif]-->

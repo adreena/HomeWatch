@@ -24,7 +24,6 @@ function ($, _, D, GraphControl) {
         /** List of managed graphs. */
         this.graphs = {};
 
-        window.graphs = this.graphs;
     }
 
     /** Adds a new graph and returns its ID. */
@@ -36,6 +35,7 @@ function ($, _, D, GraphControl) {
         this.graphs[graphID] = newGraph;
 
         /* Append the element to the div. */
+        // Err.. something weird happens on append...
         this.masterGraphList.append(newGraph.element);
 
         return graphID;
