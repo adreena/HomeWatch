@@ -14,12 +14,8 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
-	while ($row = $dbh->fetch(\PDO::FETCH_ASSOC))
-		     {
-				$result[]=(array)$row;
-		     }
-				
-	return $result;
+	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
+	return $row;
 	}
 	if ($EQ==2){//EQ2_part1
 	 $dbh=$conn->connect()->prepare("select EQ2_Part1 (:SD, :ED)") ;
