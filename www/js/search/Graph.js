@@ -303,7 +303,7 @@ function ($, _, getInternetExplorerVersion) {
 	var enddate = graphState.enddate;
 	var min_x = graphState.min_x;
 	var max_x = graphState.max_x;
-	var min_date = new Date(startdate).toUTCString();
+	var min_date = new Date(startdate);
 
         var base_x = {
 	    xaxis:
@@ -331,11 +331,10 @@ console.log("start date is : " + base_x.xaxis["min"]);
             } else if(granularity === "Daily") {
 		base_x.xaxis["max"] = startdate + get_millisecond_interval("week");
 		console.log("max is : " + base_x.xaxis["max"]);
-		console.log("min is " + startdate);
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-		base_x.xaxis["axisLabel"] = get_month_and_day(min_date) + " - " + get_month_and_day(new Date(base_x.xaxis["max"]).toUTCString()));
+		base_x.xaxis["axisLabel"] = get_month_and_day(min_date) + " - " + get_month_and_day(new Date (base_x.xaxis["max"]));
             } else if (granularity === "Weekly") {
 		base_x.xaxis["tickSize"] = [1, "week"];
 		base_x.xaxis["weekNames"] = ["1", "2", "3", "4", "5"];
