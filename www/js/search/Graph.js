@@ -294,12 +294,12 @@ function ($, _, getInternetExplorerVersion) {
 	     base_x.xaxis["min"] = startdate;
 
             if(granularity === "Hourly") {
-		base_x.xaxis["max"] = startdate + get_millisecond_interval("day");
+		base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
 	        base_x.xaxis["tickSize"] = [2, "hour"];
 	        base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity);
             } else if(granularity === "Daily") {
 		console.log("start date as string is : " + new Date(startdate));
-		base_x.xaxis["max"] = startdate + get_millisecond_interval("week");
+		base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
 		console.log("end date as string is : " + new Date(base_x.xaxis["max"]));
 		console.log("start interval is " + startdate);
 		console.log("max is : " + base_x.xaxis["max"]);
