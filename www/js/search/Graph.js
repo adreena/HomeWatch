@@ -321,7 +321,6 @@ function ($, _, getInternetExplorerVersion) {
 
 	if(xtype === "time") {
 	    base_x.xaxis["mode"] = "time";
-		console.log("start date as string is : " + new Date(startdate));
 	     base_x.xaxis["min"] = startdate;
 
             if(granularity === "Hourly") {
@@ -330,7 +329,9 @@ function ($, _, getInternetExplorerVersion) {
 	        var label = get_month_and_day(min_date);
 	        base_x.xaxis["axisLabel"] = label;
             } else if(granularity === "Daily") {
+		console.log("start date as string is : " + new Date(startdate));
 		base_x.xaxis["max"] = startdate + get_millisecond_interval("week");
+		console.log("end date as string is : " + new Date(base_x.xaxis["max"]));
 		console.log("start interval is " + startdate);
 		console.log("max is : " + base_x.xaxis["max"]);
 		base_x.xaxis["timeformat"] = "%a %d";
