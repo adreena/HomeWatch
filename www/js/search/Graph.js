@@ -200,23 +200,13 @@ function ($, _, getInternetExplorerVersion) {
                         sensor_data[apartment][sensor] = [];
                     }
 
-                    if (series_data.length === 0) {
-                        tuple = [];
-                    } else {
-                        tuple.length = 0;
-                    }
-
                     if(graphState.xtype === "time") {
 			sensor_data[apartment][sensor].push([time_stamp, value.y]);
-			//tuple[0] = time_stamp;
-                    	//tuple[1] = value.y;
 
 		    } else {
 			if(value.x) {
 			    tick_size = parseFloat(value.x);
 			    sensor_data[apartment][sensor].push([tick_size, value.y]);
-			
-                    	    //tuple[1] = value.y;
 
 			    if(min_x === undefined || min_x > tick_size) {
 				min_x = tick_size;
@@ -235,9 +225,6 @@ function ($, _, getInternetExplorerVersion) {
                             });
 			}
 		    }
-
-		    //console.log("y value is: " + tuple[1]);
-                    //sensor_data[apartment][sensor].push(tuple);
                 });
             });
         });
@@ -247,8 +234,6 @@ function ($, _, getInternetExplorerVersion) {
 	graphState.min_x = min_x;
 	graphState.max_x = max_x;
 
-	console.log("start date is: " + graphState.startdate);
-	console.log("end date is: " + graphState.enddate);
         for(var i = 0; i < apartments.length; ++i) {
 	    for(var j = 0; j < graphname.length; ++j) {
 		var label = "Apartment " + apartments[i] + " " + graphname[j];
@@ -273,10 +258,6 @@ function ($, _, getInternetExplorerVersion) {
 	var y_axis = get_y_axis(graphState);
 	var grid = get_grid();
 	var series_opts = get_series_options(graphState);
-
-	if(graphState.graphType === "line") {
-	    console.log("points opt is " + series_opts.series.points.show);
-	}
 	var legend = get_legend();
 
 	if(graphState.granularity === "Hourly" && graphState.xtype !== "time") {
@@ -286,14 +267,6 @@ function ($, _, getInternetExplorerVersion) {
 	}
 
 	var options = $.extend({}, x_axis, y_axis, grid, series_opts, legend, zoom);
-	if(graphState.graphType === "line") {
-	    if(series_opts.series.points.show !== undefined) {
-	        console.log("points opt is " + series_opts.series.points.show);
-	    } else {
-	        console.log("points is undefined");
-	    }
-	}
-	//console.log("points opt is " + options.series.points.show);
 	return options;
     };
 
