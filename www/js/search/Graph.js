@@ -481,12 +481,17 @@ function ($, _, getInternetExplorerVersion) {
                     previousPoint = item.dataIndex;
 
                     $("#tooltip").remove();
-                        var x = new Date(item.datapoint[0]);
-			x = get_month_and_day(x);
-                        y = item.datapoint[1].toFixed(2);
+			y = item.datapoint[1].toFixed(2);
 
-                        show_tool_tip(item.pageX, item.pageY,
+			if(xtype === "time") {
+                            //var x = new Date(item.datapoint[0]);
+			    var x = get_month_and_day(new Date(item.datapoint[0]));
+                            show_tool_tip(item.pageX, item.pageY,
                                 item.series.label + " on " + x + " is " + y);
+			} else {
+			    show_tool_tip(item.pageX, item.pageY,
+                                item.series.label + ": " + y + " against " + xtype + ": " + y);
+			}
                 }
             } else {
                 $("#tooltip").remove();
