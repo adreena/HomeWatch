@@ -96,7 +96,7 @@ define({
     /**
      * This is an example of what process.php currently spits out.
      */
-    exampleProcessResponse: {
+    /*exampleProcessResponse: {
         "xaxis": "time",
         "yaxis": "Water_Usage",
         "values": {
@@ -587,10 +587,10 @@ define({
         },
         "granularity": "Hourly",
         "messages": ["No graph data received\n"]
-    },
+    },*/
 
-/*exampleProcessResponse: {
-                "xaxis": "time",
+exampleProcessResponse: {
+        "xaxis": "time",
         "yaxis": "Total_Water",
         "values": {
             "1": {
@@ -740,7 +740,7 @@ define({
         },
         "granularity": "Daily",
         "messages": ["No graph data received\n"]
-    },*/
+    },
 
     /*
      * This one is kind of hacky. Turns the category display name into the type
