@@ -631,7 +631,8 @@ function ($, _, getInternetExplorerVersion) {
 	    "Monthly": year
 	};
 
-	/*return*/ console.log(tool_tip_output.granularity);
+	console.log("this is new");
+	/*return*/ console.log(tool_tip_output[granularity]);
     };
 
 	/*if(granularity === "Monthly") {
