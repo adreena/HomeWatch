@@ -312,8 +312,7 @@ function ($, _, getInternetExplorerVersion) {
 		  axisLabelUseCanvas: true,
 		  axisLabelFontSizePixels: 12,
                   axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-		  axisLabelPadding: 5,
-		  autoscaleMargin: .50
+		  axisLabelPadding: 100
 		}
 	};
 
@@ -327,8 +326,7 @@ function ($, _, getInternetExplorerVersion) {
             if(granularity === "Hourly") {
 		base_x.xaxis["max"] = startdate + get_millisecond_interval("day");
 	        base_x.xaxis["tickSize"] = [2, "hour"];
-	        var label = get_month_day_year(min_date);
-	        base_x.xaxis["axisLabel"] = label;
+	        base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity);
             } else if(granularity === "Daily") {
 		console.log("start date as string is : " + new Date(startdate));
 		base_x.xaxis["max"] = startdate + get_millisecond_interval("week");
@@ -478,15 +476,9 @@ function ($, _, getInternetExplorerVersion) {
 			y = item.datapoint[1].toFixed(2);
 
 			if(xtype === "time") {
-			    //if(granularity === "Monthly") {
-                                //var x = new Date(item.datapoint[0]);
-				var x = get_month_day_year(new Date(item.datapoint[0]), granularity);
-			    //} else if(granularity === "Weekly") {
-				//var x = get_month_day_year(new Date(item.datapoint[0]), "Weekly");
-			    //}
-
-                                show_tool_tip(item.pageX, item.pageY,
-                                    item.series.label + " for " + x + " is " + y);
+			    var x = get_month_day_year(new Date(item.datapoint[0]), granularity);
+                            show_tool_tip(item.pageX, item.pageY,
+                                item.series.label + " for " + x + " is " + y);
 			} else {
 			    show_tool_tip(item.pageX, item.pageY,
                                 item.series.label + ": " + y + " against " + xtype + ": " + y);
@@ -635,7 +627,6 @@ function ($, _, getInternetExplorerVersion) {
 	    return base * 24 * 6;
 	}
     };
-
 
     /* This module exports one public member -- the class itself. */
     return Graph;
