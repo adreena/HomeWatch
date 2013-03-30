@@ -3,8 +3,7 @@ require(['jquery',
         'underscore',
         'search/defines',
         'search/GraphManager',
-        'spiffy/spiffy.min',
-        'vendor/json2'],
+        'spiffy/spiffy.min'],
 
 function ($, _, D, GraphManager) {
     "use strict";
@@ -15,51 +14,18 @@ function ($, _, D, GraphManager) {
 
     $(function () {
 
-        /* THIS IS ALL DEBUG! */
+        // TODO: Need to get sensor, apartment, and formula info from
+        // somewhere.
 
         var data = GraphManager.makeCategories(D.exampleCategories),
-            graphMan,
-            grrid,
-            theOneGraph,
-            dump;
+            graphMan;
 
         data.apartments = _.range(1, 6 + 1); // Just like Python's range()...
         graphMan = new GraphManager(D.sel.graphList, data);
-        grrid = graphMan.add();
-        theOneGraph = $('#' + grrid);
-        dump = theOneGraph.find('.debug-results');
+        graphMan.add();
 
-        theOneGraph.find('[href=#DEBUG]').click(function () {
-            var query;
 
-            query = {
-                /* Disable process.php's test thing... stuff. */
-                notest: true,
-                /* Serialize the example 'cause I ain't got notin' else. */
-                graph: JSON.stringify(D.exampleProcessParameters)
-            };
-
-            $.ajax({
-                url: D.uri.process,
-                type: 'GET',
-                data: query,
-
-                success: function (graphInfo) {
-                    var asText = JSON.stringify(graphInfo, null, true);
-                    dump.text(asText);
-                },
-
-                error: function () {
-                    dump.text('Something went wrong while contacting process.php');
-                }
-
-            });
-
-            return false;
-
-        });
-
-        /* TEMPORARY: Trying out spiffy because why not? */
+        /* Trying out spiffy because why not? */
         $('.graph-controls').spiffy();
         $('.graph-controls > li > h3').addClass('spiffy-header');
 

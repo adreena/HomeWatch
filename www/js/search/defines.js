@@ -11,7 +11,9 @@ define({
     },
 
     sel: {
-        graphList: 'ul#graphs'
+        graphList: 'ul#graphs',
+        flotGraph: '.graph',
+        graphControl: '.graph-controls'
      },
 
     /**

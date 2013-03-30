@@ -4,10 +4,11 @@
 define([
     'jquery',
     'underscore',
+    'search/defines',
     './Graph',
     'utils/TemplateManager'],
 
-function ($, _, Graph, TemplateManager) {
+function ($, _, D, Graph, TemplateManager) {
     "use strict";
 
     var tman = new TemplateManager(),
@@ -48,9 +49,9 @@ function ($, _, Graph, TemplateManager) {
         this.el = {};
         this.element = element;
         /** The control panel. */
-        this.el.controls = element.find('.graph-controls');
+        this.el.controls = element.find(D.sel.graphControl);
         /** The graph panel. */
-        this.el.graph = element.find('.graph-container');
+        this.el.graph = element.find(D.sel.flotGraph);
 
         /* This should actually put a placeholder there until the
          * data is valid. */
@@ -146,7 +147,7 @@ function ($, _, Graph, TemplateManager) {
         /* Delegate this to update the data on the graph. */
         newData.graphType = this.getGraphType();
 
-        this.graph.update(newData);
+        this.graph.update(newData.values);
     };
 
 

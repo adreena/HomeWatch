@@ -5,7 +5,8 @@ define([
     'jquery',
     'underscore',
     'search/defines',
-    './GraphControl'],
+    './GraphControl',
+    'vendor/json2'],
 
 function ($, _, D, GraphControl) {
     "use strict";
@@ -58,7 +59,8 @@ function ($, _, D, GraphControl) {
         $.ajax({
             url: D.uri.process,
             type: 'GET',
-            data: newRequest,
+            data: JSON.stringify(newRequest),
+            dataType: 'json',
             success: function (newData) {
                 control.onNewData(newData);
             },
