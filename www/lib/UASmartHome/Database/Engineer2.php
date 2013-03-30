@@ -1,5 +1,4 @@
-<?php
-include ('Connection1.php');
+<?php namespace UASmartHome\Database; 
 
 class Engineer2 {
 
@@ -8,7 +7,7 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	{
 		//Energy1 =Solar Day  ,Energ2=(DWHR) ,Energy3=Geo field + DWHR   ,Energy4=Solar + DWHR + Geo field + Heat pumps  ,Energy5=Boiler1,Energy 6=Boiler2 ,Energy 7=Heating energy consumption
 
-	 $conn=new Connection();
+	 $conn=new Connection2();
 	if ($EQ==1)
 	{
 	$dbh=$conn->connect()->prepare("select SUM(".$column.") from Energy_Minute where Date between :SD and :ED") ;
@@ -59,7 +58,7 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 
 }
 
-$testDB = new Engineer_2();
+$testDB = new Engineer2();
  print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',4));
 echo "<br>";
 echo "===========================";
