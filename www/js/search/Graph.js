@@ -90,6 +90,9 @@ function ($, _, getInternetExplorerVersion) {
         // Note that graphData contains the plotable data
         // AND the graphType!
 
+	console.log("graph data xtype is: " + graphData.xaxis);
+	console.log("graph data ytype is: " + graphData.yaxis);
+
 	// Add all of these to the graphState object
             $.extend(this.graphState, {
                 graphType: graphData.graphType,
@@ -111,8 +114,8 @@ function ($, _, getInternetExplorerVersion) {
 	console.log("granularity is: " + granularity);
 	console.log("graphtypes is: " + graphType);
 	console.log("element is: " + element);
-	console.log("xtype is: " + graphState.xaxis);
-	console.log("ytype is: " + graphState.yaxis);
+	console.log("graph state xtype is: " + graphState.xaxis);
+	console.log("graph state ytype is: " + graphState.yaxis);
 
 	if(graphData === undefined) {
 	    console.log("no data available");
