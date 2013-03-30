@@ -123,9 +123,9 @@ function ($, _, getInternetExplorerVersion) {
 
         // test for graphtypes
 	if(graphType === "plainText") {
-	    displayText(graphState, graphData);
+	    displayText(graphState, graphData.values);
 	} else {
-            var data_and_opts = format_data(graphState, graphData);
+            var data_and_opts = format_data(graphState, graphData.values);
 	    var data = data_and_opts["data"];
 	    var options = data_and_opts["options"];
 
