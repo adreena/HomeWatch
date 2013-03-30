@@ -1,7 +1,7 @@
 <?php
 include ('Connection1.php');
 
-class Engineer_2 {
+class Engineer2 {
 
 
 public function EQ($Datefrom,$Dateto,$EQ,$column=null)
