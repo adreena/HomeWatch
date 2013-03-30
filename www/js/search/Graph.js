@@ -338,6 +338,8 @@ function ($, _, getInternetExplorerVersion) {
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+	console.log("min date for label is " + min_date);
+	console.log("max date for label is " + new Date (base_x.xaxis["max"]));
 		base_x.xaxis["axisLabel"] = get_month_day_year(min_date) + " - " + get_month_day_year(new Date (base_x.xaxis["max"]));
             } else if (granularity === "Weekly") {
 		base_x.xaxis["tickSize"] = [1, "week"];
@@ -611,10 +613,9 @@ function ($, _, getInternetExplorerVersion) {
     var get_month_day_year = function (date, granularity) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	var day = date.getUTCDate();
-	var year = date.getUTCFullYear();
 	var month = months[date.getUTCMonth()];
+	var year = date.getUTCFullYear();
 
-	console.log("gran is " + granularity);
 	var tool_tip_output = {
 	    Hourly: month + ' ' + day + ' ' + year,
 	    Daily: month + ' ' + day + ' ' + year,
@@ -622,7 +623,6 @@ function ($, _, getInternetExplorerVersion) {
 	    Monthly: month + ' ' + year
 	};
 
-	console.log("this is new");
 	return tool_tip_output[granularity];
     };
 
