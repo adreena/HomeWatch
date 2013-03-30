@@ -185,9 +185,11 @@ function ($, _, D, Graph, TemplateManager) {
      */
     GraphControl.prototype.onNewData = function  (newData) {
         /* Delegate this to update the data on the graph. */
-        this.graph.graphState.graphType = this.getGraphType();
+        newData.graphType = this.getGraphType();
 
-        this.graph.update(newData.values);
+        /* Send the data to the graph, unchanged (with the exception of the
+         * graph type!) */
+        this.graph.update(withGraphType);
     };
 
 

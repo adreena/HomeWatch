@@ -46,7 +46,6 @@ define({
         },
 
         "Sensors": {
-            "CO2": "Carbon Dioxide (PPM)",
             "all_electricity": {
                 "multiple": [
                     "Mains (Phase A)",
@@ -69,7 +68,9 @@ define({
         },
 
         "Formulae": {
-            "waffles": "Waffles"
+        },
+
+        "Alerts": {
         }
     },
 
@@ -717,7 +718,8 @@ exampleProcessResponse: {
     categoryNameToType: {
         "Time": "time",
         "Sensors": "sensorarray",
-        "Formulae": "formula"
+        "Formulae": "formula",
+        "Alerts": "formula"
     }
 
 

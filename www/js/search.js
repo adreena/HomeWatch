@@ -14,11 +14,16 @@ function ($, _, D, GraphManager) {
 
     $(function () {
 
-        // TODO: Need to get sensor, apartment, and formula info from
-        // somewhere.
+        // TODO: Need to get sensor, apartment info from somewhere...
 
-        var data = GraphManager.makeCategories(D.exampleCategories),
-            graphMan;
+        var cats = D.exampleCategories, graphMan, data;
+
+        /* Get data embedded in the page. */
+        if (categoryData !== undefined) {
+            $.extend(true, cats, categoryData);
+        }
+
+        data = GraphManager.makeCategories(cats);
 
         data.apartments = _.range(1, 6 + 1); // Just like Python's range()...
         graphMan = new GraphManager(D.sel.graphList, data);

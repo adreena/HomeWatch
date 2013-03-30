@@ -15,6 +15,9 @@
 {# See below for the templates within the templates. #}
 
 {% block content %}
+<div class="loading-placeholder">
+Graph data loading &mdash; hang tight!
+</div>
 <ul id="graphs"></ul>
 <a href="#add-graph">Create graph</a>
 {% endblock content %}
@@ -32,6 +35,10 @@
 
 
 {% block extraScripts %}
+{# First #}
+<script>
+var categoryData = {{ categories }};
+</script>
 {# Parameters:
   id:             arbitrary, identifying graph ID
   graphControls:  Provide your own <li>s for the controls.
