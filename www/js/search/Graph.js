@@ -330,6 +330,7 @@ console.log("start date is : " + base_x.xaxis["min"]);
 	        base_x.xaxis["axisLabel"] = label;
             } else if(granularity === "Daily") {
 		base_x.xaxis["max"] = startdate + get_millisecond_interval("week");
+		console.log("start interval is " + startdate);
 		console.log("max is : " + base_x.xaxis["max"]);
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
