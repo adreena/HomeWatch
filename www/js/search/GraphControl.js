@@ -189,7 +189,7 @@ function ($, _, D, Graph, TemplateManager) {
 
         /* Send the data to the graph, unchanged (with the exception of the
          * graph type!) */
-        this.graph.update(withGraphType);
+        this.graph.update(newData);
     };
 
 
