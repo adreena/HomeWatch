@@ -30,7 +30,7 @@ function ($, _, D, Graph, TemplateManager) {
 
         /* Binds events for the elements. */
         bindWeirdDateEvents,
-        bindSelectAlls,
+        bindSelectEvents,
         prevDef;
 
 
@@ -81,7 +81,6 @@ function ($, _, D, Graph, TemplateManager) {
     prevDef = function (wrappedFunction) {
         return function (event) {
             event.preventDefault();
-            console.log("`this` in prevDef:", this);
             return wrappedFunction.apply(this, arguments);
         };
     };
@@ -257,7 +256,7 @@ function ($, _, D, Graph, TemplateManager) {
         rendered = $('<div>').html(asText).children().first();
 
         bindWeirdDateEvents(rendered);
-        bindSelectAlls(rendered);
+        bindSelectEvents(rendered);
 
 
         return rendered;
@@ -336,16 +335,25 @@ function ($, _, D, Graph, TemplateManager) {
     };
 
     /** Binds select all. Doesn't really work yet. */
-    bindSelectAlls = function (element) {
-        var selectToggler = element.find('[data-select-all]'),
-            parent = selectToggler.parent(),
-            checkboxes = parent.children('input[type=checkbox]');
+    bindSelectEvents = function (element) {
+        var selectAll = element.find('.select-all'),
+            selectNone = element.find('.select-none'),
+            boundary,
+            checkboxes,
+            setter;
 
-        // TODO: Should find parent with checkboxes.
+        /* Crawl up the tree to find the select boundary. */
+        boundary = element.find('[data-select-boundary]');
+        checkboxes = boundary.find('input[type=checkbox]');
 
-        selectToggler.click(function (event) {
-            event.preventDefault();
-        });
+        setter = function (setting) {
+            return prevDef(function () {
+                checkboxes.prop('checked', setting);
+            });
+        };
+
+        selectAll.click(setter(true));
+        selectNone.click(setter(false));
 
     };
 
