@@ -70,6 +70,7 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 
 }
 
+/*
 $testDB = new Engineer2();
 print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',5));
 echo "<br>";
@@ -92,5 +93,6 @@ echo "<br>";
   echo "<br>";
 echo "===========================";
 echo "<br>";
+*/
 
 ?>
