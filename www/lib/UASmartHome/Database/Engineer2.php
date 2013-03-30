@@ -51,7 +51,19 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	$trun->execute();
 	return $row;
 	}
-		      
+	if ($EQ==5)
+	{// UseAnaylze the Cop1 & Cop2
+	 $dbh=$conn->connect()->prepare("select calc_cop_test( :SD,:ED)") ;
+	 $dbh->bindParam(":SD",$Datefrom);
+	$dbh->bindParam(":ED",$Dateto);
+	$dbh->execute();
+	$dbh=$conn->connect()->prepare("select * from anaylze") ;
+	$dbh->execute();
+	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
+	$trun=$conn->connect()->prepare ("Truncate anaylze");
+	$trun->execute();
+	return $row;
+	}	      
 	}
 
 
@@ -59,6 +71,10 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 }
 
 $testDB = new Engineer2();
+print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',5));
+echo "<br>";
+echo "===========================";
+echo "<br>";
  print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',4));
 echo "<br>";
 echo "===========================";
