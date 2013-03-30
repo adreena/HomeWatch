@@ -14,7 +14,7 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
-	while ($row = $dbh->fetch(PDO::FETCH_ASSOC))
+	while ($row = $dbh->fetch(\PDO::FETCH_ASSOC))
 		     {
 				$result[]=(array)$row;
 		     }
@@ -26,7 +26,7 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	$dbh->bindParam(":SD",$Datefrom);
 	$dbh->bindParam(":ED",$Dateto);
 	$dbh->execute();
-	$row = $dbh->fetch(PDO::FETCH_ASSOC);
+	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
 	return $row;
 	}
 	if ($EQ==3)
@@ -35,7 +35,7 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	$dbh->bindParam(":SD",$Datefrom);
 	$dbh->bindParam(":ED",$Dateto);
 	$dbh->execute();
-	$row = $dbh->fetch(PDO::FETCH_ASSOC);
+	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
 	return $row;
 	}
 	if ($EQ==4)
@@ -46,7 +46,7 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	$dbh->execute();
 	$dbh=$conn->connect()->prepare("select * from COPCal") ;
 	$dbh->execute();
-	$row = $dbh->fetch(PDO::FETCH_ASSOC);
+	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
 	$trun=$conn->connect()->prepare ("Truncate COPCal");
 	$trun->execute();
 	return $row;
