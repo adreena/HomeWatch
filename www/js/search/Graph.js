@@ -487,7 +487,7 @@ function ($, _, getInternetExplorerVersion) {
 			if(xtype === "time") {
 			    if(granularity === "Monthly") {
                                 //var x = new Date(item.datapoint[0]);
-				var x = get_month_day_year(new Date(item.datapoint[0]), Monthly);
+				var x = get_month_day_year(new Date(item.datapoint[0]), "Monthly");
 			    } else if(granularity === "Weekly") {
 
 			    }
