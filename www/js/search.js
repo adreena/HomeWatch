@@ -19,13 +19,21 @@ function ($, _, D, GraphManager) {
         var cats = D.exampleCategories, graphMan, data;
 
         /* Get data embedded in the page. */
-        if (categoryData !== undefined) {
+        if (typeof categoryData !== "undefined") {
             $.extend(true, cats, categoryData);
+        } else {
+            console.log("Could not find categoryData");
+        }
+
+        if (typeof apartments !== "undefined") {
+            $.extend(true, cats, categoryData);
+        } else {
+            console.log("Could not find apartments");
+            data.apartments = _.range(1, 3); // Just like Python's range()...
         }
 
         data = GraphManager.makeCategories(cats);
 
-        data.apartments = _.range(1, 6 + 1); // Just like Python's range()...
         graphMan = new GraphManager(D.sel.graphList, data);
         /* Have one initial graph control. */
         graphMan.add();

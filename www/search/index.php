@@ -8,6 +8,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use \UASmartHome\Auth\User;
 use \UASmartHome\Auth\Firewall;
+use \UASmartHome\EquationParser;
 use \UASmartHome\Database\Configuration\ConfigurationDB;
 
 //TODO: UNCOMMENT THE FOLLOWING LINE:
@@ -25,15 +26,21 @@ foreach ($unfilteredCategories['functions'] as $func)  {
 };
 
 $categories['Alerts'] = array();
-foreach ($unfilteredCategories['alerts'] as $func)  {
-    $categories['Alerts'][$func['id']] = $func['name'];
+foreach ($unfilteredCategories['alerts'] as $alert)  {
+    $categories['Alerts'][$alert['id']] = $alert['name'];
 };
 
-// TODO: Still need sensor and aparetment data!
+$categories['Sensors'] = array();
+foreach (EquationParser::$DBVARS as $grossName => $DBName) {
+    $categories['Sensors'][$DBName] = $grossName;
+};
+
+// TODO: Still need apartment data!
 
 $twig = \UASmartHome\TwigSingleton::getInstance();
 
 echo $twig->render("manager/search.html", array(
-    "categories" => json_encode($categories)
+    "categories" => json_encode($categories),
+    "apartments" => json_encode(array(1,2,3,4,5,6))
 ));
 
