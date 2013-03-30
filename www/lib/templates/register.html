@@ -44,7 +44,7 @@
         <li>
           <label for="role">Role</label>
           <select id="role" name="role" value="{{ account.roleID }}" onChange="onRoleChanged(this)">
-            <option value="0"></option>
+            <option value="0">SELECT ONE</option>
             <option value="5">Resident</option>
             <option value="4">Engineer</option>
             <option value="3">Manager</option>
@@ -117,7 +117,7 @@
       v.addValidation("conf-password", "eqelmnt=password","Passwords do not match.");
       v.addValidation("email", "req", "Please enter your email.");
       v.addValidation("email", "email");
-      v.addValidation("role", "req", "Please enter your role.");
+      v.addValidation("role","dontselect=0");
     </script>
     
     <nav class="extra-items">
