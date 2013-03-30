@@ -628,11 +628,11 @@ function ($, _, getInternetExplorerVersion) {
 	    "Hourly": month + ' ' + day + ' ' + year,
 	    "Daily": month + ' ' + day + ' ' + year,
 	    "Weekly": month + ' ' + year,
-	    "Monthly": year
+	    "Monthly": month + ' ' + year
 	};
 
 	console.log("this is new");
-	/*return*/ console.log(tool_tip_output[granularity]);
+	return tool_tip_output[granularity];
     };
 
 	/*if(granularity === "Monthly") {
