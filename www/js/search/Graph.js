@@ -578,24 +578,21 @@ function ($, _, getInternetExplorerVersion) {
 	var month = months[date.getUTCMonth()];
 	var year = date.getUTCFullYear();
 
-	var tool_tip_output = {
+	return tool_tip_output = {
 	    Hourly: month + ' ' + day + ' ' + year,
 	    Daily: month + ' ' + day + ' ' + year,
 	    Weekly: month + ' ' + year,
 	    Monthly: month + ' ' + year
-	};
-
-	return tool_tip_output[granularity];
+	}[granularity];
     };
 
     var get_millisecond_interval = function (interval) {
-	var base = 3600000;
-
-	if(interval === "day") {
-	    return base * 23;
-	} else if(interval === "week") {
-	    return base * 24 * 6;
-	}
+	    var base = 3600000;
+	    return milliseconds = {
+		Hourly: base * 23,
+		Daily: base * 24 * 6,
+		Weekly: base * 24 * 6
+	    }[interval];
     };
 
     /* This module exports one public member -- the class itself. */
