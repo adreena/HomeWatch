@@ -1,0 +1,46 @@
+{% extends 'engineer/base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
+
+<script src="/js/vendor/jquery-ui.js"></script>
+<script src="/js/vendor/jquery.scrollTo-min.js"></script>
+<script src="/js/calculations.js"></script>
+
+<div class="configs">
+
+    <!-- Alert Config -->
+    <div class="config">
+    <select id="calculations" onChange="showhideEnergiesOnChange(this);">
+        <option value="eq1">Heat Energy</option>
+        <option value="eq2">Corresponding Power and Energy Uses for Heat Pump</option>
+        <option value="eq3">Corresponding Power and Energy Uses for the Entire heating System</option>
+        <option value="eq4">Analysis of COP1 and COP2</option>
+    </select>
+
+
+    <select id="energies">
+        <option value="energy1">Solar Day</option>
+        <option value="energy2">DWHR</option>
+        <option value="energy3">Geo field + DWHR</option>
+        <option value="energy4">Solar + DWHR + Geo field + Heat pumps</option>
+        <option value="energy5">Boiler1</option>
+        <option value="energy6">Boiler2</option>
+        <option value="energy7">Heating energy consumption</option>
+    </select>
+
+    <label for="startdate">Start Date</label><br>
+    <input id="startdate" name="startdate" type="text" /><br>
+
+    <label for="enddate">End Date</label><br>
+    <input id="enddate" name="enddate" type="text" /><br>
+    <button onClick="calculate(this)">Calculate</button>
+
+    </div>
+
+</div> <!-- Configs -->
+
+
+{% endblock content %}
+
