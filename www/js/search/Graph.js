@@ -85,15 +85,12 @@ function ($, _, getInternetExplorerVersion) {
 
     /** Update method. Provide new data to update the graph. */
     Graph.prototype.update = function (graphData) {
-        // Actually graphs the data!
 
-        // Note that graphData contains the plotable data
-        // AND the graphType!
-
-	console.log("graph data xtype is: " + graphData.xaxis);
-	console.log("graph data ytype is: " + graphData.yaxis);
-
-	// Add all of these to the graphState object
+        /* 
+	 * Note that graphData contains the plotable data
+         * AND the graphType! Add all of these to the 
+	 * graphState object
+	 */
             $.extend(this.graphState, {
                 graphType: graphData.graphType,
                 granularity: graphData.granularity,
@@ -110,12 +107,6 @@ function ($, _, getInternetExplorerVersion) {
 	var graphType = graphState.graphType;
 	var element = graphState.element;
 	var granularity = graphState.granularity;
-
-	console.log("granularity is: " + granularity);
-	console.log("graphtypes is: " + graphType);
-	console.log("element is: " + element);
-	console.log("graph state xtype is: " + graphState.xtype);
-	console.log("graph state ytype is: " + graphState.ytype);
 
         // test for graphtypes
 	if(graphType === "plainText") {
