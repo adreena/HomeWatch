@@ -635,17 +635,6 @@ function ($, _, getInternetExplorerVersion) {
 	return tool_tip_output[granularity];
     };
 
-	/*if(granularity === "Monthly") {
-	    return months[date.getUTCMonth()] + ' ' + date.getUTCDate() + ' ' + date.getUTCFullYear();
-	}
-	return months[date.getUTCMonth()] + ' ' + date.getUTCDate() + ' ' + date.getUTCFullYear();
-    };
-
-     var get_month_year = function (date) {
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec"];
-	return months[date.getUTCMonth()] + ' ' + date.getUTCFullYear();
-    };*/
-
     var get_millisecond_interval = function (interval) {
 	var base = 3600000;
 
