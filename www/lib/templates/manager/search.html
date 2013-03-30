@@ -16,7 +16,7 @@
 
 {% block content %}
 <ul id="graphs"></ul>
-<a href="#add-graph">Add graph</a>
+<a href="#add-graph">Create graph</a>
 {% endblock content %}
 
 {#
@@ -167,11 +167,11 @@
 #}
 <script id="_t-graph-control-types" type="text/html">
   <ul data-for-internal class="graph-controls-type" data-graph data-name="graph-type">
-    <li><label><input checked type="radio" name="graph-type" value="bar" />
-        <span class="graph-preview"> Bar graph</span>
-      </label></li>
-    <li><label><input type="radio" name="graph-type" value="line" />
+    <li><label><input checked type="radio" name="graph-type" value="line" />
         <span class="graph-preview"> Line graph</span>
+      </label></li>
+    <li><label><input type="radio" name="graph-type" value="bar" />
+        <span class="graph-preview"> Bar graph</span>
       </label></li>
     <li><label><input type="radio" name="graph-type" value="pie" />
         <span class="graph-preview"> Pie chart</span>

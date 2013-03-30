@@ -24,10 +24,17 @@ function ($, _, D, GraphManager) {
         graphMan = new GraphManager(D.sel.graphList, data);
         graphMan.add();
 
-
         /* Trying out spiffy because why not? */
-        $('.graph-controls').spiffy();
+        $(D.sel.graphControls).spiffy();
         $('.graph-controls > li > h3').addClass('spiffy-header');
+
+
+        /* Herp derp derp. */
+        $(D.sel.addGraphButton).click(function (event) {
+            event.preventDefault();
+
+            graphMan.add();
+        });
 
     });
 

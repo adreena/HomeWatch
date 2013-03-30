@@ -56,23 +56,27 @@ function ($, _, D, GraphControl) {
 
     /** Makes a request an AJAX request immediately. */
     GraphManager.prototype._makeImmediateRequest = function (control, newRequest) {
-        $.ajax({
-            url: D.uri.process,
-            type: 'GET',
-            data: JSON.stringify(newRequest),
-            dataType: 'json',
-            success: function (newData) {
-                control.onNewData(newData);
-            },
-            error: function () {
-                console.log("Error fetching info from process.");
-           }
-        });
 
         // DEBUG!
-        //setTimeout(function () {
-        //    control.onNewData(D.exampleProcessResponse);
-        //}, 0);
+        if (true) {
+            $.ajax({
+                url: D.uri.process,
+                type: 'GET',
+                data: JSON.stringify(newRequest),
+                dataType: 'json',
+                success: function (newData) {
+                    control.onNewData(newData);
+                },
+                error: function () {
+                    console.log("Error fetching info from process.");
+               }
+            });
+
+        } else {
+            setTimeout(function () {
+                control.onNewData(D.exampleProcessResponse);
+            }, 0);
+        }
 
     };
 

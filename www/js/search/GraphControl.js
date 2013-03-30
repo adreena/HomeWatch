@@ -49,9 +49,10 @@ function ($, _, D, Graph, TemplateManager) {
         this.el = {};
         this.element = element;
         /** The control panel. */
-        this.el.controls = element.find(D.sel.graphControl);
+        this.el.controls = element.find(D.sel.graphControls);
         /** The graph panel. */
         this.el.graph = element.find(D.sel.flotGraph);
+        this.el.info = element.find(D.sel.graphContainer);
 
         /* This should actually put a placeholder there until the
          * data is valid. */
@@ -145,7 +146,7 @@ function ($, _, D, Graph, TemplateManager) {
      */
     GraphControl.prototype.onNewData = function  (newData) {
         /* Delegate this to update the data on the graph. */
-        newData.graphType = this.getGraphType();
+        this.graph.graphState.graphType = this.getGraphType();
 
         this.graph.update(newData.values);
     };

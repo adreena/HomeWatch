@@ -13,7 +13,9 @@ define({
     sel: {
         graphList: 'ul#graphs',
         flotGraph: '.graph',
-        graphControl: '.graph-controls'
+        graphControls: '.graph-controls',
+        graphContainer: '.graph-container',
+        addGraphButton: 'a[href=#add-graph]'
      },
 
     /**
@@ -21,7 +23,7 @@ define({
      * An HTTP request is not made within this period.
      */
     MinRequestDelay: 750,
-    
+
     /*
      * This is an example of how the sensors will look. It's in simple
      * JSON so that we can move this to a simple file if need be. If
