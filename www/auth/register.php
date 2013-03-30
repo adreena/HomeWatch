@@ -39,7 +39,7 @@ if (isset($_POST['submit'])) {
 
 // Otherwise, show the register page
 $twig = \UASmartHome\TwigSingleton::getInstance();
-echo $twig->render('register.html', array(
+echo $twig->render('manager/register.html', array(
     "account" => $data,
     "result" => $regResult
 ));
