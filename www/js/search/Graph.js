@@ -336,7 +336,7 @@ function ($, _, getInternetExplorerVersion) {
             if(granularity === "Hourly") {
 		base_x.xaxis["max"] = startdate + get_millisecond_interval("day");
 	        base_x.xaxis["tickSize"] = [2, "hour"];
-	        var label = get_month_and_day(min_date);
+	        var label = get_month_day_year(min_date);
 	        base_x.xaxis["axisLabel"] = label;
             } else if(granularity === "Daily") {
 		console.log("start date as string is : " + new Date(startdate));
@@ -347,7 +347,7 @@ function ($, _, getInternetExplorerVersion) {
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-		base_x.xaxis["axisLabel"] = get_month_and_day(min_date) + " - " + get_month_and_day(new Date (base_x.xaxis["max"]));
+		base_x.xaxis["axisLabel"] = get_month_day_year(min_date) + " - " + get_month_day_year(new Date (base_x.xaxis["max"]));
             } else if (granularity === "Weekly") {
 		base_x.xaxis["tickSize"] = [1, "week"];
 		base_x.xaxis["weekNames"] = ["1", "2", "3", "4", "5"];
@@ -471,6 +471,7 @@ function ($, _, getInternetExplorerVersion) {
         var previousPoint = null;
 	var element = this.graphState.element;
 	var xtype = this.graphState.xtype;
+	var granularity = this.graphState.granularity;
 
         $(element).bind("plothover", function (event, pos, item) {
             $("#x").text(pos.x.toFixed(2));
@@ -484,10 +485,15 @@ function ($, _, getInternetExplorerVersion) {
 			y = item.datapoint[1].toFixed(2);
 
 			if(xtype === "time") {
-                            //var x = new Date(item.datapoint[0]);
-			    var x = get_month_and_day(new Date(item.datapoint[0]));
-                            show_tool_tip(item.pageX, item.pageY,
-                                item.series.label + " on " + x + " is " + y);
+			    if(granularity === "Monthly") {
+                                //var x = new Date(item.datapoint[0]);
+				var x = get_month_day_year(new Date(item.datapoint[0]), "Monthly");
+			    } else if(granularity === "Weekly") {
+
+			    }
+
+                                show_tool_tip(item.pageX, item.pageY,
+                                    item.series.label + " for " + x + " is " + y);
 			} else {
 			    show_tool_tip(item.pageX, item.pageY,
                                 item.series.label + ": " + y + " against " + xtype + ": " + y);
@@ -611,10 +617,31 @@ function ($, _, getInternetExplorerVersion) {
         return date < 10 ? '0' + date : '' + date;
     };
 
-    var get_month_and_day = function (date) {
+    var get_month_day_year = function (date, granularity) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec"];
+	var day = date.getUTCDate();
+	var year = date.getUTCFullYear();
+	var month = months[date.getUTCMonth()];
+	var tool_tip_output = {
+	    Hourly: month + ' ' + day + ' ' + year,
+	    Daily: month + ' ' + day + ' ' + year,
+	    Weekly: month + ' ' + year,
+	    Monthly: year
+	};
+
+	return tool_tip_output.granularity
+    };
+
+	/*if(granularity === "Monthly") {
+	    return months[date.getUTCMonth()] + ' ' + date.getUTCDate() + ' ' + date.getUTCFullYear();
+	}
 	return months[date.getUTCMonth()] + ' ' + date.getUTCDate() + ' ' + date.getUTCFullYear();
     };
+
+     var get_month_year = function (date) {
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec"];
+	return months[date.getUTCMonth()] + ' ' + date.getUTCFullYear();
+    };*/
 
     var get_millisecond_interval = function (interval) {
 	var base = 3600000;
