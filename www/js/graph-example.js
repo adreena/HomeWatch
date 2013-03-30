@@ -10,7 +10,9 @@ function ($, _, Graph, D) {
     data = _.clone(D.exampleProcessResponse);
     data.graphType = 'line';
 
-    /* Make the graph. Click events are simply printed by conosle.log. */
-    graph = new Graph(container, console.log, data);
+    /* Make the graph. Click events are simply printed by console.log. */
+    //graph = new Graph(container, console.log, data);
+    graph = new Graph(container, console.log);
+    graph.update(data);
 
 });

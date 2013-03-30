@@ -144,9 +144,9 @@ function ($, _, Graph, TemplateManager) {
      */
     GraphControl.prototype.onNewData = function  (newData) {
         /* Delegate this to update the data on the graph. */
-        var withGraphType = _(newData).extend(this.getGraphType());
+        newData.graphType = this.getGraphType();
 
-        this.graph.update(withGraphType);
+        this.graph.update(newData);
     };
 
 

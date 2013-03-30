@@ -59,7 +59,7 @@ function ($, _, getInternetExplorerVersion) {
 	    enddate: null,
 	    min_x: null,
 	    max_x: null,
-            graphType: "bar",
+            graphType: "line",
             granularity: "Hourly",
             xtype: "time",
             ytype: null,
@@ -80,7 +80,7 @@ function ($, _, getInternetExplorerVersion) {
                 ytype: initialData.yaxis,
             });
 
-	console.log("graphtype is " + this.graphState.graphType);
+	    console.log("graphtype is " + this.graphState.graphType);
 
             this.update(initialData.values);
 
