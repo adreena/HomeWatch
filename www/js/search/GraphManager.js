@@ -58,7 +58,7 @@ function ($, _, D, GraphControl) {
     /** Makes a request an AJAX request immediately. */
     GraphManager.prototype._makeImmediateRequest = function (control, newRequest) {
         var graphParams = JSON.stringify(newRequest),
-            onSuccess;
+            onSuccess, self = this;
         
         /* Fetch the request out of the cache, if it's found. */
         if (_(this.resultCache).has(graphParams)) {
@@ -75,7 +75,8 @@ function ($, _, D, GraphControl) {
 
         onSuccess = function (newData) {
             /* Stuff the successful request into the cache. */
-            this.resultCache[graphParams] = newData;
+            self.resultCache[graphParams] = newData;
+            control.onNewData(newData);
         };
 
         $.ajax({
