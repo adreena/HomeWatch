@@ -193,6 +193,11 @@ function ($, _, D, Graph, TemplateManager) {
     };
 
 
+    GraphControl.prototype.onFetchError = function () {
+        // TODO: make progress more visible
+        console.log("Error fetching info from process.");
+    };
+
     /*
      * Additional event bindings.
      */

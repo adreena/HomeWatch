@@ -20,6 +20,7 @@ function ($, _, D, GraphControl) {
         this.masterGraphList = $(element);
         this.data = data;
         this.values = data.values;
+        this.resultCache = {};
 
         /** List of managed graphs. */
         this.graphs = {};
@@ -56,27 +57,38 @@ function ($, _, D, GraphControl) {
 
     /** Makes a request an AJAX request immediately. */
     GraphManager.prototype._makeImmediateRequest = function (control, newRequest) {
+        var graphParams = JSON.stringify(newRequest),
+            onSuccess;
 
-        // DEBUG!
-        if (true) {
-            $.ajax({
-                url: D.uri.process,
-                type: 'GET',
-                data: JSON.stringify(newRequest),
-                dataType: 'json',
-                success: function (newData) {
-                    control.onNewData(newData);
-                },
-                error: function () {
-                    console.log("Error fetching info from process.");
-               }
-            });
-
-        } else {
-            setTimeout(function () {
-                control.onNewData(D.exampleProcessResponse);
-            }, 0);
+        onSuccess = function (newData) {
+            /* Stuff the successful request into the cache. */
+            this.cache[graphParams] = newData;
+            control.onNewData(newData);
+        };
+        
+        /* Fetch the request out of the cache, if it's found. */
+        if (_(this.cache).has(graphParams)) {
+            console.log("Getting request from the cache.");
+            /* setTimeout to run this function outside of the
+             * current call stack to emulate how jQuery's success
+             * callback would be called. */
+            setTimeout(onSuccess, 0);
+            return;
         }
+
+        $.ajax({
+            url: D.uri.process,
+            type: 'GET',
+            data: {
+                graph: graphParams,
+                notest: true
+            },
+            dataType: 'json',
+            success: onSuccess,
+            error: function () {
+                control.onFetchError();
+           }
+        });
 
     };
 
