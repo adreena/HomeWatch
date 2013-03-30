@@ -336,7 +336,7 @@ function ($, _, getInternetExplorerVersion) {
 		console.log("max is : " + base_x.xaxis["max"]);
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
-		base_x.xaxis["dayNames"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+		base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 		base_x.xaxis["axisLabel"] = get_month_and_day(min_date) + " - " + get_month_and_day(new Date (base_x.xaxis["max"]));
             } else if (granularity === "Weekly") {
 		base_x.xaxis["tickSize"] = [1, "week"];
