@@ -347,7 +347,7 @@ function ($, _, getInternetExplorerVersion) {
 		base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 		var label = min_date.getUTCFullYear();
 		base_x.xaxis["axisLabel"] = 'Year: ' + label;
-		var year_end = label + "-12-31:0";
+		var year_end = label + "-12-01:0";
 		base_x.xaxis["max"] = DateToUTC(year_end);
 	    } else {
 		// multiple years?
