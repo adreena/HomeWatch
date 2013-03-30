@@ -21,22 +21,26 @@
 
 
     <select id="energies">
-        <option value="energy1">Solar Day</option>
-        <option value="energy2">DWHR</option>
-        <option value="energy3">Geo field + DWHR</option>
-        <option value="energy4">Solar + DWHR + Geo field + Heat pumps</option>
-        <option value="energy5">Boiler1</option>
-        <option value="energy6">Boiler2</option>
-        <option value="energy7">Heating energy consumption</option>
+        <option value="Energy1">Solar Day</option>
+        <option value="Energy2">DWHR</option>
+        <option value="Energy3">Geo field + DWHR</option>
+        <option value="Energy4">Solar + DWHR + Geo field + Heat pumps</option>
+        <option value="Energy5">Boiler1</option>
+        <option value="Energy6">Boiler2</option>
+        <option value="Energy7">Heating energy consumption</option>
     </select>
 
-    <label for="startdate">Start Date</label><br>
-    <input id="startdate" name="startdate" type="text" /><br>
+    <div>
+        <label for="startdate">Start Date</label><br>
+        <input id="startdate" name="startdate" type="text" /><br>
 
-    <label for="enddate">End Date</label><br>
-    <input id="enddate" name="enddate" type="text" /><br>
-    <button onClick="calculate(this)">Calculate</button>
+        <label for="enddate">End Date</label><br>
+        <input id="enddate" name="enddate" type="text" /><br>
+        <button onClick="calculate(this)">Calculate</button>
+    </div>
 
+    <div id="results">
+    </div>
     </div>
 
 </div> <!-- Configs -->

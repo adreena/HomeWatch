@@ -33,7 +33,8 @@ function calculate(button) {
         }
     )
     .done(function(data) {
-        alert(data);
+        var resultsdiv = document.getElementById('results');
+        resultsdiv.innerHTML = "Result: " + data + '<br />';
     })
     .fail(function(data) {
         alert("Error Doing Calculations: " + data.statusText);
