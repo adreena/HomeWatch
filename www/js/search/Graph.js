@@ -114,12 +114,8 @@ function ($, _, getInternetExplorerVersion) {
 	console.log("granularity is: " + granularity);
 	console.log("graphtypes is: " + graphType);
 	console.log("element is: " + element);
-	console.log("graph state xtype is: " + graphState.xaxis);
-	console.log("graph state ytype is: " + graphState.yaxis);
-
-	if(graphData === undefined) {
-	    console.log("no data available");
-	}
+	console.log("graph state xtype is: " + graphState.xtype);
+	console.log("graph state ytype is: " + graphState.ytype);
 
         // test for graphtypes
 	if(graphType === "plainText") {
@@ -135,7 +131,7 @@ function ($, _, getInternetExplorerVersion) {
 	        this.bind_plotclick();
 	    }
 
-	    bind_plothover(element);
+	    this.bind_plothover();
         }
     };
 
@@ -471,8 +467,10 @@ function ($, _, getInternetExplorerVersion) {
         }).appendTo("body").fadeIn(200);
     };
 
-    bind_plothover = function (element) {
+    Graph.prototype.bind_plothover = function () {
         var previousPoint = null;
+	var element = this.graphState.element;
+	var xtype = this.graphState.xtype;
 
         $(element).bind("plothover", function (event, pos, item) {
             $("#x").text(pos.x.toFixed(2));
