@@ -25,14 +25,14 @@ function ($, _, D, GraphManager) {
             console.log("Could not find categoryData");
         }
 
-        if (typeof apartments !== "undefined") {
-            $.extend(true, cats, categoryData);
+        data = GraphManager.makeCategories(cats);
+
+        if (typeof apartmentData !== "undefined") {
+            data.apartments = apartmentData;
         } else {
             console.log("Could not find apartments");
             data.apartments = _.range(1, 3); // Just like Python's range()...
         }
-
-        data = GraphManager.makeCategories(cats);
 
         graphMan = new GraphManager(D.sel.graphList, data);
         /* Have one initial graph control. */
