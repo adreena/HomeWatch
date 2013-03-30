@@ -34,7 +34,7 @@ abstract class UserProvider
     /// Returns the RegistrationResult for the request.
     ///
     final public function registerNewUser($accountData) {
-        $result = new RegistrationResult();
+        $result = new RegistrationResult($accountData);
         
         $this->validateAccountData($accountData, $result);
         if ($result->getIsOK()) {

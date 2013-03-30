@@ -83,6 +83,10 @@
       {% if result.isBad %}
       <div class="error-string"><p>Failed to register user. {{ result.friendlyResultOverall }} </p></div>
       {% endif %}
+      
+      {% if result.isOK %}
+      <div class="success-string"><p>Successfully registered user {{ result.UserName }}</p></div>
+      {% endif %}
 
     </form>
 

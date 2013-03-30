@@ -34,15 +34,6 @@ if (isset($_POST['submit'])) {
     
     if ($regResult->getIsOK()) {
         
-        // Logout the current user, if any
-        $sessionUser = User::getSessionUser();
-        if ($sessionUser != null) {
-            $sessionUser->logout();
-        }
-        
-        // Send the new user to login
-        header('Location: /');
-        exit();
     }
 }
 

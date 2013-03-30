@@ -53,3 +53,7 @@ body {
 .login-box .extra-items {
   float: left;
 }
+
+.success-string {
+  color: blue;
+}

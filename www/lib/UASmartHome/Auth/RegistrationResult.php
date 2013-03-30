@@ -15,15 +15,18 @@ class RegistrationResult
     const ERROR_UNKNOWN = 0;
     const ERROR_SQL     = 1;
     
+    private $accountData;
+    
     private $resultCode;    // The overall registration result code (see above codes)
     private $resultCodes;   // Maps AccountData fields to registration result codes
 
     private $errorType; // The internal error code type
     private $errorCode; // The internal error code corresponding to the errorType
 
-    public function __construct()
+    public function __construct($accountData)
     {
-        $resultCode = RegistrationResult::CODE_OK;
+        $this->accountData = $accountData;
+        $this->resultCode = RegistrationResult::CODE_OK;
     }
     
     ///
@@ -135,6 +138,14 @@ class RegistrationResult
     public function getIsBad()
     {
         return !$this->getIsOK();
+    }
+    
+    ///
+    ///
+    ///
+    public function getUserName()
+    {
+        return $this->accountData->username;
     }
     
 }
