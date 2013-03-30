@@ -1,32 +1,69 @@
 {% extends 'manager/base.html' %}
 
-{% block title 'UtilityContracts' %}
-
 {% block content %}
-<header>
-  <h1> This is the contracts page. </h1>
-</header>
 
-<div class="searchbuttons">
-	<form action="utilitycontracts.php" method="post">
-	  <input type="submit" name="All Contracts" value="All Contracts">
-	</form>
+<link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
 
-	<form action="electricityContracts.php" method="post">
-	  <input type="submit" name="Electricity Contracts" value="Electricity Contracts">
-	</form>
-</div>
+<script src="/js/vendor/jquery-ui.js"></script>
+<script src="/js/vendor/jquery.scrollTo-min.js"></script>
+<script src="/js/utilityConfig.js"></script>
 
-<div class="addbutton">
-	<form action="addcontracts.php" method="post">
-	  <input type="submit" name="Add A Contract" value="Add A Contract">
-	</form>
-	
-	<form action="editcontracts.php" method="post">
-	  <input type="submit" name="Edit A Contract" value="Edit A Contract">
-	</form>
-</div>
+<div class="configs">
 
-  {% include 'manager/contracts-table.html' %}
+    <!-- Utility Config -->
+    <div class="config">
+        <div class="config-display utilities">
+            <p class="title">Utility Contracts</p>
+            <table>
+                <tr class="header">
+                    <th class="type">Type</th>
+                    <th class="price">Price</th>
+                    <th class="startdate">Start Date</th>
+                    <th class="enddate">End Date</th>
+                    <th colspan="2"></th>
+                </tr>
 
-{% endblock %}
+                {% for utility in utilitiesData['utilities'] %}
+                <tr id="utility_id" class="body">
+                    <td class="type">{{ utility['type'] }}</td>
+                    <td class="price">{{ utility['price'] }}</td>
+                    <td class="startdate">{{ utility['startdate'] }}</td>
+                    <td class="enddate">{{ utility['enddate'] }}</td>
+                    <td><button onClick="editUtility(this)">Edit</button></td>
+                    <td><button onClick="deleteUtility(this)">Delete</button></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="config-editor">
+            <form id="utility-editor" onsubmit="return submitUtility()">
+                <fieldset>
+                    <legend>Utility Prices Editor</legend>
+
+                    <label for="type">Type</label><br>
+                    <input name="type" type="text" /><br>
+
+                    <label for="price">Price</label><br>
+                    <input name="price" type="text" /><br>
+
+                    <label for="startdate">Start Date</label><br>
+                    <input name="startdate" type="text" /><br>
+
+                    <label for="enddate">End Date</label><br>
+                    <input name="enddate" type="text" /><br>
+
+                    <div class="footer">
+                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Clear</button>
+                        <input class="button" name="submit" type="submit" value="Submit"/>
+                    </div>
+
+                    <input class="id" name="id" value="-1" />
+                </fieldset>
+            </form>
+        </div>
+    </div> <!-- Utility Config -->
+</div> <!-- Configs -->
+
+
+{% endblock content %}
