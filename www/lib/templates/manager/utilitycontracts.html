@@ -24,7 +24,7 @@
                 </tr>
 
                 {% for utility in utilitiesData['utilities'] %}
-                <tr id="utility_id" class="body">
+                <tr id="utility_{{ utility['id'] }}" class="body">
                     <td class="type">{{ utility['type'] }}</td>
                     <td class="price">{{ utility['price'] }}</td>
                     <td class="startdate">{{ utility['startdate'] }}</td>

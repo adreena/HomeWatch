@@ -42,12 +42,9 @@ function submitUtility() {
 }
 
 function deleteUtility(deleteButton) {
-    var type = getRowData(deleteButton).type;
-    var price = getRowData(deleteButton).price;
-    var startdate = getRowData(deleteButton).startdate;
-    var enddate = getRowData(deleteButton).enddate;
+    var utilityID = getRowData(deleteButton).id;
 
-    $.post('/manager/delete-utility.php', {type: type, price: price, startdate: startdate, enddate: enddate})
+    $.post('/manager/delete-utility.php', {id: utilityID})
     .done(function(data) { window.location.reload(); })
     .fail(function(data) { alert("Error deleting utility cost configuration: " + data.statusText); });
 }
@@ -56,6 +53,7 @@ function getUtilityEditorData() {
     var utilityEditorContents = $(utilityEditor).contents();
 
     return {
+        id: utilityEditorContents.find('input[name=id]').val(),
         type: utilityEditorContents.find('input[name=type]').val(),
         price: utilityEditorContents.find('input[name=price]').val(),
         startdate: utilityEditorContents.find('input[name=startdate]').val(),
@@ -69,6 +67,7 @@ function setUtilityEditorData(utility) {
     utilityEditorContents.find('input[name=price]').val(utility.price);
     utilityEditorContents.find('input[name=startdate]').val(utility.startdate);
     utilityEditorContents.find('input[name=enddate]').val(utility.enddate);
+    utilityEditorContents.find('input[name=id]').val(utility.id);
 }
 
 // =================================================================================================
@@ -78,7 +77,7 @@ function getRowData(rowButton) {
     var row = $(rowButton).closest("tr");
 
     return {
-        //id: row.attr('id').match(/\d+/)[0],
+        id: row.attr('id').match(/\d+/)[0],
         type: row.children(".type")[0].innerHTML,
         price: row.children(".price")[0].innerHTML,
         startdate: row.children(".startdate")[0].innerHTML,

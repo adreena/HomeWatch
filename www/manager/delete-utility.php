@@ -15,18 +15,11 @@ use \UASmartHome\Database\Utilities\UtilitiesDB;
 use \UASmartHome\Database\Utilities\Utility;
 
 // Check that the request is valid
-if (!(isset($_POST['type']) && isset($_POST['price']) && isset($_POST['startdate']) && isset($_POST['enddate']))) {
+if (!isset($_POST['id'])) {
     http_response_code(400);
     die;
 }
 
-// Submit the request
-$utility = new Utility();
-$utility->type = $_POST['type'];
-$utility->price = $_POST['price'];
-$utility->startdate = $_POST['startdate'];
-$utility->enddate = $_POST['enddate'];
-
-if (!UtilitiesDB::deleteUtility($utility)) {
+if (!UtilitiesDB::deleteUtility($_POST['id'])) {
     http_response_code(400);
 }

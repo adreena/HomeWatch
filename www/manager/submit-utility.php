@@ -22,6 +22,7 @@ if (!(isset($_POST['type']) && isset($_POST['price']) && isset($_POST['startdate
 
 // Submit the request
 $utility = new Utility();
+$utility->id = isset($_POST['id']) ? $_POST['id'] : -1;
 $utility->type = $_POST['type'];
 $utility->price = $_POST['price'];
 $utility->startdate = $_POST['startdate'];

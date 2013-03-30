@@ -22,7 +22,7 @@ class UtilitiesDB {
         if ($connection == null)
             $connection = (new Connection())->connect();
 
-        $s = $connection->prepare("SELECT Type, Price, Start_Date, End_Date
+        $s = $connection->prepare("SELECT Utility_ID, Type, Price, Start_Date, End_Date
                                    FROM Utilities_Prices");
 
         try {
@@ -35,6 +35,7 @@ class UtilitiesDB {
         $utilities = array();
         while ($utility = $s->fetch(\PDO::FETCH_ASSOC)) {
             array_push($utilities, array(
+                'id' => $utility['Utility_ID'],
                 'type' => $utility['Type'],
                 'price' => $utility['Price'],
                 'startdate' => $utility['Start_Date'],
@@ -45,35 +46,23 @@ class UtilitiesDB {
         return $utilities;
     }
 
-    public function fetchAlert($alert_name)
-    {
-        $con = new Connection();
-        $con = $con->connect();
-        $s = $con->prepare("SELECT Alert_ID, Name, Value, Description
-                                   FROM Alerts WHERE Name=:Alert_Name");
-
-        $s->bindParam(':Alert_Name', $alert_name);
-
-        try {
-            $s->execute();
-        } catch (\PDOException $e) {
-            trigger_error("Failed to fetch function: " . $e->getMessage(), E_USER_WARNING);
-            return null;
-        }
-
-        $alert = $s->fetch(\PDO::FETCH_ASSOC);
-
-        return $alert;
-    }
-
     public function submitUtility($utility)
     {
-        if ($utility == null)
+        if ($utility == null || $utility->isValid())
             return false;
         $con = new Connection();
         $con = $con->connect();
 
-        $s = $con->prepare('INSERT INTO Utilities_Prices VALUES (:type, :price, :startdate, :enddate) ON DUPLICATE KEY UPDATE Type=:type, Price=:price, Start_Date=:startdate, End_Date=:enddate');
+        if ($utility->hasID()) {
+            $s = $con->prepare('UPDATE Utilities_Prices
+                                SET Type=:type, Price=:price, Start_Date=:startdate, End_Date=:enddate
+                                WHERE Utility_ID=:Utility_ID');
+
+            $s->bindParam(':Utility_ID', $utility->id);
+        } else {
+            $s = $con->prepare('INSERT INTO Utilities_Prices (Type, Price, Start_Date, End_Date)
+                                VALUES (:type, :price, :startdate, :enddate)');
+        }
 
         $s->bindParam(':type', $utility->type);
         $s->bindParam(':price', $utility->price);
@@ -90,17 +79,15 @@ class UtilitiesDB {
         return true;
     }
 
-    public function deleteUtility($utility)
+    public function deleteUtility($utilityID)
     {
         $con = new Connection();
         $con = $con->connect();
 
-        $s = $con->prepare('DELETE FROM Utilities_Prices WHERE Type=:type AND Price=:price AND Start_Date=:startdate AND End_Date=:enddate');
+        $s = $con->prepare('DELETE FROM Utilities_Prices
+                            WHERE Utility_ID=:utility_id');
 
-        $s->bindParam(':type', $utility->type);
-        $s->bindParam(':price', $utility->price);
-        $s->bindParam(':startdate', $utility->startdate);
-        $s->bindParam(':enddate', $utility->enddate);
+        $s->bindParam(':utility_id', $utilityID);
 
         try {
             $s->execute();
