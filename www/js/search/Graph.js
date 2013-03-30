@@ -487,7 +487,7 @@ function ($, _, getInternetExplorerVersion) {
 			if(xtype === "time") {
 			    if(granularity === "Monthly") {
                                 //var x = new Date(item.datapoint[0]);
-				var x = get_month_day_year(new Date(item.datapoint[0]), "Monthly");
+				var x = get_month_day_year(new Date(item.datapoint[0]), Monthly);
 			    } else if(granularity === "Weekly") {
 
 			    }
@@ -622,6 +622,8 @@ function ($, _, getInternetExplorerVersion) {
 	var day = date.getUTCDate();
 	var year = date.getUTCFullYear();
 	var month = months[date.getUTCMonth()];
+
+	console.log("gran is " + granularity);
 	var tool_tip_output = {
 	    Hourly: month + ' ' + day + ' ' + year,
 	    Daily: month + ' ' + day + ' ' + year,
@@ -629,7 +631,7 @@ function ($, _, getInternetExplorerVersion) {
 	    Monthly: year
 	};
 
-	return tool_tip_output.granularity
+	/*return*/ console.log(tool_tip_output.granularity);
     };
 
 	/*if(granularity === "Monthly") {
