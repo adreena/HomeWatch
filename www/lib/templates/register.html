@@ -112,6 +112,7 @@
       v.addValidation("username", "req", "Please enter a username.");
       v.addValidation("username", "maxlen=30", "Max length for username is 30.");
       v.addValidation("password", "req", "Please enter a password.");
+      v.addValidation("password", "minlen=8", "Password must be at least 8 characters.");
       v.addValidation("conf-password", "req", "Please confirm your password.");
       v.addValidation("conf-password", "eqelmnt=password","Passwords do not match.");
       v.addValidation("email", "req", "Please enter your email.");
