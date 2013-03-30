@@ -65,10 +65,6 @@ function ($, _, getInternetExplorerVersion) {
             ytype: null,
 	};
 
-        //this.clickCallback = _clickCallback;
-        //this.element = element;
-        //this.graphType = initialData.graphType;
-
         // Initial update of the graph, only if the intial data exists.
         if (initialData !== undefined) {
 
@@ -93,6 +89,14 @@ function ($, _, getInternetExplorerVersion) {
 
         // Note that graphData contains the plotable data
         // AND the graphType!
+
+	// Add all of these to the graphState object
+            $.extend(this.graphState, {
+                graphType: graphData.graphType,
+                granularity: graphData.granularity,
+                xtype: graphData.xaxis,
+                ytype: graphData.yaxis,
+            });
 
 	var graphState = this.graphState;
         // Merge the new parameters to the current graph state.
