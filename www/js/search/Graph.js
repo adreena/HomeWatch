@@ -618,7 +618,7 @@ function ($, _, getInternetExplorerVersion) {
     };
 
     var get_month_day_year = function (date, granularity) {
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec"];
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	var day = date.getUTCDate();
 	var year = date.getUTCFullYear();
 	var month = months[date.getUTCMonth()];
