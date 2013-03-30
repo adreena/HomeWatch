@@ -6,7 +6,8 @@ define([
     'underscore',
     'search/defines',
     './Graph',
-    'utils/TemplateManager'],
+    'utils/TemplateManager',
+    'spiffy/spiffy.min'],
 
 function ($, _, D, Graph, TemplateManager) {
     "use strict";
@@ -69,6 +70,8 @@ function ($, _, D, Graph, TemplateManager) {
         this._bindOnChange();
         this._bindVisibilityControls();
 
+        /* Have spiffy menus for graph controls. */
+        this.el.controls.spiffy();
     }
 
 
@@ -346,9 +349,10 @@ function ($, _, D, Graph, TemplateManager) {
         boundary = element.find('[data-select-boundary]');
         checkboxes = boundary.find('input[type=checkbox]');
 
+        /* Works both for check all and check none. */
         setter = function (setting) {
             return prevDef(function () {
-                checkboxes.prop('checked', setting);
+                checkboxes.prop('checked', setting).trigger('change');
             });
         };
 

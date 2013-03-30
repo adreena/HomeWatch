@@ -9,7 +9,7 @@ function ($, _, D, GraphManager) {
     "use strict";
 
     /**
-     * On document load:
+     * On document load for the mangineer search page.
      */
 
     $(function () {
@@ -22,9 +22,10 @@ function ($, _, D, GraphManager) {
 
         data.apartments = _.range(1, 6 + 1); // Just like Python's range()...
         graphMan = new GraphManager(D.sel.graphList, data);
+        /* Have one initial graph control. */
         graphMan.add();
 
-        /* Trying out spiffy because why not? */
+        /* Have spiffy menus for graph controls.? */
         $(D.sel.graphControls).spiffy();
 
         /* Herp derp derp. */
