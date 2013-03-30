@@ -110,6 +110,13 @@ function ($, _, getInternetExplorerVersion) {
 
 	console.log("granularity is: " + granularity);
 	console.log("graphtypes is: " + graphType);
+	console.log("element is: " + element);
+	console.log("xtype is: " + graphState.xaxis);
+	console.log("ytype is: " + graphState.yaxis);
+
+	if(graphData === undefined) {
+	    console.log("no data available");
+	}
 
         // test for graphtypes
 	if(graphType === "plainText") {
