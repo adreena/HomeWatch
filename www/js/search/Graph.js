@@ -317,10 +317,11 @@ function ($, _, getInternetExplorerVersion) {
 	};
 
 	
-console.log("start date is : " + base_x.xaxis["min"]);
+
 
 	if(xtype === "time") {
 	    base_x.xaxis["mode"] = "time";
+		console.log("start date as string is : " + new Date(startdate));
 	     base_x.xaxis["min"] = startdate;
 
             if(granularity === "Hourly") {
