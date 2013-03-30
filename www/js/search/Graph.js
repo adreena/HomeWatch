@@ -316,9 +316,6 @@ function ($, _, getInternetExplorerVersion) {
 		}
 	};
 
-	
-
-
 	if(xtype === "time") {
 	    base_x.xaxis["mode"] = "time";
 	     base_x.xaxis["min"] = startdate;
@@ -375,7 +372,7 @@ function ($, _, getInternetExplorerVersion) {
                   axisLabelUseCanvas: true,
                   axisLabelFontSizePixels: 12,
                   axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-                  axisLabelPadding: 5
+                  axisLabelPadding: 25
                 }
             };
 
