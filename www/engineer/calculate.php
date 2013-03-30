@@ -32,6 +32,8 @@ if (!ConfigurationDB::submitAlert($alert)) {
     http_response_code(400);
 }
 */
-echo json_encode(
-    Engineer2::EQ($_POST['startdate'], $_POST['enddate'], $FORMULA[$_POST['calculation']], $_POST['energy'])
-);
+$result = Engineer2::EQ($_POST['startdate'], $_POST['enddate'], $FORMULA[$_POST['calculation']], $_POST['energy']);
+
+foreach ($result as $calc=>$val) {
+    echo "<br>$calc = $val <br>\n";
+}
