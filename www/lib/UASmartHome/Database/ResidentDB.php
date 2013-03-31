@@ -16,8 +16,6 @@ class ResidentDB {
 			   $row = $Query->fetch(\PDO::FETCH_OBJ);
 			   $result=(array)$row;
 			   $a= $Query->rowCount();
-			  // echo $a;
-			   echo "<br \>";
 				return $result;
 	}
 	public function Resident_Get_ResID($username)
@@ -31,8 +29,6 @@ class ResidentDB {
 			   $row = $Query->fetch(\PDO::FETCH_OBJ);
 			   $result=(array)$row;
 			   $a= $Query->rowCount();
-			  // echo $a;
-			   echo "<br \>";
 				return $result;
 	}
 	public function Resident_DB_Get_All_Residents()
@@ -44,8 +40,6 @@ class ResidentDB {
 			   $row = $Query->fetchAll(\PDO::FETCH_COLUMN);
 			   $result=(array)$row;
 			   //$a= $Query->rowCount();
-			   //echo $a;
-			   //echo "<br \>";
 				return $result;
 	}
 	   public function Resident_DB_Score($resident_id)
@@ -58,8 +52,6 @@ class ResidentDB {
 			   $row = $Query->fetch(\PDO::FETCH_OBJ);
 			   $result=(array)$row;
 			   $a= $Query->rowCount();
-			  // echo $a;
-			   echo "<br \>";
 				return $result;
 	}
 	 
@@ -134,7 +126,7 @@ class ResidentDB {
 }
 
 // Example code
-$testdb=new ResidentDB();
+//$testdb=new ResidentDB();
 //Test Resident Read
 /*
 echo "Test Resident Read : By Passing the Resident ID::";
@@ -190,4 +182,3 @@ echo "<br>";
 */
 
 
-?>
