@@ -1,70 +1,71 @@
 {% extends 'manager/base.html' %}
 
-{% set title = pageTitle|default('SmartHome Registration') %}
+{% set titleText = 'SmartHome Registration' %}
+{% block title titleText %}
 
-{% block content %}
-
-<title>{{ title }}</title>
-<link rel="stylesheet" type="text/css" href="/css/common.css" />
-<link rel="stylesheet" type="text/css" href="/css/register.css" />
+{% block extraScripts %}
 <script src="/js/vendor/jquery.validate.min.js" type="text/javascript"></script>
 <script src="/js/register.js" type="text/javascript"></script>
+{% endblock %}
 
-<div id="wrapper">
-  <div class="middle-content register-box">
-    <header>
-      <h1>{{ title }}</h1>
-    </header>
+{% block extraStyles %}
+<link rel="stylesheet" type="text/css" href="/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/css/register.css" />
+{% endblock %}
 
-    <form id="register-form" class="register-form">
-        <fieldset>
-          
-            <legend>Account Info</legend>
+{% block content %}
+<div class="middle-content register-box">
+  <header>
+    <h1>{{ titleText }}</h1>
+  </header>
 
-            <label for="username">Username</label><br>
-            <input name="username" type="text" autofocus="autofocus" /><br>
+  <form id="register-form" class="register-form">
+      <fieldset>
 
-            <label for="password">Password</label><br>
-            <input id="password" name="password" type="password" /><br>
+          <legend>Account Info</legend>
 
-            <label for="password">Confirm Password</label><br>
-            <input name="confpassword" type="password" /><br>
+          <label for="username">Username</label><br>
+          <input name="username" type="text" autofocus="autofocus" /><br>
 
-            <label for="email">Email</label><br>
-            <input name="email" type="email" /><br>
+          <label for="password">Password</label><br>
+          <input id="password" name="password" type="password" /><br>
 
-            <label for="role">Role</label><br>
-            <select id="roles" name="role">
-                <option value="default">SELECT ONE</option>
-            </select>
-        
-        </fieldset>
-    </form>
-    
-    <form id="resident-form" class="register-form role-form">
-        <fieldset>
-            <legend>Resident Info</legend>
-            
-            <label for="name">Resident Name</label><br>
-            <input name="name" type="text" /><br>
+          <label for="password">Confirm Password</label><br>
+          <input name="confpassword" type="password" /><br>
 
-            <label for="roomnumber">Room Number</label><br>
-            <input name="roomnumber" type="text" /><br>
+          <label for="email">Email</label><br>
+          <input name="email" type="email" /><br>
 
-            <label for="location">Building Location</label><br>
-            <input name="location" type="text" />
-            
-        </fieldset>
-    </form>
-    
-    <button id="register-button">Register</button>
-    
-    <nav class="extra-items">
-      <ul class="inline-nav-list">
-      </ul>
-    </nav>
-  </div>{# .register-box #}
-</div>{# #wrapper #}
+          <label for="role">Role</label><br>
+          <select id="roles" name="role">
+              <option value="default">SELECT ONE</option>
+          </select>
 
+      </fieldset>
+  </form>
+
+  <form id="resident-form" class="register-form role-form">
+      <fieldset>
+          <legend>Resident Info</legend>
+
+          <label for="name">Resident Name</label><br>
+          <input name="name" type="text" /><br>
+
+          <label for="roomnumber">Room Number</label><br>
+          <input name="roomnumber" type="text" /><br>
+
+          <label for="location">Building Location</label><br>
+          <input name="location" type="text" />
+
+      </fieldset>
+  </form>
+
+  <button id="register-button">Register</button>
+
+  <nav class="extra-items">
+    <ul class="inline-nav-list">
+    </ul>
+  </nav>
+</div>{# .register-box #}
 {% endblock content %}
 

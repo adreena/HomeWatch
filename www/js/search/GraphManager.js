@@ -80,7 +80,7 @@ function ($, _, D, GraphControl) {
             setTimeout(function () {
                 /* I could have used the third, argument list argument,
                  * but aparently IE doesn't support it. :/ */
-                control.onNewData(this.resultCache[graphParams]);
+                control.onNewData(self.resultCache[graphParams]);
             }, 0);
 
             return;
