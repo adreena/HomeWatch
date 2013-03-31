@@ -580,7 +580,7 @@ function ($, _, getInternetExplorerVersion) {
 	var daily = "Daily";
 
 	//if(granularity === "Weekly") {
-	    var week_end = (date + get_millisecond_interval("Daily")).getUTCDate;
+	    var week_end = (date + get_millisecond_interval(daily)).getUTCDate;
 	console.log("week end is " + week_end);
 	//}
 
@@ -609,6 +609,11 @@ function ($, _, getInternetExplorerVersion) {
 	ticks.push([startdate + (milli_week * 2), "Week 3"]);
 	ticks.push([startdate + (milli_week * 3), "Week 4"]);
 	ticks.push([startdate + (milli_week * 4), "Week 5"]);
+	console.log("milli week 1 is " + startdate);
+	console.log("milli week 2 is " + (startdate + milli_week));
+	console.log("milli week 3 is " + (startdate + (milli_week * 2)));
+	console.log("milli week 4 is " + (startdate + (milli_week * 3)));
+	console.log("milli week 5 is " + (startdate + (milli_week * 4)));
 
 	return ticks;
     };
