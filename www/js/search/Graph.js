@@ -575,10 +575,10 @@ function ($, _, getInternetExplorerVersion) {
 
     var get_month_day_year = function (date, type, granularity) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	var date = new Date(date);	
-	var day = date.getUTCDate();
-	var month = months[date.getUTCMonth()];
-	var year = date.getUTCFullYear();
+	var date_string = new Date(date);	
+	var day = date_string.getUTCDate();
+	var month = months[date_string.getUTCMonth()];
+	var year = date_string.getUTCFullYear();
 
 	
 	    var week_end = (date + get_millisecond_interval(daily)).getUTCDate;
