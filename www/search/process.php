@@ -138,7 +138,7 @@ if ($test) {
 	if ($error != null) {
 		array_push($messages, $error);
 		$bigArray['granularity'] = $period;
-		$bigArray['message'] = $messages;
+		$bigArray['messages'] = $messages;
         	$json = json_encode($bigArray);
         	echo $json;
 		die;
