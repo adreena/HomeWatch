@@ -577,6 +577,7 @@ function ($, _, getInternetExplorerVersion) {
 
 	if(granularity === "Weekly") {
 	    var week_end = day + get_millisecond_interval(daily);
+	console.log("these are new values");
 	}
 
 	return tool_tip_output = {
