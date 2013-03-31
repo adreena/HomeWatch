@@ -591,7 +591,7 @@ function ($, _, getInternetExplorerVersion) {
 	    return milliseconds = {
 		Hourly: base * 23,
 		Daily: base * 24 * 6,
-		Weekly: base * 24 * 6
+		Weekly: base * 24 * 7
 	    }[interval];
     };
 
