@@ -13,6 +13,7 @@ Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER);
 
 use \UASmartHome\Database\Configuration\ConfigurationDB;
 use \UASmartHome\Database\Configuration\Alert;
+use \UASmartHome\Database\Engineer;
 
 // Check that the request is valid
 if (!(isset($_POST['name']) && isset($_POST['value']) && isset($_POST['description']))) {
@@ -30,3 +31,5 @@ $alert->description = $_POST['description'];
 if (!ConfigurationDB::submitAlert($alert)) {
     http_response_code(400);
 }
+
+Engineer::db_Delete_Alert(md5($_POST['value']) . "_Alert");

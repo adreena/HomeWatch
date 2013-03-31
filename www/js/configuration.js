@@ -239,9 +239,11 @@ function submitAlert() {
 }
 
 function deleteAlert(deleteButton) {
-    var alertID = getRowData(deleteButton).id;
+    var rowData = getRowData(deleteButton);
+    var alertID = rowData.id;
+    var alertValue = rowData.value;
     
-    $.post('/engineer/delete-alert.php', {id: alertID})
+    $.post('/engineer/delete-alert.php', {id: alertID, value: alertValue})
     .done(function(data) { window.location.reload(); })
     .fail(function(data) { alert("Error deleting alert: " + data.statusText); });
 }

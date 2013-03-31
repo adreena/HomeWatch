@@ -12,6 +12,7 @@ use \UASmartHome\Auth\Firewall;
 Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER);
 
 use \UASmartHome\Database\Configuration\ConfigurationDB;
+use \UASmartHome\Database\Engineer;
 
 // Check that the request is valid
 if (!isset($_POST['id'])) {
@@ -23,3 +24,4 @@ if (!ConfigurationDB::deleteAlert($_POST['id'])) {
     http_response_code(500);
 }
 
+Engineer::db_Delete_Alert(md5($_POST['value']) . "_Alert");
