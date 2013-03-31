@@ -174,15 +174,17 @@ function ($, _, getInternetExplorerVersion) {
             $.each(value, function (key, value) {
 		// key = date stamp
 		time_stamp = DateToUTC(key);
+		console.log("time stamp is " + time_stamp);
 
 		if(startdate === undefined) {
 		    startdate = time_stamp;
 		    enddate = time_stamp;
+		console.log("end date is " + time_stamp);
 		}
 
 		if(time_stamp > enddate) {
 		    enddate = time_stamp;
-		console.log("time stamp is " + time_stamp);
+		console.log("end date is " + time_stamp);
 		}
 
                 if (graphname.length !== 0) {
