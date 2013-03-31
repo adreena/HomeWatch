@@ -393,10 +393,13 @@ function ($, _, D, Graph, TemplateManager) {
 
             /* Set the values in the partial tuple. */
             partialQuery[v + 'type'] = valueTuple.type;
+            // process.php expects a single value, not an array.
             partialQuery[v] = (valueTuple.type !== 'sensorarray')
-                ? valueTuple.values[0] // process.php expects a single value, not an array.
+                ? valueTuple.values[0]
                 : valueTuple.values;
-            partialQuery[v + 'axis'] = valueTuple.values;
+            partialQuery[v + 'axis'] = (valueTuple.type !== 'sensorarray')
+                ? valueTuple.values[0]
+                : valueTuple.values;
 
         });
 
