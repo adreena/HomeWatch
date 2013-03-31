@@ -662,7 +662,7 @@ exampleProcessResponse: {
                         "y": "60",
                         "x": "2012-03-06:0"
                     }
-                },
+                }/*,
 		"2012-03-07:0": {
                     "Total_Water": {
                         "y": "115",
@@ -672,7 +672,7 @@ exampleProcessResponse: {
                         "y": "45",
                         "x": "2012-03-07:0"
                     }
-                }
+                }*/
 	    },
             "2": {
                 "2012-03-01:0": {
@@ -734,7 +734,7 @@ exampleProcessResponse: {
                         "y": "54",
                         "x": "2012-03-06:0"
                     }
-                },
+                }/*,
 		"2012-03-07:0": {
                     "Total_Water": {
                         "y": "110",
@@ -744,7 +744,7 @@ exampleProcessResponse: {
                         "y": "49",
                         "x": "2012-03-07:0"
                     }
-                }
+                }*/
             }
         },
         "granularity": "Daily",
