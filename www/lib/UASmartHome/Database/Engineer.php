@@ -524,7 +524,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	if ($between ==2){
 	try
 			{ 
-	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$User."_".$column."".$descr."_Alert
+	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$User."_".$column."_".$descr."_Alert
 							AS select `".$table."`.`Apt` AS `Apt`,
                            avg(`".$table."`.`".$column."`) AS `".$column."`,
 							`".$table."`.`Date` AS `Date`,
