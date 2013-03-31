@@ -10,7 +10,7 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	 $conn=new Connection2();
 	if ($EQ==1)
 	{
-	$dbh=$conn->connect()->prepare("select (SUM(".$column.")*1000000) from Energy_Minute where ts between :SD and :ED") ;
+	$dbh=$conn->connect()->prepare("select SUM(".$column.") from Energy_Minute where ts between :SD and :ED") ;
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
@@ -59,7 +59,16 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	$trun=$conn->connect()->prepare ("Truncate anaylze");
 	$trun->execute();
 	return $row;
-	}	      
+	}
+        if ($EQ==6)
+	{
+	$dbh=$conn->connect()->prepare("select (SUM(".$column.")*1000000) from Energy_Minute where ts between :SD and :ED") ;
+	$dbh->bindValue(":SD",$Datefrom);
+	$dbh->bindValue(":ED",$Dateto);
+	$dbh->execute();
+	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
+	return $row;
+	}
 	}
 
 
