@@ -182,6 +182,7 @@ function ($, _, getInternetExplorerVersion) {
 
 		if(time_stamp > enddate) {
 		    enddate = time_stamp;
+		console.log("time stamp is " + time_stamp);
 		}
 
                 if (graphname.length !== 0) {
