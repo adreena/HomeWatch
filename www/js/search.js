@@ -23,7 +23,7 @@ function ($, _, D, GraphManager) {
         var cats = D.exampleCategories, graphMan, data;
 
         /* Get the sensor/formula data embedded in the page. */
-        if (categoryData === undefined) {
+        if (categoryData !== undefined) {
             $.extend(true, cats, categoryData);
         } else {
             console.log("Could not find categoryData");
@@ -32,7 +32,7 @@ function ($, _, D, GraphManager) {
         data = GraphManager.makeCategories(cats);
 
         /* Get the apartment data embedded in the page. */
-        if (apartmentData === undefined) {
+        if (apartmentData !== undefined) {
             data.apartments = apartmentData;
         } else {
             // TODO: GET RID OF THIS DEBUG NON-SENSE
@@ -51,7 +51,7 @@ function ($, _, D, GraphManager) {
         });
 
         /* Get rid of the "now loading..." placeholder. */
-        $(D.pageLoadingPlaceholder).remove();
+        $(D.sel.pageLoadingPlaceholder).remove();
 
     });
 

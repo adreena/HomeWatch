@@ -133,6 +133,20 @@ body {
   display: none;
 }
 
+/* The graph message information centre. */
+.graph-messages {
+    position: absolute;
+    top: 0;
+    z-index: 5;
+    width: 700px;
+    text-align: center;
+    background-color: #f8f8f8;
+    background-color: rgba(247,247,247,0.8);
+    margin: 4px 10px 0;
+    padding: 6px 4px;
+    border-radius: 6px;
+}
+
 .the-actual-gorram-label {
     display: block;
 }

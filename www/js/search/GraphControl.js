@@ -234,12 +234,20 @@ function ($, _, D, Graph, TemplateManager) {
 
         newData.graphType = this.getGraphType();
 
-        /* Send the data to the graph, unchanged (with the exception of the
-         * graph type!) */
-        this.graph.update(newData);
+        if (_(newData).has('value')) {
+            /* Send the data to the graph, unchanged (with the exception of the
+             * graph type!) */
+            this.graph.update(newData);
+            this.hideMessage();
+        } else if ( _(newData).has('messages')) {
+            /* Show them the message spit out by the process script. */
+            this.showMessage(newData.messages.join(','));
+        } else {
+            /* Search got an unusable response. Notify the user about this. */
+            this.showMessage(D.messages.unusableResponse);
+        }
 
         /* There probably was some crazy loading status message -- remove it. */
-        this.hideMessage();
     };
 
 

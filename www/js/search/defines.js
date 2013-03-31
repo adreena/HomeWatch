@@ -18,8 +18,8 @@ define({
     messages: {
         newGraph: 'Pick some axes, timeframe and apartments to graph',
         errorFetchingInfo: 'Error fetching info from the server :/',
-        graphLoading: 'Loading data...'
-
+        graphLoading: 'Loading data...',
+        unusableResponse: 'Received unusable data from the server.'
     },
 
     /** jQuery selectors. It is prefered to put your selectors here, so that
