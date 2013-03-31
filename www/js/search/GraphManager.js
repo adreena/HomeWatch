@@ -21,6 +21,7 @@ function ($, _, D, GraphControl) {
         this.data = data;
         this.values = data.values;
         this.resultCache = {};
+        this.currentRequest = {};
 
         /** List of managed graphs. */
         this.graphs = {};
@@ -58,7 +59,9 @@ function ($, _, D, GraphControl) {
     /** Makes a request an AJAX request immediately. */
     GraphManager.prototype._makeImmediateRequest = function (control, newRequest) {
         var graphParams = JSON.stringify(newRequest),
-            onSuccess, self = this;
+            onSuccess,
+            self = this,
+            id = control.id;
         
         /* Fetch the request out of the cache, if it's found. */
         if (_(this.resultCache).has(graphParams)) {
@@ -74,12 +77,21 @@ function ($, _, D, GraphControl) {
         }
 
         onSuccess = function (newData) {
+            /* A request has been completed, so we can stop keeping track of
+             * it. */
+            delete self.currentRequest[id];
+
             /* Stuff the successful request into the cache. */
             self.resultCache[graphParams] = newData;
             control.onNewData(newData);
         };
 
-        $.ajax({
+        /* Abort any existing requests for the current graph ID. */
+        if (_(this.currentRequest).has(id)) {
+            this.currentRequest[id].abort();
+        };
+
+        this.currentRequest[id] = $.ajax({
             url: D.uri.process,
             type: 'GET',
             data: {

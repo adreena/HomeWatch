@@ -27,7 +27,8 @@ foreach ($unfilteredCategories['functions'] as $func)  {
 
 $categories['Alerts'] = array();
 foreach ($unfilteredCategories['alerts'] as $alert)  {
-    $categories['Alerts'][$alert['id']] = $alert['name'];
+    /* That's right. Name => Name. */
+    $categories['Alerts'][$alert['name']] = $alert['name'];
 };
 
 $categories['Sensors'] = array();
