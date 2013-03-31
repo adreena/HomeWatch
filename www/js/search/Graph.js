@@ -618,7 +618,7 @@ function ($, _, getInternetExplorerVersion) {
 	console.log("end is " + enddate);
 	var max_date = enddate - startdate;
 	console.log("max is " + max_date);
-	var num_weeks = Math.ceil(max_date/get_millisecond_interval(granularity));
+	var num_weeks = Math.floor(max_date/get_millisecond_interval(granularity));
 
 	console.log("num weeks is " + num_weeks);
 
