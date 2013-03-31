@@ -474,8 +474,8 @@ function ($, _, getInternetExplorerVersion) {
 		console.log("granularity is : " + granularity);
 		console.log("you clicked!");
 	        //var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
-	        var data_pointUTC = item.datapoint[0];
-	        var date = new Date(data_pointUTC);
+	        var data_point = item.datapoint[0];
+	        var date_UTC = (new Date(data_point)).toUTCString();
 	        date_from = format_date(date, "true");
 
 		if(granularity === "Hourly") {
@@ -490,6 +490,8 @@ function ($, _, getInternetExplorerVersion) {
 		} else if(granularity === "Monthly") {
 		    drill_granularity = "Weekly";
 		    date_to = get_date_to(data_pointUTC, drill_granularity);
+		} else {
+		    //drill_granularity = "Monthly";
 		}
 
                 /* Tell whatever handler we've got that there's new data. */
@@ -581,7 +583,7 @@ function ($, _, getInternetExplorerVersion) {
 	var year = date_string.getUTCFullYear();
 
 	
-	    var week_end = (date + get_millisecond_interval(daily)).getUTCDate;
+	    var week_end = (date + get_millisecond_interval(granularity)).getUTCDate;
 
 	tool_tip = {
 	    Hourly: month + ' ' + day + ' ' + year,
