@@ -277,8 +277,8 @@ function ($, _, getInternetExplorerVersion) {
 	var enddate = graphState.enddate;
 	var min_x = graphState.min_x;
 	var max_x = graphState.max_x;
-	var min_date = new Date(startdate);
-	var max_date = new Date(enddate);
+	//var min_date = new Date(startdate);
+	//var max_date = new Date(enddate);
 
         var base_x = {
 	    xaxis:
@@ -297,7 +297,7 @@ function ($, _, getInternetExplorerVersion) {
             if(granularity === "Hourly") {
 		//base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
 	        base_x.xaxis["tickSize"] = [2, "hour"];
-	        base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity);
+	        base_x.xaxis["axisLabel"] = get_month_day_year(startdate, enddate, granularity);
             } else if(granularity === "Daily") {
 		//base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
 		base_x.xaxis["timeformat"] = "%a %d";
@@ -574,6 +574,7 @@ function ($, _, getInternetExplorerVersion) {
 
     var get_month_day_year = function (date, granularity) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	
 	var day = date.getUTCDate();
 	var month = months[date.getUTCMonth()];
 	var year = date.getUTCFullYear();
@@ -604,6 +605,8 @@ function ($, _, getInternetExplorerVersion) {
      var get_week_labels = function (startdate, granularity) {
 	var ticks = [];
 	var milli_week = get_millisecond_interval(granularity);
+	console.log("gran is " granularity);
+	console.log("milli week is " + milli_week);
 	ticks.push([startdate, "Week 1"]);
 	ticks.push([startdate + milli_week, "Week 2"]);
 	ticks.push([startdate + (milli_week * 2), "Week 3"]);
