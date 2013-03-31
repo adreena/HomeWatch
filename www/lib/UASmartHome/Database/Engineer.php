@@ -492,7 +492,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 			 return $result;
 	
 	}
-	public function db_create_Alert ($User,$column,$value1,$sign1,$between,$descr,$value2=null,$sign2=null,$condition=null)
+	public function db_create_Alert ($column,$value1,$sign1,$between,$descr,$value2=null,$sign2=null,$condition=null)
 	{
 	$tables = array("Relative_Humidity"=>"v0_air", "Temperature" => "v0_air", "CO2"=>"v0_air", 
 	"Hot_Water"=>"v0_water", "Total_Water"=>"v0_water", "Insulation"=>"v0_heat_flux", 
@@ -506,7 +506,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	if ($between ==1){
 	try
 			{ 
-	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$User."_".$column."_".$descr."_Alert
+	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW " . $descr ."_Alert
 							AS select `".$table."`.`Apt` AS `Apt`,
                            avg(`".$table."`.`".$column."`) AS `".$column."`,
 							`".$table."`.`Date` AS `Date`,
@@ -524,7 +524,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	if ($between ==2){
 	try
 			{ 
-	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$User."_".$column."_".$descr."_Alert
+	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW " . $descr . "_Alert
 							AS select `".$table."`.`Apt` AS `Apt`,
                            avg(`".$table."`.`".$column."`) AS `".$column."`,
 							`".$table."`.`Date` AS `Date`,
