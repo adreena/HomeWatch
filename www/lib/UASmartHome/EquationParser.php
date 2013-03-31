@@ -61,7 +61,7 @@ class EquationParser
         $functionArray["enddate"] = "2012-03-02:0";
         $functionArray["apartment"] = 1;
         $functionArray["granularity"] = "Hourly";
-        $functionArray["function"] = "9 * (3+pi) * \$elec_total$ + \$air_co2$ / 4";
+        $functionArray["function"] = "9 * (3+pi) * \$air_temperature$ + \$air_co2$ / 4";
         $functionArray["functionname"] = "functionname";
 
         $input = json_encode($functionArray);
@@ -84,7 +84,7 @@ class EquationParser
             return $evaluator->evaluate($function);
         }
 
-	for($i=1; $i<count($pieces); $i+=2) {
+        for($i=1; $i<count($pieces); $i+=2) {
 
             if($pieces[$i] === "elec_total") {
                 $data[$pieces[$i]] = Engineer::db_pull_query(
@@ -125,20 +125,22 @@ class EquationParser
 
             $emptydata = false;
             reset($data);
+            $firstpass = true;
             while ($cur_data = current($data)) {
-                $date = array_keys($cur_data)[$i];
-                if(count($cur_data) != $num_points) {
-                    echo "not all data have the same number of points\n";
-                    return null;
-                }
 
-                if(!array_values($cur_data)[$i]) { //no db value for this time
+                // use the first variable's date
+                if($firstpass)
+                    $date = array_keys($cur_data)[$i];
+                // date does not exist in the data or no db value exists
+                if(!array_key_exists($date, $cur_data) || !array_values($cur_data)[$i]) {
                     $emptydata = true;
+                //no db value for this time
                 }
                 else {
                     $evaluator->evaluate(key($data) . " = " . end(array_values($cur_data)[$i]));
                 }
 
+                $firstpass = false;
                 next($data);
             }
 
