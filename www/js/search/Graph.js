@@ -299,16 +299,16 @@ function ($, _, getInternetExplorerVersion) {
 	        base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity);
             } else if(granularity === "Daily") {
 		console.log("start date as string is : " + new Date(startdate));
-		base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
-		console.log("end date as string is : " + new Date(base_x.xaxis["max"]));
+		//base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
+		//console.log("end date as string is : " + new Date(base_x.xaxis["max"]));
 		console.log("start interval is " + startdate);
-		console.log("max is : " + base_x.xaxis["max"]);
+		//console.log("max is : " + base_x.xaxis["max"]);
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 	console.log("min date for label is " + min_date);
-	console.log("max date for label is " + new Date (base_x.xaxis["max"]));
-		base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (base_x.xaxis["max"]), granularity);
+	//console.log("max date for label is " + new Date (base_x.xaxis["max"]));
+		//base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (base_x.xaxis["max"]), granularity);
             } else if (granularity === "Weekly") {
 		console.log("these are new values");
 		base_x.xaxis["tickSize"] = [1, "week"];
