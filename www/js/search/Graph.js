@@ -310,9 +310,8 @@ function ($, _, getInternetExplorerVersion) {
 	//console.log("max date for label is " + new Date (base_x.xaxis["max"]));
 		//base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (base_x.xaxis["max"]), granularity);
             } else if (granularity === "Weekly") {
-		console.log("these are new values");
-		base_x.xaxis["tickSize"] = [1, "week"];
-		base_x.xaxis["weekNames"] = ["1", "2", "3", "4", "5"];
+		base_x.xaxis["ticks"] = get_week_labels(startdate, granularity);
+		//base_x.xaxis["tickSize"] = [1, "week"];
             } else if(granularity === "Monthly") {
 		base_x.xaxis["timeformat"] = "%b";
 		base_x.xaxis["tickSize"] = [1, "month"];
@@ -594,6 +593,18 @@ function ($, _, getInternetExplorerVersion) {
 		Daily: base * 24 * 6,
 		Weekly: base * 24 * 6
 	    }[interval];
+    };
+
+     var get_week_labels = function (startdate, granularity) {
+	var ticks = [];
+	var milli_week = get_millisecond_interval(granularity);
+	ticks.push([startdate, "Week 1"]);
+	ticks.push([startdate + milli_week, "Week 2"]);
+	ticks.push([startdate + (milli_week * 2), "Week 3"]);
+	ticks.push([startdate + (milli_week * 3), "Week 4"]);
+	ticks.push([startdate + (milli_week * 4), "Week 5"]);
+
+	return ticks;
     };
 
     /* This module exports one public member -- the class itself. */

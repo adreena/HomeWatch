@@ -615,11 +615,11 @@ exampleProcessResponse: {
                 },
 		"2012-03-02:0": {
                     "Total_Water": {
-                        "y": "120",
+                        "y": null,
                         "x": "2012-03-02:0"
                     },
                     "Hot_Water": {
-                        "y": "60",
+                        "y": null,
                         "x": "2012-03-02:0"
                     }
                 },
@@ -687,7 +687,7 @@ exampleProcessResponse: {
                 },
 		"2012-03-02:0": {
                     "Total_Water": {
-                        "y": "108",
+                        "y": null,
                         "x": "2012-03-02:0"
                     },
                     "Hot_Water": {
@@ -697,7 +697,7 @@ exampleProcessResponse: {
                 },
 		"2012-03-03:0": {
                     "Total_Water": {
-                        "y": "145",
+                        "y": null,
                         "x": "2012-03-03:0"
                     },
                     "Hot_Water": {
