@@ -278,6 +278,7 @@ function ($, _, getInternetExplorerVersion) {
 	var min_x = graphState.min_x;
 	var max_x = graphState.max_x;
 	var min_date = new Date(startdate);
+	var max_date = new Date(enddate);
 
         var base_x = {
 	    xaxis:
@@ -291,35 +292,30 @@ function ($, _, getInternetExplorerVersion) {
 
 	if(xtype === "time") {
 	    base_x.xaxis["mode"] = "time";
-	     base_x.xaxis["min"] = startdate;
+	    base_x.xaxis["min"] = startdate;
 
             if(granularity === "Hourly") {
-		base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
+		//base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
 	        base_x.xaxis["tickSize"] = [2, "hour"];
 	        base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity);
             } else if(granularity === "Daily") {
-		console.log("start date as string is : " + new Date(startdate));
 		//base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
-		//console.log("end date as string is : " + new Date(base_x.xaxis["max"]));
-		console.log("start interval is " + startdate);
-		//console.log("max is : " + base_x.xaxis["max"]);
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-	console.log("min date for label is " + min_date);
-	//console.log("max date for label is " + new Date (base_x.xaxis["max"]));
-		//base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (base_x.xaxis["max"]), granularity);
+		base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (max_date), granularity);
             } else if (granularity === "Weekly") {
 		base_x.xaxis["ticks"] = get_week_labels(startdate, granularity);
+		base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (max_date), granularity);
 		//base_x.xaxis["tickSize"] = [1, "week"];
             } else if(granularity === "Monthly") {
 		base_x.xaxis["timeformat"] = "%b";
 		base_x.xaxis["tickSize"] = [1, "month"];
 		base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-		var label = min_date.getUTCFullYear();
-		base_x.xaxis["axisLabel"] = 'Year: ' + label;
-		var year_end = label + "-12-01:0";
-		base_x.xaxis["max"] = DateToUTC(year_end);
+		//var label = min_date.getUTCFullYear();
+		base_x.xaxis["axisLabel"] = min_date.getUTCFullYear();
+		//var year_end = label + "-12-01:0";
+		//base_x.xaxis["max"] = DateToUTC(year_end);
 	    } else {
 		// multiple years?
 	    }
@@ -603,12 +599,6 @@ function ($, _, getInternetExplorerVersion) {
 	ticks.push([startdate + (milli_week * 2), "Week 3"]);
 	ticks.push([startdate + (milli_week * 3), "Week 4"]);
 	ticks.push([startdate + (milli_week * 4), "Week 5"]);
-
-	console.log("week 1 is " + startdate);
-	console.log("week 2 is " + (startdate + milli_week));
-	console.log("week 3 is " + (startdate + (milli_week * 2)));
-	console.log("week 4 is " + (startdate + (milli_week * 3)));
-	console.log("week 5 is " + (startdate + (milli_week * 4)));
 
 	return ticks;
     };
