@@ -1,6 +1,10 @@
 /**
  * GraphControl. Manages interface and controls of one graph.
  */
+
+/*jslint browser: true, nomen: true, white: true, indent: 4, maxlen: 120 */
+/*global define */
+
 define([
     'jquery',
     'underscore',

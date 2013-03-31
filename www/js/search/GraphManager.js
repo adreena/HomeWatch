@@ -1,6 +1,14 @@
 /**
- * GraphManager. Manages a whole bunch of graphs.
+ * GraphManager.
+ *
+ * Keeps track of several Graphs/GraphControl pairs. Manages the actual fetching
+ * of resources that are rendered by Graph instances.
  */
+
+
+/*jslint browser: true, nomen: true, white: true, indent: 4, maxlen: 120 */
+/*global define */
+
 define([
     'jquery',
     'underscore',
@@ -62,7 +70,7 @@ function ($, _, D, GraphControl) {
             onSuccess,
             self = this,
             id = control.id;
-        
+
         /* Fetch the request out of the cache, if it's found. */
         if (_(this.resultCache).has(graphParams)) {
             console.log("Getting request from the cache.");
@@ -70,9 +78,11 @@ function ($, _, D, GraphControl) {
              * current call stack to emulate how jQuery's success
              * callback would be called. */
             setTimeout(function () {
-                // Do things with stuff.
+                /* I could have used the third, argument list argument,
+                 * but aparently IE doesn't support it. :/ */
                 control.onNewData(this.resultCache[graphParams]);
             }, 0);
+
             return;
         }
 
@@ -80,16 +90,18 @@ function ($, _, D, GraphControl) {
             /* A request has been completed, so we can stop keeping track of
              * it. */
             delete self.currentRequest[id];
-
             /* Stuff the successful request into the cache. */
             self.resultCache[graphParams] = newData;
+
+            /* And render it! */
             control.onNewData(newData);
         };
 
         /* Abort any existing requests for the current graph ID. */
         if (_(this.currentRequest).has(id)) {
+            console.log("Cancelling current request.");
             this.currentRequest[id].abort();
-        };
+        }
 
         this.currentRequest[id] = $.ajax({
             url: D.uri.process,
@@ -101,6 +113,7 @@ function ($, _, D, GraphControl) {
             dataType: 'json',
             success: onSuccess,
             error: function () {
+                // Hopefully the control can handle the error.
                 control.onFetchError();
            }
         });
@@ -109,7 +122,7 @@ function ($, _, D, GraphControl) {
 
     /**
      * Makes an AJAX request, but no more than once every
-     * MinRequestDelay miliseconds. 
+     * MinRequestDelay miliseconds.
      */
     GraphManager.prototype.makeRequest = _.debounce(
         GraphManager.prototype._makeImmediateRequest,
