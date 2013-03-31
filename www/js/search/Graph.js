@@ -161,7 +161,7 @@ function ($, _, getInternetExplorerVersion) {
 	var graphname = [];
 	var apartments = [];
 	var graphname_flag = "false";
-	var min_x, max_x;
+	var min_x, max_x, y_value;
 	var apartment, sensor, timestamp, tick_size;
 	var startdate, enddate;
 
@@ -200,13 +200,21 @@ function ($, _, getInternetExplorerVersion) {
                         sensor_data[apartment][sensor] = [];
                     }
 
+		    y_value = (value.y) ? value.y : 0;
+
+		   /* if(value.y) {
+			y_value = value.y;
+		    } else {
+			y_value = 0;
+		    }*/
+
                     if(graphState.xtype === "time") {
-			sensor_data[apartment][sensor].push([time_stamp, value.y]);
+			sensor_data[apartment][sensor].push([time_stamp, y_value]);
 
 		    } else {
 			if(value.x) {
 			    tick_size = parseFloat(value.x);
-			    sensor_data[apartment][sensor].push([tick_size, value.y]);
+			    sensor_data[apartment][sensor].push([tick_size, y_value]);
 
 			    if(min_x === undefined || min_x > tick_size) {
 				min_x = tick_size;
