@@ -462,8 +462,8 @@ function ($, _, getInternetExplorerVersion) {
 
     Graph.prototype.bind_plotclick = function() {
 	var drill_granularity;
-	var date_from;
-	var date_to;
+	var date_from = this.graphState.startdate;
+	var date_to = this.graphState.enddate;
 	var granularity = this.graphState.granularity;
         var handleChangedData = this.graphState.callback;
 
@@ -471,8 +471,8 @@ function ($, _, getInternetExplorerVersion) {
             if (item) {
 		console.log("granularity is : " + granularity);
 		console.log("you clicked!");
-	        var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
-	        var data_pointUTC = item.datapoint[0] + offset;
+	        //var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
+	        var data_pointUTC = item.datapoint[0];
 	        var date = new Date(data_pointUTC);
 	        date_from = format_date(date, "true");
 
@@ -580,7 +580,7 @@ function ($, _, getInternetExplorerVersion) {
 
 	//if(granularity === "Weekly") {
 	    var week_end = (date + get_millisecond_interval("Daily")).getUTCDate;
-	//console.log("these are new values");
+	console.log("week end is " + week_end);
 	//}
 
 	return tool_tip_output = {
