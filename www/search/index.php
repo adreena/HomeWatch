@@ -28,10 +28,10 @@ foreach ($unfilteredCategories['functions'] as $func)  {
     $categories['Formulae'][$func['name']] = $func['name'];
 };
 
-//$categories['Alerts'] = array();
-//foreach ($unfilteredCategories['alerts'] as $alert)  {
-//    $categories['Alerts'][$alert['name']] = $alert['name'];
-//};
+$categories['Alerts'] = array();
+foreach ($unfilteredCategories['alerts'] as $alert)  {
+    $categories['Alerts'][$alert['name']] = $alert['name'];
+};
 
 $categories['Sensors'] = array();
 foreach (EquationParser::$DBVARS as $grossName => $DBName) {

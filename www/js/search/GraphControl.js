@@ -234,7 +234,7 @@ function ($, _, D, Graph, TemplateManager) {
 
         newData.graphType = this.getGraphType();
 
-        if (_(newData).has('value')) {
+        if (_(newData).has('values')) {
             /* Send the data to the graph, unchanged (with the exception of the
              * graph type!) */
             this.graph.update(newData);

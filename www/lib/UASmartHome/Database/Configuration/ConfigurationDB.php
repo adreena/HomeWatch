@@ -19,7 +19,7 @@ class ConfigurationDB {
         
         return $data;
     }
-    
+
     public function fetchConstants($user = null, $connection = null)
     {
         if ($connection == null)
@@ -57,7 +57,7 @@ class ConfigurationDB {
 
         return $constants;
     }
-    
+
     public function fetchFunctions($user = null, $connection = null)
     {
         if ($connection == null)

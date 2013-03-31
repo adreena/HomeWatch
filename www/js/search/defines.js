@@ -720,7 +720,7 @@ define({
         "Time": "time",
         "Sensors": "sensorarray",
         "Formulae": "formula",
-        "Alerts": "formula"
+        "Alerts": "alert"
     }
 
 
