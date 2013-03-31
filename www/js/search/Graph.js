@@ -604,6 +604,12 @@ function ($, _, getInternetExplorerVersion) {
 	ticks.push([startdate + (milli_week * 3), "Week 4"]);
 	ticks.push([startdate + (milli_week * 4), "Week 5"]);
 
+	console.log("week 1 is " + startdate);
+	console.log("week 2 is " + (startdate + milli_week));
+	console.log("week 3 is " + (startdate + (milli_week * 2)));
+	console.log("week 4 is " + (startdate + (milli_week * 3)));
+	console.log("week 5 is " + (startdate + (milli_week * 4)));
+
 	return ticks;
     };
 
