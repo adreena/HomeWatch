@@ -279,6 +279,7 @@ function ($, _, getInternetExplorerVersion) {
 	var max_x = graphState.max_x;
 	var min_date = new Date(startdate);
 	var max_date = new Date(enddate);
+	var type = "axis_label";
 
         var base_x = {
 	    xaxis:
@@ -297,18 +298,18 @@ function ($, _, getInternetExplorerVersion) {
             if(granularity === "Hourly") {
 		//base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
 	        base_x.xaxis["tickSize"] = [2, "hour"];
-	        base_x.xaxis["axisLabel"] = get_month_day_year(startdate, enddate, granularity);
+	        base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity);
             } else if(granularity === "Daily") {
 		//base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-		base_x.xaxis["axisLabel"] = get_month_day_year(startdate, granularity) + " - " + get_month_day_year(new Date (enddate), granularity);
+		base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity) + " - " + get_month_day_year(enddate, type, granularity);
             } else if (granularity === "Weekly") {
 		console.log("this is a new value");
-		base_x.xaxis["ticks"] = get_week_labels(startdate, granularity);
+		base_x.xaxis["ticks"] = get_week_labels(startdate, enddate, granularity);
 		granularity = "Daily";
-		base_x.xaxis["axisLabel"] = get_month_day_year(startdate, granularity) + " - " + get_month_day_year(new Date (enddate), granularity);
+		base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity) + " - " + get_month_day_year(enddate, type, granularity);
 		console.log("max date is " + max_date);
 		//base_x.xaxis["tickSize"] = [1, "week"];
             } else if(granularity === "Monthly") {
@@ -572,25 +573,31 @@ function ($, _, getInternetExplorerVersion) {
         return date < 10 ? '0' + date : '' + date;
     };
 
-    var get_month_day_year = function (date, granularity) {
+    var get_month_day_year = function (date, type, granularity) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	var date = new Date(date);	
+	var day = date.getUTCDate();
+	var month = months[date.getUTCMonth()];
+	var year = date.getUTCFullYear();
+
 	
-	//var day = date.getUTCDate();
-	//var month = months[date.getUTCMonth()];
-	//var year = date.getUTCFullYear();
-	//var daily = "Daily";
-
-	//if(granularity === "Weekly") {
 	    //var week_end = (date + get_millisecond_interval(daily)).getUTCDate;
-	//console.log("week end is " + week_end);
-	//}
 
-	/*return tool_tip_output = {
+	tool_tip = {
 	    Hourly: month + ' ' + day + ' ' + year,
 	    Daily: month + ' ' + day + ' ' + year,
 	    Weekly: month + ' ' + day + '-' + week_end + ' ' + year,
 	    Monthly: month + ' ' + year
-	}[granularity];*/
+	};
+
+	axis_label = {
+	    Hourly: month + ' ' + day + ' ' + year,
+	    Daily: month + ' ' + day + ' ' + year,
+	    Weekly: month + ' ' + day + ' ' + year + '-' + month + ' ' + day + ' ' + year,
+	    Monthly: month + ' ' + year
+	}; 
+
+	return type.granularity;
     };
 
     var get_millisecond_interval = function (interval) {
@@ -602,16 +609,19 @@ function ($, _, getInternetExplorerVersion) {
 	    }[interval];
     };
 
-     var get_week_labels = function (startdate, granularity) {
+     var get_week_labels = function (startdate, enddate, granularity) {
 	var ticks = [];
 	var milli_week = get_millisecond_interval(granularity);
-	console.log("gran is " + granularity);
-	console.log("milli week is " + milli_week);
-	ticks.push([startdate, "Week 1"]);
-	ticks.push([startdate + milli_week, "Week 2"]);
-	ticks.push([startdate + (milli_week * 2), "Week 3"]);
-	ticks.push([startdate + (milli_week * 3), "Week 4"]);
-	ticks.push([startdate + (milli_week * 4), "Week 5"]);
+	var max_date = enddate - startdate;
+	var num_weeks = Math.ceil(max_date/get_millisecond_interval(granularity));
+
+	console.log("num weeks is " + num_weeks);
+
+	for(i = 0; i < num_weeks; ++i) {
+	    console.log("gran is " + granularity);
+	    console.log("milli week is " + milli_week);
+	    ticks.push([startdate + (milli_week * i), "Week " + (i + 1)]);
+	}
 	console.log("milli week 1 is " + startdate);
 	console.log("milli week 2 is " + (startdate + milli_week));
 	console.log("milli week 3 is " + (startdate + (milli_week * 2)));
