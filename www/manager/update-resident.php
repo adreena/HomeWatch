@@ -21,10 +21,11 @@ if (!(isset($_POST['id']) && isset($_POST['name']) && isset($_POST['room']) && i
 
 $id = $_POST['id'];
 $name = $_POST['name'];
+$room = $_POST['room'];
 $username = $_POST['username'];
 $location = $_POST['location'];
 $roomstatus = $_POST['roomstatus'];
 
-if (!ResidentDB::Resident_DB_Update($id, $roomstatus, $name, $username)) {
+if (!ResidentDB::Resident_DB_Update($id, $room, $roomstatus, $name, $location, $username)) {
     http_response_code(400);
 }

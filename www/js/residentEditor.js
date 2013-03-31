@@ -95,7 +95,7 @@ function editConfig(editor, data) {
     var legend = $(editor).find("legend")[0];
     legend.style.color = 'red';
     legend.innerHTML = legend.innerHTML.replace(/\(.*$/, ""); // Remove any existing (EDITING "NAME") text
-    legend.innerHTML += " (EDITING \"" + data.startdate + " to " + data.enddate + "\")";
+    legend.innerHTML += " (EDITING \"" + data.name + "\")";
 }
 
 function resetEditor(clearButton) {

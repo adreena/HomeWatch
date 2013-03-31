@@ -84,13 +84,15 @@ class ResidentDB {
 	}
 	 
 	
-	public function Resident_DB_Update ($resident_id,$Room_Status,$Name,$Username)
+	public function Resident_DB_Update ($resident_id,$Room_Number,$Room_Status,$Name,$Location,$Username)
 	{ //update set where
 	$conn=new Connection ();
 	 $Query=$conn->connect()->prepare("update Resident  
-		set Room_Status= :RS , Name= :NM ,	Username= :US where Resident_ID= :Res_ID") ;
+		set Room_Number= :RN, Room_Status= :RS , Name= :NM , Location= :Location, Username= :US where Resident_ID= :Res_ID") ;
 		$Query->bindValue(":Res_ID",$resident_id);
+		$Query->bindValue(":RN", $Room_Number);
 		$Query->bindValue(":RS",$Room_Status);
+		$Query->bindValue(":Location", $Location);
 		$Query->bindValue(":NM",$Name);
 		$Query->bindValue(":US",$Username);
 		
@@ -175,7 +177,7 @@ echo "<br>";
 //Test Resident Update
 echo "Test Resident Update : By Passing the Resident Id ,Room Status,Name,Username::";
 echo "<br>";
-$a1=$testdb->Resident_DB_Update (1,'TEST','TEST','TEST');
+$a1=$testdb->Resident_DB_Update (1,100,'TEST','TEST', 'TEST','TEST');
 $a0=$testdb->Resident_DB_Read(1);
 print_r($a0);
 echo "<br>";
