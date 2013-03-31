@@ -37,7 +37,7 @@ function ($, _, D, Graph, TemplateManager) {
 
     /** Creates a new GraphControl. A GraphController has data. */
     function GraphControl(graphManager, data) {
-        var id, element, graph, self = this;
+        var id, element, self = this;
 
         id = _.uniqueId('graph');
         element = $(makeGraphGroup(id, data));
@@ -105,7 +105,7 @@ function ($, _, D, Graph, TemplateManager) {
         fetches = [
             fetchAxes(this.element, this.data.values), // Get the axes info.
             fetchApartments(this.element),
-            fetchDateTime(this.element),
+            fetchDateTime(this.element)
         ];
 
         _.each(fetches, function (partial) {
@@ -393,8 +393,10 @@ function ($, _, D, Graph, TemplateManager) {
 
             /* Set the values in the partial tuple. */
             partialQuery[v + 'type'] = valueTuple.type;
-            partialQuery[v] = (v == 'x') ? valueTuple.values[0] : valueTuple.values ;
-            partialQuery[v + 'axis'] = valueTuple.values
+            partialQuery[v] = (valueTuple.type !== 'sensorarray')
+                ? valueTuple.values[0] // process.php expects a single value, not an array.
+                : valueTuple.values;
+            partialQuery[v + 'axis'] = valueTuple.values;
 
         });
 
@@ -437,19 +439,19 @@ function ($, _, D, Graph, TemplateManager) {
                  * applicable for... */
                 return {
                     start: chosenControls.find('input[name=start]').val(),
-                    end: chosenControls.find('input[name=end]').val(),
+                    end: chosenControls.find('input[name=end]').val()
                 };
             },
             Weekly: function () {
                 return {
                     start: chosenControls.find('input[name=start]').val(),
-                    end: chosenControls.find('input[name=end]').val(),
+                    end: chosenControls.find('input[name=end]').val()
                 };
             },
             Monthly: function () {
                 return {
                     start: chosenControls.find('input[name=start]').val(),
-                    end: chosenControls.find('input[name=end]').val(),
+                    end: chosenControls.find('input[name=end]').val()
                 };
             }
         };
