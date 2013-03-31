@@ -581,7 +581,7 @@ function ($, _, getInternetExplorerVersion) {
 	var year = date.getUTCFullYear();
 
 	
-	    //var week_end = (date + get_millisecond_interval(daily)).getUTCDate;
+	    var week_end = (date + get_millisecond_interval(daily)).getUTCDate;
 
 	tool_tip = {
 	    Hourly: month + ' ' + day + ' ' + year,
@@ -621,12 +621,15 @@ function ($, _, getInternetExplorerVersion) {
 	    console.log("gran is " + granularity);
 	    console.log("milli week is " + milli_week);
 	    ticks.push([startdate + (milli_week * i), "Week " + (i + 1)]);
+		console.log((startdate + (milli_week * i)) + "Week " + (i + 1));
 	}
 	console.log("milli week 1 is " + startdate);
 	console.log("milli week 2 is " + (startdate + milli_week));
 	console.log("milli week 3 is " + (startdate + (milli_week * 2)));
 	console.log("milli week 4 is " + (startdate + (milli_week * 3)));
 	console.log("milli week 5 is " + (startdate + (milli_week * 4)));
+
+	console.log("ticks size is " + ticks.length);
 
 	return ticks;
     };
