@@ -277,7 +277,7 @@ function ($, _, getInternetExplorerVersion) {
 	var enddate = graphState.enddate;
 	var min_x = graphState.min_x;
 	var max_x = graphState.max_x;
-	//var min_date = new Date(startdate);
+	var min_date = new Date(startdate);
 	//var max_date = new Date(enddate);
 
         var base_x = {
@@ -303,12 +303,12 @@ function ($, _, getInternetExplorerVersion) {
 		base_x.xaxis["timeformat"] = "%a %d";
 		base_x.xaxis["tickSize"] = [1, "day"];
 		base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-		base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (max_date), granularity);
+		base_x.xaxis["axisLabel"] = get_month_day_year(startdate, granularity) + " - " + get_month_day_year(new Date (enddate), granularity);
             } else if (granularity === "Weekly") {
 		granularity = "Daily";
 		console.log("this is a new value");
 		base_x.xaxis["ticks"] = get_week_labels(startdate, granularity);
-		base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (max_date), granularity);
+		base_x.xaxis["axisLabel"] = get_month_day_year(startdate, granularity) + " - " + get_month_day_year(new Date (enddate), granularity);
 		console.log("max date is " + max_date);
 		//base_x.xaxis["tickSize"] = [1, "week"];
             } else if(granularity === "Monthly") {
