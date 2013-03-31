@@ -278,7 +278,7 @@ function ($, _, getInternetExplorerVersion) {
 	var min_x = graphState.min_x;
 	var max_x = graphState.max_x;
 	var min_date = new Date(startdate);
-	//var max_date = new Date(enddate);
+	var max_date = new Date(enddate);
 
         var base_x = {
 	    xaxis:
