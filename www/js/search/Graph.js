@@ -605,7 +605,7 @@ function ($, _, getInternetExplorerVersion) {
      var get_week_labels = function (startdate, granularity) {
 	var ticks = [];
 	var milli_week = get_millisecond_interval(granularity);
-	console.log("gran is " granularity);
+	console.log("gran is " + granularity);
 	console.log("milli week is " + milli_week);
 	ticks.push([startdate, "Week 1"]);
 	ticks.push([startdate + milli_week, "Week 2"]);
