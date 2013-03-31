@@ -469,6 +469,7 @@ function ($, _, getInternetExplorerVersion) {
 
     	$(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {
+		console.log("event was " + event.type);
 		console.log("granularity is : " + granularity);
 		console.log("you clicked!");
 	        //var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
