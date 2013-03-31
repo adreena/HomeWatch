@@ -308,6 +308,7 @@ function ($, _, getInternetExplorerVersion) {
 		console.log("this is a new value");
 		base_x.xaxis["ticks"] = get_week_labels(startdate, granularity);
 		base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (max_date), granularity);
+		console.log("max date is " + max_date);
 		//base_x.xaxis["tickSize"] = [1, "week"];
             } else if(granularity === "Monthly") {
 		base_x.xaxis["timeformat"] = "%b";
