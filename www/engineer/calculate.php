@@ -35,5 +35,8 @@ if (!ConfigurationDB::submitAlert($alert)) {
 $result = Engineer2::EQ($_POST['startdate'], $_POST['enddate'], $FORMULA[$_POST['calculation']], $_POST['energy']);
 
 foreach ($result as $calc=>$val) {
-    echo "<br>$calc = $val <br>\n";
+    if (is_null($val))
+        echo "<br>$calc = null (no data) <br>\n";
+    else
+        echo "<br>$calc = $val <br>\n";
 }
