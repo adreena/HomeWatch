@@ -169,6 +169,7 @@ class Alerts
 
         $input = json_decode($input, true);
         $comparison = $input["alert"];
+        $comparison_md5 = md5($comparison);
 
         if(preg_match("/(.*)(AND|OR)(.*)/", $comparison, $bool_pieces)) {
             $leftbool = trim($bool_pieces[1]);
@@ -205,8 +206,8 @@ class Alerts
                 $username = Auth\User::getSessionUser()->getUsername();
 
                 // check if the view already exists under the name username_variable
-                if(!Engineer::db_check_Alert($username . "_" . $column)) {
-                    if(!Engineer::db_create_Alert($username,$column, $value1, $sign1, 2, $value2, $sign2, $bool_pieces[2])) {
+                if(!Engineer::db_check_Alert($username . "_" . $column . "_" . $comparison_md5)) {
+                    if(!Engineer::db_create_Alert($username,$column, $value1, $sign1, 2, $comparison_md5, $value2, $sign2, $bool_pieces[2])) {
                         echo "could not create alert\n";
                         return null;
                     }
@@ -214,7 +215,7 @@ class Alerts
 
                 $data = Engineer::db_query_Alert(
                            $input["apartment"], $column,
-                           $input["startdate"], $input["enddate"], $username . "_" . $column . "_Alert");
+                           $input["startdate"], $input["enddate"], $username . "_" . $column . "_" . $comparison_md5 .  "_Alert");
 
                 return $data;
             }
@@ -243,8 +244,8 @@ class Alerts
                 $username = Auth\User::getSessionUser()->getUsername();
 
                 // check if the view already exists under the name username_variable
-                if(!Engineer::db_check_Alert($username . "_" . $column)) {
-                    if(!Engineer::db_create_Alert($username,$column, $value1, $sign1, 1)) {
+                if(!Engineer::db_check_Alert($username . "_" . $column . "_" . $comparison_md5)) {
+                    if(!Engineer::db_create_Alert($username,$column, $value1, $sign1, 1, $comparison_md5)) {
                         echo "could not create alert\n";
                         return null;
                     }
@@ -252,7 +253,7 @@ class Alerts
 
                 $data = Engineer::db_query_Alert(
                            $input["apartment"], $column,
-                           $input["startdate"], $input["enddate"], $username . "_" . $column . "_Alert");
+                           $input["startdate"], $input["enddate"], $username . "_" . $column . "_" . $comparison_md5 . "_Alert");
 
                 return $data;
             }
