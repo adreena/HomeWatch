@@ -3,28 +3,39 @@
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use \UASmartHome\Database\Connection;
+use \UASmartHome\Auth\User;
 
 class ConfigurationDB {
 
     public function fetchConfigData()
-    {
+    {            
         $con = new Connection();
         $con = $con->connect();
         
-        $data['functions'] = ConfigurationDB::fetchFunctions($con);
-        $data['constants'] = ConfigurationDB::fetchConstants($con);
-        $data['alerts'] = ConfigurationDB::fetchAlerts($con);
+        $user = User::getSessionUser();
+        $data['functions'] = ConfigurationDB::fetchFunctions($user, $con);
+        $data['constants'] = ConfigurationDB::fetchConstants($user, $con);
+        $data['alerts'] = ConfigurationDB::fetchAlerts($user, $con);
         
         return $data;
     }
     
-    public function fetchConstants($connection)
+    public function fetchConstants($user = null, $connection = null)
     {
         if ($connection == null)
             $connection = (new Connection())->connect();
         
-        $s = $connection->prepare("SELECT Constant_ID, Name, Value, Description
-                                   FROM Constants");
+        $s = null;
+        if ($user == null) {
+            $s = $connection->prepare("SELECT Constant_ID, Name, Value, Description, NULL as User
+                                       FROM Constants");
+        } else {
+            $s = $connection->prepare("SELECT c.Constant_ID, Name, Value, Description, uc.User_ID as User
+                                       FROM Constants c LEFT JOIN User_Constants uc ON c.Constant_ID = uc.Constant_ID
+                                       WHERE uc.User_ID=:User_ID or uc.User_ID IS NULL");
+            
+            $s->bindParam(':User_ID', $user->getID());
+        }
         
         try {
             $s->execute();
@@ -39,22 +50,30 @@ class ConfigurationDB {
                 'id' => $constant['Constant_ID'],
                 'name' => $constant['Name'],
                 'value' => $constant['Value'],
-                'description' => $constant['Description']
+                'description' => $constant['Description'],
+                'favorite' => $constant['User'] == null ? 0 : 1
             ));
         }
-        
-        // TODO: fetch user constants?
-        
+
         return $constants;
     }
     
-    public function fetchFunctions($connection)
+    public function fetchFunctions($user = null, $connection = null)
     {
         if ($connection == null)
             $connection = (new Connection())->connect();
         
-        $s = $connection->prepare("SELECT Equation_ID, Name, Value, Description
-                                   FROM Equations");
+        $s = null;
+        if ($user == null) {
+            $s = $connection->prepare("SELECT Equation_ID, Name, Value, Description, NULL as User
+                                       FROM Equations");
+        } else {
+            $s = $connection->prepare("SELECT e.Equation_ID, Name, Value, Description, ue.User_ID as User
+                                       FROM Equations e LEFT JOIN User_Equations ue ON e.Equation_ID = ue.Equation_ID
+                                       WHERE ue.User_ID=:User_ID or ue.User_ID IS NULL");
+            
+            $s->bindParam(':User_ID', $user->getID());
+        }
         
         try {
             $s->execute();
@@ -69,22 +88,30 @@ class ConfigurationDB {
                 'id' => $function['Equation_ID'],
                 'name' => $function['Name'],
                 'value' => $function['Value'],
-                'description' => $function['Description']
+                'description' => $function['Description'],
+                'favorite' => $function['User'] == null ? 0 : 1
             ));
         }
-        
-        // TODO: fetch user functions
-        
+
         return $functions;
     }
     
-    public function fetchAlerts($connection)
+    public function fetchAlerts($user = null, $connection = null)
     {
         if ($connection == null)
             $connection = (new Connection())->connect();
         
-        $s = $connection->prepare("SELECT Alert_ID, Name, Value, Description
-                                   FROM Alerts");
+        $s = null;
+        if ($user == null) {
+            $s = $connection->prepare("SELECT Alert_ID, Name, Value, Description, NULL as User
+                                       FROM Alerts");
+        } else {
+            $s = $connection->prepare("SELECT a.Alert_ID, Name, Value, Description, ua.User_ID as User
+                                       FROM Alerts a LEFT JOIN User_Alerts ua ON a.Alert_ID = ua.Alert_ID
+                                       WHERE ua.User_ID=:User_ID or ua.User_ID IS NULL");
+            
+            $s->bindParam(':User_ID', $user->getID());
+        }
         
         try {
             $s->execute();
@@ -99,7 +126,8 @@ class ConfigurationDB {
                 'id' => $alert['Alert_ID'],
                 'name' => $alert['Name'],
                 'value' => $alert['Value'],
-                'description' => $alert['Description']
+                'description' => $alert['Description'],
+                'favorite' => $alert['User'] == null ? 0 : 1
             ));
         }
         
@@ -307,6 +335,126 @@ class ConfigurationDB {
         return true;
     }
     
+        public function updateFavoriteFunctions($favorites)
+    {
+        $user = \UASmartHome\Auth\User::getSessionUser();
+        if ($user == null)
+            return false;
+        
+        $con = new Connection();
+        $con = $con->connect();
+        
+        try {
+            $con->beginTransaction();
+            
+            // Delete existing favorites
+            $s = $con->prepare("DELETE FROM User_Equations
+                                WHERE User_ID=:User_ID");
+            
+            $s->bindParam(':User_ID', $user->getID());
+            $s->execute();
+            
+            // Add new favorites
+            $s = $con->prepare("INSERT INTO User_Equations (User_ID, Equation_ID)
+                                VALUES (:User_ID, :Equation_ID)");
+            
+            $s->bindParam(':User_ID', $user->getID());
+            foreach ($favorites as $equationid) {
+                // TODO: it should be possible to insert all of these in one query
+                $s->bindParam(':Equation_ID', $equationid);
+                $s->execute();
+            }
+            
+            $con->commit();
+            return true;
+        } catch (\PDOException $e) {
+            trigger_error("Failed to update favorites: " . $e->getMessage(), E_USER_WARNING);
+            $con->rollback();
+        }
+        
+        return false;
+    }
+    
+    public function updateFavoriteConstants($favorites)
+    {
+        $user = \UASmartHome\Auth\User::getSessionUser();
+        if ($user == null)
+            return false;
+        
+        $con = new Connection();
+        $con = $con->connect();
+        
+        try {
+            $con->beginTransaction();
+            
+            // Delete existing favorites
+            $s = $con->prepare("DELETE FROM User_Constants
+                                WHERE User_ID=:User_ID");
+            
+            $s->bindParam(':User_ID', $user->getID());
+            $s->execute();
+            
+            // Add new favorites
+            $s = $con->prepare("INSERT INTO User_Constants (User_ID, Constant_ID)
+                                VALUES (:User_ID, :Constant_ID)");
+            
+            $s->bindParam(':User_ID', $user->getID());
+            foreach ($favorites as $constantid) {
+                // TODO: it should be possible to insert all of these in one query
+                $s->bindParam(':Constant_ID', $constantid);
+                $s->execute();
+            }
+            
+            $con->commit();
+            return true;
+        } catch (\PDOException $e) {
+            trigger_error("Failed to update favorites: " . $e->getMessage(), E_USER_WARNING);
+            $con->rollback();
+        }
+        
+        return false;
+    }
+    
+    public function updateFavoriteAlerts($favorites)
+    {
+        $user = \UASmartHome\Auth\User::getSessionUser();
+        if ($user == null)
+            return false;
+        
+        $con = new Connection();
+        $con = $con->connect();
+        
+        try {
+            $con->beginTransaction();
+            
+            // Delete existing favorites
+            $s = $con->prepare("DELETE FROM User_Alerts
+                                WHERE User_ID=:User_ID");
+            
+            $s->bindParam(':User_ID', $user->getID());
+            $s->execute();
+            
+            // Add new favorites
+            $s = $con->prepare("INSERT INTO User_Alerts (User_ID, Alert_ID)
+                                VALUES (:User_ID, :Alert_ID)");
+            
+            $s->bindParam(':User_ID', $user->getID());
+            foreach ($favorites as $alertid) {
+                // TODO: it should be possible to insert all of these in one query
+                $s->bindParam(':Alert_ID', $alertid);
+                $s->execute();
+            }
+            
+            $con->commit();
+            return true;
+        } catch (\PDOException $e) {
+            trigger_error("Failed to update favorites: " . $e->getMessage(), E_USER_WARNING);
+            $con->rollback();
+        }
+        
+        return false;
+    }   
+
 }
 
 

@@ -28,6 +28,7 @@ class User
     const ROLE_ENGINEER = 4;
     const ROLE_RESIDENT = 5;
     
+    private $id;
     private $username;
     private $roleID; // Only one role per user right now for simplicity
 
@@ -36,12 +37,21 @@ class User
     ///
     /// NOTE: Do not create users arbitrarily. Fetch and register users with an IUserProvider.
     ///
-    public function __construct($username, $roleID)
+    public function __construct($id, $username, $roleID)
     {
+        $this->id = $id;
         $this->username = $username;
         $this->roleID = $roleID;
     }
-
+    
+    ///
+    /// Returns this user's ID.
+    /// This probably shouldn't be exposed to untrusted clients.
+    ///
+    public function getID() {
+        return $this->id;
+    }
+    
     ///
     /// Returns this user's username.
     ///

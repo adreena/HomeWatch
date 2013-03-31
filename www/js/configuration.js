@@ -11,6 +11,10 @@ var functionEditorID = "#function-editor";
 var constantEditorID = "#constant-editor";
 var alertEditorID = "#alert-editor";
 
+var functionDisplayID = "#function-display";
+var constantDisplayID = "#constant-display";
+var alertDisplayID = "#alert-display";
+
 var functionEditor;
 var constantEditor;
 var alertEditor;
@@ -28,7 +32,6 @@ $(window).load(function() {
     constantEditor.reset();
     alertEditor.reset();
 
-    // TODO: Can this be cached? (Create a dynamic json on the server?)
     $.get("/search/autocomplete-data.php")
     .done(function(data) {
         equationAutoCompleteData = $.map(data, function (value, key) { return "$" + key + '$'; });
@@ -39,6 +42,12 @@ $(window).load(function() {
     .error(function(data) {
         alert("Failed to get equation variables: " + data.statusText);
     });
+    
+    // Init toggle buttons
+    $("#toggle-alerts").button();
+    $("#toggle-functions").button();
+    $("#toggle-constants").button();
+    
 }); // window load
 
 function addEquationAutoComplete(textbox)
@@ -142,6 +151,14 @@ function setFunctionEditorData(fn) {
     functionEditorContents.find('input[name=id]').val(fn.id);
 }
 
+function updateFavoriteFunctions() {
+    var favorites = getFavorites($(functionDisplayID));
+    
+    $.post('/engineer/update-favorite-functions.php', { favorites: favorites })
+    .done(function(data) { window.location.reload(); })
+    .fail(function(data) { alert("Error updating favorite functions: " + data.statusText); });
+}
+
 // =================================================================================================
 // CONSTANT CONFIG
 // =================================================================================================
@@ -189,6 +206,14 @@ function setConstantEditorData(constant) {
     constantEditorContents.find('input[name=value]').val(constant.value);
     constantEditorContents.find('input[name=description]').val(constant.description);
     constantEditorContents.find('input[name=id]').val(constant.id);
+}
+
+function updateFavoriteConstants() {
+    var favorites = getFavorites($(constantDisplayID));
+    
+    $.post('/engineer/update-favorite-constants.php', { favorites: favorites })
+    .done(function(data) { window.location.reload(); })
+    .fail(function(data) { alert("Error updating favorite constants: " + data.statusText); });
 }
 
 // =================================================================================================
@@ -240,18 +265,40 @@ function setAlertEditorData(alert) {
     alertEditorContents.find('input[name=id]').val(alert.id);
 }
 
+function updateFavoriteAlerts() {
+    var favorites = getFavorites($(alertDisplayID));
+    
+    $.post('/engineer/update-favorite-alerts.php', { favorites: favorites })
+    .done(function(data) { window.location.reload(); })
+    .fail(function(data) { alert("Error updating favorite alerts: " + data.statusText); });
+}
+
 // =================================================================================================
 // GENERAL CONFIG
 // =================================================================================================
-function getRowData(rowButton) {
-    var row = $(rowButton).closest("tr");
+function getRowData(rowElement) {
+    var row = $(rowElement).closest("tr");
     
     return {
         id: row.attr('id').match(/\d+/)[0],
         name: row.children(".name")[0].innerHTML,
         value: row.children(".value")[0].innerHTML,
-        description: row.children(".description")[0].innerHTML
+        description: row.children(".description")[0].innerHTML,
+        favorite: row.find(".favorite")[0].checked ? 1 : 0
     };
+}
+
+function getFavorites(configDisplay) {
+    var favorites = [];
+    
+    $(configDisplay).find(".favorite").each(function() {
+        var rowData = getRowData(this);
+        if (rowData.favorite) {
+            favorites.push(rowData.id);
+        }
+    });
+    
+    return favorites;
 }
 
 function editConfig(editor, data) {
@@ -272,5 +319,15 @@ function resetEditor(clearButton) {
     legend.style.color = 'black';
 
     legend.innerHTML = legend.innerHTML.replace(/\(.*$/, "");
+}
+
+function toggleFavorites(toggleButton) {
+    var configDisplay = $(toggleButton).closest(".config-display")[0];
+    
+    if (toggleButton.checked) {
+      $(configDisplay).find("input:not(:checked)").parents("tr").css('display', 'none');
+    } else {
+      $(configDisplay).find("input:not(:checked)").parents("tr").css('display', 'table-row');
+    }
 }
 

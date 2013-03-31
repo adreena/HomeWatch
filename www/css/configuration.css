@@ -48,6 +48,12 @@ div.config-display table .description {
   padding: 5px;
 }
 
+div.config-display .footer {
+  width: 97.5%;
+  text-align: right;
+  margin-top: 3px;
+}
+
 div.config-editor {
   width: 95%;
   margin-left: auto;
@@ -91,7 +97,16 @@ div.config-editor .id {
 }
 
 .ui-autocomplete {
-    max-height: 200px;
-    overflow-y: auto;
-    padding-right: 20px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 20px;
+}
+
+.ui-button {
+  height: 21px;
+}
+
+.ui-button-text {
+  font-size: 17px;
+  margin-top: -6.5px;
 }

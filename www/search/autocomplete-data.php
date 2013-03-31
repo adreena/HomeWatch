@@ -11,7 +11,7 @@ Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MAN
 use \UASmartHome\Database\Configuration\ConfigurationDB;
 use \UASmartHome\EquationParser;
 
-$constants = ConfigurationDB::fetchConstants(null);
+$constants = ConfigurationDB::fetchConstants();
 $variables = EquationParser::getVariables();
 
 $data = $variables;

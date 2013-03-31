@@ -35,7 +35,7 @@ class DefaultUserProvider extends UserProvider
             return null;
         
         // Query the DB
-        $s = $this->connection->prepare("SELECT Username, PW_Hash, Role_ID
+        $s = $this->connection->prepare("SELECT User_ID, Username, PW_Hash, Role_ID
                                          FROM Users
                                          WHERE Username = :Username");
         
@@ -53,6 +53,7 @@ class DefaultUserProvider extends UserProvider
             return null;
 
         $userData = $s->fetch(\PDO::FETCH_ASSOC);
+        $userID = $userData['User_ID'];
         $pwhash = $userData['PW_Hash'];
         $roleID = $userData['Role_ID'];
 
@@ -60,7 +61,7 @@ class DefaultUserProvider extends UserProvider
         if ($password != null && !password_verify($password, $pwhash))
             return null;
 
-        return new User($username, $roleID);
+        return new User($userID, $username, $roleID);
     }
     
     ///

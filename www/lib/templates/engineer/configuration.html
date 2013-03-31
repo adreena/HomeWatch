@@ -14,14 +14,14 @@
 
     <!-- Alert Config -->
     <div class="config">
-        <div class="config-display constants">
+        <div id="alert-display" class="config-display">
             <p class="title">Alerts</p>
             <table>
                 <tr class="header">
                     <th class="name">Name</th>
                     <th class="value">Value</th>
                     <th class="description">Description</th>
-                    <th colspan="2"></th>
+                    <th colspan="3"></th>
                 </tr>
                 
                 {% for alert in configData['alerts'] %}
@@ -29,11 +29,18 @@
                     <td class="name">{{ alert['name'] }}</td>
                     <td class="value">{{ alert['value'] }}</td>
                     <td class="description">{{ alert['description'] }}</td>
-                    <td><button onClick="editAlert(this)">Edit</button></td>
                     <td><button onClick="deleteAlert(this)">Delete</button></td>
+                    <td><button onClick="editAlert(this)">Edit</button></td>
+                    <td><input class="favorite" type="checkbox" {{ alert['favorite'] == 1 ? 'checked' : '' }}/></td>
                 </tr>
                 {% endfor %}
             </table>
+            
+            <div class="footer">
+                <button onclick="updateFavoriteAlerts()">Update Favorites</button>
+                <label for="toggle-alerts">Toggle All/Favorites</label>
+                <input id="toggle-alerts" name="toggle-alerts" type="checkbox" onclick="toggleFavorites(this)" />
+            </div>
         </div>
         
         <div class="config-editor">
@@ -63,7 +70,7 @@
 
     <!-- Function Config -->
     <div class="config">
-        <div class="config-display functions">
+        <div id="function-display" class="config-display functions">
             <p class="title">Functions</p>
             
             <table>
@@ -71,7 +78,7 @@
                     <th class="name">Name</th>
                     <th class="value">Body</th>
                     <th class="description">Description</th>
-                    <th colspan="2"></th>
+                    <th colspan="3"></th>
                 </tr>
                 
                 {% for function in configData['functions'] %}
@@ -79,11 +86,18 @@
                     <td class="name">{{ function['name'] }}</td>
                     <td class="value">{{ function['value'] }}</td>
                     <td class="description">{{ function['description'] }}</td>
-                    <td><button onClick="editFunction(this)">Edit</button></td>
                     <td><button onClick="deleteFunction(this)">Delete</button></td>
+                    <td><button onClick="editFunction(this)">Edit</button></td>
+                    <td><input class="favorite" type="checkbox" {{ function['favorite'] == 1 ? 'checked' : '' }}/></td>
                 </tr>
                 {% endfor %}
             </table>
+            
+            <div class="footer">
+                <button onclick="updateFavoriteFunctions()">Update Favorites</button>
+                <label for="toggle-functions">Toggle All/Favorites</label>
+                <input id="toggle-functions" name="toggle-functions" type="checkbox" onclick="toggleFavorites(this)" />
+            </div>
         </div>
         
         <div class="config-editor">
@@ -113,14 +127,14 @@
 
     <!-- Constant Config -->
     <div class="config">
-        <div class="config-display constants">
+        <div id="constant-display" class="config-display constants">
             <p class="title">Constants</p>
             <table>
                 <tr class="header">
                     <th class="name">Name</th>
                     <th class="value">Value</th>
                     <th class="description">Description</th>
-                    <th colspan="2"></th>
+                    <th colspan="3"></th>
                 </tr>
                 
                 {% for constant in configData['constants'] %}
@@ -128,11 +142,18 @@
                     <td class="name">{{ constant['name'] }}</td>
                     <td class="value">{{ constant['value'] }}</td>
                     <td class="description">{{ constant['description'] }}</td>
-                    <td><button onClick="editConstant(this)">Edit</button></td>
                     <td><button onClick="deleteConstant(this)">Delete</button></td>
+                    <td><button onClick="editConstant(this)">Edit</button></td>
+                    <td><input class="favorite" type="checkbox" {{ constant['favorite'] == 1 ? 'checked' : '' }}/></td>
                 </tr>
                 {% endfor %}
             </table>
+            
+            <div class="footer">
+                <button onclick="updateFavoriteConstants()">Update Favorites</button>
+                <label for="toggle-constants">Toggle All/Favorites</label>
+                <input id="toggle-constants" name="toggle-constants" type="checkbox" onclick="toggleFavorites(this)" />
+            </div>
         </div>
         
         <div class="config-editor">
