@@ -621,7 +621,7 @@ function ($, _, getInternetExplorerVersion) {
 	var num_weeks = Math.floor(max_date/get_millisecond_interval(granularity));
 
 	console.log("num weeks is " + num_weeks);
-
+	console.log("new iteration");
 	for(i = 0; i <= num_weeks; ++i) {
 	    console.log("gran is " + granularity);
 	    console.log("milli week is " + milli_week);
