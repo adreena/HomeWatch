@@ -305,6 +305,7 @@ function ($, _, getInternetExplorerVersion) {
 		base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 		base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (max_date), granularity);
             } else if (granularity === "Weekly") {
+		granularity = "Daily";
 		console.log("this is a new value");
 		base_x.xaxis["ticks"] = get_week_labels(startdate, granularity);
 		base_x.xaxis["axisLabel"] = get_month_day_year(min_date, granularity) + " - " + get_month_day_year(new Date (max_date), granularity);
