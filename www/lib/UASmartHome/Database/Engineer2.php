@@ -10,7 +10,7 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	 $conn=new Connection2();
 	if ($EQ==1)
 	{
-	$dbh=$conn->connect()->prepare("select (SUM(".$column.")*100000) from Energy_Minute where ts between :SD and :ED") ;
+	$dbh=$conn->connect()->prepare("select (SUM(".$column.")*1000000) from Energy_Minute where ts between :SD and :ED") ;
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
