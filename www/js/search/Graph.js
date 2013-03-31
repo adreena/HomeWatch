@@ -574,10 +574,14 @@ function ($, _, getInternetExplorerVersion) {
 	var month = months[date.getUTCMonth()];
 	var year = date.getUTCFullYear();
 
+	if(granularity === "Weekly") {
+	    var week_end = day + (get_millisecond_interval(granularity)/86400000);
+	}
+
 	return tool_tip_output = {
 	    Hourly: month + ' ' + day + ' ' + year,
 	    Daily: month + ' ' + day + ' ' + year,
-	    Weekly: month + ' ' + year,
+	    Weekly: month + ' ' + day + '-' + week_end + ' ' + year,
 	    Monthly: month + ' ' + year
 	}[granularity];
     };
