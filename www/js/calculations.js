@@ -24,6 +24,10 @@ function calculate(button) {
     var startdate = document.getElementById('startdate').value;
     var enddate = document.getElementById('enddate').value;
 
+    var calculateButton = document.getElementById('calculateButton');
+    calculateButton.disabled = true;
+    calculateButton.innerHTML = "calculating...";
+
     $.post('/engineer/calculate.php',
         {
             calculation: calculation,
@@ -38,7 +42,12 @@ function calculate(button) {
     })
     .fail(function(data) {
         alert("Error Doing Calculations: " + data.statusText);
+    })
+    .always(function(data) {
+        calculateButton.disabled = false;
+        calculateButton.innerHTML = "Calculate";
     });
+
 
     return false;
 }
