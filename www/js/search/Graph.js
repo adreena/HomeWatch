@@ -622,7 +622,7 @@ function ($, _, getInternetExplorerVersion) {
 
 	console.log("num weeks is " + num_weeks);
 
-	for(i = 0; i < num_weeks; ++i) {
+	for(i = 0; i <= num_weeks; ++i) {
 	    console.log("gran is " + granularity);
 	    console.log("milli week is " + milli_week);
 	    ticks.push([startdate + (milli_week * i), "Week " + (i + 1)]);
