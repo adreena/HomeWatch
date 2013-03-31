@@ -575,22 +575,22 @@ function ($, _, getInternetExplorerVersion) {
     var get_month_day_year = function (date, granularity) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	
-	var day = date.getUTCDate();
-	var month = months[date.getUTCMonth()];
-	var year = date.getUTCFullYear();
-	var daily = "Daily";
+	//var day = date.getUTCDate();
+	//var month = months[date.getUTCMonth()];
+	//var year = date.getUTCFullYear();
+	//var daily = "Daily";
 
 	//if(granularity === "Weekly") {
-	    var week_end = (date + get_millisecond_interval(daily)).getUTCDate;
-	console.log("week end is " + week_end);
+	    //var week_end = (date + get_millisecond_interval(daily)).getUTCDate;
+	//console.log("week end is " + week_end);
 	//}
 
-	return tool_tip_output = {
+	/*return tool_tip_output = {
 	    Hourly: month + ' ' + day + ' ' + year,
 	    Daily: month + ' ' + day + ' ' + year,
 	    Weekly: month + ' ' + day + '-' + week_end + ' ' + year,
 	    Monthly: month + ' ' + year
-	}[granularity];
+	}[granularity];*/
     };
 
     var get_millisecond_interval = function (interval) {
