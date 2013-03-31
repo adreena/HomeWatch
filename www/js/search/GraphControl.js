@@ -1,5 +1,5 @@
 /**
- * GraphControl. Manages interface and controls of one graph.
+ * GraphControl. Manages the interface controls for one graph.
  */
 
 /*jslint browser: true, nomen: true, white: true, indent: 4, maxlen: 120 */
@@ -46,31 +46,43 @@ function ($, _, D, Graph, TemplateManager) {
         id = _.uniqueId('graph');
         element = $(makeGraphGroup(id, data));
 
-        /** The GraphManager. */
+        /** The unique ID of this instance. */
         this.id = id;
+        /** The GraphManager. */
         this.manager = graphManager;
-        this.data = data;
+        /** The values that are associated wit the drop-downs and such. */
+        this.values = data.values;
 
+        /** Set the current data to the empty object. */
+        this.data = {};
+
+        /** The root element. */
+        this.element = element;
         /** The following are shortcuts to jQuery elements. */
         this.el = {};
-        this.element = element;
         /** The control panel. */
         this.el.controls = element.find(D.sel.graphControls);
         /** The graph panel. */
         this.el.graph = element.find(D.sel.flotGraph);
         this.el.info = element.find(D.sel.graphContainer);
-        /* The top visibility controls. */
+        /** The top visibility controls. */
         this.el.visControls = element.find(D.sel.graphVisibilityControls);
+        /** The message box. */
+        this.el.messageBox = element.find(D.sel.graphMessages);
 
         /* This should actually put a placeholder there until the
          * data is valid. */
+        this.showMessage(D.messages.newGraph);
+
         this.graph = new Graph(this.el.graph, function (newRequest) {
             self.onGranularityChange(newRequest);
         });
 
+        /* Currently unused. */
         this.hidden = false;
         this.minified = false;
 
+        /* Bind events, like on control change. */
         this._bindOnChange();
         this._bindVisibilityControls();
 
@@ -107,7 +119,7 @@ function ($, _, D, Graph, TemplateManager) {
         var query = {}, fetches;
 
         fetches = [
-            fetchAxes(this.element, this.data.values), // Get the axes info.
+            fetchAxes(this.element, this.values), // Get the axes info.
             fetchApartments(this.element),
             fetchDateTime(this.element)
         ];
@@ -168,14 +180,33 @@ function ($, _, D, Graph, TemplateManager) {
 
     /** Binds the update handlers. */
     GraphControl.prototype._bindOnChange = function () {
-        var controls = this.el.controls, self = this;
+        var self = this,
+            processControls,
+            internalControls;
 
-        controls.find('input, select').change(function () {
-            var updatedData = self.getQuery();
+        /* Get all of the control categories explicitly labled to send stuff to
+         * process.php. */
+        processControls = this.el.controls.find('[data-for-process]');
+        internalControls = this.el.controls.find('[data-for-internal]');
 
-            self.makeRequest(updatedData);
+        /* Bind all of these to invoke the sender. */
+        processControls.find('input, select').change(function () {
+            var updatedRequest = self.getQuery();
+
+            // TODO: query validation before sending...
+
+            self.makeRequest(updatedRequest);
+            // Show a message indicating loading.
+            self.showMessage(D.messages.graphLoading);
 
         });
+
+        /* Internal controls should just use the current data and update the
+         * graph. */
+        internalControls.find('input, select').change(function () {
+            self.onNewData();
+        });
+
     };
 
     /** Politely asks the manager to fetch new data for us. */
@@ -186,20 +217,35 @@ function ($, _, D, Graph, TemplateManager) {
     /**
      * Should be called (probably by the GraphManager) when new
      * plotable data arrives.
+     *
+     * newData is an optional parameter: If given, will be used as the
+     * new data value for the control; If left undefined, it will use
+     * the currently tracked data.
      */
     GraphControl.prototype.onNewData = function  (newData) {
-        /* Delegate this to update the data on the graph. */
+
+        if (newData === undefined) {
+            /* Use the last saved data. */
+            newData = _.clone(this.data);
+        } else {
+            /* OR save the given data. */
+            this.data = newData;
+        }
+
         newData.graphType = this.getGraphType();
 
         /* Send the data to the graph, unchanged (with the exception of the
          * graph type!) */
         this.graph.update(newData);
+
+        /* There probably was some crazy loading status message -- remove it. */
+        this.hideMessage();
     };
 
 
     GraphControl.prototype.onFetchError = function () {
-        // TODO: make progress more visible
-        console.log("Error fetching info from process.");
+        /* Show a generic message. */
+        this.showMessage(D.messages.errorFetchingInfo);
     };
 
     /*
@@ -214,6 +260,25 @@ function ($, _, D, Graph, TemplateManager) {
             self.destroy();
         }));
 
+    };
+
+    /*
+     * Messaging.
+     */
+
+    /** Shows a message to the user. */
+    GraphControl.prototype.showMessage = function (message) {
+        var box = this.el.messageBox;
+
+        box.text(message);
+        box.show('fast');
+
+    };
+
+    GraphControl.prototype.hideMessage = function () {
+        var box = this.el.messageBox;
+
+        box.hide('fast');
     };
 
 

@@ -15,9 +15,9 @@
 {# See below for the templates within the templates. #}
 
 {% block content %}
-<!--div class="loading-placeholder">
-Graph data loading &mdash; hang tight!
-</div-->
+<div class="loading-placeholder">
+Graphs are loading &mdash; hang tight!
+</div>
 <ul id="graphs"></ul>
 <a href="#add-graph">Create graph</a>
 {% endblock content %}
@@ -35,7 +35,8 @@ Graph data loading &mdash; hang tight!
 
 
 {% block extraScripts %}
-{# First #}
+{# First, some injected JSON data. Because, why make more than one HTTP request
+(says the guy making like... 15 just for scripts. ) #}
 <script>
 var categoryData = {{ categories|raw }};
 var apartmentData = {{ apartments|raw }};
@@ -48,7 +49,7 @@ var apartmentData = {{ apartments|raw }};
   <li class="graph-group" id="<%= graphID %>">
     <ul class="graph-vis-controls">
       <li><a href="#destroy-graph">Destroy</a></li>
-      <!--
+      <!-- Currently, these guys are disabled. 
       <li><a href="#minify-graph">Minify</a></li>
       <li><a href="#hide-graph">Hide</a></li>
       <li><a href="#show-graph">Show</a></li>
@@ -58,6 +59,7 @@ var apartmentData = {{ apartments|raw }};
     <div class="graph-container">
       <div class="graph" />
       <div class="graph-legend" />
+      <div class="graph-messages" />
     </div>
   </li>
 </script>
@@ -106,7 +108,7 @@ var apartmentData = {{ apartments|raw }};
   <% }); %>
 </script>
 {#
-  No parameters.
+  Parameters: None
 #}
 <script id="_t-graph-control-datetime" type="text/html">
   <div data-for-process class="graph-controls-datetime">
@@ -200,6 +202,4 @@ var apartmentData = {{ apartments|raw }};
     </ul>
   </form>
 </script>
-{# Flot compatibility for Internet Explorer users... sigh :/ #}
-<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="flot/excanvas.min.js"></script><![endif]-->
 {% endblock extraScripts %}

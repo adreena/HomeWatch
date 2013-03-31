@@ -50,6 +50,9 @@ function ($, _, D, GraphManager) {
             graphMan.add();
         });
 
+        /* Get rid of the "now loading..." placeholder. */
+        $(D.pageLoadingPlaceholder).remove();
+
     });
 
 });

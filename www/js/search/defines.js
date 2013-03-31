@@ -3,24 +3,45 @@
  *
  * Includes jQuery selectors (sel), AJAX URIs (uri), and other debug stuff.
  */
+
+/*jslint indent: 4, maxlen: 120 */
+/*global define */
+
 define({
 
+    /** Internal URIs to use for AJAX and alike. */
     uri: {
         /* URI to retrieve new graph data. */
         process: '/search/process.php'
     },
 
+    messages: {
+        newGraph: 'Pick some axes, timeframe and apartments to graph',
+        errorFetchingInfo: 'Error fetching info from the server :/',
+        graphLoading: 'Loading data...'
+
+    },
+
+    /** jQuery selectors. It is prefered to put your selectors here, so that
+     * in the future, when wee ne*/
     sel: {
         graphList: 'ul#graphs',
+        addGraphButton: 'a[href=#add-graph]',
+        pageLoadingPlaceholder: '.loading-placeholder',
+
         flotGraph: '.graph',
+
         graphControls: '.graph-controls',
         graphContainer: '.graph-container',
-        addGraphButton: 'a[href=#add-graph]',
+
+        graphMessages: '.graph-messages',
+
         graphVisibilityControls: '.graph-vis-controls',
         graphDestroyButton: 'a[href=#destroy-graph]',
         graphMinifyButton: 'a[href=#minify-graph]',
         graphHideButton: 'a[href=#hide-graph]'
-     },
+
+    },
 
     /**
      * This is the minimum period between requests to process.
@@ -28,7 +49,7 @@ define({
      */
     MinRequestDelay: 750,
 
-    /*
+    /**
      * This is an example of how the sensors will look. It's in simple
      * JSON so that we can move this to a simple file if need be. If
      * the value is a string, that is its display name. Otherwise,
@@ -95,7 +116,7 @@ define({
          * sensor names or a list of formulas (maybe?). */
         "y": ["Total_Water", "Hot_Water"],
         /* Can be "sensorarray" or "formula" */
-        "ytype": "sensorarray", 
+        "ytype": "sensorarray",
         /* The granularity. */
         "period": "Daily",
         /* The selected apartments. */
@@ -598,8 +619,8 @@ define({
         "messages": ["No graph data received\n"]
     },*/
 
-exampleProcessResponse: {
-"xaxis": "time",
+    exampleProcessResponse: {
+        "xaxis": "time",
         "yaxis": "Total_Water",
         "values": {
             "1": {
