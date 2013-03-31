@@ -165,7 +165,6 @@ function ($, _, D, GraphControl) {
                 if (_.isString(info)) {
                     /* The display name is either the string given, or,
                      * if it's the empty string, the key. */
-
                     displayName = (info === "")
                         ? name
                         : info;

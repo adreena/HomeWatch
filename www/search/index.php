@@ -67,7 +67,6 @@ $twig = \UASmartHome\TwigSingleton::getInstance();
 
 echo $twig->render("manager/search.html", array(
     "categories" => json_encode($categories),
-    // TODO: un-hardcode this
     "apartments" => json_encode(array(1,2,3,4,5,6)),
     "userRole" => $role
 ));

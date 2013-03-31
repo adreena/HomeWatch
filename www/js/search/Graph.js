@@ -438,6 +438,9 @@ function ($, _, getInternetExplorerVersion) {
 	var granularity = this.graphState.granularity;
 
         $(element).bind("plothover", function (event, pos, item) {
+            /* Err... do these elements even exist on the page? There can only
+             * be one element with id x and id y so... this won't work for
+             * multiple graphs...  */
             $("#x").text(pos.x.toFixed(2));
             $("#y").text(pos.y.toFixed(2));
 
@@ -449,6 +452,8 @@ function ($, _, getInternetExplorerVersion) {
 			y = item.datapoint[1].toFixed(2);
 
 			if(xtype === "time") {
+                            /* This get month day year thing is being called
+                             * wrong... but how are you supposed to call it? */
 			    var x = get_month_day_year(new Date(item.datapoint[0]), granularity);
                             show_tool_tip(item.pageX, item.pageY,
                                 item.series.label + " for " + x + " is " + y);
