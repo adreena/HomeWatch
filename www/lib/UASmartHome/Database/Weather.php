@@ -15,6 +15,11 @@ class WeatherGetData
 	"July"=>"7", "August"=>"8", "September"=>"9", 
 	"October"=>"10",  "November"=>"11", "December"=>"12");
 	 $Month = $MonthList[$GetData[10]];
+	 $WindDir;
+	 if ($GetData[30]==0) 
+	 {
+	 $WindDir=" ";
+	 }else {$WindDir=$GetData[29];}
       $Query=$conn->connect()->prepare("INSERT INTO `Weather_Forecast` (`Year`,`Month`,`Day`,`Hour`,`External_Temperature`
 	  ,`External_Relative_Humidity`,`Wind_Speed`,`Wind_Direction`) VALUES (:YR,:MT,:DY,:HR,:TP,:RV,:WS,:WD)");
 			$Query->bindValue(":YR",$GetData[11]);
@@ -24,7 +29,7 @@ class WeatherGetData
 			$Query->bindValue(":TP",$Temp[0]);
 			$Query->bindValue(":RV",$GetData[22]);
 			$Query->bindValue(":WS",$GetData[30]);
-			$Query->bindValue(":WD",$GetData[29]);
+			$Query->bindValue(":WD",$WindDir);
 			$Query->execute();
   }
   }
