@@ -578,10 +578,10 @@ function ($, _, getInternetExplorerVersion) {
 	var year = date.getUTCFullYear();
 	var daily = "Daily";
 
-	if(granularity === "Weekly") {
-	    var week_end = day + get_millisecond_interval(daily);
-	console.log("these are new values");
-	}
+	//if(granularity === "Weekly") {
+	    var week_end = (date + get_millisecond_interval("Daily")).getUTCDate;
+	//console.log("these are new values");
+	//}
 
 	return tool_tip_output = {
 	    Hourly: month + ' ' + day + ' ' + year,
