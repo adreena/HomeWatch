@@ -32,11 +32,24 @@ if (!ConfigurationDB::submitAlert($alert)) {
     http_response_code(400);
 }
 */
+
+$calculation = $_POST['calculation'];
+
 $result = Engineer2::EQ($_POST['startdate'], $_POST['enddate'], $FORMULA[$_POST['calculation']], $_POST['energy']);
 
+
 foreach ($result as $calc=>$val) {
+
     if (is_null($val))
-        echo "<br>$calc = null (no data) <br>\n";
-    else
-        echo "<br>$calc = $val <br>\n";
+        $val = "null (no data)";
+
+    if ($calculation === "eq1") {
+	echo "<br>" . $_POST['energyname'] . " Energy" . " = $val GJ <br>\n";
+    }
+    else if ($calculation === "eq4" || $calculation === "eq5") {
+	echo "<br>$calc = $val <br>\n";
+    }
+    else {
+	echo "<br>" . $_POST['name'] . " = $val <br>\n";
+    }
 }

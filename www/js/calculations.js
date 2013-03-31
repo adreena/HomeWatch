@@ -16,10 +16,12 @@ function calculate(button) {
     var calcDD = document.getElementById('calculations');
     var calcIndex = calcDD.selectedIndex;
     var calculation = calcDD.options[calcIndex].value;
+    var calcName = calcDD.options[calcIndex].innerHTML;
 
     var energyDD = document.getElementById('energies');
     var energyIndex = energyDD.selectedIndex;
     var energy = energyDD.options[energyIndex].value;
+    var energyName = energyDD.options[energyIndex].innerHTML;
 
     var startdate = document.getElementById('startdate').value;
     var enddate = document.getElementById('enddate').value;
@@ -30,6 +32,8 @@ function calculate(button) {
 
     $.post('/engineer/calculate.php',
         {
+            name: calcName,
+            energyname: energyName,
             calculation: calculation,
             energy: energy,
             startdate: startdate,
