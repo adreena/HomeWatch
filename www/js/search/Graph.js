@@ -573,9 +573,10 @@ function ($, _, getInternetExplorerVersion) {
 	var day = date.getUTCDate();
 	var month = months[date.getUTCMonth()];
 	var year = date.getUTCFullYear();
+	var daily = "Daily";
 
 	if(granularity === "Weekly") {
-	    var week_end = day + (get_millisecond_interval(granularity)/86400000);
+	    var week_end = day + get_millisecond_interval(daily);
 	}
 
 	return tool_tip_output = {
