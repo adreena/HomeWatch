@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use \UASmartHome\Database\DB;
+use \UASmartHome\Database\Connection;
 
 ///
 /// The default UserProvider.
@@ -16,10 +16,13 @@ class DefaultUserProvider extends UserProvider
 
     const PW_COST = 10; // CPU cost of password hashing algorithm (from 4 to 31)
     
+    private $connection;
+    
     // TODO: Pass in a DB or DB config object so that this class can be properly tested
     public function __construct()
     {
-    
+        $con = new Connection();
+        $this->connection =  $con->connect();
     }
     
     ///
@@ -32,17 +35,18 @@ class DefaultUserProvider extends UserProvider
             return null;
         
         // Query the DB
-        $dbh = DB::OpenPDOConnection();
-
-        $s = $dbh->prepare("SELECT Username, PW_Hash, Role_ID
-                            FROM Users
-                            WHERE Username = :Username");
+        $s = $this->connection->prepare("SELECT Username, PW_Hash, Role_ID
+                                         FROM Users
+                                         WHERE Username = :Username");
         
         $s->bindParam(':Username', $username);
-        $s->execute();
-
-        if ($s->errorCode() != 0)
+        
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to fetch user: " . $e->getMessage(), E_USER_WARNING);
             return null;
+        }
 
         // Check if the user exists
         if ($s->rowCount() != 1) //no such user exists
@@ -53,7 +57,7 @@ class DefaultUserProvider extends UserProvider
         $roleID = $userData['Role_ID'];
 
         // Verify the password
-        if (!password_verify($password, $pwhash))
+        if ($password != null && !password_verify($password, $pwhash))
             return null;
 
         return new User($username, $roleID);
@@ -69,41 +73,66 @@ class DefaultUserProvider extends UserProvider
         $pwhash = password_hash($accountData->password, PASSWORD_DEFAULT, array("cost" => DefaultUserProvider::PW_COST));
         if ($pwhash == false) {
             $result->setResultCodeOverall(RegistrationResult::CODE_ERROR);
-            return;
+            return false;
         }
 
-        // Insert the new user into the DB
-        $dbh = DB::openPDOConnection();
+        try {
+            $this->connection->beginTransaction();
+            
+            $s = $this->connection->prepare("INSERT INTO Users (Username, PW_Hash, Role_ID, Email)
+                                             VALUES (:Username, :PW_Hash, :Role_ID, :Email);");
 
-        $s = $dbh->prepare("INSERT INTO Users (Username, PW_Hash, Role_ID, Email)
-                            VALUES (:Username, :PW_Hash, :Role_ID, :Email);");
-
-        $s->bindParam(':Username', $accountData->username);
-        $s->bindParam(':PW_Hash', $pwhash);
-        $s->bindParam(':Role_ID', $accountData->roleID);
-        $s->bindParam(':Email', $accountData->email);
-        $s->execute();
-
-        if ($s->errorCode() != 0) {
+            $s->bindParam(':Username', $accountData->username);
+            $s->bindParam(':PW_Hash', $pwhash);
+            $s->bindParam(':Role_ID', $accountData->roleID);
+            $s->bindParam(':Email', $accountData->email);
+            
+            $s->execute();
+            
+            $this->registerPerRoleInfo($accountData, $result);
+            
+            $this->connection->commit();
+            return true;
+        } catch (\PDOException $e) {
+            trigger_error("Failed to register new user: " . $e->getMessage(), E_USER_WARNING);
             $result->setResultCodeOverall(RegistrationResult::CODE_ERROR, RegistrationResult::ERROR_SQL, $s->errorCode());
-            return;
+            $this->connection->rollback();
+            return false;
         }
     }
+    
+    private function registerPerRoleInfo($accountData, $result)
+    {
+        // TODO: only per-role info for residents right now
+        if ($accountData->roleID != User::ROLE_RESIDENT)
+            return true;
+        
+        $s = $this->connection->prepare("INSERT INTO Resident (Name, Username, Room_Number, Location)
+                                         VALUES (:Name, :Username, :Room_Number, :Location);");
 
+        $s->bindParam(':Name', $accountData->roleData['name']);
+        $s->bindParam(':Username', $accountData->username);
+        $s->bindParam(':Room_Number', $accountData->roleData['roomnumber']);
+        $s->bindParam(':Location', $accountData->roleData['location']);
+
+        $s->execute();
+    }
+    
     public function validateUsername($username, $result) {
         parent::validateUsername($username, $result);
         
         $field = AccountData::FIELD_USERNAME;
         
         // Check if the username already exists
-        $dbh = DB::openPDOConnection();
-        $s = $dbh->prepare("SELECT Username
-                            FROM Users
-                            WHERE Username = :Username");
+        $s = $this->connection->prepare("SELECT Username
+                                         FROM Users
+                                         WHERE Username = :Username");
         $s->bindParam(':Username', $username);
-        $s->execute();
 
-        if ($s->errorCode() != 0) {
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to validate username: " . $e->getMessage(), E_USER_WARNING);
             $result->setResultCode($field, RegistrationResult::CODE_ERROR, RegistrationResult::ERROR_SQL, $s->errorCode());
             return;
         }
@@ -120,14 +149,15 @@ class DefaultUserProvider extends UserProvider
         $field = AccountData::FIELD_ROLE;
         
         // Check if the username already exists
-        $dbh = DB::openPDOConnection();
-        $s = $dbh->prepare("SELECT Role_ID
-                            FROM Roles
-                            WHERE Role_ID = :Role_ID");
+        $s = $this->connection->prepare("SELECT Role_ID
+                                         FROM Roles
+                                         WHERE Role_ID = :Role_ID");
         $s->bindParam(':Role_ID', $roleID);
-        $s->execute();
 
-        if ($s->errorCode() != 0) {
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to validate role: " . $e->getMessage(), E_USER_WARNING);
             $result->setResultCode($field, RegistrationResult::CODE_ERROR, RegistrationResult::ERROR_SQL, $s->errorCode());
             return;
         }
@@ -144,14 +174,15 @@ class DefaultUserProvider extends UserProvider
         $field = AccountData::FIELD_EMAIL;
 
         // Check if the username already exists
-        $dbh = DB::openPDOConnection();
-        $s = $dbh->prepare("SELECT Email
-                            FROM Users
-                            WHERE Email = :Email");
+        $s = $this->connection->prepare("SELECT Email
+                                         FROM Users
+                                         WHERE Email = :Email");
         $s->bindParam(':Email', $email);
-        $s->execute();
-
-        if ($s->errorCode() != 0) {
+        
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to validate email: " . $e->getMessage(), E_USER_WARNING);
             $result->setResultCode($field, RegistrationResult::CODE_ERROR, RegistrationResult::ERROR_SQL, $s->errorCode());
             return;
         }

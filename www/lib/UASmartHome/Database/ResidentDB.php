@@ -2,8 +2,36 @@
 
 class ResidentDB {
 
+    public function fetchResidents()
+    {
+        $connection = (new Connection())->connect();
+        
+        $s = $connection->prepare("SELECT Resident_ID, Name, Username, Room_Number, Location, Points, Room_Status
+                                   FROM Resident");
+        
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to fetch residents: " . $e->getMessage(), E_USER_WARNING);
+            return null;
+        }
 
-
+        $residents = array();        
+        while ($resident = $s->fetch(\PDO::FETCH_ASSOC)) {
+            array_push($residents, array(
+                'id' => $resident['Resident_ID'],
+                'name' => $resident['Name'],
+                'username' => $resident['Username'],
+                'room' => $resident['Room_Number'],
+                'location' => $resident['Location'],
+                'points' => $resident['Points'],
+                'roomstatus' => $resident['Room_Status']
+            ));
+        }
+        
+        return $residents;
+    }
+    
    public function Resident_DB_Read($resident_id)
 	{
 	
@@ -59,13 +87,20 @@ class ResidentDB {
 	public function Resident_DB_Update ($resident_id,$Room_Status,$Name,$Username)
 	{ //update set where
 	$conn=new Connection ();
-	 $Query=$conn->connect()->prepare("update resident  
+	 $Query=$conn->connect()->prepare("update Resident  
 		set Room_Status= :RS , Name= :NM ,	Username= :US where Resident_ID= :Res_ID") ;
 		$Query->bindValue(":Res_ID",$resident_id);
 		$Query->bindValue(":RS",$Room_Status);
 		$Query->bindValue(":NM",$Name);
 		$Query->bindValue(":US",$Username);
-		$Query->execute();
+		
+		try {
+		    $Query->execute();
+		    return true;
+	    } catch (\PDOException $e) {
+            trigger_error("Failed to update resident: " . $e->getMessage(), E_USER_WARNING);
+	        return false;
+	    }
 	}
 	
 	public 	function Resident_DB_Achievement ()

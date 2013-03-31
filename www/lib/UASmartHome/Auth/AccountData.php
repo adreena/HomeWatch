@@ -19,8 +19,9 @@ class AccountData
     
     public $username;
     public $password;
-    public $roleID;
     public $email;
+    public $roleID;
+    public $roleData;
     
     public function __construct() { }
     

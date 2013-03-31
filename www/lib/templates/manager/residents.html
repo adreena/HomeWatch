@@ -1,0 +1,73 @@
+{% extends 'manager/base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
+
+<script src="/js/vendor/jquery-ui.js"></script>
+<script src="/js/vendor/jquery.scrollTo-min.js"></script>
+<script src="/js/residentEditor.js"></script>
+
+<div class="configs">
+
+    <!-- Resident Config -->
+    <div class="config">
+        <div class="config-display residents">
+            <p class="title">Residents</p>
+            <table>
+                <tr class="header">
+                    <th class="name">Name</th>
+                    <th class="username">Username</th>
+                    <th class="room">Room</th>
+                    <th class="location">Location</th>
+                    <th class="roomstatus">Room Status</th>
+                    <th colspan="1"></th>
+                </tr>
+
+                {% for resident in residents %}
+                <tr id="resident_{{ resident['id'] }}" class="body">
+                    <td class="name">{{ resident['name'] }}</td>
+                    <td class="username">{{ resident['username'] }}</td>
+                    <td class="room">{{ resident['room'] }}</td>
+                    <td class="location">{{ resident['location'] }}</td>
+                    <td class="roomstatus">{{ resident['roomstatus'] }}</td>
+                    <td><button onclick="editResident(this)">Edit</button></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="config-editor">
+            <form id="resident-editor" onsubmit="return updateResident()">
+                <fieldset>
+                    <legend>Resident Editor</legend>
+
+                    <label for="name">Name</label><br>
+                    <input name="name" type="text" /><br>
+
+                    <label for="username">Username</label><br>
+                    <input name="username" type="text" /><br>
+                    
+                    <label for="room">Room</label><br>
+                    <input name="room" type="text" /><br>
+
+                    <label for="location">Location</label><br>
+                    <input name="location" type="text" /><br>
+
+                    <label for="roomstatus">Room Status</label><br>
+                    <input name="roomstatus" type="text" /><br>
+
+                    <div class="footer">
+                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Clear</button>
+                        <input class="button" name="submit" type="submit" value="Submit"/>
+                    </div>
+
+                    <input class="id" name="id" value="-1" />
+                </fieldset>
+            </form>
+        </div>
+    </div> <!-- Resident Config -->
+</div> <!-- Configs -->
+
+
+{% endblock content %}

@@ -1,7 +1,7 @@
 <?php
 
 ///
-/// Handles a request to insert or edit an alert
+/// Handles a request to insert or edit a utilty
 ///
 
 ini_set('display_errors', 0); // Allows PHP to return response 500 on errors
