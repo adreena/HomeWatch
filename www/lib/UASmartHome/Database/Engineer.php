@@ -23,7 +23,7 @@ class Engineer {
 	
 			if ($period == "Hourly") {
                 $table .= '_Hourly';
-                $result =array();
+                $result = array();
                 $conn=new Connection ();
 
                 $Query=$conn->connect()->prepare("select ".$column.", Date, Hour from ".$table." where Apt= :Apt_Num AND Date between :startdate and :enddate" . $phasestring) ;

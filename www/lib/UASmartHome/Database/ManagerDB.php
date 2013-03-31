@@ -195,7 +195,6 @@ class ManagerDB {
 
 // Example code
 // must code
-$testdb=new ManagerDB();
 //Test Manager Read Row
 /*
 echo " 1. Test Resident Read : By Passing the Resident ID::";

@@ -163,8 +163,12 @@ function ($, _, D, GraphControl) {
                 forY = true;
 
                 if (_.isString(info)) {
-                    /* Use the defaults with this as the display name. */
-                    displayName = info;
+                    /* The display name is either the string given, or,
+                     * if it's the empty string, the key. */
+
+                    displayName = (info === "")
+                        ? name
+                        : info;
                     value = [name];
 
                 } else {
@@ -174,11 +178,11 @@ function ($, _, D, GraphControl) {
 
                     /* Check if it has multiple values, else just use the
                      * name as the value. */
-                    value = (info.hasOwnProperty('multiple'))
+                    value = (_(info).has('multiple'))
                         ? info.multiple
                         : [name];
 
-                    if (info.hasOwnProperty('applicableAxes')) {
+                    if (_(info).has('applicableAxes')) {
                         forX = /x/.test(info.applicableAxes);
                         forY =  /y/.test(info.applicableAxes);
                     }

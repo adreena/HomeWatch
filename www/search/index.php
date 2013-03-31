@@ -1,7 +1,10 @@
 <?php
 
 /*
- * Proposed index page for searching. Nowhere near done yet.
+ * Index page for searching.
+ *
+ * Loads all of the sensor, formula, alert and apartment data,
+ * and embeds the JSON in the page.
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -11,7 +14,6 @@ use \UASmartHome\Auth\Firewall;
 use \UASmartHome\EquationParser;
 use \UASmartHome\Database\Configuration\ConfigurationDB;
 
-//TODO: UNCOMMENT THE FOLLOWING LINE:
 Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MANAGER);
 
 $categories = array();
@@ -20,22 +22,26 @@ $categories = array();
 $config = new ConfigurationDB();
 $unfilteredCategories = $config->fetchConfigData();
 
+/* SUPER NOTE: When a value is the empty string, the client should use the key 
+ * as both the name to send to the server AND the display name. */
+
 $categories['Formulae'] = array();
 foreach ($unfilteredCategories['functions'] as $func)  {
-    /* For some strange reason, it took me three tries to bury this name = name 
-    * crap. I *actually* modified all other foreach loops before I got the 
-    * right one because I am THAT absent-minded. */
-    $categories['Formulae'][$func['name']] = $func['name'];
+    /* For some strange reason, it took me three tries to write this name = name 
+     * crap. I *actually* modified all other foreach loops before I got the 
+     * right one because I am THAT absent-minded. */
+    $categories['Formulae'][$func['name']] = "";
 };
 
 $categories['Alerts'] = array();
 foreach ($unfilteredCategories['alerts'] as $alert)  {
-    $categories['Alerts'][$alert['name']] = $alert['name'];
+    $categories['Alerts'][$alert['name']] = "";
 };
 
+/* There should probably be a better source for the sensor names, but ah well. */
 $categories['Sensors'] = array();
-foreach (EquationParser::$DBVARS as $grossName => $DBName) {
-    $categories['Sensors'][$DBName] = $grossName;
+foreach (array_unique(EquationParser::$DBVARS) as $DBName) {
+    $categories['Sensors'][$DBName] = "";
 };
 
 // TODO: Still need apartment data!
