@@ -22,7 +22,10 @@ $unfilteredCategories = $config->fetchConfigData();
 
 $categories['Formulae'] = array();
 foreach ($unfilteredCategories['functions'] as $func)  {
-    $categories['Formulae'][$func['id']] = $func['name'];
+    /* For some strange reason, it took me three tries to bury this name = name 
+    * crap. I *actually* modified all other foreach loops before I got the 
+    * right one because I am THAT absent-minded. */
+    $categories['Formulae'][$func['name']] = $func['name'];
 };
 
 //$categories['Alerts'] = array();
@@ -32,8 +35,7 @@ foreach ($unfilteredCategories['functions'] as $func)  {
 
 $categories['Sensors'] = array();
 foreach (EquationParser::$DBVARS as $grossName => $DBName) {
-    /* That's right. Name => Name. */
-    $categories['Sensors'][$grossName] = $grossName;
+    $categories['Sensors'][$DBName] = $grossName;
 };
 
 // TODO: Still need apartment data!
