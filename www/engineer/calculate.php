@@ -49,7 +49,7 @@ $result = Engineer2::EQ(
 );
 
 $cols = array(
-    'COP1' => "<strong>"."COP of Solar+DWHR+Geo Field+Heat Pumps"."</strong>",
+    'COP1' => "<strong> COP of Solar+DWHR+Geo Field+Heat Pumps </strong>",
     'COP2' => "COP of Entire Heating System",
     'COP3' => "COP of Heat Pumps",
     'NUM1' => "Heat Energy GJ COP1",
