@@ -63,6 +63,7 @@ function ($, _, getInternetExplorerVersion) {
             granularity: "Hourly",
             xtype: "time",
             ytype: null,
+	    ticks_length: null,
 	};
 
         // Initial update of the graph, only if the intial data exists.
@@ -164,6 +165,10 @@ function ($, _, getInternetExplorerVersion) {
 	var min_x, max_x, y_value;
 	var apartment, sensor, timestamp, tick_size;
 	var startdate, enddate;
+	var num_ticks;
+	var ticks = [];
+
+	console.log("why is this not pulling new test values?");
 
         $.each(graphData, function (key, value) {
             apartment = key;
@@ -179,11 +184,15 @@ function ($, _, getInternetExplorerVersion) {
 		if(startdate === undefined) {
 		    startdate = time_stamp;
 		    enddate = time_stamp;
+		    ticks.push([time_stamp]);
+		    num_ticks = 1;
 		console.log("end date is " + time_stamp);
 		}
 
 		if(time_stamp > enddate) {
 		    enddate = time_stamp;
+		    ++num_ticks;
+		    ticks.push([time_stamp]);
 		console.log("end date is " + time_stamp);
 		}
 
@@ -232,6 +241,9 @@ function ($, _, getInternetExplorerVersion) {
             });
         });
 
+	console.log("tick number is " + num_ticks);
+	graphState.ticks_length = num_ticks;
+	graphState.ticks = ticks;
 	graphState.startdate = startdate;
 	graphState.enddate = enddate;
 	graphState.min_x = min_x;
@@ -276,6 +288,8 @@ function ($, _, getInternetExplorerVersion) {
     var get_x_axis = function (graphState) {
 	var granularity = graphState.granularity;
 	var xtype = graphState.xtype;
+	var ticks_length = graphState.ticks_length;
+	var ticks = graphState.ticks;
 	var startdate = graphState.startdate;
 	var enddate = graphState.enddate;
 	var min_x = graphState.min_x;
@@ -324,7 +338,7 @@ function ($, _, getInternetExplorerVersion) {
 		//var year_end = label + "-12-01:0";
 		//base_x.xaxis["max"] = DateToUTC(year_end);
 	    } else {
-		// multiple years?
+		base_x.xaxis["ticks"] = get_year_label(ticks, granularity);
 	    }
 	} else {
 	    base_x.xaxis["min"] = min_x;
@@ -470,36 +484,85 @@ function ($, _, getInternetExplorerVersion) {
     };
 
     Graph.prototype.bind_plotclick = function() {
-	var drill_granularity;
-	var date_from = this.graphState.startdate;
-	var date_to = this.graphState.enddate;
 	var granularity = this.graphState.granularity;
+	var xtype = this.graphState.xtype;
+	var startdate = this.graphState.startdate;
+	var enddate = this.graphState.enddate;
         var handleChangedData = this.graphState.callback;
+	var drill_granularity, date_from, date_to;
+	var data_point, date_UTC;
+
+	console.log("xtype is " + xtype);
+	console.log("granularity is " + granularity);
 
     	$(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {
-		console.log("event was " + event.type);
 		console.log("granularity is : " + granularity);
 		console.log("you clicked!");
-	        //var offset = (new Date(item.datapoint[0])).getTimezoneOffset()*60*1000;
-	        var data_point = item.datapoint[0];
-	        var date_UTC = (new Date(data_point)).toUTCString();
-	        date_from = format_date(date, "true");
+	        
+		if(xtype === "time") {
+	            data_point = item.datapoint[0];
+	            date_UTC = (new Date(data_point));
+	            date_from = format_date(date_UTC);
+		} else {
+		    data_point = item.dataIndex;
+		console.log("data index is " + item.dataIndex);
+		}
 
 		if(granularity === "Hourly") {
 		    // cannot drill down further
 		    return;
 		} else if (granularity === "Daily") {
-		   drill_granularity = "Hourly";
-		   date_to = date_from;
+		    drill_granularity = "Hourly";
+
+		    if(xtype === "time") {
+		        date_to = date_from;
+		    } else {
+			date_from = format_date(new Date(map_index_to_time(data_point, startdate, drill_granularity)));
+			date_to = date_from;
+			console.log("date to is " + date_to);
+		    }
 		} else if (granularity === "Weekly") {
 		    drill_granularity = "Daily";
-		    date_to = get_date_to(data_pointUTC, drill_granularity);
+
+		    if(xtype === "time") {
+		        date_to = get_date_to(data_point, drill_granularity);
+			console.log("date to is " + date_to);
+		    } else {
+			var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
+			date_from = format_date(new Date(temp_date));
+			date_to = date_from + get_millisecond_interval(drill_granularity);
+			console.log("date from is " + date_from + " date to is " + date_to);
+		    }
+
 		} else if(granularity === "Monthly") {
 		    drill_granularity = "Weekly";
-		    date_to = get_date_to(data_pointUTC, drill_granularity);
+
+		    if(xtype === "time") {
+		        date_to = get_date_to(data_point, drill_granularity);
+		    } else {
+			var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
+			var date_string = (new Date(temp_date));
+			var year = date_string.getUTCFullYear();
+			var month = date_string.getUTCMonth();
+			date_from = year + '-' + month + '-01';
+			date_to = year + '-' + month + '-' + get_days_in_month(month, year);
+			console.log("date from is " + date_from + " date to is " + date_to); 			
+		    }
+
 		} else {
-		    //drill_granularity = "Monthly";
+		    // then current granularity is years
+		    drill_granularity = "Monthly";
+
+		    if(xtype === "time") {
+		        date_to = date_UTC.getUTCFullYear() + '-12-31';	
+		    } else {
+			var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
+			var date_string = (new Date(temp_date));
+			var year = date_string.getUTCFullYear();
+			date_from = year + '-01-01';
+			date_to = year + '-12-31';
+		    }	
 		}
 
                 /* Tell whatever handler we've got that there's new data. */
@@ -510,6 +573,10 @@ function ($, _, getInternetExplorerVersion) {
                 });
        	    } // if statement
 	}); // end plotclick
+    };
+
+    var map_index_to_time = function (data_point, startdate, granularity) {
+	return startdate + ((data_point) * get_next_interval(granularity));
     };
 
 
@@ -544,6 +611,11 @@ function ($, _, getInternetExplorerVersion) {
         return UTCTime;
     };
 
+    var format_date = function (date) {
+    	// return date as string in following format ('2012-03-01')
+        return date.getUTCFullYear() + '-' + add_leading_zero(date.getUTCMonth() + 1) + '-' + add_leading_zero(date.getUTCDate());
+    };
+
     var get_days_in_month = function (month, year) {
         month = parseInt(month);
         year = parseInt(year);
@@ -552,12 +624,10 @@ function ($, _, getInternetExplorerVersion) {
 
     var get_date_to = function (date, drill_granularity) {
         var millisecond_day = 86400000;
-        var millisecond_week = 6 * millisecond_day;
 
         if (drill_granularity === "Daily") {
-            var date_to = date + millisecond_week;
-            date_to = new Date(date_to);
-            return date_to = format_date(date_to, true);
+            var date_to = date + get_millisecond_interval(drill_granularity);
+            return format_date(new Date(date_to));
         }
 
         if (drill_granularity === "Weekly") {
@@ -566,16 +636,7 @@ function ($, _, getInternetExplorerVersion) {
             var year = temp_date.getUTCFullYear();
             var num_days = get_days_in_month(month, year);
             date_to = date + (num_days - 1) * millisecond_day;
-            date_to = new Date(date_to);
-            return date_to = format_date(date_to, true);
-        }
-    };
-
-    var format_date = function (date, bool) {
-        if (bool === "false") {
-            return (date.getUTCMonth() + 1) + '/' + date.getUTCFullYear();
-        } else {
-            return add_leading_zero(date.getUTCMonth() + 1) + '/' + add_leading_zero(date.getUTCDate()) + '/' + date.getUTCFullYear();
+            return format_date(new Date(date_to));
         }
     };
 
@@ -615,8 +676,19 @@ function ($, _, getInternetExplorerVersion) {
 	    return milliseconds = {
 		Hourly: base * 23,
 		Daily: base * 24 * 6,
-		Weekly: base * 24 * 7
+		Weekly: base * 24 * 7,
+		Yearly: base * 24 * 365
 	    }[interval];
+    };
+
+    var get_next_interval = function (interval) {
+        var base = 3600000;
+	return milliseconds = {
+	    Hourly: base * 24,
+	    Daily: base * 24 * 7,
+	    Weekly: base * 24 * 31,
+	    Yearly: base * 24 * 366
+	}[interval];
     };
 
      var get_week_labels = function (startdate, enddate, granularity) {
@@ -644,6 +716,19 @@ function ($, _, getInternetExplorerVersion) {
 
 	console.log("ticks size is " + ticks.length);
 
+	return ticks;
+    };
+
+    get_year_label = function (ticks, granularity) {
+	//var ticks = [];
+	var milli_year = get_next_interval(granularity);
+
+        for(i = 0; i < ticks.length; ++i) {
+	    console.log("gran is " + granularity);
+	    console.log("milli week is " + milli_year);
+	    var year_string = (new Date(ticks[i][0])).getUTCFullYear();
+	    ticks[i].push(year_string);
+	}
 	return ticks;
     };
 
