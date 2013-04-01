@@ -2,14 +2,13 @@
 
 {% block title 'Calculations' %}
 
+{% block extraStyles %}
+<link rel="stylesheet" href="/css/vendor/jdpicker/jdpicker.css" />
+{% endblock extraStyles %} 
+
+{% block requireMain 'js/calculations' %}
+
 {% block content %}
-
-<link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
-
-<script src="/js/vendor/jquery-ui.js"></script>
-<script src="/js/vendor/jquery.scrollTo-min.js"></script>
-<script src="/js/calculations.js"></script>
-
 <div class="configs">
 
     <!-- Alert Config -->
@@ -46,8 +45,7 @@
     </div>
     </div>
 
-</div> <!-- Configs -->
-
-
+  </div>{# Configs #}
 {% endblock content %}
+
 

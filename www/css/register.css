@@ -5,10 +5,6 @@ body {
   padding: 0;
 }
 
-#wrapper {
-  text-align: center; 
-}
-
 .middle-content {
   display: block;
   width: 960px;

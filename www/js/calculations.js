@@ -1,70 +1,95 @@
+/**
+ * Calculations page!
+ */
 
-// TODO: use require js
-// Requires:
-// - jquery-ui
-// - jquery.scrollto
+/*jslint browser: true, devel: true, white: true, indent: 4, maxlen: 120 */
+/*global require */
 
-var SCROLL_SPEED = 200;
-var SCROLL_OPTIONS = {offset: -100}
+/* JSLint unused variable report: 
+ * SCROLL_SPEED '[module]' 20,
+ * SCROLL_OPTIONS * '[module]' 20,
+ * button 'calculate' 26,
+ * data 'always' 60,
+ * selectedVal 'showhideEnergiesOnChange' 69
+ */
+require([
+    'jquery',
+    'vendor/jquery.jdpicker',
+    'vendor/jquery-scrollTo-min'],
 
-$(window).load(function() {
+    function ($) {
+        "use strict";
 
-}); // window load
+        var SCROLL_SPEED = 200,
+            SCROLL_OPTIONS = {offset: -100};
 
+    window.calculate = function (button) {
+        var calcDD = $('#calculations').get(),
+            calcIndex = calcDD.selectedIndex,
+            calculation = calcDD.options[calcIndex].value,
+            calcName = calcDD.options[calcIndex].innerHTML,
 
-function calculate(button) {
-    var calcDD = document.getElementById('calculations');
-    var calcIndex = calcDD.selectedIndex;
-    var calculation = calcDD.options[calcIndex].value;
-    var calcName = calcDD.options[calcIndex].innerHTML;
+            energyDD = $('#energies').get(),
+            energyIndex = energyDD.selectedIndex,
+            energy = energyDD.options[energyIndex].value,
+            energyName = energyDD.options[energyIndex].innerHTML,
 
-    var energyDD = document.getElementById('energies');
-    var energyIndex = energyDD.selectedIndex;
-    var energy = energyDD.options[energyIndex].value;
-    var energyName = energyDD.options[energyIndex].innerHTML;
+            startdate = $('#startdate').val(),
+            enddate = $('#enddate').val(),
 
-    var startdate = document.getElementById('startdate').value;
-    var enddate = document.getElementById('enddate').value;
+            calculateButton = $('#calculateButton');
 
-    var calculateButton = document.getElementById('calculateButton');
-    calculateButton.disabled = true;
-    calculateButton.innerHTML = "calculating...";
+        calculateButton.disabled = true;
+        calculateButton.innerHTML = "calculating...";
 
-    $.post('/engineer/calculate.php',
-        {
+        $.post('/engineer/calculate.php', {
             name: calcName,
             energyname: energyName,
             calculation: calculation,
             energy: energy,
             startdate: startdate,
             enddate: enddate
+        })
+            .done(function(data) {
+                var resultsdiv = $('#results').get();
+                resultsdiv.innerHTML = "Result: " + data + '<br />';
+            })
+            .fail(function(data) {
+                alert("Error Doing Calculations: " + data.statusText);
+            })
+            .always(function(data) {
+                calculateButton.disabled = false;
+                calculateButton.innerHTML = "Calculate";
+            });
+
+
+        return false;
+    };
+
+    window.showhideEnergiesOnChange = function (dropdown) {
+        var index = dropdown.selectedIndex,
+            selectedVal = dropdown[index].text,
+            energiesDD = $('#energies').get();
+
+        if (dropdown[index].value === "eq1") {
+            energiesDD.disabled = false;
+        } else {
+            energiesDD.disabled = true;
         }
-    )
-    .done(function(data) {
-        var resultsdiv = document.getElementById('results');
-        resultsdiv.innerHTML = "Result: " + data + '<br />';
-    })
-    .fail(function(data) {
-        alert("Error Doing Calculations: " + data.statusText);
-    })
-    .always(function(data) {
-        calculateButton.disabled = false;
-        calculateButton.innerHTML = "Calculate";
+    };
+
+    /* On document ready... */
+    $(function () {
+        var datePickers = $('#startdate, #enddate');
+
+        /* jdPicker gives hidden type inputs a full calendar display. */
+        datePickers.attr('type', 'hidden');
+ 
+        /* Bind the date selectors with jdPicker. */
+        datePickers.jdPicker({
+            date_format: 'YYYY-mm-dd',
+            start_of_week: 0
+        });
     });
 
-
-    return false;
-}
-
-function showhideEnergiesOnChange(dropdown) {
-    var index = dropdown.selectedIndex;
-    var selectedVal = dropdown[index].text;
-    var energiesDD = document.getElementById('energies');
-
-    if (dropdown[index].value == "eq1") {
-        energiesDD.disabled = false;
-    }
-    else {
-        energiesDD.disabled = true;
-    }
-}
+});
