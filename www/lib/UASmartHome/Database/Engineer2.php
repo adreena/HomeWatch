@@ -2,11 +2,19 @@
 
 class Engineer2 {
 
-
-public function EQ($Datefrom,$Dateto,$EQ,$column=null)
+    public static $EnergyColumns = array(
+        "Energy1" => "Solar Day",
+        "Energy2" => "DWHR",
+        "Energy3" => "Geothermal + DWHR",
+        "Energy4" => "Solar + DWHR + Geothermal + Heat Pumps",
+        "Energy5" => "Boiler 1",
+        "Energy6" => "Boiler 2",
+        "Energy7" => "Heating Energy Consumption"
+    );
+    
+    public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	{
-		//Energy1 =Solar Day  ,Energ2=(DWHR) ,Energy3=Geo field + DWHR   ,Energy4=Solar + DWHR + Geo field + Heat pumps  ,Energy5=Boiler1,Energy 6=Boiler2 ,Energy 7=Heating energy consumption
-
+	
 	 $conn=new Connection2();
 	if ($EQ==1)
 	{
@@ -69,9 +77,11 @@ public function EQ($Datefrom,$Dateto,$EQ,$column=null)
 	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
 	return $row;
 	}
-	}
+}
 
-
+    public static function getEnergyColumns() {
+        return self::$EnergyColumns;
+    }
 
 }
 

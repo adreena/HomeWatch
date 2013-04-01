@@ -23,13 +23,9 @@
 
 
     <select id="energies">
-        <option value="Energy1">Solar Day</option>
-        <option value="Energy2">DWHR</option>
-        <option value="Energy3">Geo field + DWHR</option>
-        <option value="Energy4">Solar + DWHR + Geo field + Heat pumps</option>
-        <option value="Energy5">Boiler1</option>
-        <option value="Energy6">Boiler2</option>
-        <option value="Energy7">Heating energy consumption</option>
+        {% for col,description in energycolumns %}
+        <option value="{{ col }}">{{ description }}</option>
+        {% endfor %}
     </select>
 
     <div>

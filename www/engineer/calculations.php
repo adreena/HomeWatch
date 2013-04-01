@@ -9,11 +9,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use \UASmartHome\Auth\Firewall;
 Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER);
 
-use \UASmartHome\Database\Configuration\ConfigurationDB;
-//use \UASmartHome\EquationParser;
+use \UASmartHome\Database\Engineer2;
 
-$configData = ConfigurationDB::fetchConfigData();
+$energyColumns = Engineer2::getEnergyColumns();
 
 $twig = \UASmartHome\TwigSingleton::getInstance();
-echo $twig->render('engineer/calculations.html');
+echo $twig->render('engineer/calculations.html', array(
+    "energycolumns" => $energyColumns
+));
 
