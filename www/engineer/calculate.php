@@ -36,7 +36,7 @@ $endDate = \DateTime::createFromFormat('Y-m-d', $_POST['enddate']);
 
 /* Die because we couldn't parse the date format. */
 if ($startDate === false || $endDate === false) {
-    http_response_code(400;
+    http_response_code(400);
     die;
 }
 
