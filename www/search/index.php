@@ -28,15 +28,19 @@ $unfilteredCategories = $config->fetchConfigData();
 
 $categories['Formulae'] = array();
 foreach ($unfilteredCategories['functions'] as $func)  {
-    /* For some strange reason, it took me three tries to write this name = name 
-     * crap. I *actually* modified all other foreach loops before I got the 
-     * right one because I am THAT absent-minded. */
-    $categories['Formulae'][$func['name']] = "";
+    /* Alerts and formulas are only applicable on the "y" axis. */
+    $categories['Formulae'][$func['name']] = array(
+        "displayName" => $func['name'],
+        "applicableAxes" => "y"
+    );
 };
 
 $categories['Alerts'] = array();
 foreach ($unfilteredCategories['alerts'] as $alert)  {
-    $categories['Alerts'][$alert['name']] = "";
+    $categories['Alerts'][$alert['name']] = array(
+        "displayName" => $func['name',
+        "applicableAxes" => "y"
+    );
 };
 
 /* There should probably be a better source for the sensor names, but ah well. */
@@ -45,8 +49,8 @@ foreach (array_unique(EquationParser::$DBVARS) as $DBName) {
     $categories['Sensors'][$DBName] = "";
 };
 
+/* Get all of the apartments. */
 $apartments = Engineer::db_apt_list();
-
 
 /* Get session user role. */
 switch (User::getSessionUser()->getRoleID()) {
