@@ -625,7 +625,7 @@ Exceptions:     Manager enters username or email address that is registered to a
 </pre>
 
 <pre>
-ID:              2.4
+ID:              2.5
 Description:     Building manager adds a new contract
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  A new contract is available for cost calculations
@@ -644,12 +644,50 @@ Exceptions:     Database fails to respond
 </pre>
 
 <pre>
-ID:              2.4
+ID:              2.6
+Description:     Building manager edits a contract
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  The data for the contract is overwritten in the database
+Success Flow:
+                 1. Manager enters Add Contract page
+				 2. Manager chooses a contract to edit
+				 3. Manager clicks the related edit button
+				 4. Page fills out existing data in the data fields
+                 5. Page requests necessary data fields
+                 6. Manager supplies required data fields
+                 7. Manager submits registration request
+                 8. Page validates data fields
+                 9. Page sends registration request to database
+                 10. Database responds with success or failure
+                 11. Page presents Manager with an updated table
+
+Exceptions:     Database fails to respond
+				There already exists a contract for the specified utility over the specified date
+</pre>
+
+<pre>
+ID:              2.7
+Description:     Building manager deletes a contract
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  The database drops the data for that contract
+Success Flow:
+                 1. Manager enters Utility Contracts page
+				 2. Manager chooses a contract to delete
+				 3. Manager clicks the related delete button
+                 4. Page sends registration request to database
+                 5. Database responds with success or failure
+                 6. Page presents Manager with an updated resident table
+
+Exceptions:     Database fails to respond
+</pre>
+
+<pre>
+ID:              2.8
 Description:     Building manager views an overview of resident data
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  A table containing relevent data is presented to the Manager
 Success Flow:
-                 1. Manager enters Resident View page
+                 1. Manager enters Residents page
                  2. Page submits request to the database
                  3. Database responds with the relevent data
                  4. Page creates a table out of the data
@@ -657,6 +695,63 @@ Success Flow:
 
 Exceptions:     Database fails to respond
 				There already exists a contract for the specified utility over the specified date
+</pre>
+
+<pre>
+ID:              2.9
+Description:     Building manager adds a new resident
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  A new resident is added to the database
+Success Flow:
+                 1. Manager enters Residents page
+                 2. Page requests necessary data fields
+                 3. Manager supplies required data fields
+                 4. Manager submits registration request
+                 5. Page validates data fields
+                 6. Page sends registration request to database
+                 7. Database responds with success or failure
+                 8. Page presents Manager with an updated resident table
+
+Exceptions:     Database fails to respond
+				There already exists a resident with the specified username
+</pre>
+
+<pre>
+ID:              2.10
+Description:     Building manager edits a resident
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  The database overwrites the data for that resident
+Success Flow:
+                 1. Manager enters Residents page
+				 2. Manager chooses a resident to edit
+				 3. Manager clicks the related edit button
+				 4. Page fills out existing data in the data fields
+                 5. Page requests necessary data fields
+                 6. Manager supplies required data fields
+                 7. Manager submits registration request
+                 8. Page validates data fields
+                 9. Page sends registration request to database
+                 10. Database responds with success or failure
+                 11. Page presents Manager with an updated resident table
+
+Exceptions:     Database fails to respond
+				There already exists another resident with the specified username
+</pre>
+
+<pre>
+ID:              2.11
+Description:     Building manager deletes a resident
+Preconditions:   User is logged in as a Building Manager
+Postconditions:  The database drops the data for that resident
+Success Flow:
+                 1. Manager enters Residents page
+				 2. Manager chooses a resident to delete
+				 3. Manager clicks the related delete button
+                 4. Page sends registration request to database
+                 5. Database responds with success or failure
+                 6. Page presents Manager with an updated resident table
+
+Exceptions:     Database fails to respond
 </pre>
 
 <a name="uc-engineer" />

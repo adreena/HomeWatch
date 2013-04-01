@@ -64,6 +64,16 @@ Login Testing
 		press log in button
 		verify the "incorrect login information" alert
 		verify that you are still on the login page
+		enter manager1 as username
+		enter asdfasdf as password
+		press log in button
+		verify the "incorrect login information" alert
+		verify that you are still on the login page
+		enter asdfasdf as username
+		enter password as password
+		press log in button
+		verify the "incorrect login information" alert
+		verify that you are still on the login page
 
 Registration testing
 	register with empty data
@@ -242,17 +252,12 @@ Manager Testing
 		verify you are on the manager home page
 
 	verify the overview page
-		(overview page not fully implemented - no further tests)
+		(pending)
 
 	verify the graphs page
 		click the Graphs menu text	
 		verify that you are on the graphs page
-		(graphs page not fully implemented - no further tests)
-
-	verify the reports page
-		click the Reports menu text	
-		verify that you are on the reports page
-		(reports page not fully implemented - no further tests)
+		(pending)
 
 	verify the residents page
 		click the Residents menu text	
@@ -260,127 +265,219 @@ Manager Testing
 		verify that the residents table is not empty
 		verify that the residents table does not contain duplicate data
 		verify that the residents table contains reasonable data
-		(residents page not fully implemented - no further tests)
+		verify creting a new resident
+			verify with empty data
+				click the Submit button
+				verify that the failed submission alert is displayed
+				
+			verify with incomplete data
+				enter tester as name
+				click the Submit button
+				verify that the failed submission alert is displayed
+				click the clear button
+				enter tester as username
+				click the Submit button
+				verify that the failed submission alert is displayed
+				click the clear button
+				enter 1212 as room 
+				click the Submit button
+				verify that the failed submission alert is displayed
+				click the clear button
+				enter NE as location
+				click the Submit button
+				verify that the failed submission alert is displayed
+				click the clear button
+				enter occupied as room status
+				click the Submit button
+				verify that the failed submission alert is displayed
+				click the clear button
+				
+			verify with invalid data
+				enter testing12345 as name
+				enter testing12345 as username
+				enter asdfasdf as room
+				enter NE as location
+				enter occupied as room status
+				click the Submit button
+				verify that the failed submission alert is displayed
+				click the clear button
+				
+			verify with proper data
+				enter testing12345 as name
+				enter testing12345 as username
+				enter 1212 as room
+				enter NE as location
+				enter occupied as room status
+				click the Submit button
+				verify that (after a small pause) the residents table contains the new resident
+				
+		verify editing a resident
+			choose a resident to edit
+			find the table entry relating to that resident
+			click the edit button
+			verify with empty data
+				delete all data fields
+				click the Submit button
+				verify that the failed submission alert is displayed
+				
+			verify with incomplete data
+				enter tester as name
+				click the Submit button
+				verify that the failed submission alert is displayed
+				delete all data fields
+				enter tester as username
+				click the Submit button
+				verify that the failed submission alert is displayed
+				delete all data fields
+				enter 1212 as room 
+				click the Submit button
+				verify that the failed submission alert is displayed
+				delete all data fields
+				enter NE as location
+				click the Submit button
+				verify that the failed submission alert is displayed
+				delete all data fields
+				enter occupied as room status
+				click the Submit button
+				verify that the failed submission alert is displayed
+				delete all data fields
+				
+			verify with invalid data
+				enter testing12345 as name
+				enter testing12345 as username
+				enter asdfasdf as room
+				enter NE as location
+				enter occupied as room status
+				click the Submit button
+				verify that the failed submission alert is displayed
+				click the clear button
+				
+			verify with proper data
+				click the edit button to restore data
+				add +1 to the end of the description
+				click the submit button
+				verify that (after a small delay) the residents table contains the new resident
+				verify that the residents table does not contain the older version
+				
+		verify deleting a resident
+			choose a resident to delete
+			find the row in the resident table relating to that resident
+			click the delete button
+			verify that (after a small delay) the resident table no longer contains data on that resident
 
 	verify the utility contracts page
 		click the Utility Contracts menu text	
 		verify that you are on the contracts page
-
-		verify main table
-			verify that the contracts table is not empty
-			verify that the contracts table does not contain duplicate data
-			verify that the contracts table contains reasonable data
-			verify that the contracts table contains contracts of various types
-		
-		verify electricity table
-			click the Electricity Contracts button
-			verify that the contracts table is not empty
-			verify that the contracts table does not contain duplicate data
-			verify that the contracts table contains reasonable data
-			verify that the contracts table contains only electricity contracts
-		
-		(other buttons pending)
+		verify that the contracts table is not empty
+		verify that the contracts table does not contain duplicate data
+		verify that the contracts table contains reasonable data
+		verify that the contracts table contains contracts of various types
 		
 		verify the add contract page
-			click the Add Contract button
-			verify that you are on the add contracts page
-			enter (pending date format) as End Date	
-			enter (pending date format) as Start Date
-			enter (pending data type) as Price
-			enter (pending data type) as Utility Type
-			click the Reset button
-			verify that all data fields are blank (pending specifying contracts to edit)
-			click the Submit New button
-			verify that you are on the failed submit page
-			click the Cancel button
-			verify that you are on the utilities contracts page
-			click the Add Contract button
-			click the Submit New button
-			verify the "you forgot to enter a type" alert appears
-			verify the "you forgot to enter a price" alert appears
-			verify the "you forgot to enter a start date" alert appears
-			verify the "you forgot to enter a end date" alert appears
-			click the Retry button
-			verify that you have been returned to the add contract page from the error page
-			enter (pending data type) as Utility Type
-			click the Submit New button
-			verify the "you forgot to enter a type" alert no longer appears
-			verify that other alerts still appear
-			click the Retry button
-			enter (pending data type) as Price
-			enter (pending data type) as Utility Type
-			click the Submit New button
-			verify the "you forgot to enter a price" alert no longer appears
-			verify that other alerts still appear
-			click the Retry button
-			enter (pending date format) as Start Date
-			enter (pending data type) as Price
-			enter (pending data type) as Utility Type
-			click the Submit New button
-			verify the "you forgot to enter a start date" alert no longer appears
-			verify that end date alert still appears
-			click the Retry button
-			enter (pending date format) as End Date	
-			enter (pending date format) as Start Date
-			enter (pending data type) as Price
-			enter (pending data type) as Utility Type
-			click the Submit New button
-			verify that you are now on the utilities contracts page
-			verify the success message appears
-			verify that the contract list contains the new contract
+			locate the Contacts Edit section
+			verify with empty data
+				delete all data fields
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				
+			verify with incomplete data
+				enter Electricity as Utility Type
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter 1.11 as Price
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter 1/1/2012 as Start Date
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter 1/2/2012 as End Date
+				click the Submit Edit button
+				verify that the failed to submit alert is displayed
+				
+			verify with improper data
+				enter WAFFLES as Utility Type
+				enter valid data for the other fields
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter WAFFLES as Price
+				enter valid data for the other fields
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter WAFFLES as Start Date
+				enter valid data for the other fields
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter WAFFLES as End Date
+				enter valid data for the other fields
+				click the Submit Edit button
+				verify that the failed to submit alert is displayed
+				
+			verify with proper data
+				enter Electricity as Utility Type
+				enter 1.11 as Price
+				enter 1/1/2012 as Start Date
+				enter 1/2/2012 as End Date
+				click the Submit button
+				verify that (after a short delay) the contracts table contains the changes to the contract
+				verify that the table no longer contains the old version
 
 		verify the edit contract page
-			make not of the data fields of an existing member of the contracts list
-			click the Edit Contract button
-			verify that you are on the edit contracts page
-			enter (pending date format) as End Date	
-			enter (pending date format) as Start Date
-			enter (pending data type) as Price
-			enter (pending data type) as Utility Type
-			click the Reset button
-			verify that all data fields are blank
-			click the Submit Edit button
-			verify that you are on the failed submit page
-			click the Cancel button
-			verify that you are on the utilities contracts page
-			click the Edit Contract button
-			click the Submit Edit button
-			verify the "you forgot to enter a type" alert appears
-			verify the "you forgot to enter a price" alert appears
-			verify the "you forgot to enter a start date" alert appears
-			verify the "you forgot to enter a end date" alert appears
-			click the Retry button
-			verify that you have been returned to the edit contract page from the error page
-			enter (pending data type) as Utility Type
-			click the Submit Edit button
-			verify the "you forgot to enter a type" alert no longer appears
-			verify that other alerts still appear
-			click the Retry button
-			enter (pending data type) as Price
-			enter (pending data type) as Utility Type
-			click the Submit Edit button
-			verify the "you forgot to enter a price" alert no longer appears
-			verify that other alerts still appear
-			click the Retry button
-			enter (pending date format) as Start Date
-			enter (pending data type) as Price
-			enter (pending data type) as Utility Type
-			click the Submit Edit button
-			verify the "you forgot to enter a start date" alert no longer appears
-			verify that end date alert still appears
-			click the Retry button
-			enter (pending date format) as End Date	
-			enter (pending date format) as Start Date
-			enter (pending data type) as Price
-			enter (pending data type) as Utility Type
-			click the Submit Edit button
-			verify that you are now on the utilities contracts page
-			verify the success message appears
-			verify that the contract list no longer contains a contract matching the original contract
-			verify that the contract list contains a contract matching the edited data	
+			choose a contract to edit
+			find the related row in the table
+			click the associated edit button
+			verify that the Contract Edit area has been updated with that contracts data
+			verify that the title mentions that contract
+			verify with empty data
+				delete all data fields
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				
+			verify with incomplete data
+				enter Electricity as Utility Type
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter 1.11 as Price
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter 1/1/2012 as Start Date
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter 1/2/2012 as End Date
+				click the Submit Edit button
+				verify that the failed to submit alert is displayed
+				
+			verify with improper data
+				enter WAFFLES as Utility Type
+				enter valid data for the other fields
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter WAFFLES as Price
+				enter valid data for the other fields
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter WAFFLES as Start Date
+				enter valid data for the other fields
+				click the Submit button
+				verify that the failed to submit alert is displayed
+				enter WAFFLES as End Date
+				enter valid data for the other fields
+				click the Submit Edit button
+				verify that the failed to submit alert is displayed
+				
+			verify with proper data
+				enter Electricity as Utility Type
+				enter 1.11 as Price
+				enter 1/1/2013 as Start Date
+				enter 1/2/2013 as End Date
+				click the Submit button
+				verify that (after a short delay) the contracts table contains the changes to the contract
+				verify that the table no longer contains the old version
 
 		verify the delete contract button
-			(pending)
+			choose a contract to delete
+			find the row associated with that contract
+			click the delete button
+			verify that (after a small delay) the table no longer contains data on that contract
 
 	verify the register new user page
 		register with empty data
@@ -539,28 +636,6 @@ Manager Testing
 			enter password as password
 			click login button
 			verify you are on the manager home page (there is no developer home page)	
-			
-	verify charts page
-		verify chart with invalid data
-			(pending)
-		
-		verify one chart
-			(pending)
-		
-		verify multiple charts
-			(pending)
-		
-		verify hiding charts
-			(pending)
-		
-		verify refreshing charts
-			(pending)
-			
-		verify multiple y axis charts
-			(pending)
-	
-	verify reports page
-		(pending)
 
 Engineer Testing
 	log in as engineer1
@@ -752,7 +827,7 @@ Engineer Testing
 		verify multiple y axis charts
 			(pending)
 	
-	verify reports page
+	verify calculations page
 		(pending)
 
 
