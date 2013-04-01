@@ -71,6 +71,14 @@ function ($, _, D, GraphControl) {
             self = this,
             id = control.id;
 
+        /* Abort any existing requests for the current graph ID. */
+        if (_(this.currentRequest).has(id)) {
+            console.log("Cancelling current request.");
+            this.currentRequest[id].abort();
+            /* Stop keeping track of the request. */
+            delete this.currentRequest[id];
+        }
+
         /* Fetch the request out of the cache, if it's found. */
         if (_(this.resultCache).has(graphParams)) {
             console.log("Getting request from the cache.");
@@ -82,6 +90,8 @@ function ($, _, D, GraphControl) {
                  * but aparently IE doesn't support it. :/ */
                 control.onNewData(self.resultCache[graphParams]);
             }, 0);
+
+            console.log("The XHR: ", jqXHR);
 
             return;
         }
@@ -97,12 +107,6 @@ function ($, _, D, GraphControl) {
             control.onNewData(newData);
         };
 
-        /* Abort any existing requests for the current graph ID. */
-        if (_(this.currentRequest).has(id)) {
-            console.log("Cancelling current request.");
-            this.currentRequest[id].abort();
-        }
-
         this.currentRequest[id] = $.ajax({
             url: D.uri.process,
             type: 'GET',
@@ -112,7 +116,8 @@ function ($, _, D, GraphControl) {
             },
             dataType: 'json',
             success: onSuccess,
-            error: function () {
+            error: function (jqXHR) {
+                console.log("The XHR: ", jqXHR);
                 // Hopefully the control can handle the error.
                 control.onFetchError();
            }
