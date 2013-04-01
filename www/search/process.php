@@ -195,6 +195,7 @@ if ($test) {
 		
 	
 		if ($xtype == "sensorarray") {
+			$x = end($x);
 			if (ISSET($phaseMapping[$x])) {
 				$phase = $phaseMapping[$x];
 			} else {
