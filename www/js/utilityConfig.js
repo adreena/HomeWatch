@@ -61,7 +61,7 @@ function getUtilityEditorData() {
 
     return {
         id: utilityEditorContents.find('input[name=id]').val(),
-        type: utilityEditorContents.find('input[name=type]').val(),
+        type: utilityEditorContents.find('select[name=type]').val(),
         price: utilityEditorContents.find('input[name=price]').val(),
         startdate: utilityEditorContents.find('input[name=startdate]').val(),
         enddate: utilityEditorContents.find('input[name=enddate]').val()

@@ -47,8 +47,12 @@
                 <fieldset>
                     <legend>Utility Prices Editor</legend>
 
-                    <label for="type">Type</label><br>
-                    <input name="type" type="text" /><br>
+                    <div>
+                    <select name="type">
+                        <option value="electricity">Electricity</option>
+                        <option value="water">Water</option>
+                    </select>
+                    </div>
 
                     <label for="price">Price (per KWH for electricity, per gallon for water)</label><br>
                     <input name="price" type="text" /><br>
