@@ -24,12 +24,12 @@ require([
             SCROLL_OPTIONS = {offset: -100};
 
     window.calculate = function (button) {
-        var calcDD = $('#calculations').get(),
+        var calcDD = $('#calculations').get(0),
             calcIndex = calcDD.selectedIndex,
             calculation = calcDD.options[calcIndex].value,
             calcName = calcDD.options[calcIndex].innerHTML,
 
-            energyDD = $('#energies').get(),
+            energyDD = $('#energies').get(0),
             energyIndex = energyDD.selectedIndex,
             energy = energyDD.options[energyIndex].value,
             energyName = energyDD.options[energyIndex].innerHTML,
@@ -51,7 +51,7 @@ require([
             enddate: enddate
         })
             .done(function(data) {
-                var resultsdiv = $('#results').get();
+                var resultsdiv = $('#results').get(0);
                 resultsdiv.innerHTML = "Result: " + data + '<br />';
             })
             .fail(function(data) {
@@ -69,7 +69,7 @@ require([
     window.showhideEnergiesOnChange = function (dropdown) {
         var index = dropdown.selectedIndex,
             selectedVal = dropdown[index].text,
-            energiesDD = $('#energies').get();
+            energiesDD = $('#energies').get(0);
 
         if (dropdown[index].value === "eq1") {
             energiesDD.disabled = false;
