@@ -29,7 +29,7 @@ echo "Extracted Files"
 ########################################################################
 #Install the Constants,Equations Tables 
 #########################################################################
-##Steven add your stuff here 
+mysql -u $user -p$password<ConfigTables.sql
 ########################################################################
 #Install the Resident and Manager Tables  
 #########################################################################
