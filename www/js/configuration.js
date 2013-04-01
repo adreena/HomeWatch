@@ -254,7 +254,7 @@ function getAlertEditorData() {
     return {
         id: alertEditorContents.find('input[name=id]').val(),
         name: alertEditorContents.find('input[name=name]').val(),
-        value: alertEditorContents.find('input[name=value]').text(),
+        value: alertEditorContents.find('input[name=value]').val(),
         description: alertEditorContents.find('input[name=description]').val()
     };
 }
