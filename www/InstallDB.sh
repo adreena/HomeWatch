@@ -34,7 +34,7 @@ echo "Extracted Files"
 #Install the Resident and Manager Tables  
 #########################################################################
 echo "Installing the Resident and Manager tables  (1 of 1)"
-mysql -u $user -p$password $DB<ResidentManagerDB.sql
+mysql -u $user -p$password $DB<RMDB.sql
 
 ########################################################################
 #Install the Views for the  Air,Water,Heating,Heat_flux and  El_Energy
