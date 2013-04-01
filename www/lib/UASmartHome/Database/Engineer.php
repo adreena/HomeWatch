@@ -276,7 +276,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				} else {
                     if ($Phase == 'A' || 'B')
                     {
-                        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num Ts Date between :SD AND :ED AND Phase= :PS") ;
+                        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num Ts between :SD AND :ED AND Phase= :PS") ;
                         $Query->bindValue(":PS",$Phase);
                     }
                 }
