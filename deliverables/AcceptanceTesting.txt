@@ -569,14 +569,163 @@ Engineer Testing
 		click login button
 		verify you are on the engineer home page
 		
+	verify adding alerts
+		click the Configuration text
+		verify that you are on the configuration page
+		locate the Alerts Section
+		verify with empty data
+			click the Submit button
+			verify that the failed submit alert is displayed
+			
+		verify with bad data
+			enter testing as the alert name
+			click the Submit button
+			verify that the failed submit alert is displayed
+			click the Clear button
+			verify that all data fields have been cleared
+			enter waffles as the Body
+			click the Submit button
+			verify that the failed submit alert is displayed
+			click the clear button
+			enter waffles as the description
+			click the Submit button
+			verify that the failed submit alert is displayed
+			
+		verify with proper data
+			enter acceptancetesting as the name
+			enter 4 + 5 as the body
+			enter acceptancetesting as the description
+			click the Submit button
+			verify (after a short pause) that the Alerts table displays the new equation
+	
+	verify editing alerts
+		click the Configuration text
+		verify that you are on the configuration page
+		locate the Alerts Section
+		find an alert to edit
+		click the edit button
+		verify that the Alerts Edit section has been updated with the correct data
+		verify with empty data
+			delete all data in the data fields
+			click the submit button
+			verify that the failed submit alert is displayed
+			
+		verify with bad data
+			enter testing as the alert name
+			click the Submit button
+			verify that the failed submit alert is displayed
+			delete all data in the name field
+			verify that all data fields have been cleared
+			enter waffles as the Body
+			click the Submit button
+			verify that the failed submit alert is displayed
+			delete all data in the body field
+			enter waffles as the description
+			click the Submit button
+			verify that the failed submit alert is displayed
+			
+		verify with proper data
+			enter acceptancetesting2 as the name
+			enter 4 + 5 as the body
+			enter acceptancetesting2 as the description
+			click the Submit button
+			verify (after a short pause) that the Alerts table displays the alert with the new data and doesn't contain the old version
+			
+		verify the cancel button
+			choose a formula to edit
+			click the edit button
+			verify that the Formula Edit section is updated with the proper data
+			verify that the title mentions the specific alert being edited
+			click the Cancel button
+			verify that all data fields are now blank
+			verify that the title no longer mentions the specific alert being edited
+	
+	verify deleting alerts
+		click the Configuration text
+		verify that you are on the configuration page
+		locate the Alerts Section
+		find an alert to delete
+		click the delete button
+		verify that (after a short pause) the Alerts table no longer contains the deleted alert
+		
 	verify adding custom equations
-		(pending)
+		click the Configuration text
+		verify that you are on the configuration page
+		locate the Formulas Section
+		verify with empty data
+			click the Submit button
+			verify that the failed submit alert is displayed
+			
+		verify with bad data
+			enter testing as the function name
+			click the Submit button
+			verify that the failed submit alert is displayed
+			click the Clear button
+			verify that all data fields have been cleared
+			enter waffles as the Body
+			click the Submit button
+			verify that the failed submit alert is displayed
+			click the clear button
+			enter waffles as the description
+			click the Submit button
+			verify that the failed submit alert is displayed
+			
+		verify with proper data
+			enter acceptancetesting as the name
+			enter 4 + 5 as the body
+			enter acceptancetesting as the description
+			click the Submit button
+			verify (after a short pause) that the Function table displays the new equation
 	
 	verify editing custom equations
-		(pending)
+		click the Configuration text
+		verify that you are on the configuration page
+		locate the Formulas Section
+		find a formula to edit
+		click the edit button
+		verify that the Formula Edit section has been updated with the correct data
+		verify with empty data
+			delete all data in the data fields
+			click the submit button
+			verify that the failed submit alert is displayed
+			
+		verify with bad data
+			enter testing as the function name
+			click the Submit button
+			verify that the failed submit alert is displayed
+			delete all data in the name field
+			verify that all data fields have been cleared
+			enter waffles as the Body
+			click the Submit button
+			verify that the failed submit alert is displayed
+			delete all data in the body field
+			enter waffles as the description
+			click the Submit button
+			verify that the failed submit alert is displayed
+			
+		verify with proper data
+			enter acceptancetesting2 as the name
+			enter 4 + 5 as the body
+			enter acceptancetesting2 as the description
+			click the Submit button
+			verify (after a short pause) that the Function table displays the equation with the new data and doesn't contain the old version
+			
+		verify the cancel button
+			choose a formula to edit
+			click the edit button
+			verify that the Formula Edit section is updated with the proper data
+			verify that the title mentions the specific formula being edited
+			click the Cancel button
+			verify that all data fields are now blank
+			verify that the title no longer mentions the specific formula being edited
 	
 	verify deleting custom equations
-		(pending)
+		click the Configuration text
+		verify that you are on the configuration page
+		locate the Formulas Section
+		find a formula to delete
+		click the delete button
+		verify that (after a short pause) the Formulas table no longer contains the deleted formula
 	
 	verify charts page
 		verify chart with invalid data
@@ -592,6 +741,9 @@ Engineer Testing
 			(pending)
 		
 		verify refreshing charts
+			(pending)
+		
+		verify alerts
 			(pending)
 		
 		verify custom equations

@@ -373,6 +373,11 @@ For this first pass, I have followed the Volere template for requirement analysi
     <td>As an Engineer, I want to be able to view certain data trends as a floorplan visualization.</td>
     <td>Medium</td>
   </tr>
+  <tr>
+    <td>3.28</td>
+    <td>As an Engineer, I want to be able to create alert cases to notify me when graphed data matches some defined condition.</td>
+    <td>Medium</td>
+  </tr>
 </table>
 
 <a name='uc-resident'/>
@@ -793,22 +798,173 @@ Exceptions:
 
 <pre>
 ID:              3.5
-Description:     Engineer registers a formula.
+Description:     Engineer registers an alert state.
 Preconditions:   User is logged in as an Engineer
-Postconditions:  Engineer can select the new formula to graph.
+Postconditions:  A new alert condition is stored in the database.
 Success Flow:
-                 1. Engineer locates the Engineer config file
-                 2. Engineer editsthe file, adding a line matching their formula to the required syntax
-                 3. Engineer saves their edit
-                 4. Service detects the change and commits it
-				 5. Engineer goes to graphing page
-				 6. Page detects a list of formulai
-				 7. Page displays the list along with the other options for the Engineer
-				 8. Engineer selects their formula for the data field they intend
-				 9. Page uses the formula rather than the raw data along that axis
+                 1. Engineer enters the Configuration page
+                 2. Engineer locates the Alert Editor section
+                 3. Engineer enters a name for the alert in the Name section
+                 4. Engineer enters a formula matching the syntax for the Value section
+				 5. Engineer enters a description for the Description section
+				 6. Engineer clicks Submit
+				 7. Page error checks the values entered
+				 8. Page notifies the database of the new alert
+				 9. Page redisplays the Alerts table with the new alert
 Exceptions:
-				The formula does not match the syntax
-				The formula is inteded to work in some way other than as an axis
+				The formula in value does not match the required syntax
+				The database does not respond properly
+</pre>
+
+<pre>
+ID:              3.6
+Description:     Engineer deletes an alert state.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  The chosen alert is no longer stored in the database.
+Success Flow:
+                 1. Engineer enters the Configuration page
+                 2. Engineer locates the Alerts section
+                 3. Engineer chooses the row in the table associated with the alert to be deleted
+                 4. Engineer clicks the delete button
+				 5. Page notifies the database to drop that alert
+				 6. Page redisplays the alerts table without the deleted alert
+Exceptions:
+				The database does not respond properly
+</pre>
+
+<pre>
+ID:              3.7
+Description:     Engineer edits an alert state.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  The chosen alert is updated with new data.
+Success Flow:
+                 1. Engineer enters the Configuration page
+                 2. Engineer locates the Alerts section
+                 3. Engineer chooses the row in the table associated with the alert to be deleted
+                 4. Engineer clicks the edit button
+				 5. Page updates the Alert Edit section with the chosen alert's data
+				 6. Engineer changes the data the want
+				 7. Engineer clicks Submit
+				 8. Page error checks the values entered
+				 9. Page notifies database to update the data for that alert
+				 10. Page redisplays the alerts table with the changes
+Exceptions:
+				The formula in value does not match the required syntax
+				The database does not respond properly
+</pre>
+
+<pre>
+ID:              3.8
+Description:     Engineer registers a function.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  A new function is stored in the database.
+Success Flow:
+                 1. Engineer enters the Configuration page
+                 2. Engineer locates the Function Editor section
+                 3. Engineer enters a name for the function in the Name section
+                 4. Engineer enters a formula matching the syntax for the Body section
+				 5. Engineer enters a description for the Description section
+				 6. Engineer clicks Submit
+				 7. Page error checks the values entered
+				 8. Page notifies the database of the new function
+				 9. Page redisplays the Functions table with the new function
+Exceptions:
+				The formula in value does not match the required syntax
+				The database does not respond properly
+</pre>
+
+<pre>
+ID:              3.9
+Description:     Engineer deletes a function.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  The chosen function is no longer stored in the database.
+Success Flow:
+                 1. Engineer enters the Configuration page
+                 2. Engineer locates the Functions section
+                 3. Engineer chooses the row in the table associated with the function to be deleted
+                 4. Engineer clicks the delete button
+				 5. Page notifies the database to drop that function
+				 6. Page redisplays the alerts table without the deleted function
+Exceptions:
+				The database does not respond properly
+</pre>
+
+<pre>
+ID:              3.10
+Description:     Engineer edits a Function.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  The chosen function is updated with new data.
+Success Flow:
+                 1. Engineer enters the Configuration page
+                 2. Engineer locates the Functions section
+                 3. Engineer chooses the row in the table associated with the function to be deleted
+                 4. Engineer clicks the edit button
+				 5. Page updates the Function Edit section with the chosen function's data
+				 6. Engineer changes the data the want
+				 7. Engineer clicks Submit
+				 8. Page error checks the values entered
+				 9. Page notifies database to update the data for that function
+				 10. Page redisplays the functions table with the changes
+Exceptions:
+				The formula in value does not match the required syntax
+				The database does not respond properly
+</pre>
+
+<pre>
+ID:              3.8
+Description:     Engineer registers a constant.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  A new constant is stored in the database.
+Success Flow:
+                 1. Engineer enters the Configuration page
+                 2. Engineer locates the Constant Editor section
+                 3. Engineer enters a name for the constant in the Name section
+                 4. Engineer enters a formula matching the syntax for the Value section (preferable something that is actually a constant)
+				 5. Engineer enters a description for the Description section
+				 6. Engineer clicks Submit
+				 7. Page error checks the values entered
+				 8. Page notifies the database of the new constant
+				 9. Page redisplays the Constants table with the new constant
+Exceptions:
+				The formula in value does not match the required syntax
+				The database does not respond properly
+</pre>
+
+<pre>
+ID:              3.9
+Description:     Engineer deletes a constant.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  The chosen constant is no longer stored in the database.
+Success Flow:
+                 1. Engineer enters the Configuration page
+                 2. Engineer locates the Constants section
+                 3. Engineer chooses the row in the table associated with the constant to be deleted
+                 4. Engineer clicks the delete button
+				 5. Page notifies the database to drop that constant
+				 6. Page redisplays the alerts table without the deleted constant
+Exceptions:
+				The database does not respond properly
+</pre>
+
+<pre>
+ID:              3.10
+Description:     Engineer edits a constant.
+Preconditions:   User is logged in as an Engineer
+Postconditions:  The chosen constant is updated with new data.
+Success Flow:
+                 1. Engineer enters the Configuration page
+                 2. Engineer locates the Constants section
+                 3. Engineer chooses the row in the table associated with the constant to be deleted
+                 4. Engineer clicks the edit button
+				 5. Page updates the Constant Edit section with the chosen constant's data
+				 6. Engineer changes the data the want
+				 7. Engineer clicks Submit
+				 8. Page error checks the values entered
+				 9. Page notifies database to update the data for that constant
+				 10. Page redisplays the Constants table with the changes
+Exceptions:
+				The formula in value does not match the required syntax
+				The database does not respond properly
 </pre>
 
 <a name="uc-resident" />
@@ -938,7 +1094,7 @@ Our team has agreed to the software license we discussed in class, but we have n
 * **Sustainability Goal:** A goal based on reducing the consumption of utilities indicated by sensor data.
 * **Score:** The total number of points a resident has accumulated based on their utility usage over a certain time period.
 * **Scoreboard (ladder):** A webpage that shows the total score of every resident (by a chosen username) in the building.
-* **Occupancy:** the status of the resident as being on vacation or presently occupying the unit.
+* **Occupency:** the status of the resident as being on vacation or presently occupying the unit.
 
 **Graphing Terms**
 * **Hovering:** to rest the cursor on top of an element of the webpage. Generally used to bring up additional information relating to that element.
