@@ -49,7 +49,7 @@ $result = Engineer2::EQ(
 );
 
 $cols = array(
-    'COP1' => "<strong> COP of Solar+DWHR+Geo Field+Heat Pumps </strong>",
+    'COP1' => "COP of Solar+DWHR+Geo Field+Heat Pumps",
     'COP2' => "COP of Entire Heating System",
     'COP3' => "COP of Heat Pumps",
     'NUM1' => "Heat Energy GJ COP1",
@@ -98,9 +98,9 @@ foreach ($result as $calc => $val) {
         echo "<br>" . $_POST['energyname'] . " Energy" . " = $val GJ <br>\n";
     } else if ($calculation === "eq4" || $calculation === "eq5") {
         getColumnName($calc);
-        echo "<br>$cols[$calc] = $val <br>\n";
+        echo "<strong> <br>$cols[$calc]  </strong> = $val <br>\n";
     } else {
-        echo "<br>" . $_POST['name'] . " = $val <br>\n";
+        echo "<strong> <br>" . $_POST['name'] . " </strong> = $val <br>\n";
     }
 
 }
