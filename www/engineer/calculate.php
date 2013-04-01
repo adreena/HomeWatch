@@ -29,8 +29,10 @@ static $FORMULA =  array(
 
 $calculation = $_POST['calculation'];
 
-$startDate = \DateTime::createFromFormat('YYYY-mm-dd', $_POST['startdate']);
-$endDate = \DateTime::createFromFormat('YYYY-mm-dd', $_POST['enddate']);
+/* Stupid PHP and its stupid butts. */
+date_default_timezone_set('America/Edmonton');
+$startDate = \DateTime::createFromFormat('Y-m-d', $i1);
+$endDate = \DateTime::createFromFormat('Y-m-d', $i2);
 
 $result = Engineer2::EQ(
     $startDate->format('Y-m-d H:i'),

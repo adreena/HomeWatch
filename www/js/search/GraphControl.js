@@ -117,6 +117,11 @@ function ($, _, D, Graph, TemplateManager) {
             this.getDate();
     };
 
+    Date.prototype.toModifiedISOString = function () {
+        return this.toShortISOString() + ' ' +
+            this.getHours();
+    };
+
 
 
     /*
@@ -558,7 +563,7 @@ function ($, _, D, Graph, TemplateManager) {
 
                 return {
                     start: startTime,
-                    end: endTime.toShortISOString()
+                    end: endTime.toModifiedISOString()
                 };
             },
             Daily: function () {
