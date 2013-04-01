@@ -22,14 +22,10 @@ tar -xvf DB.tar
 echo "Extracted Files"
 
 ########################################################################
-#Install the Login tables   
-#########################################################################
-#Stevein Add your stuff here //Follow same format as down
-
-########################################################################
 #Install the Constants,Equations Tables 
 #########################################################################
-mysql -u $user -p$password<ConfigTables.sql
+echo "Installing the Constants,Equations Tables   (1 of 1)"
+mysql -u $user -p$password $DB<ConfigTables.sql
 ########################################################################
 #Install the Resident and Manager Tables  
 #########################################################################
