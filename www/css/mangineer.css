@@ -16,6 +16,10 @@ body {
     padding: 0;
 }
 
+p {
+  margin: 6px inherit;
+}
+
 .masthead {
     margin: auto;
     width: 960px;

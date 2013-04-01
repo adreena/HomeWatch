@@ -11,7 +11,8 @@ define([
     'search/defines',
     './Graph',
     'utils/TemplateManager',
-    'spiffy/spiffy.min'],
+    'spiffy/spiffy.min',
+    'vendor/jquery.jdpicker'],
 
 function ($, _, D, Graph, TemplateManager) {
     "use strict";
@@ -102,6 +103,16 @@ function ($, _, D, Graph, TemplateManager) {
             event.preventDefault();
             return wrappedFunction.apply(this, arguments);
         };
+    };
+
+    /**
+     * Updates the built-in Date class with a method that returns the
+     * date as an ISO "short" string -- that is, YYYY-mm-dd.
+     */
+    Date.prototype.toShortISOString = function () {
+        return this.getFullYear() + '-' +
+            (this.getMonth() + 1) + '-' +
+            this.getDate();
     };
 
 
@@ -405,7 +416,7 @@ function ($, _, D, Graph, TemplateManager) {
 
         /* Get the date div and the drop down that will find the proper
          * granularity. */
-        dateThing = graphController .find('.graph-controls-datetime').first();
+        dateThing = graphController.find('.graph-controls-datetime').first();
         granularityChooser = dateThing.find('[name=granularity]');
 
         /* Hides all of the date/time category things. */

@@ -121,45 +121,46 @@ var apartmentData = {{ apartments|raw }};
       </select>
     </label>
 
+    {# Note: these are to be used with jdPicker jQuery plugin. #}
     <div class="graph-controls-hourly">
       <label><span class="the-actual-gorram-label"> Day </span>
-        <input name="start" type="date" />
+        <input class="fancy-date" name="start" type="hidden" />
       </label>
     </div>
 
     <div data-selected class="graph-controls-daily">
-      <p class="informative"> Ranges are <strong>not</strong> inclusive. </p>
+      <p class="informative"> Ranges are inclusive. </p>
 
       <label><span class="the-actual-gorram-label"> Start Day </span>
-        <input name="start" type="date" />
+        <input class="fancy-date" name="start" type="date" />
       </label>
 
-      <label><span class="the-actual-gorram-label"> "Until" Day </span>
-        <input name="end" type="date" />
+      <label><span class="the-actual-gorram-label"> End Day </span>
+        <input class="fancy-date" name="end" type="date" />
       </label>
     </div>
 
     <div class="graph-controls-weekly">
-      <p class="informative"> Ranges are <strong>not</strong> inclusive. </p>
+      <p class="informative"> Ranges are inclusive. </p>
 
       <label><span class="the-actual-gorram-label"> Start Week </span>
-        <input name="start" type="date" />
+        <input class="fancy-date" name="start" type="date" />
       </label>
 
-      <label><span class="the-actual-gorram-label"> "Until" Week </span>
-        <input name="end" type="date" />
+      <label><span class="the-actual-gorram-label"> End Week </span>
+        <input class="fancy-date" name="end" type="date" />
       </label>
     </div>
 
     <div class="graph-controls-monthly">
-      <p class="informative"> Ranges are <strong>not</strong> inclusive. </p>
+      <p class="informative"> Ranges are inclusive. </p>
 
       <label><span class="the-actual-gorram-label"> Start Month </span>
-        <input name="start" type="date" />
+        <input class="fancy-date" name="start" type="date" />
       </label>
 
-      <label><span class="the-actual-gorram-label"> "Until" Month </span>
-        <input name="end" type="date" />
+      <label><span class="the-actual-gorram-label"> End Month </span>
+        <input class="fancy-date" name="end" type="date" />
       </label>
     </div>
 
