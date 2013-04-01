@@ -99,20 +99,21 @@ class UtilitiesDB {
         return true;
     }
 	//The Dates in the cloumn are Time Stamp now which means you need to pass it like that "0000-00-00"
-		public 	function Utilities_getPrice ($Type,$StartDate,$EndDate)
-	{
-			   $conn=new Connection ();
-		      $Query=$conn->connect()->prepare("select price from Utilities_Prices  
-		        where Start_Date between  :SD AND :ED and Type= :TP") ;
-			$Query->bindValue(":SD",$StartDate);
-			$Query->bindValue(":ED",$EndDate);
-			$Query->bindValue(":TP",$Type);
-			$Query->execute();
-			$row = $Query->fetch(\PDO::FETCH_ASSOC);
-			 $result=(array)$row;
-			 return $result;
-	
-	}
+    public function Utilities_getPrice($Type, $StartDate, $EndDate)
+    {
+        $conn=new Connection();
+        $Query=$conn->connect()->prepare("SELECT Price, Start_Date, End_Date
+                                          FROM Utilities_Prices
+                                          WHERE Start_Date between :SD AND :ED and Type= :TP");
+        $Query->bindValue(":SD",$StartDate);
+        $Query->bindValue(":ED",$EndDate);
+        $Query->bindValue(":TP",$Type);
+        $Query->execute();
+        $row = $Query->fetch(\PDO::FETCH_ASSOC);
+        $result=(array)$row;
+        return $result;
+
+    }
 
 }
 
