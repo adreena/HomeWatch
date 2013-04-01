@@ -14,7 +14,13 @@ Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER);
 use \UASmartHome\Database\Engineer2;
 
 // Check that the request is valid
-if (!(isset($_POST['calculation']) && isset($_POST['energy']) && isset($_POST['startdate']) && isset($_POST['enddate']))) {
+if (!(isset($_POST['calculation'])
+    && isset($_POST['energy'])
+    && isset($_POST['startdate'])
+    && isset($_POST['enddate'])
+    && isset($_POST['starthour'])
+    && isset($_POST['endhour'])))
+{
     http_response_code(400);
     die;
 }
@@ -31,8 +37,10 @@ $calculation = $_POST['calculation'];
 
 /* Stupid PHP and its stupid butts. */
 date_default_timezone_set('America/Edmonton');
-$startDate = \DateTime::createFromFormat('Y-m-d', $_POST['startdate']);
-$endDate = \DateTime::createFromFormat('Y-m-d', $_POST['enddate']);
+$startDate = \DateTime::createFromFormat('Y-m-d H:i', $_POST['startdate'] .
+    ' ' . $_POST['starthour']);
+$endDate = \DateTime::createFromFormat('Y-m-d H:i', $_POST['enddate'] .
+    ' ' . $_POST['endhour'));
 
 /* Die because we couldn't parse the date format. */
 if ($startDate === false || $endDate === false) {
@@ -40,6 +48,10 @@ if ($startDate === false || $endDate === false) {
     die;
 }
 
+
+print_r($startDate);
+echo '<br/>';
+print_r($endDate);
 
 $result = Engineer2::EQ(
     $startDate->format('Y-m-d H:i'),
@@ -97,10 +109,10 @@ foreach ($result as $calc => $val) {
     if ($calculation === "eq1") {
         echo "<br>" . $_POST['energyname'] . " Energy" . " = $val GJ <br>\n";
     } else if ($calculation === "eq4" || $calculation === "eq5") {
-        getColumnName($calc);
-        echo "<strong> <br>$cols[$calc]  </strong> = $val <br>\n";
+        $col = getColumnName($calc);
+        echo "<br><strong>$col  </strong> = $val <br>\n";
     } else {
-        echo "<strong> <br>" . $_POST['name'] . " </strong> = $val <br>\n";
+        echo "<br><strong> " . $_POST['name'] . " </strong> = $val <br>\n";
     }
 
 }

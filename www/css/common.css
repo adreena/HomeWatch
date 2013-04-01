@@ -32,7 +32,7 @@ body {
 cite, em, var, address, dfn {
     font-style: italic;
 }
-em, h1, h2, h3, h4, h5, h6 {
+strong, h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
 }
 pre {
