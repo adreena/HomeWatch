@@ -8,18 +8,24 @@ class Engineer {
 
 		$table = $tables[$column];
 
+		if ($period === "Hourly") {
+			$startdate = date_create_from_Format('Y-m-d G', $startdate);
+			$enddate = date_create_from_Format('Y-m-d G', $enddate);
+		}
+		else {
+			$startdate = date_create_from_Format('Y-m-d', $startdate);
+			$enddate = date_create_from_Format('Y-m-d', $enddate);
+		}
 		$results = array();
-		$startdate = date_create_from_Format('Y-m-d G:i', $startdate);
-		$enddate = date_create_from_Format('Y-m-d G:i', $enddate);
 
 			if ($period == "Hourly") {
-                $temp = Engineer::db_query_Hourly($apt, $table, $startdate->format('Y-m-d G:i'), $enddate->format('Y-m-d G:i'), $column, $Phase);
-                foreach($temp as $row) {
-                    $returnDate = date_create_from_Format('Y-m-d G', $row["TS"]);
-                    $results[$returnDate->format('Y-m-d:G')][$column] = $row[$column];
-                }
+				$temp = Engineer::db_query_Hourly($apt, $table, $startdate->format('Y-m-d G'), $enddate->format('Y-m-d G'), $column, $Phase);
+				foreach($temp as $row) {
+				    $returnDate = date_create_from_Format('Y-m-d G', $row["TS"]);
+				    $results[$returnDate->format('Y-m-d:G')][$column] = $row[$column];
+				}
 
-			} else if ($period == "Daily") {
+			} else if ($period === "Daily") {
 				while ($startdate < $enddate) {
 					$temp = Engineer::db_query_Daily($apt, $table, $startdate->format('Y-m-d'), $column, $Phase);
 					if (ISSET($temp[0])) {
