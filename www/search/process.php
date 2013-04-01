@@ -128,9 +128,11 @@ if ($test) {
 
 	//Check to make sure the query is over a reasonable data set
 	if ($startdate != null && $enddate != null) {
-		//:0 is appended so that we can query hours as well
-		$startdate .= ":0";
-		$enddate .= ":0";
+                if ($period === "Hourly") {
+			//:0 is appended so that we can query hours as well
+			$startdate .= " 00";
+			$enddate .= " 00";
+                }
 		$error .= calculateRejection($startdate, $enddate, $period);	
 	}
 
@@ -148,7 +150,7 @@ if ($test) {
 
 	
 	$bigArray["xaxis"] = $xaxis;
-	$bigArray["yaxis"] = $yaxis;
+	$bigArray["yaxis"] = end($yaxis);
 
 	foreach ($apartments as $apartment) {
 		if ($ytype == "sensorarray") {
@@ -224,9 +226,9 @@ if ($test) {
 			//The xdata array for time was actually built when running y
 		}
 
-		$alerts = checkAlerts($startdate, $enddate, $x, $y, $apartment);
+		//$alerts = checkAlerts($startdate, $enddate, $x, $y, $apartment);
 		//echo var_dump($alerts);
-		$messages = array_merge($messages, $alerts);
+		//$messages = array_merge($messages, $alerts);
 
 	}
 
@@ -346,9 +348,15 @@ $MONTHLY_VIEW_MAX = 120;
 	//echo var_dump($startdate);	
 	
 	$error = null;
-	$startdate = date_create_from_Format('Y-m-d:G', $startdate);
-	$enddate = date_create_from_Format('Y-m-d:G', $enddate);
-	$diff = ($enddate->format("U") - $startdate->format("U"));
+	if ($period == "Hourly") {
+		$startdate = date_create_from_Format('Y-m-d G', $startdate);
+		$enddate = date_create_from_Format('Y-m-d G', $enddate);
+	}
+	else {
+		$startdate = date_create_from_Format('Y-m-d', $startdate);
+		$enddate = date_create_from_Format('Y-m-d', $enddate);
+	}
+		$diff = ($enddate->format("U") - $startdate->format("U"));
 
 	//echo var_dump($diff);
 
