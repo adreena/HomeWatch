@@ -443,6 +443,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	$conn=new Connection (); 
 	if ($between ==1){
 	try
+	
 			{ 
 			
 	                     $Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$descr."_Alert
