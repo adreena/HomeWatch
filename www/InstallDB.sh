@@ -1,6 +1,9 @@
 #!/bin/bash
 # Script File to Install the DB 
 # User Name and Password  to insert the  views in the Table DB
+echo "#################################################################"
+echo "This Script will store all the DB tables,views and functions that are essential for the Smart home project "
+echo "#################################################################"
 echo "Enter User name for the DB :"
 read user
 echo "Enter the Password for the DB :"
