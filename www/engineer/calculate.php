@@ -49,10 +49,6 @@ if ($startDate === false || $endDate === false) {
 }
 
 
-print_r($startDate);
-echo '<br/>';
-print_r($endDate);
-
 $result = Engineer2::EQ(
     $startDate->format('Y-m-d H:i'),
     $endDate->format('Y-m-d H:i'),
@@ -93,12 +89,12 @@ $cols = array(
 );
 
 function getColumnName($uglyName) {
-    if (isset($cols[$uglyName])) {
-        return $cols[$uglyName];
-    } else {
-        return $uglyName;
-    }
-};
+    global $cols;
+
+    return isset($cols[$uglyName])
+        ? $cols[$uglyName]
+        : $uglyName;
+}
 
 foreach ($result as $calc => $val) {
 
@@ -110,7 +106,7 @@ foreach ($result as $calc => $val) {
         echo "<br>" . $_POST['energyname'] . " Energy" . " = $val GJ <br>\n";
     } else if ($calculation === "eq4" || $calculation === "eq5") {
         $col = getColumnName($calc);
-        echo "<br><strong>$col  </strong> = $val <br>\n";
+        echo "<br><strong>$col</strong> = $val <br>\n";
     } else {
         echo "<br><strong> " . $_POST['name'] . " </strong> = $val <br>\n";
     }
