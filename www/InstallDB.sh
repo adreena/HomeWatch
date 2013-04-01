@@ -53,7 +53,7 @@ mysql -u $user -p$password $DB<Energy_views.sql
 echo "Installing the Table Weather Forecast with Pre-Historical Data (7 of 7)"
 mysql -u $user -p$password $DB<WV.sql
 #################################################################
-#Install the Tables for The  Required for the 
+#Install the Tables for The  Required for the Bas tables
 #################################################################
 
 # A) Install Tables flow_minute ,temp_minute,boiler_loop_minute,Anaylze,COPCal
