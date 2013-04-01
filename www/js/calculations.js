@@ -5,7 +5,7 @@
 /*jslint browser: true, devel: true, white: true, indent: 4, maxlen: 120 */
 /*global require */
 
-/* JSLint unused variable report: 
+/* JSLint unused variable report:
  * SCROLL_SPEED '[module]' 20,
  * SCROLL_OPTIONS * '[module]' 20,
  * button 'calculate' 26,
@@ -15,7 +15,7 @@
 require([
     'jquery',
     'vendor/jquery.jdpicker',
-    'vendor/jquery-scrollTo-min'],
+    'vendor/jquery.scrollTo-min'],
 
     function ($) {
         "use strict";
@@ -83,8 +83,10 @@ require([
         var datePickers = $('#startdate, #enddate');
 
         /* jdPicker gives hidden type inputs a full calendar display. */
-        datePickers.attr('type', 'hidden');
- 
+        //datePickers.attr('type', 'hidden');
+        /* On second thought, that doesn't look as snazzy as I had originally
+         * anticipated... */
+
         /* Bind the date selectors with jdPicker. */
         datePickers.jdPicker({
             date_format: 'YYYY-mm-dd',
