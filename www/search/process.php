@@ -128,11 +128,6 @@ if ($test) {
 
 	//Check to make sure the query is over a reasonable data set
 	if ($startdate != null && $enddate != null) {
-                if ($period === "Hourly") {
-			//:0 is appended so that we can query hours as well
-			$startdate .= " 00";
-			$enddate .= " 00";
-                }
 		$error .= calculateRejection($startdate, $enddate, $period);	
 	}
 
@@ -356,7 +351,8 @@ $MONTHLY_VIEW_MAX = 120;
 		$startdate = date_create_from_Format('Y-m-d', $startdate);
 		$enddate = date_create_from_Format('Y-m-d', $enddate);
 	}
-		$diff = ($enddate->format("U") - $startdate->format("U"));
+
+	$diff = ($enddate->format("U") - $startdate->format("U"));
 
 	//echo var_dump($diff);
 
