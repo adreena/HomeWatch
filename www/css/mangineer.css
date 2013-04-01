@@ -73,6 +73,7 @@ p {
     margin: auto;
     position: relative;
     padding-top: 8px;
+    padding-bottom: 16px;
 }
 
 /* Simple styles for the graph search stuff.

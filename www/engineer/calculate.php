@@ -27,29 +27,32 @@ static $FORMULA =  array(
     "eq5" => 5
 );
 
-/*
-if (!ConfigurationDB::submitAlert($alert)) {
-    http_response_code(400);
-}
-*/
-
 $calculation = $_POST['calculation'];
 
-$result = Engineer2::EQ($_POST['startdate'], $_POST['enddate'], $FORMULA[$_POST['calculation']], $_POST['energy']);
+$startDate = \DateTime::createFromFormat('YYYY-mm-dd', $_POST['startdate']);
+$endDate = \DateTime::createFromFormat('YYYY-mm-dd', $_POST['enddate']);
+
+$result = Engineer2::EQ(
+    $startDate->format('Y-m-d H:i'),
+    $endDate->format('Y-m-d H:i'),
+    $FORMULA[$calculation],
+    $_POST['energy']
+);
 
 
 foreach ($result as $calc=>$val) {
 
-    if (is_null($val))
+    if (is_null($val)) {
         $val = "null (no data)";
+    }
 
     if ($calculation === "eq1") {
-	echo "<br>" . $_POST['energyname'] . " Energy" . " = $val GJ <br>\n";
+        echo "<br>" . $_POST['energyname'] . " Energy" . " = $val GJ <br>\n";
+    } else if ($calculation === "eq4" || $calculation === "eq5") {
+        echo "<br>$calc = $val <br>\n";
+    } else {
+        echo "<br>" . $_POST['name'] . " = $val <br>\n";
     }
-    else if ($calculation === "eq4" || $calculation === "eq5") {
-	echo "<br>$calc = $val <br>\n";
-    }
-    else {
-	echo "<br>" . $_POST['name'] . " = $val <br>\n";
-    }
+
 }
+
