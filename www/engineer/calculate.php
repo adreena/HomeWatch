@@ -40,7 +40,7 @@ date_default_timezone_set('America/Edmonton');
 $startDate = \DateTime::createFromFormat('Y-m-d H:i', $_POST['startdate'] .
     ' ' . $_POST['starthour']);
 $endDate = \DateTime::createFromFormat('Y-m-d H:i', $_POST['enddate'] .
-    ' ' . $_POST['endhour'));
+    ' ' . $_POST['endhour']));
 
 /* Die because we couldn't parse the date format. */
 if ($startDate === false || $endDate === false) {
