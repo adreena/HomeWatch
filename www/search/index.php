@@ -38,7 +38,7 @@ foreach ($unfilteredCategories['functions'] as $func)  {
 $categories['Alerts'] = array();
 foreach ($unfilteredCategories['alerts'] as $alert)  {
     $categories['Alerts'][$alert['name']] = array(
-        "displayName" => $func['name',
+        "displayName" => $func['name'],
         "applicableAxes" => "y"
     );
 };
