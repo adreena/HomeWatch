@@ -2,16 +2,14 @@
  * Search page.
  */
 
-/*jslint browser: true, nomen: true, white: true, indent: 4, maxlen: 120 */
+/*jslint browser: true, nomen: true, devel: true, white: true, indent: 4, maxlen: 120 */
 /*global require, apartmentData, categoryData */
 
-require(['jquery',
-        'underscore',
+require(['jquery', //'underscore',
         'search/defines',
-        'search/GraphManager',
-        'spiffy/spiffy.min'],
+        'search/GraphManager'],
 
-function ($, _, D, GraphManager) {
+function ($, D, GraphManager) {
     "use strict";
 
     /**
@@ -26,7 +24,7 @@ function ($, _, D, GraphManager) {
         if (categoryData !== undefined) {
             $.extend(true, cats, categoryData);
         } else {
-            console.log("Could not find categoryData");
+            console.error("Could not find categoryData.");
         }
 
         data = GraphManager.makeCategories(cats);
@@ -35,9 +33,8 @@ function ($, _, D, GraphManager) {
         if (apartmentData !== undefined) {
             data.apartments = apartmentData;
         } else {
-            // TODO: GET RID OF THIS DEBUG NON-SENSE
-            console.log("Could not find apartments");
-            data.apartments = _.range(1, 3); // Just like Python's range()...
+            console.error("Could not find apartments... continuing with none.");
+            data.apartments = [];
         }
 
         graphMan = new GraphManager(D.sel.graphList, data);

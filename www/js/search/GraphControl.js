@@ -150,6 +150,10 @@ function ($, _, D, Graph, TemplateManager) {
      * Common methods.
      */
 
+    /**
+     * Destroy this GraphControl. Notifies the manager that it has been
+     * destroyed.
+     */
     GraphControl.prototype.destroy = function () {
         /* Tell our manager to stop tracking us. */
         this.manager.untrack(this.id);
@@ -251,6 +255,7 @@ function ($, _, D, Graph, TemplateManager) {
     };
 
 
+    /* Should be called when there's an error in fetching the data. */
     GraphControl.prototype.onFetchError = function () {
         /* Show a generic message. */
         this.showMessage(D.messages.errorFetchingInfo);

@@ -73,7 +73,6 @@ function ($, _, D, GraphControl) {
 
         /* Abort any existing requests for the current graph ID. */
         if (_(this.currentRequest).has(id)) {
-            console.log("Cancelling current request.");
             this.currentRequest[id].abort();
             /* Stop keeping track of the request. */
             delete this.currentRequest[id];
@@ -81,7 +80,6 @@ function ($, _, D, GraphControl) {
 
         /* Fetch the request out of the cache, if it's found. */
         if (_(this.resultCache).has(graphParams)) {
-            console.log("Getting request from the cache.");
             /* setTimeout to run this function outside of the
              * current call stack to emulate how jQuery's success
              * callback would be called. */
