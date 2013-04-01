@@ -1,11 +1,14 @@
 #!/bin/bash
 # Script File to Install the DB 
 # User Name and Password  to insert the  views in the Table DB
-
-user=root
-password=n342m8wu9
-DB=TEST1
-DB1=TEST2
+echo "Enter User name for the DB :"
+read user
+echo "Enter the Password for the DB :"
+read password
+echo "Enter DB name where air,water,el_energy,heating and heatflux installed in ""
+read DB
+echo "Enter DB name where Bas tables are instored in :"
+read DB1
 
 ########################################################################
 # Extract DB files
