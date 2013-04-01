@@ -104,14 +104,17 @@ class UtilitiesDB {
         $conn=new Connection();
         $Query=$conn->connect()->prepare("SELECT Price, Start_Date, End_Date
                                           FROM Utilities_Prices
-                                          WHERE Start_Date between :SD AND :ED and Type= :TP");
+                                          WHERE ((:SD between Start_Date and End_Date) OR (:ED between Start_Date and End_Date)) and Type= :TP");
         $Query->bindValue(":SD",$StartDate);
         $Query->bindValue(":ED",$EndDate);
         $Query->bindValue(":TP",$Type);
         $Query->execute();
-        $row = $Query->fetch(\PDO::FETCH_ASSOC);
-        $result=(array)$row;
-        return $result;
+
+        $costs = array();
+        while ($cost = $Query->fetch(\PDO::FETCH_ASSOC)) {
+            array_push($costs, $cost);
+        }
+        return $costs;
 
     }
 
