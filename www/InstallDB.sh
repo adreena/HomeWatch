@@ -67,5 +67,5 @@ mysql -u $user -p$password $DB1<BasViews.sql
 # C) Install the MySQL Functions  calc_cop_test,calc_cop,EQ2_Part 1 
 #and EQ2_Part2
 echo "Installing the MYSQL Functions (3 of 3)"
-mysql -u $user -p$password $DB<Bascalculations.sql
+mysql -u $user -p$password $DB1<Bascalculations.sql
 ##################################################################
