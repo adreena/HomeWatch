@@ -253,62 +253,33 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				//$a= $Query->rowCount();
 				return $result;
 	}
-	public function db_query_Hourly($apt,$table,$date,$Hour,$column,$Phase=null)
+	public function db_query_Hourly($apt,$table,$Startdate,$EndDate,$column,$Phase=null)
 	{
-	           
-			   
+	
 			    $result =array();
 			    $table .= '_Hourly';
 				$conn=new Connection ();
 				if ($Phase==null){
-		        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour ") ;
+		        $Query=$conn->connect()->prepare(" select ".$column." from ".$table." where Apt= :Apt_Num AND Date between :SD AND :ED ") ;
 				}else{
 				if ($Phase == 'A' || 'B')
 				{
-				$Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Hour= :Hour AND Phase= :PS") ;
+				$Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date between :SD AND :ED AND Phase= :PS") ;
 		        $Query->bindValue(":PS",$Phase);
-
 				}}
 				$Query->bindValue(":Apt_Num",$apt);
-				$Query->bindValue(":Date",$date);
-				$Query->bindValue(":Hour",$Hour);
+				$Query->bindValue(":SD",$Startdate);
+				$Query->bindValue(":ED",$EndDate);
 				$Query->execute();
 				$row_count= $Query->rowCount();
-				while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
+				while ($row = $Query->fetch(PDO::FETCH_ASSOC))
 				{
 				$result[]=(array)$row;
 				}
 				$a= $Query->rowCount();
 				return $result;
-	}
-	//Alert Function Between Date and Hours\\\
-	public function db_query_Alert ($apt,$column,$StartDate,$EndDate,$alertTable = null)
-	{
 
-		$results = array();
-		$StartDate = date_create_from_Format('Y-m-d:G', $StartDate);
-		$EndDate = date_create_from_Format('Y-m-d:G', $EndDate);
-
-	$conn=new Connection ();
-	$Query=$conn->connect()->prepare("select ".$column.",Date,Hour from ".$alertTable." where Apt= :Apt_Num AND Date Between :SD and :ED AND Hour Between :SH AND :EH ") ;
-	$Query->bindValue(":Apt_Num",$apt);
-    $Query->bindValue(":SD",$StartDate->format('Y-m-d'));
-	$Query->bindValue(":ED",$EndDate->format('Y-m-d'));
-	$Query->bindValue(":SH",$StartDate->format('G'));
-	$Query->bindValue(":EH",$EndDate->format('G'));
-	$Query->execute();
-	while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
-		     {
-                $results[$row["Date"] . ":" . $row["Hour"]] = $row[$column];
-		      }
-				
-				
-	//$a= $Query->rowCount();
-				
-				
-	return $results;
-	
-	
+  
 	}
 
 	public function db_query_default_Alert ($apt,$column,$StartDate,$EndDate,$alertTable = null)
@@ -492,45 +463,45 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 			 return $result;
 	
 	}
-	public function db_create_Alert ($column,$value1,$sign1,$between,$descr,$value2=null,$sign2=null,$condition=null)
+	public function db_create_Alert ($User,$column,$value1,$sign1,$between,$descr,$value2=null,$sign2=null,$condition=null)
 	{
-	$tables = array("Relative_Humidity"=>"v0_air", "Temperature" => "v0_air", "CO2"=>"v0_air", 
-	"Hot_Water"=>"v0_water", "Total_Water"=>"v0_water", "Insulation"=>"v0_heat_flux", 
-	"Stud"=>"v0_heat_flux", "Current_Flow"=>"v0_heating", "Current_Temperature_1"=>"v0_heating", 
-	"Current_Temperature_2"=>"v0_heating",  "Total_Mass"=>"v0_heating", "Total_Energy"=>"v0_heating", 
-	"Total_Volume"=>"v0_heating", "Phase"=>"v0_el_energy", "Ch1"=>"v0_el_energy", "Ch2"=>"v0_el_energy", "AUX1"=>"v0_el_energy", 
-	"AUX2"=>"v0_el_energy", "AUX3"=>"v0_el_energy", "AUX3"=>"v0_el_energy", "AUX4"=>"v0_el_energy", "AUX5"=>"v0_el_energy");
+	$tables = array("rv"=>"air", "temp" => "air", "co22"=>"air", 
+	"hot"=>"water", "total"=>"water", "nnsulation"=>"heat_flux", 
+	"stud"=>"heat_flux", "cur_flow"=>"heating", "cur_t2"=>"heating", 
+	"cur_t1"=>"heating",  "total_mass"=>"heating", "total_energy"=>"heating", 
+	"total_vol"=>"heating", "ch1"=>"el_energy", "ch2"=>"el_energy", "aux1"=>"el_energy", 
+	"aux2"=>"el_energy", "aux3"=>"el_energy", "aux4"=>"el_energy", "aux5"=>"el_energy");
 	$table = $tables[$column];
 	$conn=new Connection (); 
-	//Added a small describtion to the VIew name
+	//if the table is Greater Than it will have that Symbol G in the name followed by the number and 
+	//if its between two condition it will have 2 in its name with the coditions
+	//So table name will be User_Colum_Condition_number_Alert or Ahmed_CO2_G_1000_Alert if one condition or  if two conditon Ahmed_CO2_2LG_OR_200_1000_Alert
 	if ($between ==1){
 	try
 			{ 
-	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW " . $descr ."_Alert
-							AS select `".$table."`.`Apt` AS `Apt`,
-                           avg(`".$table."`.`".$column."`) AS `".$column."`,
-							`".$table."`.`Date` AS `Date`,
-							`".$table."`.`Hour` AS `Hour`
-							from `".$table."` group by `".$table."`.`Apt`,`".$table."`.`Date`,`".$table."`.`Hour`	
-                           having avg(`".$table."`.`".$column."`) ".$sign1." ".$value1."");
+			
+	                     $Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$descr."_Alert
+							AS select date_format(ts,'%Y-%m-%d %H') As TS,`apt` AS `Apt`,
+                           avg(`".$column."`) AS `".$column."`
+							from `".$table."` group by `Apt`,date_format(ts,'%Y-%m-%d %H')	
+                           having avg(`".$column."`) ".$sign1." ".$value1."");
 						   $Query->execute();
 						   return true;
 						   }
 						   catch ( \PDOException $e)
 			{
+			
 				return false;
-			}	
+			}
 			}
 	if ($between ==2){
 	try
 			{ 
-	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW " . $descr . "_Alert
-							AS select `".$table."`.`Apt` AS `Apt`,
-                           avg(`".$table."`.`".$column."`) AS `".$column."`,
-							`".$table."`.`Date` AS `Date`,
-							`".$table."`.`Hour` AS `Hour`
-							from `".$table."` group by `".$table."`.`Apt`,`".$table."`.`Date`,`".$table."`.`Hour`	
-                           having avg(`".$table."`.`".$column."`) ".$sign1." ".$value1." ".$condition." avg(`".$table."`.`".$column."`) ".$sign2." ".$value2." ");
+	$Query=$conn->connect()->prepare("CREATE OR REPLACE VIEW ".$descr."_Alert
+							AS select date_format(ts,'%Y-%m-%d %H') As TS,`apt` AS `Apt`,
+                           avg(`".$column."`) AS `".$column."`
+						    from `".$table."` group by `Apt`,date_format(ts,'%Y-%m-%d %H')	
+                           having avg(`".$column."`) ".$sign1." ".$value1." ".$condition." avg(`".$column."`) ".$sign2." ".$value2." ");
 						   $Query->execute();
 						   return true;
 						   }
@@ -542,6 +513,28 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 						   
 			
 		
+	}
+	public function db_query_Alert ($apt,$table,$StartDate,$EndDate)
+	{
+	$result =array();
+	$conn=new Connection ();
+	$Query=$conn->connect()->prepare("select * ,Date,Hour from ".$table." where Apt= :Apt_Num AND Date between :SD and :ED ") ;
+	$Query->bindValue(":Apt_Num",$apt);
+    $Query->bindValue(":SD",$StartDate);
+	$Query->bindValue(":ED",$EndDate);
+	$Query->execute();
+	while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+		     {
+				$result[]=(array)$row;
+		      }
+				
+				
+	//$a= $Query->rowCount();
+				
+				
+	return $result;
+	
+	
 	}
 	public function db_check_Alert($view)
 	{
