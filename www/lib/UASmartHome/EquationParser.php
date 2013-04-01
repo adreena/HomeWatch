@@ -86,8 +86,8 @@ class EquationParser
                 $end = strtotime($contract["End_Date"]);
 
                 // convert date from yyyy-mm-dd:h to php date format
-                $date = str_replace(":", " ", $date) . ":00";
-                if (strtotime($date) >= $start && strtotime($date) <= $end) {
+                $phpdate = str_replace(":", " ", $date) . ":00";
+                if (strtotime($phpdate) >= $start && strtotime($phpdate) <= $end) {
                     $finalCosts[$date] = $use * $contract["Price"];
                 }
 
