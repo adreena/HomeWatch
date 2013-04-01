@@ -57,7 +57,7 @@ class EquationParser
         $functionArray["startdate"] = "2012-02-29 00:00";
         $functionArray["enddate"] = "2012-03-02 00:00";
         $functionArray["apartment"] = 1;
-        $functionArray["granularity"] = "Hourly";
+        $functionArray["granularity"] = "Daily";
         $functionArray["type"] = "electricity";
 
         $input = json_encode($functionArray);
@@ -70,6 +70,7 @@ class EquationParser
 
         if($input["type"] === "electricity") {
             $utilityUse = EquationParser::getTotalElec($input["apartment"], $input["startdate"], $input["enddate"], $input["granularity"]);
+            $utilityUse = EquationParser::convertToKWH($utilityUse, $input["granularity"]);
         }
         else if($input["type"] === "water") {
             $utilityUse = EquationParser::getTotalWater($input["apartment"], $input["startdate"], $input["enddate"], $input["granularity"]);
@@ -97,6 +98,42 @@ class EquationParser
 
     }
 
+    public static function convertToKWH($use, $granularity) {
+        $numHours = 1;
+        switch($granularity) {
+            case "Daily":
+                $numHours = 24;
+                break;
+            case "Weekly":
+                $numHours = 24*7;
+                break;
+            case "Monthly":
+                foreach($use as $date=>$value) {
+                    //get the actual number of days for each month
+                    $month = date("n", strtotime(str_replace(":", " ", $date) . ":00"));
+                    $year = date("y", strtotime(str_replace(":", " ", $date) . ":00"));
+                    $numDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $use[$date] = $value/1000 * $numDays * 24;
+                }
+                break;
+            case "Yearly":
+                foreach($use as $date=>$value) {
+                    //accomodate leap years
+                    $year = date("y", strtotime(str_replace(":", " ", $date) . ":00"));
+                    $numDays = date("z", mktime(0,0,0,12,31,$year)) + 1;
+                    $use[$date] = $value/1000 * $numDays * 24;
+                }
+                break;
+        }
+
+        if ($granularity !== "Monthly" && $granularity !== "Yearly") {
+            foreach($use as $date=>$value) {
+                $use[$date] = $value/1000 * $numHours;
+            }
+        }
+
+        return $use;
+    }
 
     /* Gets the total water for a given apartment, dates, and granularity.
      * Return value is array of key=>value, where key is date and value is
@@ -139,7 +176,7 @@ class EquationParser
             if($elecAdata[$date] === 0 && $value === 0)
                 $data[$date] = 0;
             else
-                $data[$date] = $value["Ch1"] + $elecAdata[$date]["Ch1"];
+                $data[$date] = $value["Ch1"] + $elecBdata[$date]["Ch1"];
 
         }
         return $data;
