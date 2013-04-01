@@ -31,8 +31,15 @@ $calculation = $_POST['calculation'];
 
 /* Stupid PHP and its stupid butts. */
 date_default_timezone_set('America/Edmonton');
-$startDate = \DateTime::createFromFormat('Y-m-d', $i1);
-$endDate = \DateTime::createFromFormat('Y-m-d', $i2);
+$startDate = \DateTime::createFromFormat('Y-m-d', $_POST['startdate']);
+$endDate = \DateTime::createFromFormat('Y-m-d', $_POST['enddate']);
+
+/* Die because we couldn't parse the date format. */
+if ($startDate === false || $endDate === false) {
+    http_response_code(400;
+    die;
+}
+
 
 $result = Engineer2::EQ(
     $startDate->format('Y-m-d H:i'),
