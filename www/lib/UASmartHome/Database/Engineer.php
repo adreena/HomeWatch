@@ -431,7 +431,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 			 return $result;
 	
 	}
-	public function db_create_Alert ($User,$column,$value1,$sign1,$between,$descr,$value2=null,$sign2=null,$condition=null)
+	public function db_create_Alert ($column,$value1,$sign1,$between,$descr,$value2=null,$sign2=null,$condition=null)
 	{
 	$tables = array("rv"=>"air", "temp" => "air", "co2"=>"air", 
 	"hot"=>"water", "total"=>"water", "insulation"=>"heat_flux", 
@@ -441,9 +441,6 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	"aux2"=>"el_energy", "aux3"=>"el_energy", "aux4"=>"el_energy", "aux5"=>"el_energy");
 	$table = $tables[$column];
 	$conn=new Connection (); 
-	//if the table is Greater Than it will have that Symbol G in the name followed by the number and 
-	//if its between two condition it will have 2 in its name with the coditions
-	//So table name will be User_Colum_Condition_number_Alert or Ahmed_CO2_G_1000_Alert if one condition or  if two conditon Ahmed_CO2_2LG_OR_200_1000_Alert
 	if ($between ==1){
 	try
 			{ 
