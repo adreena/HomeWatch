@@ -37,7 +37,7 @@ require([
             startdate = $('#startdate').val(),
             enddate = $('#enddate').val(),
 
-            calculateButton = $('#calculateButton');
+            calculateButton = $('#calculateButton').get(0);
 
         calculateButton.disabled = true;
         calculateButton.innerHTML = "calculating...";

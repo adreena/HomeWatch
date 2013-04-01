@@ -11,11 +11,18 @@ var utilityEditorID = "#utility-editor";
 
 var utilityEditor;
 
-$(window).load(function() {
+$(function() {
+    var dateInputs = $("[name=startdate], [name=enddate]");
 
     utilityEditor = $(utilityEditorID)[0];
-
     utilityEditor.reset();
+
+    // Make jdPicker give us controls that always show.
+    dateInputs.attr('type', 'hidden');
+    dateInputs.jdPicker({
+        date_format: 'YYYY-mm-dd',
+        start_of_week: 0
+    });
 
 }); // window load
 

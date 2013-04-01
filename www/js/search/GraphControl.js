@@ -552,9 +552,9 @@ function ($, _, D, Graph, TemplateManager) {
                 var startTime = chosenControls.find('input[name=start]').val(),
                     endTime;
 
-                /* For this one, we want the next 23 hours of data (one day). */
+                /* For this one, we want the next 24 hours of data (one day). */
                 endTime = new Date(startTime);
-                endTime.setHours(endTime.getHours() + 23);
+                endTime.setHours(endTime.getHours() + 24);
 
                 return {
                     start: startTime,
