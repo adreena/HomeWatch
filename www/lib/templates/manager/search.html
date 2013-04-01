@@ -203,3 +203,8 @@ var apartmentData = {{ apartments|raw }};
   </form>
 </script>
 {% endblock extraScripts %}
+
+{# An extra style for the date picker shebang. #}
+{% block extraStyles %}
+<link rel="stylesheet" href="/css/vendor/jdpicker/jdpicker.css" type="text/css" media="screen" />
+{% endblock %}

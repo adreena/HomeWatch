@@ -48,7 +48,7 @@ foreach (array_unique(EquationParser::$DBVARS) as $DBName) {
 $apartments = Engineer::db_apt_list();
 
 
-/* Get session user ID. */
+/* Get session user role. */
 switch (User::getSessionUser()->getRoleID()) {
     case User::ROLE_DEV:
     case User::ROLE_ADMIN:
