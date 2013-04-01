@@ -6,63 +6,18 @@ class Engineer {
 	
 		$tables = array("Relative_Humidity"=>"Air", "Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "Insulation"=>"Heat_Flux", "Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy");
 
-        $phasestring = "";
-		$dateparts = explode("-", $startdate);
-		$year = $dateparts[0];
-		$month = $dateparts[1];
-		$day = $dateparts[2];
-
 		$table = $tables[$column];
 
 		$results = array();
 		$startdate = date_create_from_Format('Y-m-d G:i', $startdate);
 		$enddate = date_create_from_Format('Y-m-d G:i', $enddate);
 
-        if (!is_null($Phase))
-            $phasestring = " AND Phase = :phase";
-	
 			if ($period == "Hourly") {
-				while ($startdate < $enddate) {
-					$temp = Engineer::db_query_Hourly($apt, $table, $startdate->format('Y-m-d G:i'), $enddate->format('Y-m-d G:i'), $column, $Phase);
-					if (ISSET($temp[0])) {
-						$results[$startdate->format('Y-m-d:G')] = $temp[0];
-					} else {
-						$results[$startdate->format('Y-m-d:G')] = 0;
-					}
-					$startdate->add(date_interval_create_from_date_string('1 hour'));
-				}
-                /* broken stuff.  need to convert date to TS.  Implementing
-                   this way is a lot faster
-                $table .= '_Hourly';
-                $result = array();
-                $conn=new Connection ();
-
-                $Query=$conn->connect()->prepare("select ".$column.", TS from ".$table." where Apt= :Apt_Num AND TS between :startdate and :enddate" . $phasestring) ;
-                $Query->bindValue(":Apt_Num",$apt);
-                $Query->bindValue(":startdate",$startdate->format('Y-m-d'));
-                $Query->bindValue(":enddate",$enddate->format('Y-m-d'));
-		if (!is_null($Phase))
-			$Query->bindValue(":phase",$Phase);
-                $Query->execute();
-
-                while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
-                {
-                    if ($row["Date"] < $enddate->format('Y-m-d') ||
-                        ($row["Date"] == $enddate->format('Y-m-d') &&
-                         $row["Hour"] <= $enddate->format('G'))) {
-                            $results[$row["Date"] . ":" . $row["Hour"]] = array($column => $row[$column]);
-                    }
+                $temp = Engineer::db_query_Hourly($apt, $table, $startdate->format('Y-m-d G:i'), $enddate->format('Y-m-d G:i'), $column, $Phase);
+                foreach($temp as $row) {
+                    $returnDate = date_create_from_Format('Y-m-d G', $row["TS"]);
+                    $results[$returnDate->format('Y-m-d:G')][$column] = $row[$column];
                 }
-
-                $date = $startdate;
-
-                while ($date < $enddate) {
-                    if (!array_key_exists($date->format('Y-m-d:G'), $results)) {
-                        $results[$date->format('Y-m-d:G')] = 0;
-                    }
-                    $date->add(date_interval_create_from_date_string('1 hour'));
-                }
-                */
 
 			} else if ($period == "Daily") {
 				while ($startdate < $enddate) {
@@ -272,11 +227,11 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 			    $table .= '_Hourly';
 				$conn=new Connection ();
 				if ($Phase==null){
-                    $Query=$conn->connect()->prepare(" select ".$column." from ".$table." where Apt= :Apt_Num AND Ts between :SD AND :ED ") ;
+                    $Query=$conn->connect()->prepare(" select $column, TS from ".$table." where Apt= :Apt_Num AND Ts between :SD AND :ED ") ;
 				} else {
                     if ($Phase == 'A' || 'B')
                     {
-                        $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Ts between :SD AND :ED AND Phase= :PS") ;
+                        $Query=$conn->connect()->prepare("select $column, TS from ".$table." where Apt= :Apt_Num AND Ts between :SD AND :ED AND Phase= :PS") ;
                         $Query->bindValue(":PS",$Phase);
                     }
                 }
