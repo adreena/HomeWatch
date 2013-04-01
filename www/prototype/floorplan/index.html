@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <title></title>
 
-<script type="text/javascript" src="../../js/d3/d3.v3.js"></script>
-<script type="text/javascript" src="../../js/d3floorplan/d3.floorplan.min.js"></script>
-<script type="text/javascript" src="../../js/sprite3d/Sprite3D.js"></script>
+<script type="text/javascript" src="d3/d3.v3.js"></script>
+<script type="text/javascript" src="d3floorplan/d3.floorplan.min.js"></script>
+<script type="text/javascript" src="sprite3d/Sprite3D.js"></script>
 
 <style type="text/css">
-    @import url('../../js/d3floorplan/d3.floorplan.css');
+    @import url('d3floorplan/d3.floorplan.css');
 
     body {
         width: 100%;
@@ -52,7 +52,7 @@
 <p>
 <ul>
 <li>WASD to pan up, left, down, right</li>
-<li>Right click (on a blank area) and drag to rotate</li>
+<li>Left click (on a blank area) and drag to rotate</li>
 </p>
 
 <script type="text/javascript">
@@ -131,7 +131,7 @@ document.getElementById(DIV_FLOORPLAN).onmouseup = function(e) { m_mouseButton =
 
 var dragBehavior = d3.behavior.drag().origin(Object)
 .on("drag", function() {
-    if (m_mouseButton != MOUSE_BUTTON_RIGHT) return;
+    //if (m_mouseButton != MOUSE_BUTTON_RIGHT) return;
 
     var rz = rootSprite.rotationZ() + d3.event.dx * ROTATION_SPEED;
     rootSprite.rotationZ(rz);
