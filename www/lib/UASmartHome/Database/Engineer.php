@@ -260,11 +260,11 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 			    $table .= '_Hourly';
 				$conn=new Connection ();
 				if ($Phase==null){
-		        $Query=$conn->connect()->prepare(" select ".$column." from ".$table." where Apt= :Apt_Num AND Date between :SD AND :ED ") ;
+		        $Query=$conn->connect()->prepare(" select ".$column." from ".$table." where Apt= :Apt_Num AND Ts between :SD AND :ED ") ;
 				}else{
 				if ($Phase == 'A' || 'B')
 				{
-				$Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date between :SD AND :ED AND Phase= :PS") ;
+				$Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num Ts Date between :SD AND :ED AND Phase= :PS") ;
 		        $Query->bindValue(":PS",$Phase);
 				}}
 				$Query->bindValue(":Apt_Num",$apt);
@@ -465,8 +465,8 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	}
 	public function db_create_Alert ($User,$column,$value1,$sign1,$between,$descr,$value2=null,$sign2=null,$condition=null)
 	{
-	$tables = array("rv"=>"air", "temp" => "air", "co22"=>"air", 
-	"hot"=>"water", "total"=>"water", "nnsulation"=>"heat_flux", 
+	$tables = array("rv"=>"air", "temp" => "air", "co2"=>"air", 
+	"hot"=>"water", "total"=>"water", "insulation"=>"heat_flux", 
 	"stud"=>"heat_flux", "cur_flow"=>"heating", "cur_t2"=>"heating", 
 	"cur_t1"=>"heating",  "total_mass"=>"heating", "total_energy"=>"heating", 
 	"total_vol"=>"heating", "ch1"=>"el_energy", "ch2"=>"el_energy", "aux1"=>"el_energy", 
@@ -518,7 +518,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	{
 	$result =array();
 	$conn=new Connection ();
-	$Query=$conn->connect()->prepare("select * ,Date,Hour from ".$table." where Apt= :Apt_Num AND Date between :SD and :ED ") ;
+	$Query=$conn->connect()->prepare("select * ,Date,Hour from ".$table." where Apt= :Apt_Num AND Ts between :SD and :ED ") ;
 	$Query->bindValue(":Apt_Num",$apt);
     $Query->bindValue(":SD",$StartDate);
 	$Query->bindValue(":ED",$EndDate);
