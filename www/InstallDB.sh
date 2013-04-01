@@ -62,7 +62,7 @@ mysql -u $user -p$password $DB1<BasTables.sql
  
 # B) Install the Views V0_energy and Energy_Minute
 echo "Installing the Views for Energy and Eenergy_Minute (1 of 3)"
-mysql -u $user -p$password $DB1<BasViews.sq
+mysql -u $user -p$password $DB1<BasViews.sql
 
 # C) Install the MySQL Functions  calc_cop_test,calc_cop,EQ2_Part 1 
 #and EQ2_Part2
