@@ -80,11 +80,11 @@ function getRowData(rowButton) {
 
     return {
         id: row.attr('id').match(/\d+/)[0],
-        name: row.children(".name")[0].innerHTML,
-        username: row.children(".username")[0].innerHTML,
-        room: row.children(".room")[0].innerHTML,
-        location: row.children(".location")[0].innerHTML,
-        roomstatus: row.children(".roomstatus")[0].innerHTML
+        name: $(row.children(".name")[0]).text(),
+        username: $(row.children(".username")).text(),
+        room: $(row.children(".room")).text(),
+        location: $(row.children(".location")).text(),
+        roomstatus: $(row.children(".roomstatus")).text()
     };
 }
 

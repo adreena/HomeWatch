@@ -254,7 +254,7 @@ function getAlertEditorData() {
     return {
         id: alertEditorContents.find('input[name=id]').val(),
         name: alertEditorContents.find('input[name=name]').val(),
-        value: alertEditorContents.find('input[name=value]').val(),
+        value: alertEditorContents.find('input[name=value]').text(),
         description: alertEditorContents.find('input[name=description]').val()
     };
 }
@@ -283,9 +283,9 @@ function getRowData(rowElement) {
     
     return {
         id: row.attr('id').match(/\d+/)[0],
-        name: row.children(".name")[0].innerHTML,
-        value: row.children(".value")[0].innerHTML,
-        description: row.children(".description")[0].innerHTML,
+        name: $(row.children(".name")[0]).text(),
+        value: $(row.children(".value")).text(),
+        description: $(row.children(".description")).text(),
         favorite: row.find(".favorite")[0].checked ? 1 : 0
     };
 }

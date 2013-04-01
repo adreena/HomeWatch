@@ -85,10 +85,10 @@ function getRowData(rowButton) {
 
     return {
         id: row.attr('id').match(/\d+/)[0],
-        type: row.children(".type")[0].innerHTML,
-        price: row.children(".price")[0].innerHTML,
-        startdate: row.children(".startdate")[0].innerHTML,
-        enddate: row.children(".enddate")[0].innerHTML
+        type: $(row.children(".type")).text(),
+        price: $(row.children(".price")).text(),
+        startdate: $(row.children(".startdate")).text(),
+        enddate: $(row.children(".enddate")).text()
     };
 }
 
