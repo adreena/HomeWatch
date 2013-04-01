@@ -50,23 +50,23 @@ function ($, _, getInternetExplorerVersion) {
      */
     function Graph(element, _clickCallback, initialData) {
 
-	// object to keep graph state for a particular instance
-	this.graphState =
-	{
-	    callback: _clickCallback,
-     	    element: element,
-	    startdate: null,
-	    enddate: null,
-	    min_x: null,
-	    max_x: null,
-            graphType: "line",
-            granularity: "Hourly",
-            xtype: "time",
+        // object to keep graph state for a particular instance
+        this.graphState =
+        {
+            callback: _clickCallback,
+            element: element,
+            startdate: null,
+            enddate: null,
+            min_x: null,
+            max_x: null,
+            graphType: null,
+            granularity: null,
+            xtype: null,
             ytype: null,
-	    ticks_length: null,
-	};
+            ticks_length: null,
+        };
 
-        // Initial update of the graph, only if the intial data exists.
+        /*// Initial update of the graph, only if the intial data exists.
         if (initialData !== undefined) {
 
             // Add all of these to the graphState object
@@ -77,21 +77,24 @@ function ($, _, getInternetExplorerVersion) {
                 ytype: initialData.yaxis,
             });
 
-	    console.log("graphtype is " + this.graphState.graphType);
+            console.log("graphtype is " + this.graphState.graphType);
 
             this.update(initialData.values);
 
-        }
-    }
+        }*/
+    };
 
     /** Update method. Provide new data to update the graph. */
     Graph.prototype.update = function (graphData) {
 
+        console.log("you called update function");
+        console.log("graphdata is " + graphData);
+
         /* 
-	 * Note that graphData contains the plotable data
+         * Note that graphData contains the plotable data
          * AND the graphType! Add all of these to the 
-	 * graphState object
-	 */
+         * graphState object
+         */
             $.extend(this.graphState, {
                 graphType: graphData.graphType,
                 granularity: graphData.granularity,
@@ -99,76 +102,77 @@ function ($, _, getInternetExplorerVersion) {
                 ytype: graphData.yaxis,
             });
 
-	var graphState = this.graphState;
+        console.log("new granularity is " + this.graphState.granularity)
+
+        var graphState = this.graphState;
         // Merge the new parameters to the current graph state.
         //$.extend(graphState, graphData);
         // Should manually merge things from the graphData object.
 
 
-	var graphType = graphState.graphType;
-	var element = graphState.element;
-	var granularity = graphState.granularity;
+        var graphType = graphState.graphType;
+        var element = graphState.element;
+        var granularity = graphState.granularity;
 
-        // test for graphtypes
-	if(graphType === "plainText") {
-	    displayText(graphState, graphData.values);
-	} else {
+        /*// test for graphtypes
+        if(graphType === "plainText") {
+            displayText(graphState, graphData.values);
+        } else {*/
             var data_and_opts = format_data(graphState, graphData.values);
-	    var data = data_and_opts["data"];
-	    var options = data_and_opts["options"];
+            var data = data_and_opts["data"];
+            var options = data_and_opts["options"];
 
-	    $.plot($(element), data, options);
+            $.plot($(element), data, options);
 
-	    if(granularity !== "Hourly") {
-	        this.bind_plotclick();
-	    }
+            if(granularity !== "Hourly") {
+                console.log("binding to plot click");
+                this.bind_plotclick();
+            }
 
-	    this.bind_plothover();
-        }
+            this.bind_plothover();
+        //}
     };
 
-    var displayText = function (graphState, graphData) {
+    /*var displayText = function (graphState, graphData) {
         var display_text = "";
-	var xtype = graphState.xtype;
-	var element = graphState.element;
+        var xtype = graphState.xtype;
+        var element = graphState.element;
 
-	$.each(graphData, function(key, value) {
+        $.each(graphData, function(key, value) {
             display_text += "<h2><i>Apartment " + key + ": </i></h2>";
 
-	    $.each(value, function(key, value) {
-		display_text += "<h4>" + "Date: " + key + "</h4>";
+            $.each(value, function(key, value) {
+                display_text += "<h4>" + "Date: " + key + "</h4>";
 
-		$.each(value, function(key, value) {
-		    if(xtype === "time") {
-			display_text += "Sensor " + key + ": " + value.y + "<br />";
-		    } else {
-			display_text += "Sensor " + key + " against " + xtype + ": " + value.y + " against " + value.x + "<br />";"<br />";
-		    }
-             	});
-	    });
-	});
+                $.each(value, function(key, value) {
+                    if(xtype === "time") {
+                        display_text += "Sensor " + key + ": " + value.y + "<br />";
+                    } else {
+                        display_text += "Sensor " + key + " against " + xtype + ": " + value.y + " against " + value.x + "<br />";"<br />";
+                    }
+                     });
+            });
+        });
 
         $(element).html(display_text);
-    };
+    };*/
 
     /*
     * Parses the data retrieved from the server, into something
     * usable by Flot.
     */
     var format_data = function (graphState, graphData) {
-	var sensor_data = [];
-	var series_data = [];
-	var data_and_options = [];
-	var graphname = [];
-	var apartments = [];
-	var graphname_flag = "false";
-	var min_x, max_x, y_value;
-	var apartment, sensor, timestamp, tick_size;
-	var startdate, enddate;
-	var num_ticks;
-	var ticks = [];
-
-	console.log("why is this not pulling new test values?");
+        var sensor_data = [];
+        var series_data = [];
+        var data_and_options = [];
+        var graphname = [];
+        var apartments = [];
+        var graphname_flag = "false";
+        var min_x, max_x;
+        var apartment, sensor, timestamp, tick_size;
+        var startdate, enddate;
+        //var num_ticks;
+        var ticks = [];
 
         $.each(graphData, function (key, value) {
             apartment = key;
@@ -177,24 +181,24 @@ function ($, _, getInternetExplorerVersion) {
             sensor_data[apartment] = [];
 
             $.each(value, function (key, value) {
-		// key = date stamp
-		time_stamp = DateToUTC(key);
-		console.log("time stamp is " + time_stamp);
+                // key = date stamp
+                time_stamp = DateToUTC(key);
+                //console.log("time stamp is " + time_stamp);
 
-		if(startdate === undefined) {
-		    startdate = time_stamp;
-		    enddate = time_stamp;
-		    ticks.push([time_stamp]);
-		    num_ticks = 1;
-		console.log("end date is " + time_stamp);
-		}
+                if(startdate === undefined) {
+                    startdate = time_stamp;
+                    enddate = time_stamp;
+                    ticks.push([time_stamp]);
+                    //num_ticks = 1;
+                //console.log("end date is " + time_stamp);
+                }
 
-		if(time_stamp > enddate) {
-		    enddate = time_stamp;
-		    ++num_ticks;
-		    ticks.push([time_stamp]);
-		console.log("end date is " + time_stamp);
-		}
+                if(time_stamp > enddate) {
+                    enddate = time_stamp;
+                    //++num_ticks;
+                    ticks.push([time_stamp]);
+                //console.log("end date is " + time_stamp);
+                }
 
                 if (graphname.length !== 0) {
                     graphname_flag = "true";
@@ -205,7 +209,7 @@ function ($, _, getInternetExplorerVersion) {
                     sensor = key;
 
                     if (graphname_flag === "false" && sensor !== "time") {
-			graphname.push(sensor);
+                        graphname.push(sensor);
                     }
 
                     if (sensor_data[apartment][sensor] === undefined) {
@@ -213,152 +217,151 @@ function ($, _, getInternetExplorerVersion) {
                     }
 
                     if(graphState.xtype === "time") {
-			sensor_data[apartment][sensor].push([time_stamp, value.y]);
+                        sensor_data[apartment][sensor].push([time_stamp, value.y]);
 
-		    } else {
-			if(value.x) {
-			    tick_size = parseFloat(value.x);
-			    sensor_data[apartment][sensor].push([tick_size, value.y]);
+                    } else {
+                        if(value.x) {
+                            tick_size = parseFloat(value.x);
+                            sensor_data[apartment][sensor].push([tick_size, value.y]);
 
-			    if(min_x === undefined || min_x > tick_size) {
-				min_x = tick_size;
-			    }
+                            if(min_x === undefined || min_x > tick_size) {
+                                min_x = tick_size;
+                            }
 
-			    if(max_x === undefined || max_x < tick_size) {
-				max_x = tick_size;
-			    }
+                            if(max_x === undefined || max_x < tick_size) {
+                                max_x = tick_size;
+                            }
 
-			} else {
+                        } else {
                             console.log({
                                 msg: "Got null value in sensor reading!",
                                 apt: apartment,
                                 date: time_stamp,
                                 sensor: sensor
                             });
-			}
-		    }
+                        }
+                    }
                 });
             });
         });
 
-	console.log("tick number is " + num_ticks);
-	graphState.ticks_length = num_ticks;
-	graphState.ticks = ticks;
-	graphState.startdate = startdate;
-	graphState.enddate = enddate;
-	graphState.min_x = min_x;
-	graphState.max_x = max_x;
+        //console.log("tick number is " + num_ticks);
+        //graphState.ticks_length = num_ticks;
+        graphState.ticks = ticks;
+        graphState.startdate = startdate;
+        graphState.enddate = enddate;
+        graphState.min_x = min_x;
+        graphState.max_x = max_x;
 
         for(var i = 0; i < apartments.length; ++i) {
-	    for(var j = 0; j < graphname.length; ++j) {
-		var label = "Apartment " + apartments[i] + " " + graphname[j];
-		series_length = series_data.length;
-		if(series_length === 0) {
-		    series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
+            for(var j = 0; j < graphname.length; ++j) {
+                var label = "Apartment " + apartments[i] + " " + graphname[j];
+                series_length = series_data.length;
+                if(series_length === 0) {
+                    series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
 
-		} else {
-		    series_data[series_length] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
-		}
-	    }
-	}
+                } else {
+                    series_data[series_length] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
+                }
+            }
+        }
 
         var options = set_all_options(graphState);
-	data_and_options["data"] = series_data;
-	data_and_options["options"] = options;
-	return data_and_options;
+        data_and_options["data"] = series_data;
+        data_and_options["options"] = options;
+        return data_and_options;
     };
 
     var set_all_options = function (graphState) {
-	var x_axis = get_x_axis(graphState);
-	var y_axis = get_y_axis(graphState);
-	var grid = get_grid();
-	var series_opts = get_series_options(graphState);
-	var legend = get_legend();
+        var x_axis = get_x_axis(graphState);
+        var y_axis = get_y_axis(graphState);
+        var grid = get_grid();
+        var series_opts = get_series_options(graphState);
+        var legend = get_legend();
 
-	if(graphState.granularity === "Hourly" && graphState.xtype !== "time") {
-	    var zoom = get_zoom_options();
-	} else {
-	    var zoom = {};
-	}
+        if(graphState.granularity === "Hourly" && graphState.xtype !== "time") {
+            var zoom = get_zoom_options();
+        } else {
+            var zoom = {};
+        }
 
-	var options = $.extend({}, x_axis, y_axis, grid, series_opts, legend, zoom);
-	return options;
+        var options = $.extend({}, x_axis, y_axis, grid, series_opts, legend, zoom);
+        return options;
     };
 
     var get_x_axis = function (graphState) {
-	var granularity = graphState.granularity;
-	var xtype = graphState.xtype;
-	var ticks_length = graphState.ticks_length;
-	var ticks = graphState.ticks;
-	var startdate = graphState.startdate;
-	var enddate = graphState.enddate;
-	var min_x = graphState.min_x;
-	var max_x = graphState.max_x;
-	var min_date = new Date(startdate);
-	var max_date = new Date(enddate);
-	var type = "axis_label";
+        var granularity = graphState.granularity;
+        var xtype = graphState.xtype;
+        var ticks_length = graphState.ticks_length;
+        var ticks = graphState.ticks;
+        var startdate = graphState.startdate;
+        var enddate = graphState.enddate;
+        var min_x = graphState.min_x;
+        var max_x = graphState.max_x;
+        var min_date = new Date(startdate);
+        var max_date = new Date(enddate);
+        var type = "axis_label";
 
         var base_x = {
-	    xaxis:
-		{
-		  axisLabelUseCanvas: true,
-		  axisLabelFontSizePixels: 12,
+            xaxis:
+                {
+                  axisLabelUseCanvas: true,
+                  axisLabelFontSizePixels: 12,
                   axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-		  axisLabelPadding: 25
-		}
-	};
+                  axisLabelPadding: 25
+                }
+        };
 
-	if(xtype === "time") {
-	    base_x.xaxis["mode"] = "time";
-	    base_x.xaxis["min"] = startdate;
+        if(xtype === "time") {
+            base_x.xaxis["mode"] = "time";
+            base_x.xaxis["min"] = startdate;
 
             if(granularity === "Hourly") {
-		//base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
-	        base_x.xaxis["tickSize"] = [2, "hour"];
-	        base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity);
+                //base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
+                base_x.xaxis["tickSize"] = [2, "hour"];
+                base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity);
             } else if(granularity === "Daily") {
-		//base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
-		base_x.xaxis["timeformat"] = "%a %d";
-		base_x.xaxis["tickSize"] = [1, "day"];
-		base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-		base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity) + " - " + get_month_day_year(enddate, type, granularity);
+                //base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
+                base_x.xaxis["timeformat"] = "%a %d";
+                base_x.xaxis["tickSize"] = [1, "day"];
+                base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity) + " - " + get_month_day_year(enddate, type, granularity);
             } else if (granularity === "Weekly") {
-		console.log("this is a new value");
-		base_x.xaxis["ticks"] = get_week_labels(startdate, enddate, granularity);
-		granularity = "Daily";
-		base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity) + " - " + get_month_day_year(enddate, type, granularity);
-		console.log("max date is " + max_date);
-		//base_x.xaxis["tickSize"] = [1, "week"];
+                base_x.xaxis["ticks"] = get_tick_labels(ticks, granularity);
+                granularity = "Daily";
+                base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity) + " - " + get_month_day_year(enddate, type, granularity);
+                //console.log("max date is " + max_date);
+                //base_x.xaxis["tickSize"] = [1, "week"];
             } else if(granularity === "Monthly") {
-		base_x.xaxis["timeformat"] = "%b";
-		base_x.xaxis["tickSize"] = [1, "month"];
-		base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-		//var label = min_date.getUTCFullYear();
-		base_x.xaxis["axisLabel"] = min_date.getUTCFullYear();
-		//var year_end = label + "-12-01:0";
-		//base_x.xaxis["max"] = DateToUTC(year_end);
-	    } else {
-		base_x.xaxis["ticks"] = get_year_label(ticks, granularity);
-	    }
-	} else {
-	    base_x.xaxis["min"] = min_x;
-	    base_x.xaxis["max"] = max_x;
-	    base_x.xaxis["axisLabel"] = xtype;
-	}
+                base_x.xaxis["timeformat"] = "%b";
+                base_x.xaxis["tickSize"] = [1, "month"];
+                base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                //var label = min_date.getUTCFullYear();
+                base_x.xaxis["axisLabel"] = min_date.getUTCFullYear();
+                //var year_end = label + "-12-01:0";
+                //base_x.xaxis["max"] = DateToUTC(year_end);
+            } else {
+                base_x.xaxis["ticks"] = get_tick_labels(ticks, granularity);
+            }
+        } else {
+            base_x.xaxis["min"] = min_x;
+            base_x.xaxis["max"] = max_x;
+            base_x.xaxis["axisLabel"] = xtype;
+        }
 
-	if(granularity === "Hourly") {
-	    base_x.xaxis["zoomRange"] = [0.1, 3600000];
-	    var pan_range = max_x * 1.5;
-	    base_x.xaxis["panRange"] = [-100, pan_range];
-	}
+        if(granularity === "Hourly") {
+            base_x.xaxis["zoomRange"] = [0.1, 3600000];
+            var pan_range = max_x * 1.5;
+            base_x.xaxis["panRange"] = [-100, pan_range];
+        }
 
-	return base_x;
+        return base_x;
     };
 
     var get_y_axis = function (graphState) {
         var base_y = {
             yaxis:
-		{
+                {
                   axisLabelUseCanvas: true,
                   axisLabelFontSizePixels: 12,
                   axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
@@ -368,60 +371,60 @@ function ($, _, getInternetExplorerVersion) {
 
         base_y.yaxis["axisLabel"] = graphState.ytype;
 
-	if(graphState.granularity === "Hourly") {
-	    base_y.yaxis["zoomRange"] = [0.1, 3600000];
-	    base_y.yaxis["panRange"] = [-100, 1000];
-	}
+        if(graphState.granularity === "Hourly") {
+            base_y.yaxis["zoomRange"] = [0.1, 3600000];
+            base_y.yaxis["panRange"] = [-100, 1000];
+        }
 
         return base_y;
     };
 
     var get_grid = function () {
-	return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};
+        return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};
     };
 
     var get_series_options = function (graphState, order) {
-	var graphType = graphState.graphType;
+        var graphType = graphState.graphType;
 
-	var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true}}};
-	var bars = {series: {bars: { show: true, barWidth: 1000*60*60*0.25, fill: true, lineWidth: 1, clickable: true, hoverable: true, order: order}}};
-	var pie =  {series: {pie: {show: true, radius: 1}}};
+        var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true}}};
+        var bars = {series: {bars: { show: true, barWidth: 1000*60*60*0.25, fill: true, lineWidth: 1, clickable: true, hoverable: true, order: order}}};
+        var pie =  {series: {pie: {show: true, radius: 1}}};
 
-	if(graphType === "line") {
-	console.log("line opt is " + line.series.points.show);
-	    return line;
-	} else if(graphType === "bar") {
-	    return bars;
-	} else if(graphType === "pie") {
-	    return pie;
+        if(graphType === "line") {
+        //console.log("line opt is " + line.series.points.show);
+            return line;
+        } else if(graphType === "bar") {
+            return bars;
+        } else if(graphType === "pie") {
+            return pie;
         }
     };
 
     var get_legend = function () {
         return {
-	    legend:
-		{
-    		  show: true,
-		  labelBoxBorderColor: "rgb(51, 204, 204)",
-		  backgroundColor: "rgb(255, 255, 204)",
-    		  margin: [10, 300],
-    		  backgroundOpacity: .75
-  		}
+            legend:
+                {
+                      show: true,
+                  labelBoxBorderColor: "rgb(51, 204, 204)",
+                  backgroundColor: "rgb(255, 255, 204)",
+                      margin: [10, 300],
+                      backgroundOpacity: .75
+                  }
         }
     };
 
     var get_zoom_options = function () {
         return {
             zoom:
-		{
+                {
                 interactive: true
-            	},
+                    },
 
             pan:
-		{
+                {
                 interactive: true
-            	}
-	}
+                    }
+        }
     };
 
     var create_series_object = function (label, data) {
@@ -447,9 +450,9 @@ function ($, _, getInternetExplorerVersion) {
 
     Graph.prototype.bind_plothover = function () {
         var previousPoint = null;
-	var element = this.graphState.element;
-	var xtype = this.graphState.xtype;
-	var granularity = this.graphState.granularity;
+        var element = this.graphState.element;
+        var xtype = this.graphState.xtype;
+        var granularity = this.graphState.granularity;
 
         $(element).bind("plothover", function (event, pos, item) {
             /* Err... do these elements even exist on the page? There can only
@@ -463,18 +466,18 @@ function ($, _, getInternetExplorerVersion) {
                     previousPoint = item.dataIndex;
 
                     $("#tooltip").remove();
-			y = item.datapoint[1].toFixed(2);
+                        y = item.datapoint[1].toFixed(2);
 
-			if(xtype === "time") {
+                        if(xtype === "time") {
                             /* This get month day year thing is being called
                              * wrong... but how are you supposed to call it? */
-			    var x = get_month_day_year(new Date(item.datapoint[0]), granularity);
+                            var x = get_month_day_year(new Date(item.datapoint[0]), granularity);
                             show_tool_tip(item.pageX, item.pageY,
                                 item.series.label + " for " + x + " is " + y);
-			} else {
-			    show_tool_tip(item.pageX, item.pageY,
+                        } else {
+                            show_tool_tip(item.pageX, item.pageY,
                                 item.series.label + ": " + y + " against " + xtype + ": " + y);
-			}
+                        }
                 }
             } else {
                 $("#tooltip").remove();
@@ -484,99 +487,132 @@ function ($, _, getInternetExplorerVersion) {
     };
 
     Graph.prototype.bind_plotclick = function() {
-	var granularity = this.graphState.granularity;
-	var xtype = this.graphState.xtype;
-	var startdate = this.graphState.startdate;
-	var enddate = this.graphState.enddate;
+        var old_granularity = this.graphState.granularity;
+       console.log("bound gran is " + this.graphState.granularity);
+        var xtype = this.graphState.xtype;
+        var startdate = this.graphState.startdate;
+        var enddate = this.graphState.enddate;
         var handleChangedData = this.graphState.callback;
-	var drill_granularity, date_from, date_to;
-	var data_point, date_UTC;
+        var drill_granularity, date_from, date_to;
+        var data_point, date_UTC;
 
-	console.log("xtype is " + xtype);
-	console.log("granularity is " + granularity);
+        //console.log("xtype is " + xtype);
+        //console.log("granularity is " + granularity);
 
-    	$(this.graphState.element).bind("plotclick", function (event, pos, item) {
+            $(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {
-		console.log("granularity is : " + granularity);
-		console.log("you clicked!");
-	        
-		if(xtype === "time") {
-	            data_point = item.datapoint[0];
-	            date_UTC = (new Date(data_point));
-	            date_from = format_date(date_UTC);
-		} else {
-		    data_point = item.dataIndex;
-		console.log("data index is " + item.dataIndex);
-		}
 
-		if(granularity === "Hourly") {
-		    // cannot drill down further
-		    return;
-		} else if (granularity === "Daily") {
-		    drill_granularity = "Hourly";
+                var granularity = self.graphState.granularity;
 
-		    if(xtype === "time") {
-		        date_to = date_from;
-		    } else {
-			date_from = format_date(new Date(map_index_to_time(data_point, startdate, drill_granularity)));
-			date_to = date_from;
-			console.log("date to is " + date_to);
-		    }
-		} else if (granularity === "Weekly") {
-		    drill_granularity = "Daily";
+                var new_granularity = {
+                    Hourly: null,
+                    Daily: "Hourly",
+                    Weekly: "Daily",
+                    Monthly: "Weekly",
+                    Yearly: "Monthly"
+                };
 
-		    if(xtype === "time") {
-		        date_to = get_date_to(data_point, drill_granularity);
-			console.log("date to is " + date_to);
-		    } else {
-			var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
-			date_from = format_date(new Date(temp_date));
-			date_to = date_from + get_millisecond_interval(drill_granularity);
-			console.log("date from is " + date_from + " date to is " + date_to);
-		    }
+            drill_granularity = new_granularity[granularity];
+            console,.log
+            console.log("old granularity is " + old_granularity);
+            console.log("drill granularity is " + drill_granularity);
 
-		} else if(granularity === "Monthly") {
-		    drill_granularity = "Weekly";
+            
+               
+                console.log("you clicked!");
 
-		    if(xtype === "time") {
-		        date_to = get_date_to(data_point, drill_granularity);
-		    } else {
-			var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
-			var date_string = (new Date(temp_date));
-			var year = date_string.getUTCFullYear();
-			var month = date_string.getUTCMonth();
-			date_from = year + '-' + month + '-01';
-			date_to = year + '-' + month + '-' + get_days_in_month(month, year);
-			console.log("date from is " + date_from + " date to is " + date_to); 			
-		    }
+                 //console.log("granularity is : " + granularity);
 
-		} else {
-		    // then current granularity is years
-		    drill_granularity = "Monthly";
 
-		    if(xtype === "time") {
-		        date_to = date_UTC.getUTCFullYear() + '-12-31';	
-		    } else {
-			var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
-			var date_string = (new Date(temp_date));
-			var year = date_string.getUTCFullYear();
-			date_from = year + '-01-01';
-			date_to = year + '-12-31';
-		    }	
-		}
+                if(xtype === "time") {
+            console.log("xtype is time");
+                    data_point = item.datapoint[0];
+                    date_UTC = (new Date(data_point));
+                    date_from = format_date(date_UTC);
+                } else {
+                    data_point = item.dataIndex;
+                console.log("data index is " + item.dataIndex);
+                }
 
+                if(drill_granularity === undefined) {
+                    // cannot drill down further
+                    console.log("returning without drilling");
+                    return;
+                } else if (drill_granularity === "Hourly") {
+            //console.log("drilling down to hourly");
+                    //drill_granularity = "Hourly";
+
+                    if(xtype === "time") {
+            console.log("we got into hourly drill");
+                        date_to = date_from;
+                date_from += " 00";
+                date_to += " 23";
+            console.log("date from is " + date_from + " and date to is " + date_to);
+                    } else {
+                        console.log("entered correlational date");
+                        date_from = format_date(new Date(map_index_to_time(data_point, startdate, drill_granularity)));
+                        date_to = date_from;
+                        date_from += " 00";
+                        date_to += " 23";
+                        console.log("date to is " + date_to);
+                    }
+                } else if (granularity === "Daily") {
+                    //drill_granularity = "Daily";
+
+                    if(xtype === "time") {
+                        date_to = get_date_to(data_point, drill_granularity);
+                        console.log("date to is " + date_to);
+                    } else {
+                        var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
+                        date_from = format_date(new Date(temp_date));
+                        date_to = date_from + get_millisecond_interval(drill_granularity);
+                        console.log("date from is " + date_from + " date to is " + date_to);
+                    }
+
+                } else if(granularity === "Weekly") {
+                   //drill_granularity = "Weekly";
+
+                    if(xtype === "time") {
+                        date_to = get_date_to(data_point, drill_granularity);
+                    } else {
+                        var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
+                        var date_string = (new Date(temp_date));
+                        var year = date_string.getUTCFullYear();
+                        var month = date_string.getUTCMonth();
+                        date_from = year + '-' + month + '-01';
+                        date_to = year + '-' + month + '-' + get_days_in_month(month, year);
+                        console.log("date from is " + date_from + " date to is " + date_to);                         
+                    }
+
+                } else {
+                    // then current granularity is years
+                    //drill_granularity = "Monthly";
+
+                    if(xtype === "time") {
+                        date_to = date_UTC.getUTCFullYear() + '-12-31';        
+                    } else {
+                        var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
+                        var date_string = (new Date(temp_date));
+                        var year = date_string.getUTCFullYear();
+                        date_from = year + '-01-01';
+                        date_to = year + '-12-31';
+                    }        
+                }
+
+        console.log("about to handle changed data");
+            console.log("drill gran is " + drill_granularity);
                 /* Tell whatever handler we've got that there's new data. */
                 handleChangedData({
                     startdate: date_from,
                     enddate: date_to,
                     period: drill_granularity
                 });
-       	    } // if statement
-	}); // end plotclick
+                   } // if statement
+        }); // end plotclick
     };
 
     var map_index_to_time = function (data_point, startdate, granularity) {
-	return startdate + ((data_point) * get_next_interval(granularity));
+        return startdate + ((data_point) * get_next_interval(granularity));
     };
 
 
@@ -612,7 +648,7 @@ function ($, _, getInternetExplorerVersion) {
     };
 
     var format_date = function (date) {
-    	// return date as string in following format ('2012-03-01')
+            // return date as string in following format ('2012-03-01')
         return date.getUTCFullYear() + '-' + add_leading_zero(date.getUTCMonth() + 1) + '-' + add_leading_zero(date.getUTCDate());
     };
 
@@ -646,90 +682,93 @@ function ($, _, getInternetExplorerVersion) {
 
     var get_month_day_year = function (date, type, granularity) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	var date_string = new Date(date);	
-	var day = date_string.getUTCDate();
-	var month = months[date_string.getUTCMonth()];
-	var year = date_string.getUTCFullYear();
+        var date_string = new Date(date);        
+        var day = date_string.getUTCDate();
+        var month = months[date_string.getUTCMonth()];
+        var year = date_string.getUTCFullYear();
 
-	
-	    var week_end = (date + get_millisecond_interval(granularity)).getUTCDate;
+        
+            var week_end = (date + get_millisecond_interval(granularity)).getUTCDate;
 
-	tool_tip = {
-	    Hourly: month + ' ' + day + ' ' + year,
-	    Daily: month + ' ' + day + ' ' + year,
-	    Weekly: month + ' ' + day + '-' + week_end + ' ' + year,
-	    Monthly: month + ' ' + year
-	};
+        tool_tip = {
+            Hourly: month + ' ' + day + ' ' + year,
+            Daily: month + ' ' + day + ' ' + year,
+            Weekly: month + ' ' + day + '-' + week_end + ' ' + year,
+            Monthly: month + ' ' + year
+        };
 
-	axis_label = {
-	    Hourly: month + ' ' + day + ' ' + year,
-	    Daily: month + ' ' + day + ' ' + year,
-	    Weekly: month + ' ' + day + ' ' + year + '-' + month + ' ' + day + ' ' + year,
-	    Monthly: month + ' ' + year
-	}; 
+        axis_label = {
+            Hourly: month + ' ' + day + ' ' + year,
+            Daily: month + ' ' + day + ' ' + year,
+            Weekly: month + ' ' + day + ' ' + year + '-' + month + ' ' + day + ' ' + year,
+            Monthly: month + ' ' + year
+        }; 
 
-	return type.granularity;
+        return type.granularity;
     };
 
     var get_millisecond_interval = function (interval) {
-	    var base = 3600000;
-	    return milliseconds = {
-		Hourly: base * 23,
-		Daily: base * 24 * 6,
-		Weekly: base * 24 * 7,
-		Yearly: base * 24 * 365
-	    }[interval];
+            var base = 3600000;
+            return milliseconds = {
+                Hourly: base * 23,
+                Daily: base * 24 * 6,
+                Weekly: base * 24 * 7,
+                Yearly: base * 24 * 365
+            }[interval];
     };
 
     var get_next_interval = function (interval) {
         var base = 3600000;
-	return milliseconds = {
-	    Hourly: base * 24,
-	    Daily: base * 24 * 7,
-	    Weekly: base * 24 * 31,
-	    Yearly: base * 24 * 366
-	}[interval];
+        return milliseconds = {
+            Hourly: base * 24,
+            Daily: base * 24 * 7,
+            Weekly: base * 24 * 31,
+            Yearly: base * 24 * 366
+        }[interval];
     };
 
-     var get_week_labels = function (startdate, enddate, granularity) {
-	var ticks = [];
-	var milli_week = get_millisecond_interval(granularity);
-	console.log("start is " + startdate);
-	console.log("end is " + enddate);
-	var max_date = enddate - startdate;
-	console.log("max is " + max_date);
-	var num_weeks = Math.ceil(max_date/get_millisecond_interval(granularity)) + 1;
+     /*var get_week_labels = function (startdate, enddate, granularity) {
+        var ticks = [];
+        var milli_week = get_millisecond_interval(granularity);
+        console.log("start is " + startdate);
+        console.log("end is " + enddate);
+        var max_date = enddate - startdate;
+        console.log("max is " + max_date);
+        var num_weeks = Math.ceil(max_date/get_millisecond_interval(granularity)) + 1;
 
-	console.log("num weeks is " + num_weeks);
-	console.log("new iteration");
-	for(i = 0; i < num_weeks; ++i) {
-	    console.log("gran is " + granularity);
-	    console.log("milli week is " + milli_week);
-	    ticks.push([startdate + (milli_week * i), "Week " + (i + 1)]);
-		console.log((startdate + (milli_week * i)) + "Week " + (i + 1));
-	}
-	console.log("milli week 1 is " + startdate);
-	console.log("milli week 2 is " + (startdate + milli_week));
-	console.log("milli week 3 is " + (startdate + (milli_week * 2)));
-	console.log("milli week 4 is " + (startdate + (milli_week * 3)));
-	console.log("milli week 5 is " + (startdate + (milli_week * 4)));
+        console.log("num weeks is " + num_weeks);
+        console.log("new iteration");
+        for(i = 0; i < num_weeks; ++i) {
+            console.log("gran is " + granularity);
+            console.log("milli week is " + milli_week);
+            ticks.push([startdate + (milli_week * i), "Week " + (i + 1)]);
+                console.log((startdate + (milli_week * i)) + "Week " + (i + 1));
+        }
+        console.log("milli week 1 is " + startdate);
+        console.log("milli week 2 is " + (startdate + milli_week));
+        console.log("milli week 3 is " + (startdate + (milli_week * 2)));
+        console.log("milli week 4 is " + (startdate + (milli_week * 3)));
+        console.log("milli week 5 is " + (startdate + (milli_week * 4)));
 
-	console.log("ticks size is " + ticks.length);
+        console.log("ticks size is " + ticks.length);
 
-	return ticks;
-    };
+        return ticks;
+    };*/
 
-    get_year_label = function (ticks, granularity) {
-	//var ticks = [];
-	var milli_year = get_next_interval(granularity);
+    get_tick_labels = function (ticks, granularity) {
+        var label;
+        //var milli_year = get_next_interval(granularity);
 
         for(i = 0; i < ticks.length; ++i) {
-	    console.log("gran is " + granularity);
-	    console.log("milli week is " + milli_year);
-	    var year_string = (new Date(ticks[i][0])).getUTCFullYear();
-	    ticks[i].push(year_string);
-	}
-	return ticks;
+            if(granularity === "Weekly") {
+                label = "Week " + (i + 1);
+            } else {
+                label = (new Date(ticks[i][0])).getUTCFullYear();
+            }
+
+            ticks[i].push(label);
+        }
+        return ticks;
     };
 
     /* This module exports one public member -- the class itself. */
