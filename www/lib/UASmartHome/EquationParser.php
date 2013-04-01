@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use \UASmartHome\Database\Engineer;
 use \UASmartHome\Database\Configuration\ConfigurationDB;
+use \UASmartHome\Database\Utilities\UtilitiesDB;
 
 
 class EquationParser
@@ -45,6 +46,106 @@ class EquationParser
 
     }
 
+    /*
+     * input: startdate, enddate, apartment, granularity, type ("electricity" or "water)
+     * output: array of key=>value, where key is a timestamp and value is cost
+     */
+    public static function getUtilityCosts($input) {
+
+        /* test data
+        $functionArray = array();
+        $functionArray["startdate"] = "2012-02-29 00:00";
+        $functionArray["enddate"] = "2012-03-02 00:00";
+        $functionArray["apartment"] = 1;
+        $functionArray["granularity"] = "Hourly";
+        $functionArray["type"] = "electricity";
+
+        $input = json_encode($functionArray);
+        */
+
+        $input = json_decode($input, true);
+        $finalCosts = array();
+
+        $costData = UtilitiesDB::Utilities_getPrice($input["type"], $input["startdate"], $input["enddate"]);
+
+        if($input["type"] === "electricity") {
+            $utilityUse = EquationParser::getTotalElec($input["apartment"], $input["startdate"], $input["enddate"], $input["granularity"]);
+        }
+        else if($input["type"] === "water") {
+            $utilityUse = EquationParser::getTotalWater($input["apartment"], $input["startdate"], $input["enddate"], $input["granularity"]);
+        }
+        else {
+            echo "utility type not found\n";
+            return null;
+        }
+
+        foreach($utilityUse as $date=>$use) {
+            foreach($costData as $contract) {
+                $start = strtotime($contract["Start_Date"]);
+                $end = strtotime($contract["End_Date"]);
+
+                // convert date from yyyy-mm-dd:h to php date format
+                $date = str_replace(":", " ", $date) . ":00";
+                if (strtotime($date) >= $start && strtotime($date) <= $end) {
+                    $finalCosts[$date] = $use * $contract["Price"];
+                }
+
+            }
+        }
+
+        return $finalCosts;
+
+    }
+
+
+    /* Gets the total water for a given apartment, dates, and granularity.
+     * Return value is array of key=>value, where key is date and value is
+     * total water
+    */
+    public static function getTotalWater($apartment, $startdate, $enddate, $granularity) {
+        $data = array();
+        $waterData = Engineer::db_pull_query($apartment, "Total_Water",
+                                             $startdate, $enddate, $granularity);
+
+        foreach($waterData as $date=>$value) {
+            if($waterData[$date] === 0 && $value === 0)
+                $data[$date] = 0;
+            else
+                $data[$date] = $value["Total_Water"];
+        }
+
+        return $data;
+
+    }
+
+    /*
+     * Gets the total electricity (Ch1 of phase A + Ch1 of phase B) between
+     * startdate and enddate for a given apartment.  Return value is an array
+     * of key=>value, where key is date and value is the total electricity used
+     */
+    public static function getTotalElec($apartment, $startdate, $enddate, $granularity) {
+
+        $data = array();
+        $elecAdata = Engineer::db_pull_query(
+                   $apartment, "Ch1",
+                   $startdate, $enddate,
+                   $granularity, "A");
+        $elecBdata = Engineer::db_pull_query(
+                   $apartment, "Ch1",
+                   $startdate, $enddate,
+                   $granularity, "B");
+
+        foreach($elecAdata as $date=>$value) {
+            if($elecAdata[$date] === 0 && $value === 0)
+                $data[$date] = 0;
+            else
+                $data[$date] = $value["Ch1"] + $elecAdata[$date]["Ch1"];
+
+        }
+        return $data;
+
+    }
+
     /**
      * Given the equation from the config file, replace all the values
      * specified by $variables$ by the values in the database and calculate
@@ -57,10 +158,10 @@ class EquationParser
 
         /* test data
         $functionArray = array();
-        $functionArray["startdate"] = "2012-02-29:0";
-        $functionArray["enddate"] = "2012-03-02:0";
+        $functionArray["startdate"] = "2012-03-01 00:00";
+        $functionArray["enddate"] = "2012-03-02 00:00";
         $functionArray["apartment"] = 1;
-        $functionArray["granularity"] = "Hourly";
+        $functionArray["granularity"] = "Daily";
         $functionArray["function"] = "9 * (3+pi) * \$air_temperature$ + \$air_co2$ / 4";
         $functionArray["functionname"] = "functionname";
 
@@ -87,19 +188,12 @@ class EquationParser
         for($i=1; $i<count($pieces); $i+=2) {
 
             if($pieces[$i] === "elec_total") {
-                $data[$pieces[$i]] = Engineer::db_pull_query(
-                           $input["apartment"], "Ch1",
-                           $input["startdate"], $input["enddate"],
-                           $input["granularity"], "A");
-                $elecBdata = Engineer::db_pull_query(
-                           $input["apartment"], "Ch1",
-                           $input["startdate"], $input["enddate"],
-                           $input["granularity"], "B");
-                foreach($elecBdata as $date=>$value) {
-                    if($data["elec_total"][$date] === 0 && $value === 0)
-                        $data["elec_total"][$date] = 0;
-                    else
-                        $data["elec_total"][$date]["Ch1"] += $value["Ch1"];
+                $totalElec = getTotalElec($input["apartment"],
+                                $input["startdate"], $input["enddate"],
+                                $input["granularity"]);
+
+                foreach($totalElec as $date=>$value) {
+                    $data["elec_total"][$date]["Ch1"] = $value;
                 }
             }
             else {
