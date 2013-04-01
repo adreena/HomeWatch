@@ -433,7 +433,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	}
 	public function db_create_Alert ($column,$value1,$sign1,$between,$descr,$value2=null,$sign2=null,$condition=null)
 	{
-	$tables = array("rh"=>"air", "temp" => "air", "co2"=>"air", 
+	$tables = array("rh"=>"air", "temperature" => "air", "co2"=>"air", 
 	"hot"=>"water", "total"=>"water", "insulation"=>"heat_flux", 
 	"stud"=>"heat_flux", "cur_flow"=>"heating", "cur_t2"=>"heating", 
 	"cur_t1"=>"heating",  "total_mass"=>"heating", "total_energy"=>"heating", 
