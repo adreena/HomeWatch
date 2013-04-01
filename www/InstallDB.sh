@@ -8,7 +8,7 @@ echo "Enter User name for the DB :"
 read user
 echo "Enter the Password for the DB :"
 read password
-echo "Enter DB name where air,water,el_energy,heating and heatflux installed in ""
+echo "Enter DB name where air,water,el_energy,heating and heatflux installed in :"
 read DB
 echo "Enter DB name where Bas tables are instored in :"
 read DB1
@@ -33,7 +33,8 @@ echo "Extracted Files"
 ########################################################################
 #Install the Resident and Manager Tables  
 #########################################################################
-
+echo "Installing the Resident and Manager tables  (1 of 1)"
+mysql -u $user -p$password $DB<ResidentManagerDB.sql
 
 ########################################################################
 #Install the Views for the  Air,Water,Heating,Heat_flux and  El_Energy
@@ -76,7 +77,7 @@ echo "Installing the Bas Tables for Flow minute ,Temp Minute ,Boiler minute,Anay
 mysql -u $user -p$password $DB1<BasTables.sql
  
 # B) Install the Views V0_energy and Energy_Minute
-echo "Installing the Views for Energy and Eenergy_Minute (2 of 3)"
+echo "Installing the Views for Energy and Eenergy_Minute (1 of 3)"
 mysql -u $user -p$password $DB1<BasViews.sql
 
 # C) Install the MySQL Functions  calc_cop_test,calc_cop,EQ2_Part 1 
