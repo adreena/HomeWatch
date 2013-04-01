@@ -1,4 +1,4 @@
-<Files ~ "composer.*$">
+<Files ~ "^(composer.*|phpunit.*)$">
 	Order deny,allow
 	deny from all
 </Files>
