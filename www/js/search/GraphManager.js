@@ -91,8 +91,6 @@ function ($, _, D, GraphControl) {
                 control.onNewData(self.resultCache[graphParams]);
             }, 0);
 
-            console.log("The XHR: ", jqXHR);
-
             return;
         }
 
@@ -117,9 +115,10 @@ function ($, _, D, GraphControl) {
             dataType: 'json',
             success: onSuccess,
             error: function (jqXHR) {
-                console.log("The XHR: ", jqXHR);
-                // Hopefully the control can handle the error.
-                control.onFetchError();
+                /* Hopefully the control can handle the error. */
+                if (jqXHR.statusText !== "abort") {
+                    control.onFetchError();
+                }
            }
         });
 
