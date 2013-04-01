@@ -567,20 +567,16 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 				$Query=$conn->connect()->prepare("Drop view if exists ".$viewname." ");
 				$Query->execute();
 	}
-	public function db_apt_list ()
-	{
-			$conn=new Connection ();  
-				$Query=$conn->connect()->prepare(" SELECT distinct(`apt`) FROM `apt_info` ");
-				$Query->execute();
-					while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
-				{
-				$result[]=(array)$row;
-				}
-				return $result;
-	}
 
+	/* Ahmed told me that it's okay if this one is the only static function.
+	 * ...for now. */
+	public static function db_apt_list ()
+	{
+		$conn = new Connection ();  
+		$Query=$conn->connect()->prepare(" SELECT distinct(`apt`) FROM `apt_info` ");
+		$Query->execute();
+		return $Query->fetchAll(\PDO::FETCH_COLUMN, 0);
+	}
 
 }
 
-
-?>

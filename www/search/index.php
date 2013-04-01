@@ -12,6 +12,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use \UASmartHome\Auth\User;
 use \UASmartHome\Auth\Firewall;
 use \UASmartHome\EquationParser;
+use \UASmartHome\Database\Engineer;
 use \UASmartHome\Database\Configuration\ConfigurationDB;
 
 Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MANAGER);
@@ -44,7 +45,7 @@ foreach (array_unique(EquationParser::$DBVARS) as $DBName) {
     $categories['Sensors'][$DBName] = "";
 };
 
-// TODO: Still need apartment data!
+$apartments = Engineer::db_apt_list();
 
 
 /* Get session user ID. */
@@ -67,7 +68,7 @@ $twig = \UASmartHome\TwigSingleton::getInstance();
 
 echo $twig->render("manager/search.html", array(
     "categories" => json_encode($categories),
-    "apartments" => json_encode(array(1,2,3,4,5,6)),
+    "apartments" => json_encode($apartments),
     "userRole" => $role
 ));
 
