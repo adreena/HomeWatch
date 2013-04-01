@@ -6,10 +6,19 @@ user=root
 password=n342m8wu9
 DB=TEST1
 DB1=TEST2
+
+########################################################################
+# Extract DB files
+########################################################################
+
+echo "Extracting DB Files"
+tar -xvf DB.tar
+echo "Extracted Files"
+
 ########################################################################
 #Install the Login tables   
 #########################################################################
-##Stevein Add your stuff here //Follow same format as down
+#Stevein Add your stuff here //Follow same format as down
 
 ########################################################################
 #Install the Constants,Equations Tables 
