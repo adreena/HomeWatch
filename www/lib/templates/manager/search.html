@@ -124,7 +124,7 @@ var apartmentData = {{ apartments|raw }};
     {# Note: these are to be used with jdPicker jQuery plugin. #}
     <div class="graph-controls-hourly">
       <label><span class="the-actual-gorram-label"> Day </span>
-        <input class="fancy-date" name="start" type="hidden" />
+        <input class="simple-day-picker" name="start" type="hidden" />
       </label>
     </div>
 
@@ -132,11 +132,11 @@ var apartmentData = {{ apartments|raw }};
       <p class="informative"> Ranges are inclusive. </p>
 
       <label><span class="the-actual-gorram-label"> Start Day </span>
-        <input class="fancy-date" name="start" type="date" />
+        <input class="simple-day-picker" name="start" type="hidden" />
       </label>
 
       <label><span class="the-actual-gorram-label"> End Day </span>
-        <input class="fancy-date" name="end" type="date" />
+        <input class="simple-day-picker" name="end" type="hidden" />
       </label>
     </div>
 
@@ -144,11 +144,11 @@ var apartmentData = {{ apartments|raw }};
       <p class="informative"> Ranges are inclusive. </p>
 
       <label><span class="the-actual-gorram-label"> Start Week </span>
-        <input class="fancy-date" name="start" type="date" />
+        <input class="week-picker" name="start" type="date" />
       </label>
 
       <label><span class="the-actual-gorram-label"> End Week </span>
-        <input class="fancy-date" name="end" type="date" />
+        <input class="week-picker" name="end" type="date" />
       </label>
     </div>
 

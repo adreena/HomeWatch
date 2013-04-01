@@ -37,7 +37,9 @@ function ($, _, D, Graph, TemplateManager) {
         /* Binds events for the elements. */
         bindWeirdDateEvents,
         bindSelectEvents,
-        prevDef;
+        prevDef,
+
+        jdPickerDefaultsWith;
 
 
     /** Creates a new GraphControl. A GraphController has data. */
@@ -407,6 +409,22 @@ function ($, _, D, Graph, TemplateManager) {
         return tman.render('graph-control-types', {});
     };
 
+    /* Mini-module for date picker stuff. */
+    jdPickerDefaultsWith = (function () {
+        var defaults = {
+            date_format: "YYYY-mm-dd",
+            /* Start the week on Sunday. */
+            start_of_week: 0,
+            /* Set the max to the today. */
+            date_max: (new Date()).toShortISOString()
+        };
+
+        return function (extras) {
+            var newSettings = _.clone(defaults);
+            return _.extend(newSettings, extras);
+        };
+    }());
+
     /**
      * Graph controller is a jQuery which we can bind events to.
      * Yay!
@@ -418,6 +436,13 @@ function ($, _, D, Graph, TemplateManager) {
          * granularity. */
         dateThing = graphController.find('.graph-controls-datetime').first();
         granularityChooser = dateThing.find('[name=granularity]');
+
+        /* Make all of the jdPicker things. */
+        dateThing.find('.simple-day-picker').jdPicker(jdPickerDefaultsWith({}));
+        dateThing.find('.week-picker').jdPicker(jdPickerDefaultsWith({
+            select_week: true
+        }));
+
 
         /* Hides all of the date/time category things. */
         hideAll = function () {
@@ -524,10 +549,16 @@ function ($, _, D, Graph, TemplateManager) {
         /* TODO: Make these subfetchers less terrible. */
         subfetchers = {
             Hourly: function () {
-                var theONLYDate = chosenControls.find('input[name=start]').val();
+                var startTime = chosenControls.find('input[name=start]').val(),
+                    endTime;
+
+                /* For this one, we want the next 23 hours of data (one day). */
+                endTime = new Date(startTime);
+                endTime.setHours(endTime.getHours() + 23);
+
                 return {
-                    start: theONLYDate,
-                    end: theONLYDate
+                    start: startTime,
+                    end: endTime.toShortISOString()
                 };
             },
             Daily: function () {
