@@ -103,7 +103,7 @@ class Engineer2 {
             $strTick = $tick->format("Y-m-d G");
             $strTickEnd = $tick->add($interval)->format("Y-m-d G");
             $sum = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column)['sum'];
-            $data[$tick] = $sum;
+            $data[$strTick] = $sum;
         }
 
         return data;
