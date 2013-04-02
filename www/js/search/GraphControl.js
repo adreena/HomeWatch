@@ -521,9 +521,7 @@ function ($, _, D, Graph, TemplateManager) {
             partialQuery[v] = (valueTuple.type === 'time')
                 ? valueTuple.values[0]
                 : valueTuple.values;
-            partialQuery[v + 'axis'] = (valueTuple.type === 'sensorarray')
-                ? valueTuple.values
-                : valueTuple.values[0];
+            partialQuery[v + 'axis'] = select.text();
 
         });
 
