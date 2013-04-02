@@ -72,6 +72,7 @@ function ($, _, D, Graph, TemplateManager) {
         this.el.visControls = element.find(D.sel.graphVisibilityControls);
         /** The message box. */
         this.el.messageBox = element.find(D.sel.graphMessages);
+        this.el.legend = element.find(D.sel.graphLegend);
 
         /* This should actually put a placeholder there until the
          * data is valid. */
@@ -79,7 +80,7 @@ function ($, _, D, Graph, TemplateManager) {
 
         this.graph = new Graph(this.el.graph, function (newRequest) {
             self.onGranularityChange(newRequest);
-        });
+        }, this.el.legend);
 
         /* Currently unused. */
         this.hidden = false;

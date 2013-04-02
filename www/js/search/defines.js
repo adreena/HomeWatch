@@ -35,6 +35,7 @@ define({
         graphContainer: '.graph-container',
 
         graphMessages: '.graph-messages',
+        graphLegend: '.graph-legend',
 
         graphVisibilityControls: '.graph-vis-controls',
         graphDestroyButton: 'a[href=#destroy-graph]',
