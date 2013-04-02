@@ -10,6 +10,7 @@ function ($) {
     var SCROLL_OPTIONS = {offset: -100}
 
     var UTILITY_EDITOR_ID = "#utility-editor";
+    var UTILITY_DISPLAY_ID = "#utility-display";
 
     var utilityEditor;
 
@@ -32,8 +33,8 @@ function ($) {
         });
         
         // Init the edit and delete buttons
-        $(UTILITY_EDITOR_ID).find('.delete-utility').click(deleteUtility);
-        $(UTILITY_EDITOR_ID).find('.edit-utility').click(editUtility);
+        $(UTILITY_DISPLAY_ID).find('.delete-utility').click(deleteUtility);
+        $(UTILITY_DISPLAY_ID).find('.edit-utility').click(editUtility);
         
         // Init the editor form 
         utilityEditor = $(UTILITY_EDITOR_ID)[0];
