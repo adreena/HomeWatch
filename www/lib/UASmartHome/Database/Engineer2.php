@@ -106,7 +106,7 @@ class Engineer2 {
             $data[$strTick] = $sum;
         }
 
-        return data;
+        return $data;
     }
     
     public static function getEnergyColumns() {

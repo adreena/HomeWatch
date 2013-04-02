@@ -219,6 +219,7 @@ if ($test) {
             $d2 = date_create_from_Format('Y-m-d G', $enddate);
             
             $ydata = Engineer2::getEnergyColumnData($d1, $d2, $period, $yaxis);
+            var_dump($ydata);
             foreach ($ydata as $date=>$value) {
                 $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
                 $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
