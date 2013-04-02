@@ -494,7 +494,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
 	{
 	$result =array();
 	$conn=new Connection ();
-	$Query=$conn->connect()->prepare("select * ,Date,Hour from ".$table." where Apt= :Apt_Num AND Ts between :SD and :ED ") ;
+	$Query=$conn->connect()->prepare("select * from ".$table." where Apt= :Apt_Num AND Ts between :SD and :ED ") ;
 	$Query->bindValue(":Apt_Num",$apt);
     $Query->bindValue(":SD",$StartDate);
 	$Query->bindValue(":ED",$EndDate);
