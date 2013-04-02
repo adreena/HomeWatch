@@ -48,7 +48,9 @@ function ($) {
     // FUNCTION CONFIG
     // =================================================================================================
     function initFunctionConfig() {
-
+        if (!hasConfig(FUNCTION_EDITOR_ID))
+            return;
+        
         // Init the favorites toggle button
         $(FUNCTION_TOGGLE_ID).button();
         $(FUNCTION_TOGGLE_ID).change(toggleFavorites);
@@ -138,7 +140,9 @@ function ($) {
     // CONSTANT CONFIG
     // =================================================================================================
     function initConstantConfig() {
-
+        if (!hasConfig(CONSTANT_EDITOR_ID))
+            return;
+            
         // Init the favorites toggle button
         $(CONSTANT_TOGGLE_ID).button();
         $(CONSTANT_TOGGLE_ID).change(toggleFavorites);
@@ -230,7 +234,10 @@ function ($) {
     // =================================================================================================
     // ALERT CONFIG
     // =================================================================================================
-    function initAlertConfig() {    
+    function initAlertConfig() {
+        if (!hasConfig(ALERT_EDITOR_ID))
+            return;
+               
         // Init the favorites toggle button
         $(ALERT_TOGGLE_ID).button();
         $(ALERT_TOGGLE_ID).change(toggleFavorites);
@@ -268,7 +275,7 @@ function ($) {
     }
 
     function submitAlert() {
-        $.post('/engineer/submit-alert.php', getAlertEditorData())
+        $.post('/manager/submit-alert.php', getAlertEditorData())
         .done(function(data) {
             alertEditor.reset();
             location.reload();
@@ -286,7 +293,7 @@ function ($) {
         var alertID = rowData.id;
         var alertValue = rowData.value;
         
-        $.post('/engineer/delete-alert.php', {id: alertID, value: alertValue})
+        $.post('/manager/delete-alert.php', {id: alertID, value: alertValue})
         .done(function(data) { window.location.reload(); })
         .fail(function(data) { alert("Error deleting alert: " + data.statusText); });
     }
@@ -318,9 +325,13 @@ function ($) {
         .fail(function(data) { alert("Error updating favorite alerts: " + data.statusText); });
     }
 
-    // =================================================================================================
+    // =============================================================================================
     // GENERAL CONFIG
-    // =================================================================================================
+    // =============================================================================================
+    function hasConfig(editorID) {
+        return $(editorID)[0] != null;
+    }
+    
     function getRowData(rowElement) {
         var row = $(rowElement).closest("tr");
         
@@ -383,8 +394,11 @@ function ($) {
         .done(function(data) {
             equationAutoCompleteData = $.map(data, function (value, key) { return "$" + key + '$'; });
             
-            addEquationAutoComplete($(FUNCTION_EDITOR_ID + " input[name=value]")[0]);
-            addEquationAutoComplete($(ALERT_EDITOR_ID + " input[name=value]")[0]);
+            if (hasConfig(FUNCTION_EDITOR_ID))
+                addEquationAutoComplete($(FUNCTION_EDITOR_ID + " input[name=value]")[0]);
+            
+            if (hasConfig(ALERT_EDITOR_ID))
+                addEquationAutoComplete($(ALERT_EDITOR_ID + " input[name=value]")[0]);
         })
         .error(function(data) {
             alert("Failed to get equation variables: " + data.statusText);

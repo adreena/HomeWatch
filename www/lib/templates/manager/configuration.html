@@ -1,0 +1,73 @@
+{% extends 'manager/base.html' %}
+
+{% block title 'Manager Configuration' %}
+
+{% block requireMain '/js/configuration' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
+
+<div class="configs">
+
+    <!-- Alert Config -->
+    <div class="config">
+        <div id="alert-display" class="config-display">
+            <p class="title">Alerts</p>
+            <table>
+                <tr class="header">
+                    <th class="name">Name</th>
+                    <th class="value">Value</th>
+                    <th class="description">Description</th>
+                    <th colspan="3"></th>
+                </tr>
+                
+                {% for alert in configData['alerts'] %}
+                <tr id="alert_{{ alert['id'] }}" class="body">
+                    <td class="name">{{ alert['name'] }}</td>
+                    <td class="value">{{ alert['value'] }}</td>
+                    <td class="description">{{ alert['description'] }}</td>
+                    <td><button class="delete-alert">Delete</button></td>
+                    <td><button class="edit-alert">Edit</button></td>
+                    <td><input class="favorite" type="checkbox" {{ alert['favorite'] == 1 ? 'checked' : '' }}/></td>
+                </tr>
+                {% endfor %}
+            </table>
+            
+            <div class="footer">
+                <button id="update-alerts">Update Favorites</button>
+                <label for="toggle-alerts">Toggle All/Favorites</label>
+                <input id="toggle-alerts" name="toggle-alerts" type="checkbox"/>
+            </div>
+        </div>
+        
+        <div class="config-editor">
+            <form id="alert-editor">
+                <fieldset>
+                    <legend>Alert Editor</legend>
+                                        
+                    <label for="name">Name</label><br>
+                    <input name="name" type="text" /><br>
+                    
+                    <label for="value">Value</label><br>
+                    <input name="value" type="text" /><br>
+                    
+                    <label for="description">Description</label><br>
+                    <input name="description" type="text" /><br>
+                    
+                    <div class="footer">
+                        <button class="button editor-reset" type="button" tabindex="-1">Cancel</button>
+                        <input class="button" name="submit" type="submit" value="Submit"/>
+                    </div>
+                    
+                    <input class="id" name="id" value="-1" />
+                </fieldset>
+            </form>
+        </div>
+    </div> <!-- Alert Config -->
+    
+</div> <!-- Configs -->
+
+
+{% endblock content %}
+
