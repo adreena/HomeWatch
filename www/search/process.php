@@ -20,8 +20,8 @@ use \UASmartHome\Database\Configuration\ConfigurationDB;
 header('Content-Type: application/json; charset=utf-8');
 
 //TESTING FLAG: SET TO FALSE TO USE DATA FROM SERVER
+//This is overwritten by a "don't use test" flag from the front-end so this can be left true
 $test = true;
-//$test = false;
 
 $sensors = array();
 $apartments = array();
@@ -39,13 +39,6 @@ if (ISSET($_GET['graph'])) {
 	$graph = json_decode($_GET['graph'], true);
 } else {
 	array_push($messages, "No graph data received\n");
-}
-
-//TODO: We might need to handle this differently
-if (ISSET($_GET['finances'])) {
-	$finances = true;
-} else {
-	$finances = false;
 }
 
 if ($test == false && count($messages) > 0 ) {
@@ -80,74 +73,62 @@ if ($test) {
 	$phase = null;
 	$xdata = array();
 	$ydata = array();
-
-	$error = null;
-
+	
 	if ($apartments == null) {
-		$error .= "No apartments selected. ";
+		array_push($messages, "No apartments selected. ");
 	}
 	if ($startdate == null) {
-		$error .= "No start date. ";
+		array_push($messages, "No start date. ");
 	}
 
 	if ($enddate == null) {
-		$error .= "No end date. ";
+		array_push($messages, "No end date. ");
 	}
 
 	if ($period == null) {
-		$error .= "No granularity. ";
+		array_push($messages, "No granularity. ");
 	}
 
 	if ($xtype == null) {
-		$error .= "X-axis type not specified. ";
+		array_push($messages, "X-axis type not specified. ");
 	}
 
 	if ($ytype == null) {
-		$error .= "Y-axis type not specified. ";
+		array_push($messages, "Y-axis type not specified. ");
 	}
 
 	if ($x == null) {
-		$error .= "No x-axis dataset selected. ";
+		array_push($messages, "No x-axis dataset selected. ");
 	}
 
 	if ($y == null) {
-		$error .= "No y-axis dataset selected. ";
+		array_push($messages, "No y-axis dataset selected. ");
 	}
-
-	/*
-	 *  Is it necessary to throw an error if the axis labels are not present?
-         *
-
-	if ($xaxis == null) {
-		$error .= "No y-axis dataset selected. ";
-	}
-
-	if ($yaxis == null) {
-		$error .= "No y-axis dataset selected. ";
-	}*/
-
 
 	//Check to make sure the query is over a reasonable data set
 	if ($startdate != null && $enddate != null) {
-		$error .= calculateRejection($startdate, $enddate, $period);
+		array_push($messages, calculateRejection($startdate, $enddate, $period));
 	}
 
 	//If any errors have occurred at this point there's no way we can process the query, so we spit out the query data, any error messages, and die
-	if ($error != null) {
-		array_push($messages, $error);
+	if (count($messages) > 0) {
 		$bigArray['granularity'] = $period;
 		$bigArray['messages'] = $messages;
-        	$json = json_encode($bigArray);
-        	echo $json;
+        $json = json_encode($bigArray);
+        echo $json;
 		die;
 	}
 
+    //This array is for determining what phase electrical sensors belong to from the name, passed from the front end
 	$phaseMapping = array("Mains (Phase A)" => "A", "Bedroom and hot water tank (Phase A)" => "A", "Oven (Phase A) and range hood" => "A", "Microwave and ERV controller" => "A", "Electrical duct heating" => "A", "Kitchen plugs (Phase A) and bathroom lighting" => "A", "Energy recovery ventilation" => "A", "Mains (Phase B)" => "B", "Kitchen plugs (Phase B) and kitchen counter" => "B", "Oven (Phase B)" => "B", "Bathroom" => "B", "Living room and balcony" => "B",  "Hot water tank (Phase B)" => "B", "Refrigerator" => "B");
 
 
+    //Xaxis is always a single variable, but multiple variables might be plotted along the y-axis. Here we set the x-axis label to what we received and the y-axis label to the last array name
 	$bigArray["xaxis"] = $xaxis;
 	$bigArray["yaxis"] = is_array($yaxis) ? end($yaxis) : $yaxis;
 
+
+    //This code block pulls data from a sensor or array of sensors and adds it to the JSON array
 	foreach ($apartments as $apartment) {
 		if ($ytype == "sensorarray") {
 			foreach ($y as $sensor) {
@@ -173,6 +154,7 @@ if ($test) {
 				}
 			}
 
+        //If the frontend has requested a formula then we fetch the formula and process that, then add it to the JSON array
 		} else if ($ytype == "formula") {
             //get the actual function body from the function name
             $ydata = ConfigurationDB::fetchFunction($yaxis);
@@ -197,8 +179,8 @@ if ($test) {
                 }
 
             }
+        //Alerts are handled here
 		} else if ($ytype == "alert") {
-            //get the actual alert body from the alert name
             $ydata = ConfigurationDB::fetchAlert($yaxis);
 
             // if fetchAlert returns false, this name doesn't exist in db
@@ -206,7 +188,7 @@ if ($test) {
                 array_push($messages, "No alert with the name $yaxis found");
             else {
                 $ydata = $ydata["Value"];
-                $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment);
+                $function = parseFormulaToJson($ydata, $startdate, $enddate, "Hourly", $apartment);
 
                 try {
                     $ydata = Alerts::getAlerts($function);
@@ -220,9 +202,12 @@ if ($test) {
                     $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
                 }
             }
+        //Energy data has to be handled differently
 		} else if ($ytype == "energy") {
             $dateFormat = 'Y-m-d';
-            if ($period == "Hourly") $dateFormat .= ' G';
+            if ($period == "Hourly") {
+                $dateFormat .= ' G';
+            }
 
             $d1 = date_create_from_Format($dateFormat, $startdate);
             $d2 = date_create_from_Format($dateFormat, $enddate);
@@ -232,7 +217,7 @@ if ($test) {
                 $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
                 $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
             }
-
+        //This is where we process the cost of energy data
 		} else if ($ytype == "utility") {
             $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment, $yaxis);
             $ydata = EquationParser::getUtilityCosts($function);
@@ -293,56 +278,15 @@ if ($test) {
 
 	$bigArray['granularity'] = $period;
 	$bigArray['messages'] = $messages;
-        $json = json_encode($bigArray);
-        echo $json;
+    $json = json_encode($bigArray);
+    echo $json;
 
 
 
 
 
-/*
- * This function determines what alerts should be shown alongside the graph.
- * Alerts could be things like high CO2, energy usage, or other.
- * Theoretically there is a plan for these to be specified by the user
- * but for now they are hard-coded in.
- * As input, this method takes the x and y data being graphed,
- * the name of these data sets, the current apartment, and the error-logging
- * variable "message".
- * The variable "message" passed as an argument is returned by this method,
- * with any additional alerts identified by the system appended to it.
- */
 
 
-/*
-function checkAlerts ($startdate, $enddate, $x, $yarray, $apartment) {
-
-	$listOfAlerts = array("CO2" => '$air_co2$ > 1000');
-
-	$triggeredAlerts = array();
-
-	array_push ($yarray, $x);
-
-
-	foreach ($yarray as $y) {
-		if ($y == "CO2") {
-			$alertJson = parseAlertToJson($listOfAlerts[$y], $startdate, $enddate, $apartment);
-
-			//echo var_dump($alertJson);
-
-			$alerts = Alerts::getAlerts($alertJson);
-				foreach ($alerts as $alertTime => $alertValue) {
-					array_push($triggeredAlerts, "Apartment $apartment triggered alert $listOfAlerts[$y] at time $alertTime with value $alertValue");
-				}
-
-			//array_push($triggeredAlerts, Alerts::getAlerts($alertJson));
-		}
-	}
-
-
-
-	return $triggeredAlerts;
-}
-*/
 
 /*
  * This returns a json array used for formula/function parsing.
@@ -363,19 +307,6 @@ function parseFormulaToJson ($data, $startdate, $enddate, $period, $apartment, $
 
 	return json_encode($functionArray);
 }
-
-/*
-function parseAlertToJson ($alertString, $startdate, $enddate, $apartment) {
-	$alertArray = array();
-	$alertArray["startdate"] = $startdate;
-	$alertArray["enddate"] = $enddate;
-	$alertArray["alert"] = $alertString;
-	$alertArray["apartment"] = $apartment;
-
-	return json_encode($alertArray);
-}
-
-*/
 
 /*
  * This function calculates whether a query should be rejected or not based on the size of the data set requested.

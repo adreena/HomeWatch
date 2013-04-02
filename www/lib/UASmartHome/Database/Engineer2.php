@@ -102,7 +102,7 @@ class Engineer2 {
           $strTick = $tick->format("Y-m-d G"); 
          $strTickEnd = $tick->add($interval)->format("Y-m-d G");*/
         $data = null;
-        $data=self::EQ($datefrom->format("Y-m-d G:i"), $dateto->format("Y-m-d G:i"), self::ENERGY_EQ, $column);
+        $data=self::EQ($datefrom->format("Y-m-d:G"), $dateto->format("Y-m-d:G"), self::ENERGY_EQ, $column);
       /*  foreach ($period as $tick) {
             $strDisplayTick = $tick->format("Y-m-d:G");
             
