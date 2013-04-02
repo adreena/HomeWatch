@@ -1,485 +1,99 @@
 
-All tests need to be repeated for recent versions Firefox, Chrome and Internet Explorer
-Successful user registrations will cause future registrations of that username or email address to fail. Appending a number works for testing purposes.
+Introduction
 
-Login Testing
-	log in as resident
-		enter resident1 as username
-		enter password as password
-		press log in button
-		verify you have entered the resident home page
-	log out
-		press logout text (top right)
-		verify you have entered the login page
-		click the browsers back button
-		verify you are still on the login page
+	This document is the Acceptance Testing document for the Smart Home application. It's purpose is to assist with installation of the system as well as giving the user some idea of how to achieve various goals in more detail than is available in the User Manual. This detail also lends itself towards aiding a user who is having difficulty working with the interface to locate the exact step at which their problem occurs, as well as alowing them to etermine if the error is a matter of order of operations or a fault in the application itself. If an application fault is discovered the contacts provided in the Support Contact section can be used to alert the team in order to generate a solution to the fault. The intended audience of this document is the team involved with the instalation and maintenence of the application, rather than those who use it for non work purposes or administration, although the System Tests section may be of some use to them if they cannot learn what they want from the User Manual.
 
-	log in as engineer
-		enter engineer1 as username
-		enter password as password
-		press log in button
-		verify you have entered the engineer home page
-	log out
-		press logout text (top right)
-		verify you have entered the login page
-		click the browsers back button
-		verify you are still on the login page
-
-	log in as manager
-		enter manager1 as username
-		enter password as password
-		press log in button
-		verify you have entered the manager home page
-	log out
-		press logout text (top right)
-		verify you have entered the login page
-		click the browsers back button
-		verify you are still on the login page
-
-	log in as admin
-		enter admin1 as username
-		enter password as password
-		press log in button
-		verify you have entered the manager home page (there is no admin home page)
-	log out
-		press logout text (top right)
-		verify you have entered the login page
-		click the browsers back button
-		verify you are still on the login page
-
-	log in as developer
-		enter developer1 as username
-		enter password as password
-		press log in button
-		verify you have entered the manager home page (there is no developer home page)
-	log out
-		press logout text (top right)
-		verify you have entered the login page
-		click the browsers back button
-		verify you are still on the login page
-
-	log in with random data
-		enter asdfasdf as username
-		enter asdfasdf as password
-		press log in button
-		verify the "incorrect login information" alert
-		verify that you are still on the login page
-		enter manager1 as username
-		enter asdfasdf as password
-		press log in button
-		verify the "incorrect login information" alert
-		verify that you are still on the login page
-		enter asdfasdf as username
-		enter password as password
-		press log in button
-		verify the "incorrect login information" alert
-		verify that you are still on the login page
-
-Registration testing
-	register with empty data
-		click register text
-		verify you have entered the registration page
-		click register button
-		verify that the registration process fails
-		verify the "Please enter a username" alert
-		verify the "Please enter a password" alert
-		verify the "Please confirm your password" alert
-		verify the "Please enter your email" alert
-
-	register with incomplete data
-		enter a username
-		click register
-		verify that the registration process fails
-		verify that the "Please enter a username" alert no longer displays
-		verify that the other alerts still display
-		enter password as password
-		click register
-		verify that the registration process fails
-		verify that the "Please enter a password" alert no longer displays
-		verify that the other alerts still display
-		enter password as confirm password
-		click register
-		verify that the registration process fails
-		verify that the "Please confirm your password" alert no longer displays
-		verify that the other alerts still display
-		enter test@email.com as email
-		click register
-		verify that the registration process fails
-		verify that the "Please enter your email" alert no longer displays
-		verify the "Failed to register user. Invalid info: role," alert
-		
-	register with improper data
-		enter a username
-		enter test as password
-		enter test as confirm password
-		enter an email as email
-		select a role
-		click register
-		verify that the registration process fails
-		verify the "Failed to register user. Invalid info: password," alert
-		enter a password of 8 characters of longer as password
-		enter a password of 8 characters of longer as confirm password
-		enter testing as email
-		click register
-		verify that the registration process fails
-		verify the "please enter an email address" alert
+Instalation
 	
-	register with duplicate data
-		enter resident1 as username
-		enter password as password
-		enter password as confirm password
-		enter waffles@hotmail.com as email
-		select resident as role
-		click register
-		verify that the registration process fails
-		verify the "Failed to register user. Taken: username," alert
-		enter resident123 as username
-		enter password as password
-		enter password as confirm password
-		enter sgdavis@ualberta.ca as email
-		select resident as role
-		click register
-		verify that the registration process fails
-		verify the "Failed to register user. Taken: email," alert
+	(instructions on how to run the pages, however we want them to do it.)
+	(Maybe we give them the folder/files to run on their own server or we tell them how to access a server)
+	(if we want them to make their own we should give instructions of virtual machines as well)
+	
+	(instructions on how to install the database)
+	
+	(instructions on how to set up required scripts)
+	
+	(instruction on how to do other stuff (?))
+	
+System Tests
+	
+	All tests need to be repeated for recent versions Firefox, Chrome and Internet Explorer
+	Successful user registrations will cause future registrations of that username or email address to fail. Appending a number works for testing purposes.
+	
+	Login Testing
+		log in as resident
+			enter resident1 as username
+			enter password as password
+			press log in button
+			verify you have entered the resident home page
+		log out
+			press logout text (top right)
+			verify you have entered the login page
+			click the browsers back button
+			verify you are still on the login page
 
-	register a resident
-		enter resident123 as username
-		enter password as password
-		enter password as confirm password
-		enter resident123@hotmail.com as email
-		select resident as role
-		click register
-		verify that you are on the login page
-		enter resident123 as username
-		enter password as password
-		click login button
-		verify you are on the resident home page
+		log in as engineer
+			enter engineer1 as username
+			enter password as password
+			press log in button
+			verify you have entered the engineer home page
+		log out
+			press logout text (top right)
+			verify you have entered the login page
+			click the browsers back button
+			verify you are still on the login page
 
-	register an engineer
-		enter engineer123 as username
-		enter password as password
-		enter password as confirm password
-		enter engineer123@hotmail.com as email
-		select engineer as role
-		click register
-		verify that you are on the login page
-		enter engineer123 as username
-		enter password as password
-		click login button
-		verify you are on the engineer home page
+		log in as manager
+			enter manager1 as username
+			enter password as password
+			press log in button
+			verify you have entered the manager home page
+		log out
+			press logout text (top right)
+			verify you have entered the login page
+			click the browsers back button
+			verify you are still on the login page
 
-	register a manager
-		enter manager123 as username
-		enter password as password
-		enter password as confirm password
-		enter manager123@hotmail.com as email
-		select manager as role
-		click register
-		verify that you are on the login page
-		enter manager123 as username
-		enter password as password
-		click login button
-		verify you are on the manager home page
+		log in as admin
+			enter admin1 as username
+			enter password as password
+			press log in button
+			verify you have entered the manager home page (there is no admin home page)
+		log out
+			press logout text (top right)
+			verify you have entered the login page
+			click the browsers back button
+			verify you are still on the login page
 
-	register an admin
-		enter admin123 as username
-		enter password as password
-		enter password as confirm password
-		enter admin123@hotmail.com as email
-		select admin as role
-		click register
-		verify that you are on the login page
-		enter admin123 as username
-		enter password as password
-		click login button
-		verify you are on the manager home page (there is no admin home page)
+		log in as developer
+			enter developer1 as username
+			enter password as password
+			press log in button
+			verify you have entered the manager home page (there is no developer home page)
+		log out
+			press logout text (top right)
+			verify you have entered the login page
+			click the browsers back button
+			verify you are still on the login page
 
-	register a developer
-		enter developer123 as username
-		enter password as password
-		enter password as confirm password
-		enter developer123@hotmail.com as email
-		select admin as role
-		click register
-		verify that you are on the login page
-		enter developer123 as username
-		enter password as password
-		click login button
-		verify you are on the manager home page (there is no developer home page)
-		
-Resident Testing
-	log in as resident1
-		enter resident1 as username
-		enter password as password
-		click login button
-		verify you are on the resident home page
+		log in with random data
+			enter asdfasdf as username
+			enter asdfasdf as password
+			press log in button
+			verify the "incorrect login information" alert
+			verify that you are still on the login page
+			enter manager1 as username
+			enter asdfasdf as password
+			press log in button
+			verify the "incorrect login information" alert
+			verify that you are still on the login page
+			enter asdfasdf as username
+			enter password as password
+			press log in button
+			verify the "incorrect login information" alert
+			verify that you are still on the login page
 
-	verify resident home page data
-		verify that your rank is not blank
-		verify that your rank is not zero
-		verify that your rank is a reasonable number
-		verify that the ranking table is not empty
-		verify that the ranking table holds reasonable numbers
-
-	verify achievements page data
-		click the Achievements menu text
-		verify that you are on the achievements page
-		verify that the achievements array is not empty
-		verify that reasonable icons are displaying for each achievement
-		verify that one icon is not greyed out (pending)
-		verify achievement data
-			hover over an achievement icon
-			verify that a tooltip appears
-			verify that the tooltip is not empty
-			verify that the tooltip contains valid text
-			verify that the tooltip text roughly relates to the icon
-
-	verify the schoreboard page
-		click the Scoreboard menu text
-		verify that you are on the scoreboard page
-		(scoreboard not fully implemented - no further tests)
-
-	verify the advice page
-		click the Advice menu text
-		verify that you are on the advice page
-		(advice not fully implemented - no further tests)
-
-Manager Testing
-	log in as manager1
-		enter manager1 as username
-		enter password as password
-		click login button
-		verify you are on the manager home page
-
-	verify the overview page
-		(pending)
-
-	verify the graphs page
-		click the Graphs menu text	
-		verify that you are on the graphs page
-		(pending)
-
-	verify the residents page
-		click the Residents menu text	
-		verify that you are on the resident page
-		verify that the residents table is not empty
-		verify that the residents table does not contain duplicate data
-		verify that the residents table contains reasonable data
-		verify creting a new resident
-			verify with empty data
-				click the Submit button
-				verify that the failed submission alert is displayed
-				
-			verify with incomplete data
-				enter tester as name
-				click the Submit button
-				verify that the failed submission alert is displayed
-				click the clear button
-				enter tester as username
-				click the Submit button
-				verify that the failed submission alert is displayed
-				click the clear button
-				enter 1212 as room 
-				click the Submit button
-				verify that the failed submission alert is displayed
-				click the clear button
-				enter NE as location
-				click the Submit button
-				verify that the failed submission alert is displayed
-				click the clear button
-				enter occupied as room status
-				click the Submit button
-				verify that the failed submission alert is displayed
-				click the clear button
-				
-			verify with invalid data
-				enter testing12345 as name
-				enter testing12345 as username
-				enter asdfasdf as room
-				enter NE as location
-				enter occupied as room status
-				click the Submit button
-				verify that the failed submission alert is displayed
-				click the clear button
-				
-			verify with proper data
-				enter testing12345 as name
-				enter testing12345 as username
-				enter 1212 as room
-				enter NE as location
-				enter occupied as room status
-				click the Submit button
-				verify that (after a small pause) the residents table contains the new resident
-				
-		verify editing a resident
-			choose a resident to edit
-			find the table entry relating to that resident
-			click the edit button
-			verify with empty data
-				delete all data fields
-				click the Submit button
-				verify that the failed submission alert is displayed
-				
-			verify with incomplete data
-				enter tester as name
-				click the Submit button
-				verify that the failed submission alert is displayed
-				delete all data fields
-				enter tester as username
-				click the Submit button
-				verify that the failed submission alert is displayed
-				delete all data fields
-				enter 1212 as room 
-				click the Submit button
-				verify that the failed submission alert is displayed
-				delete all data fields
-				enter NE as location
-				click the Submit button
-				verify that the failed submission alert is displayed
-				delete all data fields
-				enter occupied as room status
-				click the Submit button
-				verify that the failed submission alert is displayed
-				delete all data fields
-				
-			verify with invalid data
-				enter testing12345 as name
-				enter testing12345 as username
-				enter asdfasdf as room
-				enter NE as location
-				enter occupied as room status
-				click the Submit button
-				verify that the failed submission alert is displayed
-				click the clear button
-				
-			verify with proper data
-				click the edit button to restore data
-				add +1 to the end of the description
-				click the submit button
-				verify that (after a small delay) the residents table contains the new resident
-				verify that the residents table does not contain the older version
-				
-		verify deleting a resident
-			choose a resident to delete
-			find the row in the resident table relating to that resident
-			click the delete button
-			verify that (after a small delay) the resident table no longer contains data on that resident
-
-	verify the utility contracts page
-		click the Utility Contracts menu text	
-		verify that you are on the contracts page
-		verify that the contracts table is not empty
-		verify that the contracts table does not contain duplicate data
-		verify that the contracts table contains reasonable data
-		verify that the contracts table contains contracts of various types
-		
-		verify the add contract page
-			locate the Contacts Edit section
-			verify with empty data
-				delete all data fields
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				
-			verify with incomplete data
-				enter Electricity as Utility Type
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter 1.11 as Price
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter 1/1/2012 as Start Date
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter 1/2/2012 as End Date
-				click the Submit Edit button
-				verify that the failed to submit alert is displayed
-				
-			verify with improper data
-				enter WAFFLES as Utility Type
-				enter valid data for the other fields
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter WAFFLES as Price
-				enter valid data for the other fields
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter WAFFLES as Start Date
-				enter valid data for the other fields
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter WAFFLES as End Date
-				enter valid data for the other fields
-				click the Submit Edit button
-				verify that the failed to submit alert is displayed
-				
-			verify with proper data
-				enter Electricity as Utility Type
-				enter 1.11 as Price
-				enter 1/1/2012 as Start Date
-				enter 1/2/2012 as End Date
-				click the Submit button
-				verify that (after a short delay) the contracts table contains the changes to the contract
-				verify that the table no longer contains the old version
-
-		verify the edit contract page
-			choose a contract to edit
-			find the related row in the table
-			click the associated edit button
-			verify that the Contract Edit area has been updated with that contracts data
-			verify that the title mentions that contract
-			verify with empty data
-				delete all data fields
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				
-			verify with incomplete data
-				enter Electricity as Utility Type
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter 1.11 as Price
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter 1/1/2012 as Start Date
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter 1/2/2012 as End Date
-				click the Submit Edit button
-				verify that the failed to submit alert is displayed
-				
-			verify with improper data
-				enter WAFFLES as Utility Type
-				enter valid data for the other fields
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter WAFFLES as Price
-				enter valid data for the other fields
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter WAFFLES as Start Date
-				enter valid data for the other fields
-				click the Submit button
-				verify that the failed to submit alert is displayed
-				enter WAFFLES as End Date
-				enter valid data for the other fields
-				click the Submit Edit button
-				verify that the failed to submit alert is displayed
-				
-			verify with proper data
-				enter Electricity as Utility Type
-				enter 1.11 as Price
-				enter 1/1/2013 as Start Date
-				enter 1/2/2013 as End Date
-				click the Submit button
-				verify that (after a short delay) the contracts table contains the changes to the contract
-				verify that the table no longer contains the old version
-
-		verify the delete contract button
-			choose a contract to delete
-			find the row associated with that contract
-			click the delete button
-			verify that (after a small delay) the table no longer contains data on that contract
-
-	verify the register new user page
+	Registration testing
 		register with empty data
 			click register text
 			verify you have entered the registration page
@@ -489,7 +103,7 @@ Manager Testing
 			verify the "Please enter a password" alert
 			verify the "Please confirm your password" alert
 			verify the "Please enter your email" alert
-	
+
 		register with incomplete data
 			enter a username
 			click register
@@ -511,7 +125,7 @@ Manager Testing
 			verify that the registration process fails
 			verify that the "Please enter your email" alert no longer displays
 			verify the "Failed to register user. Invalid info: role," alert
-		
+			
 		register with improper data
 			enter a username
 			enter test as password
@@ -544,26 +158,20 @@ Manager Testing
 			select resident as role
 			click register
 			verify that the registration process fails
-			verify the "Failed to register user. Taken: email," alert	
+			verify the "Failed to register user. Taken: email," alert
 
 		register a resident
-			enter resident12345 as username
+			enter resident123 as username
 			enter password as password
 			enter password as confirm password
-			enter resident12345@hotmail.com as email
+			enter resident123@hotmail.com as email
 			select resident as role
 			click register
-			verify the success message displays (pending)
-			press the logout text
 			verify that you are on the login page
-			enter resident12345 as username
+			enter resident123 as username
 			enter password as password
 			click login button
-			verify you are on the resident home page	
-			click the logout text
-			enter manager1 as username
-			enter password as password
-			click login button
+			verify you are on the resident home page
 
 		register an engineer
 			enter engineer123 as username
@@ -572,17 +180,11 @@ Manager Testing
 			enter engineer123@hotmail.com as email
 			select engineer as role
 			click register
-			verify the success message displays (pending)
-			press the logout text
 			verify that you are on the login page
 			enter engineer123 as username
 			enter password as password
 			click login button
-			verify you are on the engineer home page	
-			click the logout text
-			enter manager1 as username
-			enter password as password
-			click login button
+			verify you are on the engineer home page
 
 		register a manager
 			enter manager123 as username
@@ -591,17 +193,11 @@ Manager Testing
 			enter manager123@hotmail.com as email
 			select manager as role
 			click register
-			verify the success message displays (pending)
-			press the logout text
 			verify that you are on the login page
 			enter manager123 as username
 			enter password as password
 			click login button
-			verify you are on the manager home page	
-			click the logout text
-			enter manager1 as username
-			enter password as password
-			click login button
+			verify you are on the manager home page
 
 		register an admin
 			enter admin123 as username
@@ -610,17 +206,11 @@ Manager Testing
 			enter admin123@hotmail.com as email
 			select admin as role
 			click register
-			verify the success message displays (pending)
-			press the logout text
 			verify that you are on the login page
 			enter admin123 as username
 			enter password as password
 			click login button
 			verify you are on the manager home page (there is no admin home page)
-			click the logout text
-			enter manager1 as username
-			enter password as password
-			click login button
 
 		register a developer
 			enter developer123 as username
@@ -629,205 +219,676 @@ Manager Testing
 			enter developer123@hotmail.com as email
 			select admin as role
 			click register
-			verify the success message displays (pending)
-			press the logout text
 			verify that you are on the login page
 			enter developer123 as username
 			enter password as password
 			click login button
-			verify you are on the manager home page (there is no developer home page)	
+			verify you are on the manager home page (there is no developer home page)
+			
+	Resident Testing
+		log in as resident1
+			enter resident1 as username
+			enter password as password
+			click login button
+			verify you are on the resident home page
 
-Engineer Testing
-	log in as engineer1
-		enter engineer1 as username
-		enter password as password
-		click login button
-		verify you are on the engineer home page
+		verify resident home page data
+			verify that your rank is not blank
+			verify that your rank is not zero
+			verify that your rank is a reasonable number
+			verify that the ranking table is not empty
+			verify that the ranking table holds reasonable numbers
+
+		verify achievements page data
+			click the Achievements menu text
+			verify that you are on the achievements page
+			verify that the achievements array is not empty
+			verify that reasonable icons are displaying for each achievement
+			verify that one icon is not greyed out (pending)
+			verify achievement data
+				hover over an achievement icon
+				verify that a tooltip appears
+				verify that the tooltip is not empty
+				verify that the tooltip contains valid text
+				verify that the tooltip text roughly relates to the icon
+
+		verify the schoreboard page
+			click the Scoreboard menu text
+			verify that you are on the scoreboard page
+			(scoreboard not fully implemented - no further tests)
+
+		verify the advice page
+			click the Advice menu text
+			verify that you are on the advice page
+			(advice not fully implemented - no further tests)
+
+	Manager Testing
+		log in as manager1
+			enter manager1 as username
+			enter password as password
+			click login button
+			verify you are on the manager home page
+
+		verify the overview page
+			(pending)
+
+		verify the graphs page
+			click the Graphs menu text	
+			verify that you are on the graphs page
+			(pending)
+
+		verify the residents page
+			click the Residents menu text	
+			verify that you are on the resident page
+			verify that the residents table is not empty
+			verify that the residents table does not contain duplicate data
+			verify that the residents table contains reasonable data
+			verify creting a new resident
+				verify with empty data
+					click the Submit button
+					verify that the failed submission alert is displayed
+					
+				verify with incomplete data
+					enter tester as name
+					click the Submit button
+					verify that the failed submission alert is displayed
+					click the clear button
+					enter tester as username
+					click the Submit button
+					verify that the failed submission alert is displayed
+					click the clear button
+					enter 1212 as room 
+					click the Submit button
+					verify that the failed submission alert is displayed
+					click the clear button
+					enter NE as location
+					click the Submit button
+					verify that the failed submission alert is displayed
+					click the clear button
+					enter occupied as room status
+					click the Submit button
+					verify that the failed submission alert is displayed
+					click the clear button
+					
+				verify with invalid data
+					enter testing12345 as name
+					enter testing12345 as username
+					enter asdfasdf as room
+					enter NE as location
+					enter occupied as room status
+					click the Submit button
+					verify that the failed submission alert is displayed
+					click the clear button
+					
+				verify with proper data
+					enter testing12345 as name
+					enter testing12345 as username
+					enter 1212 as room
+					enter NE as location
+					enter occupied as room status
+					click the Submit button
+					verify that (after a small pause) the residents table contains the new resident
+					
+			verify editing a resident
+				choose a resident to edit
+				find the table entry relating to that resident
+				click the edit button
+				verify with empty data
+					delete all data fields
+					click the Submit button
+					verify that the failed submission alert is displayed
+					
+				verify with incomplete data
+					enter tester as name
+					click the Submit button
+					verify that the failed submission alert is displayed
+					delete all data fields
+					enter tester as username
+					click the Submit button
+					verify that the failed submission alert is displayed
+					delete all data fields
+					enter 1212 as room 
+					click the Submit button
+					verify that the failed submission alert is displayed
+					delete all data fields
+					enter NE as location
+					click the Submit button
+					verify that the failed submission alert is displayed
+					delete all data fields
+					enter occupied as room status
+					click the Submit button
+					verify that the failed submission alert is displayed
+					delete all data fields
+					
+				verify with invalid data
+					enter testing12345 as name
+					enter testing12345 as username
+					enter asdfasdf as room
+					enter NE as location
+					enter occupied as room status
+					click the Submit button
+					verify that the failed submission alert is displayed
+					click the clear button
+					
+				verify with proper data
+					click the edit button to restore data
+					add +1 to the end of the description
+					click the submit button
+					verify that (after a small delay) the residents table contains the new resident
+					verify that the residents table does not contain the older version
+					
+			verify deleting a resident
+				choose a resident to delete
+				find the row in the resident table relating to that resident
+				click the delete button
+				verify that (after a small delay) the resident table no longer contains data on that resident
+
+		verify the utility contracts page
+			click the Utility Contracts menu text	
+			verify that you are on the contracts page
+			verify that the contracts table is not empty
+			verify that the contracts table does not contain duplicate data
+			verify that the contracts table contains reasonable data
+			verify that the contracts table contains contracts of various types
+			
+			verify the add contract page
+				locate the Contacts Edit section
+				verify with empty data
+					delete all data fields
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					
+				verify with incomplete data
+					enter Electricity as Utility Type
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter 1.11 as Price
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter 1/1/2012 as Start Date
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter 1/2/2012 as End Date
+					click the Submit Edit button
+					verify that the failed to submit alert is displayed
+					
+				verify with improper data
+					enter WAFFLES as Utility Type
+					enter valid data for the other fields
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter WAFFLES as Price
+					enter valid data for the other fields
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter WAFFLES as Start Date
+					enter valid data for the other fields
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter WAFFLES as End Date
+					enter valid data for the other fields
+					click the Submit Edit button
+					verify that the failed to submit alert is displayed
+					
+				verify with proper data
+					enter Electricity as Utility Type
+					enter 1.11 as Price
+					enter 1/1/2012 as Start Date
+					enter 1/2/2012 as End Date
+					click the Submit button
+					verify that (after a short delay) the contracts table contains the changes to the contract
+					verify that the table no longer contains the old version
+
+			verify the edit contract page
+				choose a contract to edit
+				find the related row in the table
+				click the associated edit button
+				verify that the Contract Edit area has been updated with that contracts data
+				verify that the title mentions that contract
+				verify with empty data
+					delete all data fields
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					
+				verify with incomplete data
+					enter Electricity as Utility Type
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter 1.11 as Price
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter 1/1/2012 as Start Date
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter 1/2/2012 as End Date
+					click the Submit Edit button
+					verify that the failed to submit alert is displayed
+					
+				verify with improper data
+					enter WAFFLES as Utility Type
+					enter valid data for the other fields
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter WAFFLES as Price
+					enter valid data for the other fields
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter WAFFLES as Start Date
+					enter valid data for the other fields
+					click the Submit button
+					verify that the failed to submit alert is displayed
+					enter WAFFLES as End Date
+					enter valid data for the other fields
+					click the Submit Edit button
+					verify that the failed to submit alert is displayed
+					
+				verify with proper data
+					enter Electricity as Utility Type
+					enter 1.11 as Price
+					enter 1/1/2013 as Start Date
+					enter 1/2/2013 as End Date
+					click the Submit button
+					verify that (after a short delay) the contracts table contains the changes to the contract
+					verify that the table no longer contains the old version
+
+			verify the delete contract button
+				choose a contract to delete
+				find the row associated with that contract
+				click the delete button
+				verify that (after a small delay) the table no longer contains data on that contract
+
+		verify the register new user page
+			register with empty data
+				click register text
+				verify you have entered the registration page
+				click register button
+				verify that the registration process fails
+				verify the "Please enter a username" alert
+				verify the "Please enter a password" alert
+				verify the "Please confirm your password" alert
+				verify the "Please enter your email" alert
 		
-	verify adding alerts
-		click the Configuration text
-		verify that you are on the configuration page
-		locate the Alerts Section
-		verify with empty data
-			click the Submit button
-			verify that the failed submit alert is displayed
+			register with incomplete data
+				enter a username
+				click register
+				verify that the registration process fails
+				verify that the "Please enter a username" alert no longer displays
+				verify that the other alerts still display
+				enter password as password
+				click register
+				verify that the registration process fails
+				verify that the "Please enter a password" alert no longer displays
+				verify that the other alerts still display
+				enter password as confirm password
+				click register
+				verify that the registration process fails
+				verify that the "Please confirm your password" alert no longer displays
+				verify that the other alerts still display
+				enter test@email.com as email
+				click register
+				verify that the registration process fails
+				verify that the "Please enter your email" alert no longer displays
+				verify the "Failed to register user. Invalid info: role," alert
 			
-		verify with bad data
-			enter testing as the alert name
-			click the Submit button
-			verify that the failed submit alert is displayed
-			click the Clear button
-			verify that all data fields have been cleared
-			enter waffles as the Body
-			click the Submit button
-			verify that the failed submit alert is displayed
-			click the clear button
-			enter waffles as the description
-			click the Submit button
-			verify that the failed submit alert is displayed
+			register with improper data
+				enter a username
+				enter test as password
+				enter test as confirm password
+				enter an email as email
+				select a role
+				click register
+				verify that the registration process fails
+				verify the "Failed to register user. Invalid info: password," alert
+				enter a password of 8 characters of longer as password
+				enter a password of 8 characters of longer as confirm password
+				enter testing as email
+				click register
+				verify that the registration process fails
+				verify the "please enter an email address" alert
 			
-		verify with proper data
-			enter acceptancetesting as the name
-			enter 4 + 5 as the body
-			enter acceptancetesting as the description
-			click the Submit button
-			verify (after a short pause) that the Alerts table displays the new equation
-	
-	verify editing alerts
-		click the Configuration text
-		verify that you are on the configuration page
-		locate the Alerts Section
-		find an alert to edit
-		click the edit button
-		verify that the Alerts Edit section has been updated with the correct data
-		verify with empty data
-			delete all data in the data fields
-			click the submit button
-			verify that the failed submit alert is displayed
+			register with duplicate data
+				enter resident1 as username
+				enter password as password
+				enter password as confirm password
+				enter waffles@hotmail.com as email
+				select resident as role
+				click register
+				verify that the registration process fails
+				verify the "Failed to register user. Taken: username," alert
+				enter resident123 as username
+				enter password as password
+				enter password as confirm password
+				enter sgdavis@ualberta.ca as email
+				select resident as role
+				click register
+				verify that the registration process fails
+				verify the "Failed to register user. Taken: email," alert	
+
+			register a resident
+				enter resident12345 as username
+				enter password as password
+				enter password as confirm password
+				enter resident12345@hotmail.com as email
+				select resident as role
+				click register
+				verify the success message displays (pending)
+				press the logout text
+				verify that you are on the login page
+				enter resident12345 as username
+				enter password as password
+				click login button
+				verify you are on the resident home page	
+				click the logout text
+				enter manager1 as username
+				enter password as password
+				click login button
+
+			register an engineer
+				enter engineer123 as username
+				enter password as password
+				enter password as confirm password
+				enter engineer123@hotmail.com as email
+				select engineer as role
+				click register
+				verify the success message displays (pending)
+				press the logout text
+				verify that you are on the login page
+				enter engineer123 as username
+				enter password as password
+				click login button
+				verify you are on the engineer home page	
+				click the logout text
+				enter manager1 as username
+				enter password as password
+				click login button
+
+			register a manager
+				enter manager123 as username
+				enter password as password
+				enter password as confirm password
+				enter manager123@hotmail.com as email
+				select manager as role
+				click register
+				verify the success message displays (pending)
+				press the logout text
+				verify that you are on the login page
+				enter manager123 as username
+				enter password as password
+				click login button
+				verify you are on the manager home page	
+				click the logout text
+				enter manager1 as username
+				enter password as password
+				click login button
+
+			register an admin
+				enter admin123 as username
+				enter password as password
+				enter password as confirm password
+				enter admin123@hotmail.com as email
+				select admin as role
+				click register
+				verify the success message displays (pending)
+				press the logout text
+				verify that you are on the login page
+				enter admin123 as username
+				enter password as password
+				click login button
+				verify you are on the manager home page (there is no admin home page)
+				click the logout text
+				enter manager1 as username
+				enter password as password
+				click login button
+
+			register a developer
+				enter developer123 as username
+				enter password as password
+				enter password as confirm password
+				enter developer123@hotmail.com as email
+				select admin as role
+				click register
+				verify the success message displays (pending)
+				press the logout text
+				verify that you are on the login page
+				enter developer123 as username
+				enter password as password
+				click login button
+				verify you are on the manager home page (there is no developer home page)	
+
+	Engineer Testing
+		log in as engineer1
+			enter engineer1 as username
+			enter password as password
+			click login button
+			verify you are on the engineer home page
 			
-		verify with bad data
-			enter testing as the alert name
-			click the Submit button
-			verify that the failed submit alert is displayed
-			delete all data in the name field
-			verify that all data fields have been cleared
-			enter waffles as the Body
-			click the Submit button
-			verify that the failed submit alert is displayed
-			delete all data in the body field
-			enter waffles as the description
-			click the Submit button
-			verify that the failed submit alert is displayed
-			
-		verify with proper data
-			enter acceptancetesting2 as the name
-			enter 4 + 5 as the body
-			enter acceptancetesting2 as the description
-			click the Submit button
-			verify (after a short pause) that the Alerts table displays the alert with the new data and doesn't contain the old version
-			
-		verify the cancel button
-			choose a formula to edit
+		verify adding alerts
+			click the Configuration text
+			verify that you are on the configuration page
+			locate the Alerts Section
+			verify with empty data
+				click the Submit button
+				verify that the failed submit alert is displayed
+				
+			verify with bad data
+				enter testing as the alert name
+				click the Submit button
+				verify that the failed submit alert is displayed
+				click the Clear button
+				verify that all data fields have been cleared
+				enter waffles as the Body
+				click the Submit button
+				verify that the failed submit alert is displayed
+				click the clear button
+				enter waffles as the description
+				click the Submit button
+				verify that the failed submit alert is displayed
+				
+			verify with proper data
+				enter acceptancetesting as the name
+				enter 4 + 5 as the body
+				enter acceptancetesting as the description
+				click the Submit button
+				verify (after a short pause) that the Alerts table displays the new equation
+		
+		verify editing alerts
+			click the Configuration text
+			verify that you are on the configuration page
+			locate the Alerts Section
+			find an alert to edit
 			click the edit button
-			verify that the Formula Edit section is updated with the proper data
-			verify that the title mentions the specific alert being edited
-			click the Cancel button
-			verify that all data fields are now blank
-			verify that the title no longer mentions the specific alert being edited
-	
-	verify deleting alerts
-		click the Configuration text
-		verify that you are on the configuration page
-		locate the Alerts Section
-		find an alert to delete
-		click the delete button
-		verify that (after a short pause) the Alerts table no longer contains the deleted alert
+			verify that the Alerts Edit section has been updated with the correct data
+			verify with empty data
+				delete all data in the data fields
+				click the submit button
+				verify that the failed submit alert is displayed
+				
+			verify with bad data
+				enter testing as the alert name
+				click the Submit button
+				verify that the failed submit alert is displayed
+				delete all data in the name field
+				verify that all data fields have been cleared
+				enter waffles as the Body
+				click the Submit button
+				verify that the failed submit alert is displayed
+				delete all data in the body field
+				enter waffles as the description
+				click the Submit button
+				verify that the failed submit alert is displayed
+				
+			verify with proper data
+				enter acceptancetesting2 as the name
+				enter 4 + 5 as the body
+				enter acceptancetesting2 as the description
+				click the Submit button
+				verify (after a short pause) that the Alerts table displays the alert with the new data and doesn't contain the old version
+				
+			verify the cancel button
+				choose a formula to edit
+				click the edit button
+				verify that the Formula Edit section is updated with the proper data
+				verify that the title mentions the specific alert being edited
+				click the Cancel button
+				verify that all data fields are now blank
+				verify that the title no longer mentions the specific alert being edited
 		
-	verify adding custom equations
-		click the Configuration text
-		verify that you are on the configuration page
-		locate the Formulas Section
-		verify with empty data
-			click the Submit button
-			verify that the failed submit alert is displayed
+		verify deleting alerts
+			click the Configuration text
+			verify that you are on the configuration page
+			locate the Alerts Section
+			find an alert to delete
+			click the delete button
+			verify that (after a short pause) the Alerts table no longer contains the deleted alert
 			
-		verify with bad data
-			enter testing as the function name
-			click the Submit button
-			verify that the failed submit alert is displayed
-			click the Clear button
-			verify that all data fields have been cleared
-			enter waffles as the Body
-			click the Submit button
-			verify that the failed submit alert is displayed
-			click the clear button
-			enter waffles as the description
-			click the Submit button
-			verify that the failed submit alert is displayed
-			
-		verify with proper data
-			enter acceptancetesting as the name
-			enter 4 + 5 as the body
-			enter acceptancetesting as the description
-			click the Submit button
-			verify (after a short pause) that the Function table displays the new equation
-	
-	verify editing custom equations
-		click the Configuration text
-		verify that you are on the configuration page
-		locate the Formulas Section
-		find a formula to edit
-		click the edit button
-		verify that the Formula Edit section has been updated with the correct data
-		verify with empty data
-			delete all data in the data fields
-			click the submit button
-			verify that the failed submit alert is displayed
-			
-		verify with bad data
-			enter testing as the function name
-			click the Submit button
-			verify that the failed submit alert is displayed
-			delete all data in the name field
-			verify that all data fields have been cleared
-			enter waffles as the Body
-			click the Submit button
-			verify that the failed submit alert is displayed
-			delete all data in the body field
-			enter waffles as the description
-			click the Submit button
-			verify that the failed submit alert is displayed
-			
-		verify with proper data
-			enter acceptancetesting2 as the name
-			enter 4 + 5 as the body
-			enter acceptancetesting2 as the description
-			click the Submit button
-			verify (after a short pause) that the Function table displays the equation with the new data and doesn't contain the old version
-			
-		verify the cancel button
-			choose a formula to edit
+		verify adding custom equations
+			click the Configuration text
+			verify that you are on the configuration page
+			locate the Formulas Section
+			verify with empty data
+				click the Submit button
+				verify that the failed submit alert is displayed
+				
+			verify with bad data
+				enter testing as the function name
+				click the Submit button
+				verify that the failed submit alert is displayed
+				click the Clear button
+				verify that all data fields have been cleared
+				enter waffles as the Body
+				click the Submit button
+				verify that the failed submit alert is displayed
+				click the clear button
+				enter waffles as the description
+				click the Submit button
+				verify that the failed submit alert is displayed
+				
+			verify with proper data
+				enter acceptancetesting as the name
+				enter 4 + 5 as the body
+				enter acceptancetesting as the description
+				click the Submit button
+				verify (after a short pause) that the Function table displays the new equation
+		
+		verify editing custom equations
+			click the Configuration text
+			verify that you are on the configuration page
+			locate the Formulas Section
+			find a formula to edit
 			click the edit button
-			verify that the Formula Edit section is updated with the proper data
-			verify that the title mentions the specific formula being edited
-			click the Cancel button
-			verify that all data fields are now blank
-			verify that the title no longer mentions the specific formula being edited
-	
-	verify deleting custom equations
-		click the Configuration text
-		verify that you are on the configuration page
-		locate the Formulas Section
-		find a formula to delete
-		click the delete button
-		verify that (after a short pause) the Formulas table no longer contains the deleted formula
-	
-	verify charts page
-		verify chart with invalid data
-			(pending)
+			verify that the Formula Edit section has been updated with the correct data
+			verify with empty data
+				delete all data in the data fields
+				click the submit button
+				verify that the failed submit alert is displayed
+				
+			verify with bad data
+				enter testing as the function name
+				click the Submit button
+				verify that the failed submit alert is displayed
+				delete all data in the name field
+				verify that all data fields have been cleared
+				enter waffles as the Body
+				click the Submit button
+				verify that the failed submit alert is displayed
+				delete all data in the body field
+				enter waffles as the description
+				click the Submit button
+				verify that the failed submit alert is displayed
+				
+			verify with proper data
+				enter acceptancetesting2 as the name
+				enter 4 + 5 as the body
+				enter acceptancetesting2 as the description
+				click the Submit button
+				verify (after a short pause) that the Function table displays the equation with the new data and doesn't contain the old version
+				
+			verify the cancel button
+				choose a formula to edit
+				click the edit button
+				verify that the Formula Edit section is updated with the proper data
+				verify that the title mentions the specific formula being edited
+				click the Cancel button
+				verify that all data fields are now blank
+				verify that the title no longer mentions the specific formula being edited
 		
-		verify one chart
-			(pending)
+		verify deleting custom equations
+			click the Configuration text
+			verify that you are on the configuration page
+			locate the Formulas Section
+			find a formula to delete
+			click the delete button
+			verify that (after a short pause) the Formulas table no longer contains the deleted formula
 		
-		verify multiple charts
-			(pending)
-		
-		verify hiding charts
-			(pending)
-		
-		verify refreshing charts
-			(pending)
-		
-		verify alerts
-			(pending)
-		
-		verify custom equations
-			(pending)
+		verify charts page
+			click the charts text
+			verify that you are on the charts page
+			verify that the "Pick some axes, timeframe and apartments to graph" alert is displayed
+			verify one line graph with one apartment
+				enter Time as the x axis
+				enter CO2 as the y axis
+				enter Daily as granularity
+				verify that the "No apartments selected. No start date. No end date." alert is displayed
+				enter March 1st 2012 as Start Date
+				verify that the No apartments selected. No end date." alert is displayed
+				enter March 5th as End Date
+				verify that the "No apartments selected." alert is displayed
+				select apartment1 in apartments
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a graph is generated
+				verify that the x axis is measured in days
+				verify that the x axis contains 5 nodes
+				verify that the legend contains only Apartment1
+				
+			verify data point hovering
+				hover over any node in the graph
+				verify that a tooltip is displayed over the node
+				verify that Apartment1 is mentioned
+				verify that the proper date is mentioned
+				verify that a value is mentioned
+				verify that the value mentioned lines up with the y axis point of the node
+				hover over any other node in the graph
+				verify that Apartment1 is still mentioned
+				verify that the date has changed and is still proper
+				verify that the value matches the y axis value of that node
+				
+			verify refreshing line graphs
+				enter March 10th 2012 as End Date
+				verify that the "Loading Data" alert is displayed
+				verify that (after a short delay) a new graph is generated
+				verify that the old graph is no longer displayed
+				verify that the x axis contains 10 nodes
 			
-		verify multiple y axis charts
+			verify multiple charts
+				click the Create Graph text (bottom of screen)
+				verify that an empty form has been created for a second graph
+				enter March 1st 2012 as the date
+				select all apartments
+				verify that the new graph matches the old graph
+				unselect all but one apartment
+				verify that the second graph updates properly to show only one line
+				verify that the original graph does not change
+			
+			verify hiding charts
+				click the Destroy text above the new graph (right side of screen)
+				verify that the new form and graph are no longer displayed
+				verify that the old form and graph still display
+				verify that the old form and graph have not changed
+			
+			verify alerts
+				(pending)
+			
+			verify custom equations
+				(pending)
+				
+			verify multiple y axis charts
+				(pending)
+		
+		verify calculations page
 			(pending)
-	
-	verify calculations page
-		(pending)
 
+Support Contact
 
+	For issues regarding system installation failure please contact Ahmed Ghoneim at aghoneim@ualberta.ca
+	For issues regarding database communication failure please contact Ahmed Ghoneim at aghoneim@ualberta.ca
+	For issues regarding web page failure please contact Eddie Santos at esantos@ualberta.ca
