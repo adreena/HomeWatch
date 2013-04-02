@@ -113,7 +113,7 @@ class EquationParser
                     $month = date("n", strtotime(str_replace(":", " ", $date) . ":00"));
                     $year = date("y", strtotime(str_replace(":", " ", $date) . ":00"));
                     $numDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                    $use[$date] = $value/1000 * $numDays * 24;
+                    $use[$date] = $value/3600/1000 * $numDays * 24;
                 }
                 break;
             case "Yearly":
@@ -121,14 +121,14 @@ class EquationParser
                     //accomodate leap years
                     $year = date("y", strtotime(str_replace(":", " ", $date) . ":00"));
                     $numDays = date("z", mktime(0,0,0,12,31,$year)) + 1;
-                    $use[$date] = $value/1000 * $numDays * 24;
+                    $use[$date] = $value/3600/1000 * $numDays * 24;
                 }
                 break;
         }
 
         if ($granularity !== "Monthly" && $granularity !== "Yearly") {
             foreach($use as $date=>$value) {
-                $use[$date] = $value/1000 * $numHours;
+                $use[$date] = $value/3600/1000 * $numHours;
             }
         }
 
