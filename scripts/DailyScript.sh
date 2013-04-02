@@ -10,7 +10,7 @@ DB1=TEST2
 
 
 #######################################################################
-tar -xvf DBDaily.tar
+tar -xvf DBScript.tar
 #######################################################################
 ########################################################################
 #Updates the Views for the  Air,Water,Heating,Heat_flux and  El_Energy
@@ -35,8 +35,6 @@ mysql -u $user -p$password $DB<Heatflux_views.sql
 # F) Updates the View for El Energy 
 mysql -u $user -p$password $DB<Energy_views.sql
 
-# G) Updates the Weather Forecast Pre-Historical Data
-mysql -u $user -p$password $DB<WV.sql
 #################################################################
 #Updates the Tables for The  Required for the Bas tables
 #################################################################
