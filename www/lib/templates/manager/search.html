@@ -123,8 +123,13 @@ var apartmentData = {{ apartments|raw }};
 
     {# Note: these are to be used with jdPicker jQuery plugin. #}
     <div class="graph-controls-hourly">
+      <p class="informative"> Will fetch a 24 hour period. </p>
+
       <label><span class="the-actual-gorram-label"> Day </span>
         <input class="simple-day-picker" name="start" type="hidden" />
+      </label>
+      <label><span class="the-actual-gorram-label"> Start hour </span>
+        <input value="0" name="hour" type="number" min="0" max="23" />
       </label>
     </div>
 
