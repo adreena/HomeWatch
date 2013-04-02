@@ -14,7 +14,7 @@ class Engineer2 {
         "Energy7" => "Heating Energy Consumption"
     );
     
-    public function EQ($Datefrom,$Dateto,$EQ,$column=null)
+    public function EQ($Datefrom,$Dateto,$EQ,$column=null,$tablename=null)
 	{
 	
 	 $conn=new Connection2();
@@ -72,7 +72,7 @@ class Engineer2 {
 	}
         if ($EQ==self::ENERGY_EQ)
 	{
-	$dbh=$conn->connect()->prepare("select ".$column."  from Energyh_Graph where ts between :SD and :ED") ;
+	$dbh=$conn->connect()->prepare("select ".$column."  from ".$tablename." where ts between :SD and :ED") ;
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
