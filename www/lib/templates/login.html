@@ -1,5 +1,4 @@
 {% set loginTitle = pageTitle|default('SmartHome Login') %}
-{% set loginAction = loginPage|default('/auth/login.php') %}
 <!DOCTYPE HTML>
 <html>
   <head>
@@ -38,7 +37,7 @@
     
     <nav class="extra-items">
       <ul class="inline-nav-list">
-        <li><a href="/auth/password_reset.php">Forgot password?</a></li>
+        <li><a href="/auth/forgot-password.php">Forgot password?</a></li>
       </ul>
     </nav>
   {% endblock loginForm %}

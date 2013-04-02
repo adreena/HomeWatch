@@ -194,4 +194,34 @@ class DefaultUserProvider extends UserProvider
         }
     }
     
+    public function resetUserPassword($email) {
+        $s = $this->connection->prepare("UPDATE Users SET Reset = 1 WHERE Email = :Email");
+        
+        $s->bindParam(':Email', $email);
+        
+        try {
+            $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to reset user password: " . $e->getMessage(), E_USER_WARNING);
+            return false;
+        }
+         
+        // Check if the change was made (the user existed)
+        if ($s->rowCount() != 1)
+            return false;
+        
+        return $this->sendResetEmail($email);
+    }
+    
+    private function sendResetEmail($email) {
+        $token = generateActivationToken();
+        
+        $to = $email;
+        $subject = 'SmartCondo Password Reset';
+        $message = "Use the following activation token to reset your password on next login:\n$token";
+        $headers = 'From: donotreply@smartcondo.com';
+        
+        return mail($email, $subject, $message, $headers);
+    }
+    
 }
