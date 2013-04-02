@@ -15,7 +15,7 @@ class DefaultUserProvider extends UserProvider
 {
 
     // TODO: this needs to be in a configuration file
-    const DOMAIN = "http://c401g01.cs.ualberta.ca";
+    const DOMAIN = 'http://cs401g01.cs.ualberta.ca';
 
     const PW_COST = 10; // CPU cost of password hashing algorithm (from 4 to 31)
     
@@ -219,7 +219,7 @@ class DefaultUserProvider extends UserProvider
     }
     
     public function sendResetToken($email) {
-        $username = fetchUsername($email);
+        $username = $this->fetchUsername($email);
         if ($username == null)
             return false;
         
@@ -240,13 +240,13 @@ class DefaultUserProvider extends UserProvider
         if ($result == false)
             return true;
 
-        return $this->sendResetEmail($email, $token);
+        return $this->sendResetEmail($username, $email, $token);
     }
     
     private function sendResetEmail($username, $email, $token) {
         $to = $email;
         $subject = 'SmartCondo Password Reset';
-        $message = "Navigate to " . DOMAIN . "/auth/reset-password?username=$username&token=$token (at the correct domain) to reset your password."
+        $message = "Navigate to " . self::DOMAIN . "/auth/reset-password?username=$username&token=$token (at the correct domain) to reset your password.";
         $headers = 'From: donotreply@smartcondo.com';
 
         return mail($email, $subject, $message, $headers);
