@@ -72,12 +72,15 @@ class Engineer2 {
 	}
         if ($EQ==self::ENERGY_EQ)
 	{
-	$dbh=$conn->connect()->prepare("select (SUM(".$column.")*1000000) as sum from Energy_Minute where ts between :SD and :ED") ;
+	$dbh=$conn->connect()->prepare("select ".$column."  from Energyh_Graph where ts between :SD and :ED") ;
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
-	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
-	return $row;
+	while ($row = $dbh->fetch(PDO::FETCH_ASSOC))
+				{
+				$result[]=(array)$row;
+				}
+	return $result;			
 	}
 }
 
