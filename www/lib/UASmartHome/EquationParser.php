@@ -63,6 +63,7 @@ class EquationParser
         $input = json_encode($functionArray);
         */
 
+        /* wtffffffffffffffffffff. */
         $input = json_decode($input, true);
         $finalCosts = array();
 
@@ -76,8 +77,8 @@ class EquationParser
             $utilityUse = EquationParser::getTotalWater($input["apartment"], $input["startdate"], $input["enddate"], $input["granularity"]);
         }
         else {
-            echo "utility type not found\n";
-            return null;
+            $type = $input['type'];
+            throw new \DomainException("Utility type '$type' not found.");
         }
 
         foreach($utilityUse as $date=>$use) {

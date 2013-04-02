@@ -30,11 +30,11 @@ $messages = array();
 //If we are getting data from the front end, this flag will tell us to use that input instead of test data
 if (ISSET($_GET['notest'])) {
 	$test = false;
-} 
+}
 
 //We need to grab all of this data from the request header to correctly handle it
 if (ISSET($_GET['graph'])) {
-    /* ALL of the information is just passed as a JSON object -- convert it 
+    /* ALL of the information is just passed as a JSON object -- convert it
      * into an associative array. */
 	$graph = json_decode($_GET['graph'], true);
 } else {
@@ -85,7 +85,7 @@ if ($test) {
 
 	if ($apartments == null) {
 		$error .= "No apartments selected. ";
-	}	
+	}
 	if ($startdate == null) {
 		$error .= "No start date. ";
 	}
@@ -105,7 +105,7 @@ if ($test) {
 	if ($ytype == null) {
 		$error .= "Y-axis type not specified. ";
 	}
-	
+
 	if ($x == null) {
 		$error .= "No x-axis dataset selected. ";
 	}
@@ -117,7 +117,7 @@ if ($test) {
 	/*
 	 *  Is it necessary to throw an error if the axis labels are not present?
          *
-         
+
 	if ($xaxis == null) {
 		$error .= "No y-axis dataset selected. ";
 	}
@@ -129,7 +129,7 @@ if ($test) {
 
 	//Check to make sure the query is over a reasonable data set
 	if ($startdate != null && $enddate != null) {
-		$error .= calculateRejection($startdate, $enddate, $period);	
+		$error .= calculateRejection($startdate, $enddate, $period);
 	}
 
 	//If any errors have occurred at this point there's no way we can process the query, so we spit out the query data, any error messages, and die
@@ -144,7 +144,7 @@ if ($test) {
 
 	$phaseMapping = array("Mains (Phase A)" => "A", "Bedroom and hot water tank (Phase A)" => "A", "Oven (Phase A) and range hood" => "A", "Microwave and ERV controller" => "A", "Electrical duct heating" => "A", "Kitchen plugs (Phase A) and bathroom lighting" => "A", "Energy recovery ventilation" => "A", "Mains (Phase B)" => "B", "Kitchen plugs (Phase B) and kitchen counter" => "B", "Oven (Phase B)" => "B", "Bathroom" => "B", "Living room and balcony" => "B",  "Hot water tank (Phase B)" => "B", "Refrigerator" => "B");
 
-	
+
 	$bigArray["xaxis"] = $xaxis;
 	$bigArray["yaxis"] = is_array($yaxis) ? end($yaxis) : $yaxis;
 
@@ -208,7 +208,13 @@ if ($test) {
                 $ydata = $ydata["Value"];
                 $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment);
 
-                $ydata = Alerts::getAlerts($function);
+                try {
+                    $ydata = Alerts::getAlerts($function);
+                } catch (\DomainException $e) {
+                    $ydata = array();
+                    $messages[] = $e->getMessage();
+                }
+
                 foreach($ydata as $date=>$value) {
                     $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
                     $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
@@ -217,10 +223,10 @@ if ($test) {
 		} else if ($ytype == "energy") {
             $dateFormat = 'Y-m-d';
             if ($period == "Hourly") $dateFormat .= ' G';
-		    
+
             $d1 = date_create_from_Format($dateFormat, $startdate);
             $d2 = date_create_from_Format($dateFormat, $enddate);
-            
+
             $ydata = Engineer2::getEnergyColumnData($d1, $d2,$yaxis);
             foreach ($ydata as $date=>$value) {
                 $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
@@ -236,8 +242,8 @@ if ($test) {
             }
         }
 
-		
-	
+
+
 		if ($xtype == "sensorarray") {
 			$x = end($x);
 			if (ISSET($phaseMapping[$x])) {
@@ -258,7 +264,7 @@ if ($test) {
 					$bigArray['values'][$apartment][$date][$sensor] = $sensordata;
 				}
 			}
-			
+
 		} else if ($xtype == "formula") {
 			$function = parseFormulaToJson($xdata, $startdate, $enddate, $period, $apartment, $phase);
 			$xdata = EquationParser::getData($function);
@@ -297,10 +303,10 @@ if ($test) {
 /*
  * This function determines what alerts should be shown alongside the graph.
  * Alerts could be things like high CO2, energy usage, or other.
- * Theoretically there is a plan for these to be specified by the user 
+ * Theoretically there is a plan for these to be specified by the user
  * but for now they are hard-coded in.
  * As input, this method takes the x and y data being graphed,
- * the name of these data sets, the current apartment, and the error-logging 
+ * the name of these data sets, the current apartment, and the error-logging
  * variable "message".
  * The variable "message" passed as an argument is returned by this method,
  * with any additional alerts identified by the system appended to it.
@@ -320,7 +326,7 @@ function checkAlerts ($startdate, $enddate, $x, $yarray, $apartment) {
 	foreach ($yarray as $y) {
 		if ($y == "CO2") {
 			$alertJson = parseAlertToJson($listOfAlerts[$y], $startdate, $enddate, $apartment);
-	
+
 			//echo var_dump($alertJson);
 
 			$alerts = Alerts::getAlerts($alertJson);
@@ -354,7 +360,7 @@ function parseFormulaToJson ($data, $startdate, $enddate, $period, $apartment, $
 	$functionArray["granularity"] = $period;
 	$functionArray["function"] = $data;
     $functionArray["type"] = $type;
-	
+
 	return json_encode($functionArray);
 }
 
@@ -391,8 +397,7 @@ $WEEKLY_VIEW_MAX = 104;
 $MONTHLY_VIEW_MAX = 120;
 
 
-	//echo var_dump($startdate);	
-	
+
 	$error = null;
 	if ($period == "Hourly") {
 		$startdate = date_create_from_Format('Y-m-d G', $startdate);
@@ -427,7 +432,7 @@ $MONTHLY_VIEW_MAX = 120;
 		if ($months > $MONTHLY_VIEW_MAX) {
 			$error = "Time period of $months months is too large for monthly view.";
 		}
-	} 
+	}
 
 	return $error;
 
@@ -436,4 +441,3 @@ $MONTHLY_VIEW_MAX = 120;
 
 
 
-?>

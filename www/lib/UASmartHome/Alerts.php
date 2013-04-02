@@ -35,9 +35,11 @@ class Alerts
                 }
                 break;
             default:
-                echo "comparison operator not found\n";
-                return false;
+                throw new \InvalidArgumentException("Comparison operator not found");
         }
+
+        /* The above may have matched, but the comparison failed. */
+        return false;
 
     }
 
@@ -73,8 +75,7 @@ class Alerts
         $db_compare_vals = array();
 
         if($numleftpieces === 1 && $numrightpieces === 1) {
-            echo "no database variables in the alert\n";
-            return null;
+            throw new \DomainException("no database variables in the alert");
         }
         else if ($numleftpieces > 3 || $numrightpieces > 3) {
             // more than 1 variable on one side on the comparison, db
@@ -153,9 +154,8 @@ class Alerts
          * 2 => operator
          * 3 => stuff after the operator
          */
-        if(!preg_match("/(.*)(<|>|!=|==)(.*)/", $formula, $pieces)) {
-            echo "no comparison operator found in $formula\n";
-            return null;
+        if (!preg_match("/(.*)(<|>|!=|==)(.*)/", $formula, $pieces)) {
+            throw new \DomainException("no comparison operator found in $formula");
         }
 
         $pieces[1] = trim($pieces[1]);
@@ -194,7 +194,7 @@ class Alerts
 
 
                 if($leftcompare["left"] != $rightcompare["left"]) {
-                    echo "different variables are not supported right now\n";
+                    throw new \DomainException("Different variables are not supported right now");
                     return null;
                 }
 
@@ -205,8 +205,9 @@ class Alerts
                 $sign2 = $rightcompare["operator"];
 
                 // check if the view already exists under the name username_variable
-                if(!Engineer::db_check_Alert($comparison_md5)) {
-                    if(!Engineer::db_create_Alert($column, $value1, $sign1, 2, $comparison_md5, $value2, $sign2, $bool_pieces[2])) {
+                if (!Engineer::db_check_Alert($comparison_md5)) {
+                    if (!Engineer::db_create_Alert($column, $value1, $sign1, 2, $comparison_md5, $value2, $sign2, $bool_pieces[2])) {
+                        /* THERE SHOULD NOT BE AN ECHO HERE! */
                         echo "could not create alert\n";
                         return null;
                     }
@@ -217,13 +218,13 @@ class Alerts
                            $input["startdate"], $input["enddate"], $comparison_md5 .  "_Alert");
 
                 return $data;
-            }
-            else {
-                echo "syntax error in the alert\n";
+
+            } else {
+                throw new \DomainException("Syntax error in the alert");
                 return null;
             }
-        }
-        else {
+
+        } else {
             $finalAlerts = array();
 
             $pieces = Alerts::getPieces($comparison);
@@ -265,7 +266,7 @@ class Alerts
             $right = EquationParser::getData($input);
 
             if(!is_array($left) && !is_array($right)) { //neither has a variable
-                echo "there are no database variables in the alert\n";
+                throw new \DomainException("there are no database variables in the alert");
                 return null;
             }
 
