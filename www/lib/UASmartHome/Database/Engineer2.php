@@ -3,17 +3,17 @@
 class Engineer2 {
 
     const ENERGY_EQ = 6;
-    
+
     public static $EnergyColumns = array(
-        "Energy1" => "Solar Day",
-        "Energy2" => "DWHR",
-        "Energy3" => "Geothermal + DWHR",
-        "Energy4" => "Solar + DWHR + Geothermal + Heat Pumps",
-        "Energy5" => "Boiler 1",
-        "Energy6" => "Boiler 2",
-        "Energy7" => "Heating Energy Consumption"
-    );
-    
+            "Energy1" => "Solar Day",
+            "Energy2" => "DWHR",
+            "Energy3" => "Geothermal + DWHR",
+            "Energy4" => "Solar + DWHR + Geothermal + Heat Pumps",
+            "Energy5" => "Boiler 1",
+            "Energy6" => "Boiler 2",
+            "Energy7" => "Heating Energy Consumption"
+            );
+
     public function EQ($Datefrom,$Dateto,$EQ,$column=null,$tablename=null)
 	{
 	
@@ -81,10 +81,12 @@ class Engineer2 {
 	}
 }
 
+
     public static function getEnergyColumnData($datefrom, $dateto,$column,$granularity=null) {
         /* Assume that all dates are in a "canonical" format -- that is, 
-        * prevent the server's default timezone from affecting the date. */
+         * prevent the server's default timezone from affecting the date. */
         date_default_timezone_set('UTC');
+
         
         $intervalString = null;
         switch ($granularity) {
@@ -127,9 +129,10 @@ class Engineer2 {
             
         }
 
+
         return $data;
     }
-    
+
     public static function getEnergyColumns() {
         return self::$EnergyColumns;
     }
@@ -137,28 +140,28 @@ class Engineer2 {
 }
 
 /*
-$testDB = new Engineer2();
-print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',5));
-echo "<br>";
-echo "===========================";
-echo "<br>";
- print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',4));
-echo "<br>";
-echo "===========================";
-echo "<br>";
-  print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',3));
-  echo "<br>";
-echo "===========================";
-echo "<br>";
- print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',2));
-  echo "<br>";
-echo "===========================";
-echo "<br>";
-echo "<br>";
- print_r($testDB->EQ('2013-03-15 ','2013-03-21 23:59',1,"Energy1"));
-  echo "<br>";
-echo "===========================";
-echo "<br>";
-*/
+   $testDB = new Engineer2();
+   print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',5));
+   echo "<br>";
+   echo "===========================";
+   echo "<br>";
+   print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',4));
+   echo "<br>";
+   echo "===========================";
+   echo "<br>";
+   print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',3));
+   echo "<br>";
+   echo "===========================";
+   echo "<br>";
+   print_r($testDB->EQ('2013-03-15 00:00','2013-03-21 23:59',2));
+   echo "<br>";
+   echo "===========================";
+   echo "<br>";
+   echo "<br>";
+   print_r($testDB->EQ('2013-03-15 ','2013-03-21 23:59',1,"Energy1"));
+   echo "<br>";
+   echo "===========================";
+   echo "<br>";
+ */
 
 ?>

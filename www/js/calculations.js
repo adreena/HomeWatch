@@ -88,9 +88,7 @@ require([
         var datePickers = $('#startdate, #enddate');
 
         /* jdPicker gives hidden type inputs a full calendar display. */
-        //datePickers.attr('type', 'hidden');
-        /* On second thought, that doesn't look as snazzy as I had originally
-         * anticipated... */
+        datePickers.attr('type', 'hidden');
 
         /* Bind the date selectors with jdPicker. */
         datePickers.jdPicker({

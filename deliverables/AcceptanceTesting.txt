@@ -20,6 +20,11 @@ System Tests
 	All tests need to be repeated for recent versions Firefox, Chrome and Internet Explorer
 	Successful user registrations will cause future registrations of that username or email address to fail. Appending a number works for testing purposes.
 	
+	Testing usernames and passwords
+		engineer1 password
+		manager1 password
+		resident1 password
+	
 	Login Testing
 		log in as resident
 			enter resident1 as username
@@ -92,138 +97,9 @@ System Tests
 			press log in button
 			verify the "incorrect login information" alert
 			verify that you are still on the login page
-
-	Registration testing
-		register with empty data
-			click register text
-			verify you have entered the registration page
-			click register button
-			verify that the registration process fails
-			verify the "Please enter a username" alert
-			verify the "Please enter a password" alert
-			verify the "Please confirm your password" alert
-			verify the "Please enter your email" alert
-
-		register with incomplete data
-			enter a username
-			click register
-			verify that the registration process fails
-			verify that the "Please enter a username" alert no longer displays
-			verify that the other alerts still display
-			enter password as password
-			click register
-			verify that the registration process fails
-			verify that the "Please enter a password" alert no longer displays
-			verify that the other alerts still display
-			enter password as confirm password
-			click register
-			verify that the registration process fails
-			verify that the "Please confirm your password" alert no longer displays
-			verify that the other alerts still display
-			enter test@email.com as email
-			click register
-			verify that the registration process fails
-			verify that the "Please enter your email" alert no longer displays
-			verify the "Failed to register user. Invalid info: role," alert
 			
-		register with improper data
-			enter a username
-			enter test as password
-			enter test as confirm password
-			enter an email as email
-			select a role
-			click register
-			verify that the registration process fails
-			verify the "Failed to register user. Invalid info: password," alert
-			enter a password of 8 characters of longer as password
-			enter a password of 8 characters of longer as confirm password
-			enter testing as email
-			click register
-			verify that the registration process fails
-			verify the "please enter an email address" alert
-		
-		register with duplicate data
-			enter resident1 as username
-			enter password as password
-			enter password as confirm password
-			enter waffles@hotmail.com as email
-			select resident as role
-			click register
-			verify that the registration process fails
-			verify the "Failed to register user. Taken: username," alert
-			enter resident123 as username
-			enter password as password
-			enter password as confirm password
-			enter sgdavis@ualberta.ca as email
-			select resident as role
-			click register
-			verify that the registration process fails
-			verify the "Failed to register user. Taken: email," alert
-
-		register a resident
-			enter resident123 as username
-			enter password as password
-			enter password as confirm password
-			enter resident123@hotmail.com as email
-			select resident as role
-			click register
-			verify that you are on the login page
-			enter resident123 as username
-			enter password as password
-			click login button
-			verify you are on the resident home page
-
-		register an engineer
-			enter engineer123 as username
-			enter password as password
-			enter password as confirm password
-			enter engineer123@hotmail.com as email
-			select engineer as role
-			click register
-			verify that you are on the login page
-			enter engineer123 as username
-			enter password as password
-			click login button
-			verify you are on the engineer home page
-
-		register a manager
-			enter manager123 as username
-			enter password as password
-			enter password as confirm password
-			enter manager123@hotmail.com as email
-			select manager as role
-			click register
-			verify that you are on the login page
-			enter manager123 as username
-			enter password as password
-			click login button
-			verify you are on the manager home page
-
-		register an admin
-			enter admin123 as username
-			enter password as password
-			enter password as confirm password
-			enter admin123@hotmail.com as email
-			select admin as role
-			click register
-			verify that you are on the login page
-			enter admin123 as username
-			enter password as password
-			click login button
-			verify you are on the manager home page (there is no admin home page)
-
-		register a developer
-			enter developer123 as username
-			enter password as password
-			enter password as confirm password
-			enter developer123@hotmail.com as email
-			select admin as role
-			click register
-			verify that you are on the login page
-			enter developer123 as username
-			enter password as password
-			click login button
-			verify you are on the manager home page (there is no developer home page)
+	Forgot Password Testing
+		(pending)
 			
 	Resident Testing
 		log in as resident1
@@ -269,13 +145,120 @@ System Tests
 			click login button
 			verify you are on the manager home page
 
-		verify the overview page
-			(pending)
-
-		verify the graphs page
-			click the Graphs menu text	
-			verify that you are on the graphs page
-			(pending)
+		verify charts page
+			click the charts text
+			verify that you are on the charts page
+			verify that the "Pick some axes, timeframe and apartments to graph" alert is displayed
+			verify one line graph
+				enter Time as the x axis
+				enter CO2 as the y axis
+				enter Daily as granularity
+				verify that the "No apartments selected. No start date. No end date." alert is displayed
+				enter March 1st 2012 as Start Date
+				verify that the No apartments selected. No end date." alert is displayed
+				enter March 5th as End Date
+				verify that the "No apartments selected." alert is displayed
+				select apartment1 in apartments
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a graph is generated
+				verify that the x axis is measured in days
+				verify that the x axis contains 5 nodes
+				verify that the legend contains only Apartment1
+				
+			verify data point hovering
+				hover over any node in the graph
+				verify that a tooltip is displayed over the node
+				verify that Apartment1 is mentioned
+				verify that the proper date is mentioned
+				verify that a value is mentioned
+				verify that the value mentioned lines up with the y axis point of the node
+				hover over any other node in the graph
+				verify that Apartment1 is still mentioned
+				verify that the date has changed and is still proper
+				verify that the value matches the y axis value of that node
+				
+			verify refreshing line graphs
+				enter March 10th 2012 as End Date
+				verify that the "Loading Data" alert is displayed
+				verify that (after a short delay) a new graph is generated
+				verify that the old graph is no longer displayed
+				verify that the x axis contains 10 nodes
+				select apartment8 as well as apartment1 in apartments
+				verify that (after a short delay) a new graph is generated
+				verify that the old graph is no longer displayed
+				verify that there are now two lines being displayed on the graph
+				verify that the legend shows both aparments
+				verify that the data points associated with apartment1 have not changed
+				verify hovering works for the line associated with apartment8
+				
+			verify bar graphs
+				select Bar Graph as Graph Type
+				verify that the line graph is destroyed
+				verify that there is a bar graph generated
+				verify that the x axis has not changed
+				verify that the legend has not changed
+				verify that there are still only two data sets being graphed
+				verify that the data points for each apartment have not changed
+				
+			verify drilling down
+				select Line Graph as Graph Type
+				choose any data point in the graph
+				make note of the relative distance between the data for apartment1 and apartment8 on that day
+				click the data point
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a new graph is generated
+				verify that the x axis is not divided into hours
+				verify that the x axis is labeled with the correct day
+				verify that the data points are distributed in such a way that their averages match the noted distances
+			
+			verify multiple charts
+				click the Create Graph text (bottom of screen)
+				verify that an empty form has been created for a second graph
+				enter Time as the x axis
+				enter CO2 as the y axis
+				enter Daily as granularity
+				enter March 1st 2012 as Start Date
+				enter March 10th 2012 as End Date
+				select apartment1 and apartment8 from apartments
+				verify that the new graph matches the old graph
+				unselect apartment8
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a new graph is generated
+				verify that the second graph updates properly to show only one line
+				verify that the original graph does not change
+				verify that the data points associated with apartment1 in the new graph match those in the old graph (via hovering)
+			
+			verify hiding charts
+				click the Destroy text above the new graph (right side of screen just above the graph)
+				verify that the new form and graph are no longer displayed
+				verify that the old form and graph still display
+				verify that the old form and graph have not changed
+			
+			verify alerts
+				(pending)
+			
+			verify custom equations
+				click the Create Graph text (bottom of screen)
+				select Time as the x axis
+				select Total_Water as the y axis
+				select Daily as granularity
+				enter March 1st 2012 as Start Date
+				enter March 10th 2012 as End Date
+				select apartment1 from apartments
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a new graph is generated
+				make note of some of the values for the data points displayed
+				select Hot_Water as the y axis
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a new graph is generated
+				make note of some of the values for the data points displayed
+				select ColdWater as the y axis (under Formulae)
+				verify that the "loading data" alert is displayed
+				verify that (after a longish delay) a new graph is generated
+				verify that the data points displayed correspond to the values shown under Total_Water minus those under Hot_Water
+				
+			verify multiple y axis charts
+				(pending)
 
 		verify the residents page
 			click the Residents menu text	
@@ -824,7 +807,7 @@ System Tests
 			click the charts text
 			verify that you are on the charts page
 			verify that the "Pick some axes, timeframe and apartments to graph" alert is displayed
-			verify one line graph with one apartment
+			verify one line graph
 				enter Time as the x axis
 				enter CO2 as the y axis
 				enter Daily as granularity
@@ -858,19 +841,53 @@ System Tests
 				verify that (after a short delay) a new graph is generated
 				verify that the old graph is no longer displayed
 				verify that the x axis contains 10 nodes
+				select apartment8 as well as apartment1 in apartments
+				verify that (after a short delay) a new graph is generated
+				verify that the old graph is no longer displayed
+				verify that there are now two lines being displayed on the graph
+				verify that the legend shows both aparments
+				verify that the data points associated with apartment1 have not changed
+				verify hovering works for the line associated with apartment8
+				
+			verify bar graphs
+				select Bar Graph as Graph Type
+				verify that the line graph is destroyed
+				verify that there is a bar graph generated
+				verify that the x axis has not changed
+				verify that the legend has not changed
+				verify that there are still only two data sets being graphed
+				verify that the data points for each apartment have not changed
+				
+			verify drilling down
+				select Line Graph as Graph Type
+				choose any data point in the graph
+				make note of the relative distance between the data for apartment1 and apartment8 on that day
+				click the data point
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a new graph is generated
+				verify that the x axis is not divided into hours
+				verify that the x axis is labeled with the correct day
+				verify that the data points are distributed in such a way that their averages match the noted distances
 			
 			verify multiple charts
 				click the Create Graph text (bottom of screen)
 				verify that an empty form has been created for a second graph
-				enter March 1st 2012 as the date
-				select all apartments
+				enter Time as the x axis
+				enter CO2 as the y axis
+				enter Daily as granularity
+				enter March 1st 2012 as Start Date
+				enter March 10th 2012 as End Date
+				select apartment1 and apartment8 from apartments
 				verify that the new graph matches the old graph
-				unselect all but one apartment
+				unselect apartment8
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a new graph is generated
 				verify that the second graph updates properly to show only one line
 				verify that the original graph does not change
+				verify that the data points associated with apartment1 in the new graph match those in the old graph (via hovering)
 			
 			verify hiding charts
-				click the Destroy text above the new graph (right side of screen)
+				click the Destroy text above the new graph (right side of screen just above the graph)
 				verify that the new form and graph are no longer displayed
 				verify that the old form and graph still display
 				verify that the old form and graph have not changed
@@ -879,7 +896,24 @@ System Tests
 				(pending)
 			
 			verify custom equations
-				(pending)
+				click the Create Graph text (bottom of screen)
+				select Time as the x axis
+				select Total_Water as the y axis
+				select Daily as granularity
+				enter March 1st 2012 as Start Date
+				enter March 10th 2012 as End Date
+				select apartment1 from apartments
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a new graph is generated
+				make note of some of the values for the data points displayed
+				select Hot_Water as the y axis
+				verify that the "loading data" alert is displayed
+				verify that (after a short delay) a new graph is generated
+				make note of some of the values for the data points displayed
+				select ColdWater as the y axis (under Formulae)
+				verify that the "loading data" alert is displayed
+				verify that (after a longish delay) a new graph is generated
+				verify that the data points displayed correspond to the values shown under Total_Water minus those under Hot_Water
 				
 			verify multiple y axis charts
 				(pending)

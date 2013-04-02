@@ -68,6 +68,8 @@ define({
         },
 
         "Sensors": {
+            /* This doesn't really work so disable it! */
+            /*
             "all_electricity": {
                 "multiple": [
                     "Mains (Phase A)",
@@ -87,6 +89,7 @@ define({
                 "applicableAxes": "y",
                 "displayName": "All electricity"
             }
+            */
         },
 
         "Utilities": {
