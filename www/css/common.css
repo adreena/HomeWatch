@@ -52,3 +52,12 @@ h3 {
 .spiffy-header:hover {
     color: #444;
 }
+
+div.error {
+  color: red;
+  font-size: 90%;
+  font-weight: normal;
+  font-style: italic;
+  display: inline-block;
+  margin-left: 20px;
+}

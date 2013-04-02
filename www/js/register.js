@@ -25,7 +25,7 @@ var roleForm;
 
 var roleData;
 
-$(window).load(function() {
+$(document).ready(function() {
     initForms();
 });
 
@@ -40,7 +40,7 @@ function initForms() {
     // Install the register button
     $(REGISTER_BUTTON_ID).click(function() {
         if (!$(registerForm).valid()) return false;
-        $(registerForm).validate().settings.submithandler();
+        $(registerForm).validate().settings.submitHandler();
         return false;
     });
 }
@@ -60,7 +60,7 @@ function initRegisterForm() {
     registerForm.reset();
     
     $(registerForm).validate({
-        submithandler: registerUser,
+        submitHandler: registerUser,
         rules: {
 	        username: {
 		        required: true,
@@ -84,31 +84,13 @@ function initRegisterForm() {
 	        }
 	    },
 	    messages: {
-		    username: {
-			    required: "Please enter a username",
-			    minlength: "Your username must be at least " + USERNAME_LENGTH_MIN + " characters long",
-			    maxlength: "Your username can be at most " + USERNAME_LENGTH_MAX + " characters long"
-		    },
-		    password: {
-			    required: "Please provide a password",
-			    minlength: "Your password must be at least " + PASSWORD_LENGTH_MIN + " characters long"
-		    },
-		    confpassword: {
-			    required: "Please provide a password",
-			    equalTo: "Passwords do not match"
-		    },
-		    email: "Please enter a valid email address",
-		    role : {
-		        valueNotEquals: "Please select a role"
-		    }
+		    role: "Please select a role"
 	    },
-	    showErrors: function(errorMap, errorList) {
-	        if (errorList.length)
-		        alert(errorList[0].message);
-	    },
-	    onkeyup: false,
-	    onfocusout: false,
-	    onclick: false
+	    errorElement: "div",
+        errorPlacement: function(error, element) {
+            $(element).prev().before(error);
+        },
+	    onkeyup: false
     });
     
     initRoles();
@@ -117,7 +99,7 @@ function initRegisterForm() {
 function registerUser() {
     if (roleForm) {
         if (!$(roleForm).valid()) return false;
-        roleData = $(roleForm).validate().settings.submithandler();
+        roleData = $(roleForm).validate().settings.submitHandler();
     }
     
     var registrationData = {
@@ -197,7 +179,7 @@ function initResidentForm() {
     residentForm.reset();
 
     $(residentForm).validate({
-        submithandler: registerResident,
+        submitHandler: registerResident,
         rules: {
 	        name: {
 		        required: true
@@ -207,22 +189,11 @@ function initResidentForm() {
 		        number: true
 	        },
 	    },
-	    messages: {
-		    name: {
-			    required: "Please provide a name",
-		    },
-		    roomnumber: {
-			    required: "Please provide a room number",
-			    roomnumber: "Room number must be numeric"
-		    }
-	    },
-	    showErrors: function(errorMap, errorList) {
-	        if (errorList.length)
-		        alert(errorList[0].message);
-	    },
-	    onkeyup: false,
-	    onfocusout: false,
-	    onclick: false
+	    errorElement: "div",
+        errorPlacement: function(error, element) {
+            $(element).prev().before(error);
+        },
+	    onkeyup: false
     });
 }
 

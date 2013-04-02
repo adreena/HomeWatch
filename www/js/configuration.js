@@ -4,114 +4,79 @@
 // - jquery-ui
 // - jquery.scrollto
 
+// IDs
+var ALERT_DISPLAY_ID = "#alert-display";
+var ALERT_EDITOR_ID = "#alert-editor";
+var ALERT_TOGGLE_ID = "#toggle-alerts";
+var ALERT_FAV_UPDATE_ID = "#update-alerts";
+var CONSTANT_DISPLAY_ID = "#constant-display";
+var CONSTANT_EDITOR_ID = "#constant-editor";
+var CONSTANT_TOGGLE_ID = "#toggle-constants";
+var CONSTANT_FAV_UPDATE_ID = "#update-constants";
+var FUNCTION_DISPLAY_ID = "#function-display";
+var FUNCTION_EDITOR_ID = "#function-editor";
+var FUNCTION_TOGGLE_ID = "#toggle-functions";
+var FUNCTION_FAV_UPDATE_ID = "#update-functions";
+
+// Scrolling
 var SCROLL_SPEED = 200;
 var SCROLL_OPTIONS = {offset: -100}
 
-var functionEditorID = "#function-editor";
-var constantEditorID = "#constant-editor";
-var alertEditorID = "#alert-editor";
-
-var functionDisplayID = "#function-display";
-var constantDisplayID = "#constant-display";
-var alertDisplayID = "#alert-display";
-
+// Editors
 var functionEditor;
 var constantEditor;
 var alertEditor;
 
+// Autocomplete
 var equationAutoCompleteData;
 var autoCompleteOpen = false;
 
 $(window).load(function() {
 
-    functionEditor = $(functionEditorID)[0];
-    constantEditor = $(constantEditorID)[0];
-    alertEditor = $(alertEditorID)[0];
-    
-    functionEditor.reset();
-    constantEditor.reset();
-    alertEditor.reset();
+    initFunctionConfig();
+    initConstantConfig();
+    initAlertConfig();
 
-    $.get("/engineer/autocomplete-data.php")
-    .done(function(data) {
-        equationAutoCompleteData = $.map(data, function (value, key) { return "$" + key + '$'; });
-        
-        addEquationAutoComplete($(functionEditorID + " input[name=value]")[0]);
-        addEquationAutoComplete($(alertEditorID + " input[name=value]")[0]);
-    })
-    .error(function(data) {
-        alert("Failed to get equation variables: " + data.statusText);
-    });
-    
-    // Init toggle buttons
-    $("#toggle-alerts").button();
-    $("#toggle-functions").button();
-    $("#toggle-constants").button();
-    
-}); // window load
-
-function addEquationAutoComplete(textbox)
-{
-    $(textbox).autocomplete(
-        { source: equationAutoCompleteData,
-          autoFocus: false,
-          disabled: true,
-          focus: function(event, ui) {
-              autoCompleteOpen = true;
-              
-              // Get the text up to the caret position and replace the last variable tag with the focused item value
-              var replaceText = textbox.value.substring(0, textbox.selectionStart);
-              replaceText = replaceText.replace(/\$([^\$\s]+\$|[^\$]*)$/, ui.item.value);
-              
-              // Apply the text to the textbox
-              var endText = textbox.value.substr(textbox.selectionStart);
-              textbox.value = replaceText + endText;
-              
-              // Set the caret position to the end of the replaced text
-              textbox.selectionStart = textbox.selectionEnd = replaceText.length;
-              
-              // Let jquery-ui know that the event has been handled
-              event.preventDefault();
-          },
-          select: function(event, ui) {
-              // Let jquery-ui know that we have already handled inserting the selection text (in the focus handler)
-              event.preventDefault();
-              $(textbox).autocomplete("disable");
-          },
-          close: function(event, ui) {
-              autoCompleteOpen = false;
-          }
-    });
-    
-    $(textbox).keyup(onDBVarAutoCompleteTextChanged); 
-}
-
-function onDBVarAutoCompleteTextChanged(event) {
-    if (autoCompleteOpen) return;
-    
-    var textbox = event.target;
-    
-    // Try to match the start of a variable up to the caret position
-    var text = textbox.value.substring(0, textbox.selectionStart);        
-    var match = text.match(/\$[^\$]*$/);
-    
-    // If there is a match, open the autocomplete box for that match
-    if (match) {
-        $(textbox).autocomplete("enable");
-        $(textbox).autocomplete("search", match[0]);
-    }
-}
+    initEquationAutoComplete();
+});
 
 // =================================================================================================
 // FUNCTION CONFIG
 // =================================================================================================
+function initFunctionConfig() {
+
+    // Init the favorites toggle button
+    $(FUNCTION_TOGGLE_ID).button();
+    $(FUNCTION_TOGGLE_ID).change(toggleFavorites);
+    
+    // Init the favorites update button
+    $(FUNCTION_FAV_UPDATE_ID).click(updateFavoriteFunctions);
+
+    // Init the editor form
+    functionEditor = $(FUNCTION_EDITOR_ID)[0];
+    functionEditor.reset();
+    
+    $(functionEditor).validate({
+        submitHandler: submitFunction,
+        rules: {
+	        name: "required",
+	        value: "required"
+	    },
+	    errorElement: "div",
+        errorPlacement: function(error, element) {
+            $(element).prev().before(error);
+        },
+	    onkeyup: false
+    });
+}
+
 function editFunction(editButton) {
     var functionData = getRowData(editButton);
     setFunctionEditorData(functionData);
     editConfig(functionEditor, functionData);
 }
 
-function submitFunction() {
+function submitFunction(form) {
     $.post('/engineer/submit-function.php', getFunctionEditorData())
     .done(function(data) {
         functionEditor.reset();
@@ -152,7 +117,7 @@ function setFunctionEditorData(fn) {
 }
 
 function updateFavoriteFunctions() {
-    var favorites = getFavorites($(functionDisplayID));
+    var favorites = getFavorites($(FUNCTION_DISPLAY_ID));
     
     $.post('/engineer/update-favorite-functions.php', { favorites: favorites })
     .done(function(data) { window.location.reload(); })
@@ -162,6 +127,36 @@ function updateFavoriteFunctions() {
 // =================================================================================================
 // CONSTANT CONFIG
 // =================================================================================================
+function initConstantConfig() {
+
+    // Init the favorites toggle button
+    $(CONSTANT_TOGGLE_ID).button();
+    $(CONSTANT_TOGGLE_ID).change(toggleFavorites);
+    
+    // Init the favorites update button
+    $(CONSTANT_FAV_UPDATE_ID).click(updateFavoriteConstants);
+    
+    constantEditor = $(CONSTANT_EDITOR_ID)[0];
+    constantEditor.reset();
+    
+    // Init the editor form
+    $(constantEditor).validate({
+        submitHandler: submitConstant,
+        rules: {
+	        name: "required",
+	        value: {
+	            required: true,
+	            number: true
+            }
+	    },
+	    errorElement: "div",
+        errorPlacement: function(error, element) {
+            $(element).prev().before(error);
+        },
+	    onkeyup: false
+    });
+}
+
 function editConstant(editButton) {
     var constantData = getRowData(editButton);
     setConstantEditorData(constantData);
@@ -209,7 +204,7 @@ function setConstantEditorData(constant) {
 }
 
 function updateFavoriteConstants() {
-    var favorites = getFavorites($(constantDisplayID));
+    var favorites = getFavorites($(CONSTANT_DISPLAY_ID));
     
     $.post('/engineer/update-favorite-constants.php', { favorites: favorites })
     .done(function(data) { window.location.reload(); })
@@ -219,6 +214,32 @@ function updateFavoriteConstants() {
 // =================================================================================================
 // ALERT CONFIG
 // =================================================================================================
+function initAlertConfig() {    
+    // Init the favorites toggle button
+    $(ALERT_TOGGLE_ID).button();
+    $(ALERT_TOGGLE_ID).change(toggleFavorites);
+    
+    // Init the favorites update button
+    $(ALERT_FAV_UPDATE_ID).click(updateFavoriteAlerts);
+    
+    // Init the editor form
+    alertEditor = $(ALERT_EDITOR_ID)[0];
+    alertEditor.reset();
+    
+    $(alertEditor).validate({
+        submitHandler: submitAlert,
+        rules: {
+	        name: "required",
+	        value: "required"
+	    },
+	    errorElement: "div",
+        errorPlacement: function(error, element) {
+            $(element).prev().before(error);
+        },
+	    onkeyup: false
+    });
+}
+
 function editAlert(editButton) {
     var alertData = getRowData(editButton);
     setAlertEditorData(alertData);
@@ -268,7 +289,7 @@ function setAlertEditorData(alert) {
 }
 
 function updateFavoriteAlerts() {
-    var favorites = getFavorites($(alertDisplayID));
+    var favorites = getFavorites($(ALERT_DISPLAY_ID));
     
     $.post('/engineer/update-favorite-alerts.php', { favorites: favorites })
     .done(function(data) { window.location.reload(); })
@@ -323,13 +344,78 @@ function resetEditor(clearButton) {
     legend.innerHTML = legend.innerHTML.replace(/\(.*$/, "");
 }
 
-function toggleFavorites(toggleButton) {
+function toggleFavorites(event) {
+    var toggleButton = event.target;
     var configDisplay = $(toggleButton).closest(".config-display")[0];
     
     if (toggleButton.checked) {
       $(configDisplay).find("input:not(:checked)").parents("tr").css('display', 'none');
     } else {
       $(configDisplay).find("input:not(:checked)").parents("tr").css('display', 'table-row');
+    }
+}
+
+function initEquationAutoComplete() {
+    $.get("/engineer/autocomplete-data.php")
+    .done(function(data) {
+        equationAutoCompleteData = $.map(data, function (value, key) { return "$" + key + '$'; });
+        
+        addEquationAutoComplete($(FUNCTION_EDITOR_ID + " input[name=value]")[0]);
+        addEquationAutoComplete($(ALERT_EDITOR_ID + " input[name=value]")[0]);
+    })
+    .error(function(data) {
+        alert("Failed to get equation variables: " + data.statusText);
+    });
+} 
+
+function addEquationAutoComplete(textbox) {
+    $(textbox).autocomplete(
+        { source: equationAutoCompleteData,
+          autoFocus: false,
+          disabled: true,
+          focus: function(event, ui) {
+              autoCompleteOpen = true;
+              
+              // Get the text up to the caret position and replace the last variable tag with the focused item value
+              var replaceText = textbox.value.substring(0, textbox.selectionStart);
+              replaceText = replaceText.replace(/\$([^\$\s]+\$|[^\$]*)$/, ui.item.value);
+              
+              // Apply the text to the textbox
+              var endText = textbox.value.substr(textbox.selectionStart);
+              textbox.value = replaceText + endText;
+              
+              // Set the caret position to the end of the replaced text
+              textbox.selectionStart = textbox.selectionEnd = replaceText.length;
+              
+              // Let jquery-ui know that the event has been handled
+              event.preventDefault();
+          },
+          select: function(event, ui) {
+              // Let jquery-ui know that we have already handled inserting the selection text (in the focus handler)
+              event.preventDefault();
+              $(textbox).autocomplete("disable");
+          },
+          close: function(event, ui) {
+              autoCompleteOpen = false;
+          }
+    });
+    
+    $(textbox).keyup(onDBVarAutoCompleteTextChanged); 
+}
+
+function onDBVarAutoCompleteTextChanged(event) {
+    if (autoCompleteOpen) return;
+    
+    var textbox = event.target;
+    
+    // Try to match the start of a variable up to the caret position
+    var text = textbox.value.substring(0, textbox.selectionStart);        
+    var match = text.match(/\$[^\$]*$/);
+    
+    // If there is a match, open the autocomplete box for that match
+    if (match) {
+        $(textbox).autocomplete("enable");
+        $(textbox).autocomplete("search", match[0]);
     }
 }
 

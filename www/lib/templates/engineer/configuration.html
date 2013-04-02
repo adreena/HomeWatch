@@ -8,6 +8,7 @@
 
 <script src="/js/vendor/jquery-ui.js"></script>
 <script src="/js/vendor/jquery.scrollTo-min.js"></script>
+<script src="/js/vendor/jquery.validate.min.js"></script>
 <script src="/js/configuration.js"></script>
 
 <div class="configs">
@@ -37,14 +38,14 @@
             </table>
             
             <div class="footer">
-                <button onclick="updateFavoriteAlerts()">Update Favorites</button>
+                <button id="update-alerts">Update Favorites</button>
                 <label for="toggle-alerts">Toggle All/Favorites</label>
-                <input id="toggle-alerts" name="toggle-alerts" type="checkbox" onclick="toggleFavorites(this)" />
+                <input id="toggle-alerts" name="toggle-alerts" type="checkbox"/>
             </div>
         </div>
         
         <div class="config-editor">
-            <form id="alert-editor" onsubmit="return submitAlert()">
+            <form id="alert-editor">
                 <fieldset>
                     <legend>Alert Editor</legend>
                                         
@@ -94,14 +95,14 @@
             </table>
             
             <div class="footer">
-                <button onclick="updateFavoriteFunctions()">Update Favorites</button>
+                <button id="update-functions">Update Favorites</button>
                 <label for="toggle-functions">Toggle All/Favorites</label>
-                <input id="toggle-functions" name="toggle-functions" type="checkbox" onclick="toggleFavorites(this)" />
+                <input id="toggle-functions" name="toggle-functions" type="checkbox"/>
             </div>
         </div>
         
         <div class="config-editor">
-            <form id="function-editor" onsubmit="return submitFunction()">
+            <form id="function-editor">
                 <fieldset>
                     <legend>Function Editor</legend>
                     
@@ -150,14 +151,14 @@
             </table>
             
             <div class="footer">
-                <button onclick="updateFavoriteConstants()">Update Favorites</button>
+                <button id="update-constants"">Update Favorites</button>
                 <label for="toggle-constants">Toggle All/Favorites</label>
-                <input id="toggle-constants" name="toggle-constants" type="checkbox" onclick="toggleFavorites(this)" />
+                <input id="toggle-constants" name="toggle-constants" type="checkbox"/>
             </div>
         </div>
         
         <div class="config-editor">
-            <form id="constant-editor" onsubmit="return submitConstant()">
+            <form id="constant-editor">
                 <fieldset>
                     <legend>Constant Editor</legend>
                     
