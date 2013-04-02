@@ -104,6 +104,8 @@ foreach ($result as $calc => $val) {
 
     if ($calculation === "eq1") {
         echo "<br>" . $_POST['energyname'] . " Energy" . " = $val GJ <br>\n";
+    } else if ($calculation === "eq2" || $calculation === "eq3") {
+        echo "<br><strong> " . $_POST['name'] . " </strong> = $val KWH <br>\n";
     } else if ($calculation === "eq4" || $calculation === "eq5") {
         $col = getColumnName($calc);
         echo "<br><strong>$col</strong> = $val <br>\n";
