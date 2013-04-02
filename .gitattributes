@@ -1,1 +1,2 @@
-* text=auto
+*.php text=auto
+*.js text=auto
