@@ -319,17 +319,18 @@ function ($, _, getInternetExplorerVersion) {
             if(granularity === "Hourly") {
                 //base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
                 base_x.xaxis["tickSize"] = [2, "hour"];
+                console.log("start date is " + startdate);
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity);
             } else if(granularity === "Daily") {
                 //base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
                 base_x.xaxis["timeformat"] = "%a %d";
                 base_x.xaxis["tickSize"] = [1, "day"];
                 base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-                base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity) + " - " + get_month_day_year(enddate, type, granularity);
+                base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity, enddate);
             } else if (granularity === "Weekly") {
                 base_x.xaxis["ticks"] = get_tick_labels(ticks, granularity);
-                granularity = "Daily";
-                base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity) + " - " + get_month_day_year(enddate, type, granularity);
+                //granularity = "Daily";
+                base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity, enddate);
                 //console.log("max date is " + max_date);
                 //base_x.xaxis["tickSize"] = [1, "week"];
             } else if(granularity === "Monthly") {
@@ -337,7 +338,7 @@ function ($, _, getInternetExplorerVersion) {
                 base_x.xaxis["tickSize"] = [1, "month"];
                 base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                 //var label = min_date.getUTCFullYear();
-                base_x.xaxis["axisLabel"] = min_date.getUTCFullYear();
+                base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity, enddate);
                 //var year_end = label + "-12-01:0";
                 //base_x.xaxis["max"] = DateToUTC(year_end);
             } else {
@@ -452,26 +453,28 @@ function ($, _, getInternetExplorerVersion) {
         var previousPoint = null;
         var element = this.graphState.element;
         var xtype = this.graphState.xtype;
-        var granularity = this.graphState.granularity;
+        var self = this;
+        var type = "tool_tip";
+        var granularity, end_date;
 
         $(element).bind("plothover", function (event, pos, item) {
-            /* Err... do these elements even exist on the page? There can only
-             * be one element with id x and id y so... this won't work for
-             * multiple graphs...  */
             $("#x").text(pos.x.toFixed(2));
             $("#y").text(pos.y.toFixed(2));
 
             if (item) {
                 if (previousPoint != item.dataIndex) {
                     previousPoint = item.dataIndex;
+    
+                    granularity = self.graphState.granularity;
 
                     $("#tooltip").remove();
                         y = item.datapoint[1].toFixed(2);
 
                         if(xtype === "time") {
-                            /* This get month day year thing is being called
-                             * wrong... but how are you supposed to call it? */
-                            var x = get_month_day_year(new Date(item.datapoint[0]), granularity);
+                            if(granularity !== "Hourly") {
+                                end_date = item.datapoint[0];
+                            }
+                                var x = get_month_day_year(item.datapoint[0], type, granularity, end_date);
                             show_tool_tip(item.pageX, item.pageY,
                                 item.series.label + " for " + x + " is " + y);
                         } else {
@@ -556,7 +559,7 @@ function ($, _, getInternetExplorerVersion) {
                         date_to += " 23";
                         console.log("date to is " + date_to);
                     }
-                } else if (granularity === "Daily") {
+                } else if (drill_granularity === "Daily") {
                     //drill_granularity = "Daily";
 
                     if(xtype === "time") {
@@ -569,7 +572,7 @@ function ($, _, getInternetExplorerVersion) {
                         console.log("date from is " + date_from + " date to is " + date_to);
                     }
 
-                } else if(granularity === "Weekly") {
+                } else if(drill_granularity === "Weekly") {
                    //drill_granularity = "Weekly";
 
                     if(xtype === "time") {
@@ -626,7 +629,7 @@ function ($, _, getInternetExplorerVersion) {
      */
 
     DateToUTC = function (dateString) {
-        var dateRegex = /(\d+)-(\d+)-(\d+)(?:[ :](\d+))?/,
+        var dateRegex = /(\d+)-(\d+)-(\d+)(?::(\d+))?/,
             m, // m for match
             UTCTime;
 
@@ -680,31 +683,43 @@ function ($, _, getInternetExplorerVersion) {
         return date < 10 ? '0' + date : '' + date;
     };
 
-    var get_month_day_year = function (date, type, granularity) {
+    var get_month_day_year = function (start_date, type, granularity, end_date) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var date_string = new Date(date);        
+        var date_string = new Date(start_date);        
         var day = date_string.getUTCDate();
         var month = months[date_string.getUTCMonth()];
         var year = date_string.getUTCFullYear();
 
-        
-            var week_end = (date + get_millisecond_interval(granularity)).getUTCDate;
+        if(end_date !== undefined) {
+            var end_date_string = new Date(end_date);
+            var end_day = end_date_string.getUTCDate();
+            var end_month = months[end_date_string.getUTCMonth()];
+            var end_year = end_date_string.getUTCFullYear();
+            var week_end = (new Date(end_date + get_millisecond_interval("Daily"))).getUTCDate();
+        }
+       
+        console.log("week end is " + week_end);
+        console.log("granularity is " + granularity);
 
-        tool_tip = {
-            Hourly: month + ' ' + day + ' ' + year,
-            Daily: month + ' ' + day + ' ' + year,
-            Weekly: month + ' ' + day + '-' + week_end + ' ' + year,
-            Monthly: month + ' ' + year
-        };
+        if(type === "tool_tip") {
+            return tool_tip = {
+                Hourly: month + ' ' + day + ' ' + year,
+                Daily: month + ' ' + day + ' ' + year,
+                Weekly: month + ' ' + day + '-' + week_end + ' ' + year,
+                Monthly: month + ' ' + year
+            }[granularity];
+        } else {
+            return axis_label = {
+                Hourly: month + ' ' + day + ' ' + year,
+                Daily: month + ' ' + day + ' ' + year + ' - ' + end_month + ' ' + end_day + ' ' + end_year,
+                Weekly: month + ' ' + day + ' ' + year + ' - ' + end_month + ' ' + week_end + ' ' + end_year,
+                Monthly: month + ' ' + day + ' ' + year + ' - ' + end_month + ' ' + end_day + ' ' + end_year,
+                Yearly: month + ' ' + day + ' ' + year + ' - ' + end_month + ' ' + end_day + ' ' + end_year
+            }[granularity];
+        } 
 
-        axis_label = {
-            Hourly: month + ' ' + day + ' ' + year,
-            Daily: month + ' ' + day + ' ' + year,
-            Weekly: month + ' ' + day + ' ' + year + '-' + month + ' ' + day + ' ' + year,
-            Monthly: month + ' ' + year
-        }; 
-
-        return type.granularity;
+        console.log("type gran is " + type[granularity]);
+        //return type[granularity];
     };
 
     var get_millisecond_interval = function (interval) {
