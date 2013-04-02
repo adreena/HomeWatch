@@ -110,8 +110,15 @@ if ($test) {
 		array_push($messages, calculateRejection($startdate, $enddate, $period));
 	}
 
+
+    if ($period != "Hourly") {
+        $startdate .= " ".date("G");
+        $enddate .= " ".date("G");
+    }
+
+
 	//If any errors have occurred at this point there's no way we can process the query, so we spit out the query data, any error messages, and die
-	if (count($messages) > 0) {
+	if (count($messages) > 0 && $messages[0] != null) {
 		$bigArray['granularity'] = $period;
 		$bigArray['messages'] = $messages;
         $json = json_encode($bigArray);
@@ -131,6 +138,7 @@ if ($test) {
     //This code block pulls data from a sensor or array of sensors and adds it to the JSON array
 	foreach ($apartments as $apartment) {
 		if ($ytype == "sensorarray") {
+
 			foreach ($y as $sensor) {
 
 				if (ISSET($phaseMapping[$sensor])) {
@@ -156,6 +164,7 @@ if ($test) {
 
         //If the frontend has requested a formula then we fetch the formula and process that, then add it to the JSON array
 		} else if ($ytype == "formula") {
+
             //get the actual function body from the function name
             $ydata = ConfigurationDB::fetchFunction($yaxis);
 
@@ -181,6 +190,7 @@ if ($test) {
             }
         //Alerts are handled here
 		} else if ($ytype == "alert") {
+
             $ydata = ConfigurationDB::fetchAlert($yaxis);
 
             // if fetchAlert returns false, this name doesn't exist in db
@@ -204,26 +214,28 @@ if ($test) {
             }
         //Energy data has to be handled differently
 		} else if ($ytype == "energy") {
-            $dateFormat = 'Y-m-d';
-            if ($period == "Hourly") {
-                $dateFormat .= ' G';
-            }
+
+            $dateFormat = 'Y-m-d G';
 
             $d1 = date_create_from_Format($dateFormat, $startdate);
             $d2 = date_create_from_Format($dateFormat, $enddate);
 
-            $ydata = Engineer2::getEnergyColumnData($d1, $d2,$yaxis);
+            $ydata = Engineer2::getEnergyColumnData($d1, $d2,$yaxis, $period);
+            
+            //echo var_dump($ydata);
+
             foreach ($ydata as $date=>$value) {
                 $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
                 $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
             }
         //This is where we process the cost of energy data
 		} else if ($ytype == "utility") {
+
             $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment, $yaxis);
             $ydata = EquationParser::getUtilityCosts($function);
             foreach($ydata as $date=>$value) {
-                $bigArray['values'][$apartment][$date]["$yaxis Cost"]["x"] = $date;
                 $bigArray['values'][$apartment][$date]["$yaxis Cost"]["y"] = $value;
+                $bigArray['values'][$apartment][$date]["$yaxis Cost"]["x"] = $date;
             }
         }
 

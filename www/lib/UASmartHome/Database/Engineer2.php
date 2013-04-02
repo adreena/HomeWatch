@@ -70,14 +70,14 @@ class Engineer2 {
 	$trun->execute();
 	return $row;
 	}
-        if ($EQ==self::ENERGY_EQ)
+    if ($EQ==self::ENERGY_EQ)
 	{//The Tablees Are EnergyH_Graph the Ts format ->2013-03-15:01 ,EnergyD_Graph is a Date only 2013-03-15
-	$dbh=$conn->connect()->prepare("select ts,".$column."  from ".$tablename." where ts between :SD and :ED") ;
-	$dbh->bindValue(":SD",$Datefrom);
-	$dbh->bindValue(":ED",$Dateto);
-	$dbh->execute();
-	$result = $dbh->fetch(\PDO::FETCH_ASSOC);
-	return $result;
+	    $dbh=$conn->connect()->prepare("select ".$column."  from ".$tablename." where ts between :SD and :ED") ;
+	    $dbh->bindValue(":SD",$Datefrom);
+	    $dbh->bindValue(":ED",$Dateto);
+	    $dbh->execute();
+	    $result = $dbh->fetch(\PDO::FETCH_ASSOC);
+	    return $result[$column];
 	}
 }
 
@@ -85,7 +85,7 @@ class Engineer2 {
         /* Assume that all dates are in a "canonical" format -- that is, 
         * prevent the server's default timezone from affecting the date. */
         date_default_timezone_set('UTC');
-       /* 
+        
         $intervalString = null;
         switch ($granularity) {
             case "Hourly": $intervalString = '1 hour'; break;
@@ -94,25 +94,38 @@ class Engineer2 {
             case "Monthly":
             default: $intervalString = '1 month'; break;
         }
-        *//*
+        
         $interval = \DateInterval::createFromDateString($intervalString);
         $period = new \DatePeriod($datefrom, $interval, $dateto);
 
-         $strDisplayTick = $tick->format("Y-m-d:G");     
-          $strTick = $tick->format("Y-m-d G"); 
-         $strTickEnd = $tick->add($interval)->format("Y-m-d G");*/
-        $data = null;
-        $data=self::EQ($datefrom->format("Y-m-d:G"), $dateto->format("Y-m-d:G"), self::ENERGY_EQ, $column);
-      /*  foreach ($period as $tick) {
-            $strDisplayTick = $tick->format("Y-m-d:G");
+        $data = array();
+
+      /*  while ($startdate < $enddate) {
+
+        if ($granularity == "Hourly") {
+            $data=self::EQ($datefrom->format("Y-m-d:G"), $dateto->format("Y-m-d:G"), self::ENERGY_EQ, $column, "EnergyH_Graph");
+        } else if ($granularity == "Daily"){
+            $data=self::EQ($datefrom->format("Y-m-d"), $dateto->format("Y-m-d"), self::ENERGY_EQ, $column, "EnergyD_Graph");
+        }
+
+        }
+*/      foreach ($period as $tick) {
             
-            $strTick = $tick->format("Y-m-d G");
-            $strTickEnd = $tick->add($interval)->format("Y-m-d G");
+        $strDisplayTick = $tick->format("Y-m-d:G");
             
-            $sum = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column)['sum'];
+            if ($granularity == "Hourly") {
+                $strTick = $tick->format("Y-m-d G");
+                $strTickEnd = $tick->add($interval)->format("Y-m-d G");
+                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyH_Graph");
+            } else if ($granularity == "Daily") {
+                $strTick = $tick->format("Y-m-d");
+                $strTickEnd = $tick->add($interval)->format("Y-m-d");
+                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyD_Graph");
+            }
+               
+            $data[$strDisplayTick] = $datapoint;
             
-            $data[$strDisplayTick] = $sum;
-        }*/
+        }
 
         return $data;
     }

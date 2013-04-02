@@ -17,8 +17,8 @@ class Engineer {
             $enddate = date_create_from_Format('Y-m-d G', $enddate);
         }
         else {
-            $startdate = date_create_from_Format('Y-m-d', $startdate);
-            $enddate = date_create_from_Format('Y-m-d', $enddate);
+            $startdate = date_create_from_Format('Y-m-d G', $startdate);
+            $enddate = date_create_from_Format('Y-m-d G', $enddate);
         }
         $results = array();
 
