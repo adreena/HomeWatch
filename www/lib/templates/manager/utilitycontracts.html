@@ -2,16 +2,12 @@
 
 {% block title 'Utility Contracts' %}
 
+{% block requireMain '/js/utilityConfig' %}
+
 {% block extraStyles %}
 <link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
 <link rel="stylesheet" href="/css/vendor/jdpicker/jdpicker.css" />
 {% endblock extraStyles %}
-
-{% block extraScripts %}
-<script src="/js/vendor/jquery.jdpicker.js"></script>
-<script src="/js/vendor/jquery.scrollTo-min.js"></script>
-<script src="/js/utilityConfig.js"></script>
-{% endblock extraScripts %}
 
 {% block content %}
 <div class="configs">
@@ -35,15 +31,15 @@
                     <td class="price">{{ utility['price'] }}</td>
                     <td class="startdate">{{ utility['startdate'] }}</td>
                     <td class="enddate">{{ utility['enddate'] }}</td>
-                    <td><button onClick="editUtility(this)">Edit</button></td>
-                    <td><button onClick="deleteUtility(this)">Delete</button></td>
+                    <td><button class="edit-utility">Edit</button></td>
+                    <td><button class="delete-utility"">Delete</button></td>
                 </tr>
                 {% endfor %}
             </table>
         </div>
 
         <div class="config-editor">
-            <form id="utility-editor" onsubmit="return submitUtility()">
+            <form id="utility-editor">
                 <fieldset>
                     <legend>Utility Prices Editor</legend>
 
@@ -64,7 +60,7 @@
                     <input name="enddate" type="text" /><br>
 
                     <div class="footer">
-                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Cancel</button>
+                        <button class="button editor-reset" type="button" tabindex="-1">Cancel</button>
                         <input class="button" name="submit" type="submit" value="Submit"/>
                     </div>
 

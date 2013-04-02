@@ -1,114 +1,145 @@
+require(['jquery',
+         'vendor/jquery.scrollTo-min',
+         'vendor/jquery.validate.min',
+         'vendor/jquery.jdpicker'],
 
-// TODO: use require js
-// Requires:
-// - jquery-ui
-// - jquery.scrollto
+function ($) {
+    "use strict";
 
-var SCROLL_SPEED = 200;
-var SCROLL_OPTIONS = {offset: -100}
+    var SCROLL_SPEED = 200;
+    var SCROLL_OPTIONS = {offset: -100}
 
-var utilityEditorID = "#utility-editor";
+    var UTILITY_EDITOR_ID = "#utility-editor";
 
-var utilityEditor;
+    var utilityEditor;
 
-$(function() {
-    var dateInputs = $("[name=startdate], [name=enddate]");
+    $(function () {
+        initUtilityEditor();
+        
+        // Init editor reset buttons
+        $(document).find('.button.editor-reset').click(resetEditor);
+    });// window load
 
-    utilityEditor = $(utilityEditorID)[0];
-    utilityEditor.reset();
-
-    // Make jdPicker give us controls that always show.
-    dateInputs.attr('type', 'hidden');
-    dateInputs.jdPicker({
-        date_format: 'YYYY-mm-dd',
-        start_of_week: 0
-    });
-
-}); // window load
-
-// =================================================================================================
-// UTILITY CONFIG
-// =================================================================================================
-function editUtility(editButton) {
-    var utilityData = getRowData(editButton);
-    setUtilityEditorData(utilityData);
-    editConfig(utilityEditor, utilityData);
-}
-
-function submitUtility() {
-    $.post('/manager/submit-utility.php', getUtilityEditorData())
-    .done(function(data) {
+    function initUtilityEditor() {
+        // Setup date inputs
+        var dateInputs = $("[name=startdate], [name=enddate]");
+        
+        // Make jdPicker give us controls that always show.
+        dateInputs.attr('type', 'hidden');
+        dateInputs.jdPicker({
+            date_format: 'YYYY-mm-dd',
+            start_of_week: 0
+        });
+        
+        // Init the edit and delete buttons
+        $(UTILITY_EDITOR_ID).find('.delete-utility').click(deleteUtility);
+        $(UTILITY_EDITOR_ID).find('.edit-utility').click(editUtility);
+        
+        // Init the editor form 
+        utilityEditor = $(UTILITY_EDITOR_ID)[0];
         utilityEditor.reset();
-        location.reload();
-    })
-    .fail(function(data) {
-        alert("Error Submitting Utility Costs: " + data.statusText);
-    });
 
-    return false;
-}
+        $(utilityEditor).validate({
+            submitHandler: submitUtility,
+            rules: {
+	            price: "required",
+	            startdate: "required",
+	            enddate: "required"
+	        },
+	        errorElement: "div",
+            errorPlacement: function(error, element) {
+                $(element).prev().before(error);
+            },
+	        onkeyup: false
+        });
+    }
+    
+    // =================================================================================================
+    // UTILITY CONFIG
+    // =================================================================================================
+    function editUtility(event) {
+        var editButton = event.target;
+        var utilityData = getRowData(editButton);
+        setUtilityEditorData(utilityData);
+        editConfig(utilityEditor, utilityData);
+    }
 
-function deleteUtility(deleteButton) {
-    var utilityID = getRowData(deleteButton).id;
+    function submitUtility() {
+        $.post('/manager/submit-utility.php', getUtilityEditorData())
+        .done(function(data) {
+            utilityEditor.reset();
+            location.reload();
+        })
+        .fail(function(data) {
+            alert("Error Submitting Utility Costs: " + data.statusText);
+        });
 
-    $.post('/manager/delete-utility.php', {id: utilityID})
-    .done(function(data) { window.location.reload(); })
-    .fail(function(data) { alert("Error deleting utility cost configuration: " + data.statusText); });
-}
+        return false;
+    }
 
-function getUtilityEditorData() {
-    var utilityEditorContents = $(utilityEditor).contents();
+    function deleteUtility(event) {
+        var deleteButton = event.target;
+        var utilityID = getRowData(deleteButton).id;
 
-    return {
-        id: utilityEditorContents.find('input[name=id]').val(),
-        type: utilityEditorContents.find('select[name=type]').val(),
-        price: utilityEditorContents.find('input[name=price]').val(),
-        startdate: utilityEditorContents.find('input[name=startdate]').val(),
-        enddate: utilityEditorContents.find('input[name=enddate]').val()
-    };
-}
+        $.post('/manager/delete-utility.php', {id: utilityID})
+        .done(function(data) { window.location.reload(); })
+        .fail(function(data) { alert("Error deleting utility cost configuration: " + data.statusText); });
+    }
 
-function setUtilityEditorData(utility) {
-    var utilityEditorContents = $(utilityEditor).contents();
-    utilityEditorContents.find('input[name=type]').val(utility.type);
-    utilityEditorContents.find('input[name=price]').val(utility.price);
-    utilityEditorContents.find('input[name=startdate]').val(utility.startdate);
-    utilityEditorContents.find('input[name=enddate]').val(utility.enddate);
-    utilityEditorContents.find('input[name=id]').val(utility.id);
-}
+    function getUtilityEditorData() {
+        var utilityEditorContents = $(utilityEditor).contents();
 
-// =================================================================================================
-// GENERAL CONFIG
-// =================================================================================================
-function getRowData(rowButton) {
-    var row = $(rowButton).closest("tr");
+        return {
+            id: utilityEditorContents.find('input[name=id]').val(),
+            type: utilityEditorContents.find('select[name=type]').val(),
+            price: utilityEditorContents.find('input[name=price]').val(),
+            startdate: utilityEditorContents.find('input[name=startdate]').val(),
+            enddate: utilityEditorContents.find('input[name=enddate]').val()
+        };
+    }
 
-    return {
-        id: row.attr('id').match(/\d+/)[0],
-        type: $(row.children(".type")).text(),
-        price: $(row.children(".price")).text(),
-        startdate: $(row.children(".startdate")).text(),
-        enddate: $(row.children(".enddate")).text()
-    };
-}
+    function setUtilityEditorData(utility) {
+        var utilityEditorContents = $(utilityEditor).contents();
+        utilityEditorContents.find('input[name=type]').val(utility.type);
+        utilityEditorContents.find('input[name=price]').val(utility.price);
+        utilityEditorContents.find('input[name=startdate]').val(utility.startdate);
+        utilityEditorContents.find('input[name=enddate]').val(utility.enddate);
+        utilityEditorContents.find('input[name=id]').val(utility.id);
+    }
 
-function editConfig(editor, data) {
-    $.scrollTo(editor, SCROLL_SPEED, SCROLL_OPTIONS);
+    // =================================================================================================
+    // GENERAL CONFIG
+    // =================================================================================================
+    function getRowData(rowButton) {
+        var row = $(rowButton).closest("tr");
 
-    // Make the legend red and add (EDITING "NAME") to text
-    var legend = $(editor).find("legend")[0];
-    legend.style.color = 'red';
-    legend.innerHTML = legend.innerHTML.replace(/\(.*$/, ""); // Remove any existing (EDITING "NAME") text
-    legend.innerHTML += " (EDITING \"" + data.startdate + " to " + data.enddate + "\")";
-}
+        return {
+            id: row.attr('id').match(/\d+/)[0],
+            type: $(row.children(".type")).text(),
+            price: $(row.children(".price")).text(),
+            startdate: $(row.children(".startdate")).text(),
+            enddate: $(row.children(".enddate")).text()
+        };
+    }
 
-function resetEditor(clearButton) {
-    var form = $(clearButton).closest("form")[0];
-    form.reset();
+    function editConfig(editor, data) {
+        $.scrollTo(editor, SCROLL_SPEED, SCROLL_OPTIONS);
 
-    var legend = $(form).find("legend")[0];
-    legend.style.color = 'black';
+        // Make the legend red and add (EDITING "NAME") to text
+        var legend = $(editor).find("legend")[0];
+        legend.style.color = 'red';
+        legend.innerHTML = legend.innerHTML.replace(/\(.*$/, ""); // Remove any existing (EDITING "NAME") text
+        legend.innerHTML += " (EDITING \"" + data.startdate + " to " + data.enddate + "\")";
+    }
 
-    legend.innerHTML = legend.innerHTML.replace(/\(.*$/, "");
-}
+    function resetEditor(clearButton) {
+        var form = $(clearButton).closest("form")[0];
+        form.reset();
+
+        var legend = $(form).find("legend")[0];
+        legend.style.color = 'black';
+
+        legend.innerHTML = legend.innerHTML.replace(/\(.*$/, "");
+    }
+});
 
