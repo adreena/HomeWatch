@@ -100,10 +100,14 @@ class Engineer2 {
 
         $data = null;
         foreach ($period as $tick) {
-            $strTick = $tick->format("Y-m-d:G");
-            $strTickEnd = $tick->add($interval)->format("Y-m-d:G");
+            $strDisplayTick = $tick->format("Y-m-d G");
+            
+            $strTick = $tick->format("Y-m-d G");
+            $strTickEnd = $tick->add($interval)->format("Y-m-d G");
+            
             $sum = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column)['sum'];
-            $data[$strTick] = $sum;
+            
+            $data[$strDisplayTick] = $sum;
         }
 
         return $data;
