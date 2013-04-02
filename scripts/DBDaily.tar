@@ -1,0 +1,837 @@
+Air_views.sql���������������������������������������������������������������������������������������0000644�0001750�0001750�00000003410�12126320307�012237� 0����������������������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������CREATE OR REPLACE VIEW Air_Yearly 
+							AS select `v0_air`.`Apt` AS `Apt`,
+                            avg(`v0_air`.`Temperature`) AS `Temperature`,
+							avg(`v0_air`.`Relative Humidity`) AS `Relative_Humidity`,
+							avg(`v0_air`.`CO2`) AS `CO2`,
+							`v0_air`.`Year` AS `Year` 
+							from `v0_air` group by `v0_air`.`Apt`,`v0_air`.`Year`;
+
+CREATE OR REPLACE VIEW Air_Monthly 
+							AS select `v0_air`.`Apt` AS `Apt`,
+                            avg(`v0_air`.`Temperature`) AS `Temperature`,
+							avg(`v0_air`.`Relative Humidity`) AS `Relative_Humidity`,
+							avg(`v0_air`.`CO2`) AS `CO2`,
+							`v0_air`.`Year` AS `Year`,
+							`v0_air`.`Month` AS `Month`
+							from `v0_air` group by `v0_air`.`Apt`,`v0_air`.`Year`,`v0_air`.`month`;	
+							
+CREATE OR REPLACE VIEW Air_Weekly 
+							AS select `v0_air`.`Apt` AS `Apt`,
+                            avg(`v0_air`.`Temperature`) AS `Temperature`,
+							avg(`v0_air`.`Relative Humidity`) AS `Relative_Humidity`,
+							avg(`v0_air`.`CO2`) AS `CO2`,
+							`v0_air`.`Year` AS `Year`, 
+							`v0_air`.`Week` AS `Week`
+							from `v0_air` group by `v0_air`.`Apt`,`v0_air`.`Year`,`v0_air`.`Week`;
+
+CREATE OR REPLACE VIEW Air_Daily 
+							AS select `v0_air`.`Apt` AS `Apt`,
+                            avg(`v0_air`.`Temperature`) AS `Temperature`,
+							avg(`v0_air`.`Relative Humidity`) AS `Relative_Humidity`,
+							avg(`v0_air`.`CO2`) AS `CO2`,
+							`v0_air`.`Date` AS `Date`
+							from `v0_air` group by `v0_air`.`Apt`,`v0_air`.`Date`;							
+
+CREATE OR REPLACE VIEW Air_Hourly
+				AS	select date_format(ts,'%Y-%m-%d %H') As TS,apt,
+				AVG(CO2) as "CO2",
+			    AVG(`rh`) AS `Relative_Humidity`,
+				AVG(temperature) AS `Temperature` 
+				from air
+				group by apt,
+				date_format(ts,'%Y-%m-%d %H');	
+	
+
+					
+							
+
+							��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������Bascalculations.sql���������������������������������������������������������������������������������0000664�0001750�0001750�00000024115�12126324756�013441� 0����������������������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������DROP Function IF EXISTS EQ2_part1;
+DELIMITER $$
+CREATE Function EQ2_part1(
+		tsfrom VARCHAR(16),
+		tsto VARCHAR(16) ) 
+		RETURNS  float
+BEGIN
+DECLARE P110,P120,HPx10,HPx20,HPx30,HPx40,cop_heat_pump FLOAT;
+DECLARE P11,P12,HPx1,HPx2,HPx3,HPx4 FLOAT;
+SELECT AVG(`P-1-1`),
+       AVG(`P-1-2`),
+       AVG(`HP1`),
+       AVG(`HP2`),
+       AVG(`HP3`),
+       AVG(`HP4`)
+       INTO P110,P120,HPx10,HPx20,HPx30,HPx40 from bas_el_energy 
+where date_format(ts,'%Y-%m-%d %H:%i') = tsfrom;
+
+SELECT AVG(`P-1-1`),
+       AVG(`P-1-2`),
+       AVG(`HP1`),
+       AVG(`HP2`),
+       AVG(`HP3`),
+       AVG(`HP4`)
+       INTO P11,P12,HPx1,HPx2,HPx3,HPx4 from bas_el_energy 
+where date_format(ts,'%Y-%m-%d %H:%i') = tsto;
+
+set cop_heat_pump=(
+                    (P11+P12+HPx1+HPx2+HPx3+HPx4)-
+                    (P110+P120+HPx10+HPx20+HPx30+HPx40)
+                  )/3600000;
+return cop_heat_pump;
+END $$
+
+
+DELIMITER ;
+
+
+DROP Function IF EXISTS EQ2_part2;
+
+DELIMITER $$
+
+CREATE Function EQ2_Part2(
+     tsfrom VARCHAR(16)
+  ,  tsto   VARCHAR(16) ) 
+      Returns FLOAT 
+
+BEGIN
+DECLARE Hours,Cop_heat Float;
+DECLARE SHTS,P7_1,P8,P2_1,P2_2,P2_3,P2_4,P4_1,P4_2,BLR_1,BLR_2,P3_1,P3_2 FLOAT;
+
+Select (TIMESTAMPDIFF( MINUTE ,  tsfrom,  tsto )/60) INTO Hours;
+Select (111.55*Hours*1*.001) INTO SHTS;
+Select (714*Hours*1*.001) INTO P7_1;
+
+Select 75.9*Hours*.001*( 
+       AVG(BO_P8_1_DHR_Hx_EN)+
+       AVG(BO_P8_2_DHR_Hx_EN)+
+       AVG(BO_P8_3_DHR_Hx_EN)+
+       AVG(BO_P8_4_DHR_Hx_EN)+
+       AVG(BO_P8_5_DHR_Hx_EN)+
+       AVG(BO_P8_7_DHR_Hx_EN)+
+       AVG(BO_P8_8_DHR_Hx_EN)+
+       AVG(BO_P8_9_DHR_Hx_EN)+
+       AVG(BO_P8_10_DHR_Hx_EN)+
+       AVG(BO_P8_11_DHR_Hx_EN)+
+       AVG(BO_P8_12_DHR_Hx_EN)) INTO P8 from bas_drains
+       where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+Select 785*Hours*.001*(AVG(BO_P2_1_Enable)),
+       785*Hours*.001*(AVG(BO_P2_2_Enable)),
+       785*Hours*.001*(AVG(BO_P2_3_Enable)),
+       785*Hours*.001*(AVG(BO_P2_4_Enable))  INTO P2_1,P2_2,P2_3,P2_4 from bas_geothermal
+       where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+
+Select 870*Hours*.001*(AVG(BO_Blr_1_Enable)),
+       870*Hours*.001*(AVG(BO_Blr_2_Enable)),
+       324*Hours*.001*(AVG(BO_Blr_1_Enable)), 
+       324*Hours*.001*(AVG(BO_Blr_2_Enable))
+       INTO P4_1,P4_2,BLR_1,BLR_2 from bas_boiler_loop
+	where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+Select 2460*Hours*.00001*(AVG(AO_P3_VFD_Ctrl)), 
+       2460*Hours*.00001*(AVG(AO_P3_2_VFD_Ctrl))
+       INTO P3_1,P3_2 from bas_heating_loop
+	where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+set cop_heat = SHTS+P7_1+P8+P2_1+P2_2+P2_3+P2_4+P4_1+P4_2+BLR_1+BLR_2+P3_1+P3_2;
+return cop_heat;
+END $$
+
+DELIMITER ;
+
+
+DROP Function IF EXISTS Calc_Cop;
+
+DELIMITER $$
+
+CREATE Function Calc_Cop(
+     tsfrom VARCHAR(16)
+  , tsto   VARCHAR(16)
+  ) Returns VARCHAR (1)
+   
+
+BEGIN
+DECLARE P110,P120,HPx10,HPx20,HPx30,HPx40 FLOAT;
+DECLARE P11,P12,HPx1,HPx2,HPx3,HPx4 FLOAT;
+DECLARE Hours,NUM1,NUM2,NUM3,DOM1,DOM2,DOM3,COP1,COP2,COP3 Float;
+DECLARE SHTS,P7_1,P8,P2_1,P2_2,P2_3,P2_4,P4_1,P4_2,BLR_1,BLR_2,P3_1,P3_2 FLOAT;
+
+# Energy Values in GJ
+
+Select (TIMESTAMPDIFF( MINUTE ,  tsfrom,  tsto )/60) INTO Hours;
+Select SUM(Energy4),SUM(Energy4+Energy5+Energy6) INTO NUM1,NUM2 from Energy_Minute
+       where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+# Values are converted from WS to KWH by dividing by 3,600,000
+# Consumption Geo Field+ Heat Pumps (KWH) From Time Stamp
+SELECT AVG(`P-1-1`)/3600000,
+       AVG(`P-1-2`)/3600000,
+       AVG(`HP1`)/3600000,
+       AVG(`HP2`)/3600000,
+       AVG(`HP3`)/3600000,
+       AVG(`HP4`)/3600000
+       INTO P110,P120,HPx10,HPx20,HPx30,HPx40 from bas_el_energy 
+where date_format(ts,'%Y-%m-%d %H:%i') = tsfrom;
+
+# Consumption Geo Field+ Heat Pumps (KWH) To Time Stamp
+SELECT AVG(`P-1-1`)/3600000,
+       AVG(`P-1-2`)/3600000,
+       AVG(`HP1`)/3600000,
+       AVG(`HP2`)/3600000,
+       AVG(`HP3`)/3600000,
+       AVG(`HP4`)/3600000
+       INTO P11,P12,HPx1,HPx2,HPx3,HPx4 from bas_el_energy 
+where date_format(ts,'%Y-%m-%d %H:%i') = tsto;
+# Schedule 2 Power usage (KWH)
+# Solar 
+Select (111.55*Hours*1*.001) INTO SHTS;
+# DWHR
+Select (714*Hours*1*.001) INTO P7_1;
+
+Select 75.9*Hours*.001*( 
+       AVG(BO_P8_1_DHR_Hx_EN)+
+       AVG(BO_P8_2_DHR_Hx_EN)+
+       AVG(BO_P8_3_DHR_Hx_EN)+
+       AVG(BO_P8_4_DHR_Hx_EN)+
+       AVG(BO_P8_5_DHR_Hx_EN)+
+       AVG(BO_P8_7_DHR_Hx_EN)+
+       AVG(BO_P8_8_DHR_Hx_EN)+
+       AVG(BO_P8_9_DHR_Hx_EN)+
+       AVG(BO_P8_10_DHR_Hx_EN)+
+       AVG(BO_P8_11_DHR_Hx_EN)+
+       AVG(BO_P8_12_DHR_Hx_EN)) INTO P8 from bas_drains
+       where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+# Heat Pumps Circulation
+Select 785*Hours*.001*(AVG(BO_P2_1_Enable)),
+       785*Hours*.001*(AVG(BO_P2_2_Enable)),
+       785*Hours*.001*(AVG(BO_P2_3_Enable)),
+       785*Hours*.001*(AVG(BO_P2_4_Enable))  INTO P2_1,P2_2,P2_3,P2_4 from bas_geothermal
+       where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+# Boilers
+Select 870*Hours*.001*(AVG(BO_Blr_1_Enable)),
+       870*Hours*.001*(AVG(BO_Blr_2_Enable)),
+       324*Hours*.001*(AVG(BO_Blr_1_Enable)), 
+       324*Hours*.001*(AVG(BO_Blr_2_Enable))
+       INTO P4_1,P4_2,BLR_1,BLR_2 from bas_boiler_loop
+	where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+# Heating Loop
+Select 2460*Hours*.00001*(AVG(AO_P3_VFD_Ctrl)), 
+       2460*Hours*.00001*(AVG(AO_P3_2_VFD_Ctrl))
+       INTO P3_1,P3_2 from bas_heating_loop
+	where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+# Calculations of COP1, COP2, and COP3 
+set DOM1=((P11+P12+HPx1+HPx2+HPx3+HPx4)- (P110+P120+HPx10+HPx20+HPx30+HPx40))+SHTS+P7_1+P8+P2_1+P2_2+P2_3+P2_4;
+set DOM2 = ((P11+P12+HPx1+HPx2+HPx3+HPx4)- (P110+P120+HPx10+HPx20+HPx30+HPx40))+SHTS
+
++P7_1+P8+P2_1+P2_2+P2_3+P2_4+P4_1+P4_2+BLR_1+BLR_2+P3_1+P3_2;
+set DOM3 = ((HPx1+HPx2+HPx3+HPx4)- (HPx10+HPx20+HPx30+HPx40))+P2_1+P2_2+P2_3+P2_4;
+set NUM3 = NUM1;
+set COP1 = 0;
+set COP2 = 0;
+set COP3 = 0;
+
+# Avoid Dividing by 0
+IF DOM1 != 0 Then set COP1 = (NUM1*277.78)/DOM1;
+END IF;
+IF DOM2 != 0 Then set COP2 = (NUM2*277.78)/DOM2;
+END IF;
+IF DOM3 != 0 Then set COP3 = (NUM3*277.78)/DOM3;
+END IF;
+insert into COPCal values (COP1,COP2,COP3);
+
+ return " ";
+END $$
+
+DELIMITER ;
+
+
+DROP Function IF EXISTS calc_cop_test;
+
+DELIMITER $$
+
+CREATE Function calc_cop_test(
+     tsfrom VARCHAR(16)
+  , tsto   VARCHAR(16)
+  ) Returns VARCHAR (1)
+   
+
+BEGIN
+DECLARE P110,P120,HPx10,HPx20,HPx30,HPx40 FLOAT;
+DECLARE P11,P12,HPx1,HPx2,HPx3,HPx4 FLOAT;
+DECLARE Hours,NUM1,NUM2,NUM3,DOM1,DOM2,DOM3,COP1,COP2,COP3 Float;
+DECLARE SHTS,P7_1,P8,P2_1,P2_2,P2_3,P2_4,P4_1,P4_2,BLR_1,BLR_2,P3_1,P3_2 FLOAT;
+
+# Energy Values in GJ
+
+Select (TIMESTAMPDIFF( MINUTE ,  tsfrom,  tsto )/60) INTO Hours;
+Select SUM(Energy4),SUM(Energy4+Energy5+Energy6) INTO NUM1,NUM2 from Energy_Minute
+       where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+# Values are converted from WS to KWH by dividing by 3,600,000
+# Consumption Geo Field+ Heat Pumps (KWH) From Time Stamp
+SELECT AVG(`P-1-1`)/3600000,
+       AVG(`P-1-2`)/3600000,
+       AVG(`HP1`)/3600000,
+       AVG(`HP2`)/3600000,
+       AVG(`HP3`)/3600000,
+       AVG(`HP4`)/3600000
+       INTO P110,P120,HPx10,HPx20,HPx30,HPx40 from bas_el_energy 
+where date_format(ts,'%Y-%m-%d %H:%i') = tsfrom;
+
+# Consumption Geo Field+ Heat Pumps (KWH) To Time Stamp
+SELECT AVG(`P-1-1`)/3600000,
+       AVG(`P-1-2`)/3600000,
+       AVG(`HP1`)/3600000,
+       AVG(`HP2`)/3600000,
+       AVG(`HP3`)/3600000,
+       AVG(`HP4`)/3600000
+       INTO P11,P12,HPx1,HPx2,HPx3,HPx4 from bas_el_energy 
+where date_format(ts,'%Y-%m-%d %H:%i') = tsto;
+# Schedule 2 Power usage (KWH)
+# Solar 
+Select (111.55*Hours*1*.001) INTO SHTS;
+# DWHR
+Select (714*Hours*1*.001) INTO P7_1;
+
+Select 75.9*Hours*.001*( 
+       AVG(BO_P8_1_DHR_Hx_EN)+
+       AVG(BO_P8_2_DHR_Hx_EN)+
+       AVG(BO_P8_3_DHR_Hx_EN)+
+       AVG(BO_P8_4_DHR_Hx_EN)+
+       AVG(BO_P8_5_DHR_Hx_EN)+
+       AVG(BO_P8_7_DHR_Hx_EN)+
+       AVG(BO_P8_8_DHR_Hx_EN)+
+       AVG(BO_P8_9_DHR_Hx_EN)+
+       AVG(BO_P8_10_DHR_Hx_EN)+
+       AVG(BO_P8_11_DHR_Hx_EN)+
+       AVG(BO_P8_12_DHR_Hx_EN)) INTO P8 from bas_drains
+       where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+# Heat Pumps Circulation
+Select 785*Hours*.001*(AVG(BO_P2_1_Enable)),
+       785*Hours*.001*(AVG(BO_P2_2_Enable)),
+       785*Hours*.001*(AVG(BO_P2_3_Enable)),
+       785*Hours*.001*(AVG(BO_P2_4_Enable))  INTO P2_1,P2_2,P2_3,P2_4 from bas_geothermal
+       where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+# Boilers
+Select 870*Hours*.001*(AVG(BO_Blr_1_Enable)),
+       870*Hours*.001*(AVG(BO_Blr_2_Enable)),
+       324*Hours*.001*(AVG(BO_Blr_1_Enable)), 
+       324*Hours*.001*(AVG(BO_Blr_2_Enable))
+       INTO P4_1,P4_2,BLR_1,BLR_2 from bas_boiler_loop
+	where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+# Heating Loop
+Select 2460*Hours*.00001*(AVG(AO_P3_VFD_Ctrl)), 
+       2460*Hours*.00001*(AVG(AO_P3_2_VFD_Ctrl))
+       INTO P3_1,P3_2 from bas_heating_loop
+	where date_format(ts,'%Y-%m-%d %H:%i') between tsfrom and tsto;
+
+	
+# Calculations of COP1, COP2, and COP3 
+set DOM1=((P11+P12+HPx1+HPx2+HPx3+HPx4)- (P110+P120+HPx10+HPx20+HPx30+HPx40))+SHTS+P7_1+P8+P2_1+P2_2+P2_3+P2_4;
+set DOM2 = ((P11+P12+HPx1+HPx2+HPx3+HPx4)- (P110+P120+HPx10+HPx20+HPx30+HPx40))+SHTS
+
++P7_1+P8+P2_1+P2_2+P2_3+P2_4+P4_1+P4_2+BLR_1+BLR_2+P3_1+P3_2;
+set DOM3 = ((HPx1+HPx2+HPx3+HPx4)- (HPx10+HPx20+HPx30+HPx40))+P2_1+P2_2+P2_3+P2_4;
+set NUM3 = NUM1;
+set COP1 = 0;
+set COP2 = 0;
+set COP3 = 0;
+
+# Avoid Dividing by 0
+IF DOM1 != 0 Then set COP1 = (NUM1*277.78)/DOM1;
+END IF;
+IF DOM2 != 0 Then set COP2 = (NUM2*277.78)/DOM2;
+END IF;
+IF DOM3 != 0 Then set COP3 = (NUM3*277.78)/DOM3;
+END IF;
+insert into anaylze values  (COP1,COP2,COP3,(P11-P110) ,(P12-P120)  ,(HPx1-HPx10)  ,(HPx2-HPx20)  ,(HPx3-HPx30)   ,(HPx4-HPx40),Hours 
+ ,NUM1  ,NUM2 ,NUM3,DOM1 ,DOM2 ,DOM3,P7_1 ,P8 ,P2_1 ,P2_2 ,P2_3 ,P2_4 ,P4_1 ,P4_2 ,BLR_1 ,BLR_2 ,P3_1 ,P3_2 ,SHTS);
+   
+ return " ";
+END $$
+
+DELIMITER ;���������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������Energy_views.sql������������������������������������������������������������������������������������0000644�0001750�0001750�00000007236�12126154203�012767� 0����������������������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+CREATE OR REPLACE VIEW El_Energy_Yearly 
+
+                            AS select `v0_el_energy`.`Apt` AS `Apt`,
+							`v0_el_energy`.`Phase` AS `Phase`,
+							Max(`v0_el_energy`.`Ch1`) - Min(`v0_el_energy`.`Ch1`) AS `Ch1`,
+							Max(`v0_el_energy`.`Ch2`) - Min(`v0_el_energy`.`Ch2`) AS `Ch2`,
+							Max(`v0_el_energy`.`AUX1`) - Min(`v0_el_energy`.`AUX1`) AS `AUX1`,
+							Max(`v0_el_energy`.`AUX2`) - Min(`v0_el_energy`.`AUX2`) AS `AUX2`,
+							Max(`v0_el_energy`.`AUX3`) - Min(`v0_el_energy`.`AUX3`) AS `AUX3`,
+							Max(`v0_el_energy`.`AUX4`) - Min(`v0_el_energy`.`AUX4`) AS `AUX4`,
+							Max(`v0_el_energy`.`AUX5`) - Min(`v0_el_energy`.`AUX5`) AS `AUX5`,
+							`v0_el_energy`.`Year` AS `Year` 
+							from `v0_el_energy` group by `v0_el_energy`.`Apt`,`v0_el_energy`.`Phase`,`v0_el_energy`.`Year`;
+
+CREATE OR REPLACE VIEW El_Energy_Monthly 
+							AS  select `v0_el_energy`.`Apt` AS `Apt`,
+							`v0_el_energy`.`Phase` AS `Phase`,
+								Max(`v0_el_energy`.`Ch1`) - Min(`v0_el_energy`.`Ch1`) AS `Ch1`,
+							Max(`v0_el_energy`.`Ch2`) - Min(`v0_el_energy`.`Ch2`) AS `Ch2`,
+							Max(`v0_el_energy`.`AUX1`) - Min(`v0_el_energy`.`AUX1`) AS `AUX1`,
+							Max(`v0_el_energy`.`AUX2`) - Min(`v0_el_energy`.`AUX2`) AS `AUX2`,
+							Max(`v0_el_energy`.`AUX3`) - Min(`v0_el_energy`.`AUX3`) AS `AUX3`,
+							Max(`v0_el_energy`.`AUX4`) - Min(`v0_el_energy`.`AUX4`) AS `AUX4`,
+							Max(`v0_el_energy`.`AUX5`) - Min(`v0_el_energy`.`AUX5`) AS `AUX5`,
+							`v0_el_energy`.`Year` AS `Year`,
+							`v0_el_energy`.`Month` AS `Month`
+							from `v0_el_energy` group by `v0_el_energy`.`Apt`,`v0_el_energy`.`Phase`,`v0_el_energy`.`Year`,`v0_el_energy`.`month`;	
+							
+CREATE OR REPLACE VIEW El_Energy_Weekly 
+							AS select `v0_el_energy`.`Apt` AS `Apt`,
+							`v0_el_energy`.`Phase` AS `Phase`,
+								Max(`v0_el_energy`.`Ch1`) - Min(`v0_el_energy`.`Ch1`) AS `Ch1`,
+							Max(`v0_el_energy`.`Ch2`) - Min(`v0_el_energy`.`Ch2`) AS `Ch2`,
+							Max(`v0_el_energy`.`AUX1`) - Min(`v0_el_energy`.`AUX1`) AS `AUX1`,
+							Max(`v0_el_energy`.`AUX2`) - Min(`v0_el_energy`.`AUX2`) AS `AUX2`,
+							Max(`v0_el_energy`.`AUX3`) - Min(`v0_el_energy`.`AUX3`) AS `AUX3`,
+							Max(`v0_el_energy`.`AUX4`) - Min(`v0_el_energy`.`AUX4`) AS `AUX4`,
+							Max(`v0_el_energy`.`AUX5`) - Min(`v0_el_energy`.`AUX5`) AS `AUX5`,
+							`v0_el_energy`.`Year` AS `Year`, 
+							`v0_el_energy`.`Week` AS `Week`
+							from `v0_el_energy` group by `v0_el_energy`.`Apt`,`v0_el_energy`.`Phase`,`v0_el_energy`.`Year`,`v0_el_energy`.`Week`;
+
+CREATE OR REPLACE VIEW El_Energy_Daily 
+							AS select `v0_el_energy`.`Apt` AS `Apt`,`v0_el_energy`.`Phase` AS `Phase`,
+							Max(`v0_el_energy`.`Ch1`) - Min(`v0_el_energy`.`Ch1`) AS `Ch1`,
+							Max(`v0_el_energy`.`Ch2`) - Min(`v0_el_energy`.`Ch2`) AS `Ch2`,
+							Max(`v0_el_energy`.`AUX1`) - Min(`v0_el_energy`.`AUX1`) AS `AUX1`,
+							Max(`v0_el_energy`.`AUX2`) - Min(`v0_el_energy`.`AUX2`) AS `AUX2`,
+							Max(`v0_el_energy`.`AUX3`) - Min(`v0_el_energy`.`AUX3`) AS `AUX3`,
+							Max(`v0_el_energy`.`AUX4`) - Min(`v0_el_energy`.`AUX4`) AS `AUX4`,
+							Max(`v0_el_energy`.`AUX5`) - Min(`v0_el_energy`.`AUX5`) AS `AUX5`,
+							`v0_el_energy`.`Date` AS `Date`
+							from `v0_el_energy` group by `v0_el_energy`.`Apt`,`v0_el_energy`.`Phase`,`v0_el_energy`.`Date`;							
+
+
+CREATE OR REPLACE VIEW El_Energy_Hourly
+AS select date_format(ts,'%Y-%m-%d %H') As TS, apt,phase,
+	Max(`ch1`) - Min(`ch2`) AS `Ch1`,
+	Max(`ch2`) - Min(`ch2`) AS `Ch2`,
+	Max(`aux1`) - Min(`aux1`) AS `AUX1`,
+	Max(`aux2`) - Min(`aux2`) AS `AUX2`,
+	Max(`aux3`) - Min(`aux3`) AS `AUX3`,
+	Max(`aux4`) - Min(`aux4`) AS `AUX4`,
+	Max(`aux5`) - Min(`aux5`) AS `AUX5`
+	from el_energy
+		group by apt,phase,
+		date_format(ts,'%Y-%m-%d %H');
+							������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������BasTables.sql���������������������������������������������������������������������������������������0000644�0001750�0001750�00000006037�12126324307�012163� 0����������������������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������DROP TABLE IF EXISTS temp_minute;
+CREATE table temp_minute
+SELECT date_format(ts,'%Y-%m-%d %H:%i') as ts,
+avg(t1) as T1,
+avg(t2) as T2,
+avg(t3) as T3,
+avg(t4) as T4,
+avg(t5) as T5,
+avg(t6) as T6,
+avg(t7) as T7,
+avg(t8) as T8,
+avg(t9) as T9,
+avg(t12) as T12,
+avg(t13) as T13
+from bas_temp_extra
+group by
+date_format(ts,'%Y-%m-%d %H:%i');
+
+DROP TABLE IF EXISTS flow_minute;
+CREATE table flow_minute
+SELECT date_format(ts,'%Y-%m-%d %H:%i') as ts,
+avg(flow1) as Flow1,
+avg(flow2) as Flow2,
+avg(flow3) as Flow3,
+avg(flow4_1) as Flow4_1,
+avg(flow4_2) as Flow4_2,
+avg(flow5_1) as Flow5_1,
+avg(flow5_2) as Flow5_2,
+avg(flow5_3) as Flow5_3,
+avg(flow5_4) as Flow5_4,
+avg(flow6) as Flow6
+from bas_flows
+group by
+date_format(ts,'%Y-%m-%d %H:%i');
+
+DROP TABLE IF EXISTS boiler_loop_minute;
+Create table boiler_loop_minute 
+Select date_format(ts,'%Y-%m-%d %H:%i') as ts,
+building,
+AVG(AI_T15_Blr2_Supply) as T15,
+AVG(AI_T14_Blr1_Supply) as T14,
+AVG(BO_Blr_1_Enable) as BLR1,
+AVG(BO_Blr_2_Enable) as BLR2,
+AVG(AV_Tank_10_Setpoint) as TANK10,
+AVG(AV_T10_Temp) as T10,
+AVG(AI_T04_Outside_Air) as AIRT04
+from bas_boiler_loop
+group by
+building, date_format(ts,'%Y-%m-%d %H:%i');
+
+DROP TABLE IF EXISTS solar_minute;
+Create table solar_minute 
+Select date_format(ts,'%Y-%m-%d %H:%i') as ts,
+building,
+avg(BO_SHTS_Solar_EN) as T,
+avg(`AI_T03_Solar_SupTemp2`) as SupTemp2,
+avg(`AI_R05_Solar_SupPres`) as SupPres,
+avg(`AI_T03_Solar_SupTemp1`) as SupTemp1,
+avg(`AI_T03_Solar_SupTemp`) as SupTemp,
+avg(`AI_R06_Solar_RetPres`) as RetPres,
+avg(`AI_T04_Outside_Air`) as AirTemp
+from bas_solar
+group by
+building, date_format(ts,'%Y-%m-%d %H:%i');
+
+
+DROP TABLE IF EXISTS `COPCal`;
+CREATE TABLE IF NOT EXISTS `COPCal` (
+  `COP1` float DEFAULT NULL,
+  `COP2` float DEFAULT NULL,
+  `COP3` float DEFAULT NULL
+);
+
+
+
+DROP TABLE IF EXISTS `anaylze`;
+CREATE TABLE IF NOT EXISTS `anaylze` (
+  `COP1` float DEFAULT NULL,
+  `COP2` float DEFAULT NULL,
+  `COP3` float NOT NULL,
+  `P11-P110` float DEFAULT NULL,
+  `P12-P120` float DEFAULT NULL,
+  `HPx1-HPx10` float DEFAULT NULL,
+  `HPx2-HPx20` float DEFAULT NULL,
+  `HPx3-HPx30` float DEFAULT NULL,
+  `HPx4HPx40` float DEFAULT NULL,
+  `Hours` float DEFAULT NULL,
+  `NUM1` float DEFAULT NULL,
+  `NUM2` float DEFAULT NULL,
+  `NUM3` float DEFAULT NULL,
+  `DOM1` float DEFAULT NULL,
+  `DOM2` float DEFAULT NULL,
+  `DOM3` float DEFAULT NULL,
+  `P7_1` float DEFAULT NULL,
+  `P8` float DEFAULT NULL,
+  `P2_1` float DEFAULT NULL,
+  `P2_2` float DEFAULT NULL,
+  `P2_3` float DEFAULT NULL,
+  `P2_4` float DEFAULT NULL,
+  `P4_1` float DEFAULT NULL,
+  `P4_2` float DEFAULT NULL,
+  `BLR_1` float DEFAULT NULL,
+  `BLR_2` float DEFAULT NULL,
+  `P3_1` float DEFAULT NULL,
+  `P3_2` float DEFAULT NULL,
+  `SHTS` float DEFAULT NULL
+);
+
+
+
+Alter table temp_minute add constraint Primary Key ts(ts);
+Alter table flow_minute add constraint Primary Key ts(ts);
+Alter table solar_minute add constraint Primary Key ts(ts,building);
+Alter table boiler_loop_minute add constraint Primary Key ts(ts,building);
+
+�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������Heatflux_views.sql����������������������������������������������������������������������������������0000644�0001750�0001750�00000003307�12126151274�013316� 0����������������������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������CREATE OR REPLACE VIEW Heat_Flux_Yearly 
+							AS select `v0_heat_flux`.`Apt` AS `Apt`,
+                            avg(`v0_heat_flux`.`stud`) AS `Stud`,
+							avg(`v0_heat_flux`.`insulation`) AS `Insulation`,
+							`v0_heat_flux`.`Year` AS `Year` 
+							from `v0_heat_flux` group by `v0_heat_flux`.`Apt`,`v0_heat_flux`.`Year`;
+
+CREATE OR REPLACE VIEW Heat_Flux_Monthly 
+							AS select `v0_heat_flux`.`Apt` AS `Apt`,
+                               avg(`v0_heat_flux`.`stud`) AS `Stud`,
+							avg(`v0_heat_flux`.`insulation`) AS `Insulation`,
+							`v0_heat_flux`.`Year` AS `Year`,
+							`v0_heat_flux`.`Month` AS `Month`
+							from `v0_heat_flux` group by `v0_heat_flux`.`Apt`,`v0_heat_flux`.`Year`,`v0_heat_flux`.`month`;	
+							
+CREATE OR REPLACE VIEW Heat_Flux_Weekly 
+							AS select `v0_heat_flux`.`Apt` AS `Apt`,
+                              avg(`v0_heat_flux`.`stud`) AS `Stud`,
+							avg(`v0_heat_flux`.`insulation`) AS `Insulation`,
+							`v0_heat_flux`.`Year` AS `Year`, 
+							`v0_heat_flux`.`Week` AS `Week`
+							from `v0_heat_flux` group by `v0_heat_flux`.`Apt`,`v0_heat_flux`.`Year`,`v0_heat_flux`.`Week`;
+
+CREATE OR REPLACE VIEW Heat_Flux_Daily 
+							AS select `v0_heat_flux`.`Apt` AS `Apt`,
+                                avg(`v0_heat_flux`.`stud`) AS `Stud`,
+							avg(`v0_heat_flux`.`insulation`) AS `Insulation`,
+							`v0_heat_flux`.`Date` AS `Date`
+							from `v0_heat_flux` group by `v0_heat_flux`.`Apt`,`v0_heat_flux`.`Date`;							
+
+
+CREATE OR REPLACE VIEW Heat_Flux_Hourly
+
+						AS	select date_format(ts,'%Y-%m-%d %H') As TS,apt,
+						avg(`stud`) AS `Stud`,
+						avg(`insulation`) AS `Insulation`
+						from heat_flux
+						group by apt,
+						date_format(ts,'%Y-%m-%d %H');	
+							�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������v0_views.sql����������������������������������������������������������������������������������������0000644�0001750�0001750�00000006540�12126320053�012056� 0����������������������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������CREATE OR REPLACE VIEW `v0_air` AS select `air`.`apt` AS `Apt`,
+                               cast(`air`.`ts` as date) AS `Date`,
+							   year(`air`.`ts`) AS `Year`,month(`air`.`ts`) AS `Month`,
+							   dayofmonth(`air`.`ts`) AS `Day`,
+							   hour(`air`.`ts`) AS `Hour`,
+							   week(`air`.`ts`,0) AS `Week`,
+							   dayofweek(`air`.`ts`)-1 AS `Day of Week`,
+							   dayname(`air`.`ts`) AS `Day Name`,
+							   `air`.`co2` AS `CO2`,`air`.`rh` AS `Relative Humidity`,
+							   `air`.`temperature` AS `Temperature` 
+							   from `air`;
+							   
+	
+                                 
+							   
+CREATE OR REPLACE VIEW `v0_el_energy` AS select `el_energy`.`apt` AS `Apt`,
+                               cast(`el_energy`.`ts` as date) AS `Date`,
+							   year(`el_energy`.`ts`) AS `Year`,month(`el_energy`.`ts`) AS `Month`,
+							   dayofmonth(`el_energy`.`ts`) AS `Day`,
+							   hour(`el_energy`.`ts`) AS `Hour`,
+							   week(`el_energy`.`ts`,0) AS `Week`,
+							   dayofweek(`el_energy`.`ts`)-1 AS `Day of Week`,
+							   dayname(`el_energy`.`ts`) AS `Day Name`,
+							   `el_energy`.`phase` AS `Phase`,
+							   `el_energy`.`ch1` AS `Ch1`,
+							   `el_energy`.`ch2` AS `Ch2`,
+							   `el_energy`.`aux1` AS `AUX1`,
+							   `el_energy`.`aux2` AS `AUX2`, 
+							   `el_energy`.`aux3` AS `AUX3`,
+							   `el_energy`.`aux4` AS `AUX4`,
+							   `el_energy`.`aux5` AS `AUX5`
+							   from `el_energy`;
+ 
+							CREATE OR REPLACE VIEW `v0_water` AS select `water`.`apt` AS `Apt`,
+                               cast(`water`.`ts` as date) AS `Date`,
+							   year(`water`.`ts`) AS `Year`,month(`water`.`ts`) AS `Month`,
+							   dayofmonth(`water`.`ts`) AS `Day`,
+							   hour(`water`.`ts`) AS `Hour`,
+							   week(`water`.`ts`,0) AS `Week`,
+							   dayofweek(`water`.`ts`)-1 AS `Day of Week`,
+							   dayname(`water`.`ts`) AS `Day Name`,
+							   `water`.`hot` AS `Hot_Water`,`water`.`total` AS `Total_Water`
+							   from `water`;
+
+							   CREATE OR REPLACE VIEW `v0_heat_flux` AS select `heat_flux`.`apt` AS `Apt`,
+                               cast(`heat_flux`.`ts` as date) AS `Date`,
+							   year(`heat_flux`.`ts`) AS `Year`,month(`heat_flux`.`ts`) AS `Month`,
+							   dayofmonth(`heat_flux`.`ts`) AS `Day`,
+							   hour(`heat_flux`.`ts`) AS `Hour`,
+							   week(`heat_flux`.`ts`,0) AS `Week`,
+							   dayofweek(`heat_flux`.`ts`)-1 AS `Day of Week`,
+							   dayname(`heat_flux`.`ts`) AS `Day Name`,
+							   `heat_flux`.`stud` AS `Stud`,`heat_flux`.`insulation` AS `Insulation`
+							   from heat_flux;
+
+
+							      CREATE OR REPLACE VIEW `v0_Heating` AS select `heating`.`apt` AS `Apt`,
+                               cast(`heating`.`ts` as date) AS `Date`,
+							   year(`heating`.`ts`) AS `Year`,month(`heating`.`ts`) AS `Month`,
+							   dayofmonth(`heating`.`ts`) AS `Day`,
+							   hour(`heating`.`ts`) AS `Hour`,
+							   week(`heating`.`ts`,0) AS `Week`,
+							   dayofweek(`heating`.`ts`)-1 AS `Day of Week`,
+							   dayname(`heating`.`ts`) AS `Day Name`,
+							   `heating`.`total_energy` AS `Total_Energy`,`heating`.`total_vol` AS `Total_Volume`,
+							   `heating`.`total_mass` AS `Total_Mass`,`heating`.`cur_flow` AS `Current_Flow`,
+							   `heating`.`cur_t1` AS `Current_Temperature_1`,
+							   `heating`.`cur_t2` AS `Current_Temperature_2`
+							   from heating;����������������������������������������������������������������������������������������������������������������������������������������������������������������BasViews.sql����������������������������������������������������������������������������������������0000644�0001750�0001750�00000002174�12126324433�012044� 0����������������������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������Create or Replace view v0_energy
+As Select a.ts,a.t,a.building,
+b.Flow1,
+b.Flow2,
+b.Flow3,
+b.Flow4_1,
+b.Flow4_2,
+b.Flow5_1,
+b.Flow5_2,
+b.Flow5_3,
+b.Flow5_4,
+b.Flow6,
+c.T1,
+c.T3,
+c.T4,
+c.T5,
+c.T6,
+c.T7,
+c.T8,
+c.T9,
+c.T12,
+c.T13,
+d.T14,
+d.T15
+from solar_minute a,
+flow_minute b,
+temp_minute c,
+boiler_loop_minute d
+where a.ts = b.ts and a.ts = c.ts and a.ts = d.ts;
+
+
+Create or Replace view Energy_Minute
+As Select ts,building,
+Date(ts) AS `Date`,
+year(ts) AS `Year`,month(ts)AS `Month`,
+dayofmonth(ts) AS `Day`,
+hour(ts) AS `Hour`,
+minute(ts) As 'Minute',
+week(ts) AS `Week`,
+(dayofweek(ts) - 1) AS `Day of Week`,
+dayname(ts) AS `Day Name`,
+(0.000001*.001*4.00*971.68*flow3*T*(T5-T4)) as 'Energy1',
+(0.000001*.001*4.00*971.68*flow6*T*(T12-T13)) as 'Energy2',
+(0.000001*.001*4.00*971.68*flow2*T*(T9-T8)) as 'Energy3',
+(0.000001*.001*3.90*1016.98*(flow5_1+flow5_2+flow5_3+flow5_4)*T*(T3-T1)) as 'Energy4',
+(0.000001*.001*3.90*1016.98*flow4_1*T*(T14-T1)) as 'Energy5',
+(0.000001*.001*3.90*1016.98*flow4_2*T*(T15-T1)) as 'Energy6',
+(0.000001*.001*3.90*1016.98*flow1*T*(T6-T7)) as 'Energy7'
+from v0_energy;����������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������Heating_views.sql�����������������������������������������������������������������������������������0000644�0001750�0001750�00000011534�12126322115�013110� 0����������������������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
+CREATE OR REPLACE VIEW Heating_Yearly 
+							AS select `v0_Heating`.`Apt` AS `Apt`,
+							Max(`v0_Heating`.`Total_Energy`) - Min(`v0_Heating`.`Total_Energy`) AS `Total_Energy`,
+							Max(`v0_Heating`.`Total_Volume`) - Min(`v0_Heating`.`Total_Volume`) AS `Total_Volume`,
+							Max(  `v0_Heating`.`Total_Mass`) - Min(  `v0_Heating`.`Total_Mass`) AS `Total_Mass`,
+							`v0_Heating`.`Year` AS `Year` 
+							from `v0_Heating` group by `v0_Heating`.`Apt`,`v0_Heating`.`Year`;
+							
+CREATE OR REPLACE VIEW Heating_Water_Yearly 
+							AS select `v0_Heating`.`Apt` AS `Apt`,
+                            avg(`v0_Heating`.`Current_Flow`) AS `Current_Flow`,
+							avg(`v0_Heating`.`Current_Temperature_1` )AS `Current_Temperature_1`,
+							avg( `v0_Heating`.`Current_Temperature_2`) AS `Current_Temperature_2`,
+							`v0_Heating`.`Year` AS `Year` 
+							from `v0_Heating`
+							group by `v0_Heating`.`Apt`,`v0_Heating`.`Year`
+							Having avg(`v0_Heating`.`Current_Flow`)>0;
+							
+							
+CREATE OR REPLACE VIEW Heating_Monthly 
+							AS select `v0_Heating`.`Apt` AS `Apt`,
+							Max(`v0_Heating`.`Total_Energy`) - Min(`v0_Heating`.`Total_Energy`) AS `Total_Energy`,
+							Max(`v0_Heating`.`Total_Volume`) - Min(`v0_Heating`.`Total_Volume`) AS `Total_Volume`,
+							Max(  `v0_Heating`.`Total_Mass`) - Min(  `v0_Heating`.`Total_Mass`) AS `Total_Mass`,
+							`v0_Heating`.`Year` AS `Year`,
+							`v0_Heating`.`Month` AS `Month`
+							from `v0_Heating` group by `v0_Heating`.`Apt`,`v0_Heating`.`Year`,`v0_Heating`.`month`;	
+							
+CREATE OR REPLACE VIEW Heating_Water_Monthly 
+							AS select `v0_Heating`.`Apt` AS `Apt`,
+							 avg(`v0_Heating`.`Current_Flow`) AS `Current_Flow`,
+							  avg(`v0_Heating`.`Current_Temperature_1` )AS `Current_Temperature_1`,
+							  avg( `v0_Heating`.`Current_Temperature_2`) AS `Current_Temperature_2`,
+							`v0_Heating`.`Year` AS `Year`,
+							`v0_Heating`.`Month` AS `Month`
+							from `v0_Heating` 
+							group by `v0_Heating`.`Apt`,`v0_Heating`.`Year`,`v0_Heating`.`month`
+                            Having avg(`v0_Heating`.`Current_Flow`)>0;							
+							
+							
+CREATE OR REPLACE VIEW Heating_Weekly 
+							AS select `v0_Heating`.`Apt` AS `Apt`,
+							Max(`v0_Heating`.`Total_Energy`) - Min(`v0_Heating`.`Total_Energy`) AS `Total_Energy`,
+							Max(`v0_Heating`.`Total_Volume`) - Min(`v0_Heating`.`Total_Volume`) AS `Total_Volume`,
+							Max(  `v0_Heating`.`Total_Mass`) - Min(  `v0_Heating`.`Total_Mass`) AS `Total_Mass`,
+							`v0_Heating`.`Year` AS `Year`, 
+							`v0_Heating`.`Week` AS `Week`
+							from `v0_Heating` 
+							group by `v0_Heating`.`Apt`,`v0_Heating`.`Year`,`v0_Heating`.`Week`;
+							
+							
+CREATE OR REPLACE VIEW Heating_Water_Weekly 
+							AS select `v0_Heating`.`Apt` AS `Apt`,
+							avg(`v0_Heating`.`Current_Flow`) AS `Current_Flow`,
+							  avg(`v0_Heating`.`Current_Temperature_1` )AS `Current_Temperature_1`,
+							  avg( `v0_Heating`.`Current_Temperature_2`) AS `Current_Temperature_2`,
+							`v0_Heating`.`Year` AS `Year`, 
+							`v0_Heating`.`Week` AS `Week`
+							from `v0_Heating` 
+							group by `v0_Heating`.`Apt`,`v0_Heating`.`Year`,`v0_Heating`.`Week`	
+							Having avg(`v0_Heating`.`Current_Flow`)>0;
+							
+CREATE OR REPLACE VIEW Heating_Daily 
+							AS select `v0_Heating`.`Apt` AS `Apt`,
+							Max(`v0_Heating`.`Total_Energy`) - Min(`v0_Heating`.`Total_Energy`) AS `Total_Energy`,
+							Max(`v0_Heating`.`Total_Volume`) - Min(`v0_Heating`.`Total_Volume`) AS `Total_Volume`,
+							Max(  `v0_Heating`.`Total_Mass`) - Min(  `v0_Heating`.`Total_Mass`) AS `Total_Mass`,
+							`v0_Heating`.`Date` AS `Date`
+							from `v0_Heating` group by `v0_Heating`.`Apt`,`v0_Heating`.`Date`;	
+							
+CREATE OR REPLACE VIEW Heating_Water_Daily 
+								AS select `v0_Heating`.`Apt` AS `Apt`,
+							 avg(`v0_Heating`.`Current_Flow`) AS `Current_Flow`,
+							  avg(`v0_Heating`.`Current_Temperature_1` )AS `Current_Temperature_1`,
+							  avg( `v0_Heating`.`Current_Temperature_2`) AS `Current_Temperature_2`,
+							`v0_Heating`.`Date` AS `Date`
+							from `v0_Heating` group by `v0_Heating`.`Apt`,`v0_Heating`.`Year`
+							Having avg(`v0_Heating`.`Current_Flow`)>0;
+							
+CREATE OR REPLACE VIEW Heating_Hourly
+							AS	select date_format(ts,'%Y-%m-%d %H') As TS,apt,
+							Max(`total_energy`) - Min(`total_energy`) AS `Total_Energy`,
+							Max(`total_vol`) - Min(`total_vol`) AS `Total_Volume`,
+							Max(`total_mass`) - Min(`total_mass`) AS `Total_Mass`
+							from heating
+							group by apt,
+							date_format(ts,'%Y-%m-%d %H');								
+							
+							
+							
+							
+CREATE OR REPLACE VIEW Heating_Water_Hourly
+							AS	select date_format(ts,'%Y-%m-%d %H') As TS,apt,
+							avg(`cur_flow`) AS `Current_Flow`,
+							  avg(`cur_t1` )AS `Current_Temperature_1`,
+							  avg( `cur_t2`) AS `Current_Temperature_2`
+							from heating
+							group by apt,
+							date_format(ts,'%Y-%m-%d %H')
+							Having avg(`cur_flow`)>0;
+��������������������������������������������������������������������������������������������������������������������������������������������������������������������BasViews.sql����������������������������������������������������������������������������������������0000644�0001750�0001750�00000000000�12126324433�014271� 1BasViews.sql����������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������Water_views.sql�������������������������������������������������������������������������������������0000644�0001750�0001750�00000003730�12126154404�012616� 0����������������������������������������������������������������������������������������������������ustar  �user����������������������������user�������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������CREATE OR REPLACE VIEW Water_Yearly 
+							AS select `v0_water`.`Apt` AS `Apt`,
+                            Max(`v0_water`.`Hot_Water`) - Min(`v0_water`.`Hot_Water`) AS `Hot_Water`,
+                            Max(`v0_water`.`Total_Water`) - Min(`v0_water`.`Total_Water`) AS `Total_Water`,
+							`v0_water`.`Year` AS `Year` 
+							from `v0_water` group by `v0_water`.`Apt`,`v0_water`.`Year`;
+
+CREATE OR REPLACE VIEW Water_Monthly 
+							AS select `v0_water`.`Apt` AS `Apt`,
+                              Max(`v0_water`.`Hot_Water`) - Min(`v0_water`.`Hot_Water`) AS `Hot_Water`,
+                              Max(`v0_water`.`Total_Water`) - Min(`v0_water`.`Total_Water`) AS `Total_Water`,
+							`v0_water`.`Year` AS `Year`,
+							`v0_water`.`Month` AS `Month`
+							from `v0_water` group by `v0_water`.`Apt`,`v0_water`.`Year`,`v0_water`.`month`;	
+							
+CREATE OR REPLACE VIEW Water_Weekly 
+							AS select `v0_water`.`Apt` AS `Apt`,
+                               Max(`v0_water`.`Hot_Water`) - Min(`v0_water`.`Hot_Water`) AS `Hot_Water`,
+                            Max(`v0_water`.`Total_Water`) - Min(`v0_water`.`Total_Water`) AS `Total_Water`,
+							`v0_water`.`Year` AS `Year`, 
+							`v0_water`.`Week` AS `Week`
+							from `v0_water` group by `v0_water`.`Apt`,`v0_water`.`Year`,`v0_water`.`Week`;
+
+CREATE OR REPLACE VIEW Water_Daily 
+							AS select `v0_water`.`Apt` AS `Apt`,
+                            Max(`v0_water`.`Hot_Water`) - Min(`v0_water`.`Hot_Water`) AS `Hot_Water`,
+                            Max(`v0_water`.`Total_Water`) - Min(`v0_water`.`Total_Water`) AS `Total_Water`,
+							`v0_water`.`Date` AS `Date`
+							from `v0_water` group by `v0_water`.`Apt`,`v0_water`.`Date`;							
+												
+							
+CREATE OR REPLACE VIEW Water_Hourly
+			 	AS	select date_format(ts,'%Y-%m-%d %H') As TS,apt,
+				Max(`hot`) - Min(`hot`) AS `Hot_Water`,
+                Max(`total`) - Min(`total`) AS `Total_Water`
+				from water
+				group by apt,
+				date_format(ts,'%Y-%m-%d %H');	
+							��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������
