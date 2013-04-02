@@ -100,7 +100,7 @@ class Engineer2 {
 
         $data = null;
         foreach ($period as $tick) {
-            $strDisplayTick = $tick->format("Y-m-d G");
+            $strDisplayTick = $tick->format("Y-m-d:G");
             
             $strTick = $tick->format("Y-m-d G");
             $strTickEnd = $tick->add($interval)->format("Y-m-d G");
