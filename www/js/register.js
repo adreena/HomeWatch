@@ -1,4 +1,4 @@
-require(['jquery', 'vendor/jquery-validate'],
+require(['jquery', 'vendor/jquery.validate.min'],
 
 function ($) {
     "use strict";
