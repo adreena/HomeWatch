@@ -191,11 +191,36 @@ if ($test) {
                 }
                 //var_dump($bigArray);
             }
+		} else if ($ytype == "alert") {
+            //get the actual alert body from the alert name
+            $ydata = ConfigurationDB::fetchAlert($yaxis);
+
+            // if fetchAlert returns false, this name doesn't exist in db
+            if (!$ydata)
+                array_push($messages, "No alert with the name $yaxis found");
+            else {
+                $ydata = $ydata["Value"];
+                $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment);
+
+                $ydata = Alerts::getAlerts($function);
+                foreach($ydata as $date=>$value) {
+                    $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
+                    $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
+                }
+            }
 		} else if ($ytype == "energy") {
 		    $energyColumn = $yaxis;
 		    $ydata = Engineer2::getEnergyColumnData($startdate, $enddate, $energyColumn);
                     //...
-		}
+
+		} else if ($ytype == "utility") {
+            $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment, $yaxis);
+            $ydata = EquationParser::getUtilityCosts($function);
+            foreach($ydata as $date=>$value) {
+                $bigArray['values'][$apartment][$date]["$yaxis Cost"]["x"] = $date;
+                $bigArray['values'][$apartment][$date]["$yaxis Cost"]["y"] = $value;
+            }
+        }
 
 		
 	
@@ -266,6 +291,7 @@ if ($test) {
  */
 
 
+/*
 function checkAlerts ($startdate, $enddate, $x, $yarray, $apartment) {
 
 	$listOfAlerts = array("CO2" => '$air_co2$ > 1000');
@@ -294,6 +320,7 @@ function checkAlerts ($startdate, $enddate, $x, $yarray, $apartment) {
 
 	return $triggeredAlerts;
 }
+*/
 
 /*
  * This returns a json array used for formula/function parsing.
@@ -303,18 +330,19 @@ function checkAlerts ($startdate, $enddate, $x, $yarray, $apartment) {
  * Data: The function to be parsed
  * Name: The name of the function (maybe unnecesary)?
  */
-function parseFormulaToJson ($data, $startdate, $enddate, $period, $apartment) {
+function parseFormulaToJson ($data, $startdate, $enddate, $period, $apartment, $type = null) {
 	$functionArray = array();
 	$functionArray["startdate"] = $startdate;
 	$functionArray["enddate"] = $enddate;
 	$functionArray["apartment"] = $apartment;
 	$functionArray["granularity"] = $period;
 	$functionArray["function"] = $data;
-	//$functionArray["functionname"] = $name;
+    $functionArray["type"] = $type;
 	
 	return json_encode($functionArray);
 }
 
+/*
 function parseAlertToJson ($alertString, $startdate, $enddate, $apartment) {
 	$alertArray = array();
 	$alertArray["startdate"] = $startdate;
@@ -325,6 +353,7 @@ function parseAlertToJson ($alertString, $startdate, $enddate, $apartment) {
 	return json_encode($alertArray);
 }
 
+*/
 
 /*
  * This function calculates whether a query should be rejected or not based on the size of the data set requested.
