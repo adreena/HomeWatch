@@ -184,12 +184,18 @@ if ($test) {
                 $ydata = $ydata["Value"];
                 $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment);
 
-                $ydata = EquationParser::getData($function);
+                try {
+                    $ydata = EquationParser::getData($function);
+                } catch (\Exception $e) {
+                    $ydata = array();
+                    $messages[] = $e->getMessage();
+                }
+
                 foreach($ydata as $date=>$value) {
                     $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
                     $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
                 }
-                //var_dump($bigArray);
+
             }
 		} else if ($ytype == "alert") {
             //get the actual alert body from the alert name

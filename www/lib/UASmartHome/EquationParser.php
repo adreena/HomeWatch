@@ -245,8 +245,8 @@ class EquationParser
         $rand_data = current($data);
 
         if (!$rand_data) {
-            echo "no database variable found in equation\n";
-            return null;
+            throw new \Exception('No data found for the given range ' .
+                . 'No database variable found in equation');
         }
 
         $num_points = count($rand_data);
