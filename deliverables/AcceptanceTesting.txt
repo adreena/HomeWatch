@@ -1,4 +1,3 @@
-
 Introduction
 
 	This document is the Acceptance Testing document for the Smart Home application. It's purpose is to assist with installation of the system as well as giving the user some idea of how to achieve various goals in more detail than is available in the User Manual. This detail also lends itself towards aiding a user who is having difficulty working with the interface to locate the exact step at which their problem occurs, as well as alowing them to etermine if the error is a matter of order of operations or a fault in the application itself. If an application fault is discovered the contacts provided in the Support Contact section can be used to alert the team in order to generate a solution to the fault. The intended audience of this document is the team involved with the instalation and maintenence of the application, rather than those who use it for non work purposes or administration, although the System Tests section may be of some use to them if they cannot learn what they want from the User Manual.
@@ -9,8 +8,25 @@ Instalation
 	(Maybe we give them the folder/files to run on their own server or we tell them how to access a server)
 	(if we want them to make their own we should give instructions of virtual machines as well)
 	
-	(instructions on how to install the database)
-	
+	###################################################################################
+  	DB First Time Installtion:
+        A)The user will need to have the Same table names as was provided by the client 
+        B)User will need to put the Air,Water,Heatflux,Energy and Water in one DB and the Bas tables should be in different one
+        ,incase the data or views needed to be accessed through phpmyadmin
+        C) InstallDB.sh and DB.tar should be in the Same folder under the Script folder 
+	D)Excute the InstallDB shell script
+ 	E)User will need to enter the username ,password and 2 Databases names .The first one for Water..etc and second for 
+ 	bas 
+        ###################################################################################
+
+	###################################################################################
+         CronJob Installtion:
+        A)User will need to insert the username,password,db names in the Daily script shell script and config.php,inorder to be
+        excuted by crontab .
+        B)This cronJob for Daily update the views and tables for the DB overnight and allow the Weather.php to pull the data 
+	and store in the DB 
+        ###################################################################################
+
 	(instructions on how to set up required scripts)
 	
 	(instruction on how to do other stuff (?))
