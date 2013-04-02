@@ -112,14 +112,14 @@ function ($, _, D, Graph, TemplateManager) {
      * date as an ISO "short" string -- that is, YYYY-mm-dd.
      */
     Date.prototype.toShortISOString = function () {
-        return this.getFullYear() + '-' +
-            (this.getMonth() + 1) + '-' +
-            this.getDate();
+        return this.getUTCFullYear() + '-' +
+            (this.getUTCMonth() + 1) + '-' +
+            this.getUTCDate();
     };
 
     Date.prototype.toModifiedISOString = function () {
         return this.toShortISOString() + ' ' +
-            this.getHours();
+            this.getUTCHours();
     };
 
 
