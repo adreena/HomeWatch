@@ -57,35 +57,35 @@ $result = Engineer2::EQ(
 );
 
 $cols = array(
-    'COP1' => "COP of Solar+DWHR+Geo Field+Heat Pumps",
-    'COP2' => "COP of Entire Heating System",
-    'COP3' => "COP of Heat Pumps",
-    'NUM1' => "Heat Energy GJ COP1",
-    'NUM2' => "Heat Energy GJ COP2",
-    'NUM3' => "Heat Energy GJ COP3",
-    'P11-P110' => "Geo KWH P1 1",
-    'P12-P120' => "Geo KWH P1 2",
-    'HPx1-HPx10' => "Heat Pump KWH HP1",
-    'HPx2-HPx20' => "Heat Pump KWH HP2",
-    'HPx3-HPx30' => "Heat Pump KWH HP3",
-    'HPx4-HPx40' => "Heat Pump KWH HP4",
-    'Hours' => "Hours In Period",
-    'SHTS' => "Solar SHTS KWH",
-    'P7_1' => "Elect Usage KWH DWHR P7 1",
-    'P8' => "Elect Usage KWH DWHR P8",
-    'P2_1' => "Elect Usage KWH HP P2 1",
-    'P2_2' => "Elect Usage KWH HP P2 2",
-    'P2_3' => "Elect Usage KWH HP P2 3",
-    'P2_4' => "Elect Usage KWH HP P2 4",
-    'P4_1' => "Elect Usage KWH Boilers P4 1",
-    'P4_2' => "Elect Usage KWH Boilers P4 2",
-    'BLR_1' => "Elect Usage KWH Boilers BLR 1",
-    'BLR_2' => "Elect Usage KWH Boilers BLR 2",
-    'P3_1' => "Elect Usage KWH Heat Loop P3 1",
-    'P3_2' => "Elect Usage KWH Heat Loop P3 2",
-    'DOM1' => "Total Elect KWH COP1",
-    'DOM2' => "Total Elect KWH COP2",
-    'DOM3' => "Total Elect KWH COP3"
+    'COP1' => array("COP of Solar+DWHR+Geo Field+Heat Pumps", ""),
+    'COP2' => array("COP of Entire Heating System", ""),
+    'COP3' => array("COP of Heat Pumps", ""),
+    'NUM1' => array("Heat Energy COP1", "GJ"),
+    'NUM2' => array("Heat Energy COP2", "GJ"),
+    'NUM3' => array("Heat Energy COP3", "GJ"),
+    'P11-P110' => array("Geo P1 1", "KWH"),
+    'P12-P120' => array("Geo P1 2", "KWH"),
+    'HPx1-HPx10' => array("Heat Pump HP1", "KWH"),
+    'HPx2-HPx20' => array("Heat Pump HP2", "KWH"),
+    'HPx3-HPx30' => array("Heat Pump HP3", "KWH"),
+    'HPx4-HPx40' => array("Heat Pump HP4", "KWH"),
+    'Hours' => array("Hours In Period", "hours"),
+    'SHTS' => array("Solar SHTS", "KWH"),
+    'P7_1' => array("Elect Usage DWHR P7 1", "KWH"),
+    'P8' => array("Elect Usage DWHR P8", "KWH"),
+    'P2_1' => array("Elect Usage HP P2 1", "KWH"),
+    'P2_2' => array("Elect Usage HP P2 2", "KWH"),
+    'P2_3' => array("Elect Usage HP P2 3", "KWH"),
+    'P2_4' => array("Elect Usage HP P2 4", "KWH"),
+    'P4_1' => array("Elect Usage Boilers P4 1", "KWH"),
+    'P4_2' => array("Elect Usage Boilers P4 2", "KWH"),
+    'BLR_1' => array("Elect Usage Boilers BLR 1", "KWH"),
+    'BLR_2' => array("Elect Usage Boilers BLR 2", "KWH"),
+    'P3_1' => array("Elect Usage Heat Loop P3 1", "KWH"),
+    'P3_2' => array("Elect Usage Heat Loop P3 2", "KWH"),
+    'DOM1' => array("Total Elect COP1", "KWH"),
+    'DOM2' => array("Total Elect COP2", "KWH"),
+    'DOM3' => array("Total Elect COP3", "KWH")
 );
 
 function getColumnName($uglyName) {
@@ -108,7 +108,7 @@ foreach ($result as $calc => $val) {
         echo "<br><strong> " . $_POST['name'] . " </strong> = $val KWH <br>\n";
     } else if ($calculation === "eq4" || $calculation === "eq5") {
         $col = getColumnName($calc);
-        echo "<br><strong>$col</strong> = $val <br>\n";
+        echo "<br><strong>" . $col[0] . "</strong> = $val " . $col[1] . " <br>\n";
     } else {
         echo "<br><strong> " . $_POST['name'] . " </strong> = $val <br>\n";
     }
