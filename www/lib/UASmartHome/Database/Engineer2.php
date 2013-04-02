@@ -71,8 +71,8 @@ class Engineer2 {
 	return $row;
 	}
         if ($EQ==self::ENERGY_EQ)
-	{
-	$dbh=$conn->connect()->prepare("select ts,".$column."  from EnergyH_Graph where ts between :SD and :ED") ;
+	{//The Tablees Are EnergyH_Graph the Ts format ->2013-03-15:01 ,EnergyD_Graph is a Date only 2013-03-15
+	$dbh=$conn->connect()->prepare("select ts,".$column."  from ".$tablename." where ts between :SD and :ED") ;
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
