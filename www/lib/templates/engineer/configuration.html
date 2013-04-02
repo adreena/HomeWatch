@@ -2,14 +2,11 @@
 
 {% block title 'Alert, formula configuration' %}
 
+{% block requireMain '/js/configuration' %}
+
 {% block content %}
 
 <link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
-
-<script src="/js/vendor/jquery-ui.js"></script>
-<script src="/js/vendor/jquery.scrollTo-min.js"></script>
-<script src="/js/vendor/jquery.validate.min.js"></script>
-<script src="/js/configuration.js"></script>
 
 <div class="configs">
 
@@ -30,8 +27,8 @@
                     <td class="name">{{ alert['name'] }}</td>
                     <td class="value">{{ alert['value'] }}</td>
                     <td class="description">{{ alert['description'] }}</td>
-                    <td><button onClick="deleteAlert(this)">Delete</button></td>
-                    <td><button onClick="editAlert(this)">Edit</button></td>
+                    <td><button class="delete-alert">Delete</button></td>
+                    <td><button class="edit-alert">Edit</button></td>
                     <td><input class="favorite" type="checkbox" {{ alert['favorite'] == 1 ? 'checked' : '' }}/></td>
                 </tr>
                 {% endfor %}
@@ -59,7 +56,7 @@
                     <input name="description" type="text" /><br>
                     
                     <div class="footer">
-                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Cancel</button>
+                        <button class="button editor-reset" type="button" tabindex="-1">Cancel</button>
                         <input class="button" name="submit" type="submit" value="Submit"/>
                     </div>
                     
@@ -87,8 +84,8 @@
                     <td class="name">{{ function['name'] }}</td>
                     <td class="value">{{ function['value'] }}</td>
                     <td class="description">{{ function['description'] }}</td>
-                    <td><button onClick="deleteFunction(this)">Delete</button></td>
-                    <td><button onClick="editFunction(this)">Edit</button></td>
+                    <td><button class="delete-function">Delete</button></td>
+                    <td><button class="edit-function">Edit</button></td>
                     <td><input class="favorite" type="checkbox" {{ function['favorite'] == 1 ? 'checked' : '' }}/></td>
                 </tr>
                 {% endfor %}
@@ -116,7 +113,7 @@
                     <input name="description" type="text" /><br>
                     
                     <div class="footer">
-                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Cancel</button>
+                        <button class="button editor-reset" type="button" tabindex="-1">Cancel</button>
                         <input class="button" name="submit" type="submit" value="Submit"/>
                     </div>
                     
@@ -143,8 +140,8 @@
                     <td class="name">{{ constant['name'] }}</td>
                     <td class="value">{{ constant['value'] }}</td>
                     <td class="description">{{ constant['description'] }}</td>
-                    <td><button onClick="deleteConstant(this)">Delete</button></td>
-                    <td><button onClick="editConstant(this)">Edit</button></td>
+                    <td><button class="delete-constant">Delete</button></td>
+                    <td><button class="edit-constant">Edit</button></td>
                     <td><input class="favorite" type="checkbox" {{ constant['favorite'] == 1 ? 'checked' : '' }}/></td>
                 </tr>
                 {% endfor %}
@@ -172,7 +169,7 @@
                     <input name="description" type="text" /><br>
                     
                     <div class="footer">
-                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Cancel</button>
+                        <button class="button editor-reset" type="button" tabindex="-1"'>Cancel</button>
                         <input class="button" name="submit" type="submit" value="Submit"/>
                     </div>
                     
