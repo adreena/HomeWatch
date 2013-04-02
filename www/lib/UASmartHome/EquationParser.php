@@ -31,7 +31,6 @@ class EquationParser
         "heat_temp1" => "Current_Temperature_1",
         "heat_temp2" => "Current_Temperature_2",
         "heatflux_stud" => "Stud",
-        "hotflex_stud" => "Stud",
         "heatflux_insul" => "Insulation",
         "water_hot" => "Hot_Water",
         "water_total" => "Total_Water",
