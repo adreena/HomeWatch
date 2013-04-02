@@ -192,3 +192,8 @@ p {
     font-style: italic;
     color: #111;
 }
+
+/* Hack for jdPicker. */
+.date-wrapper {
+  width: 160px;
+}
