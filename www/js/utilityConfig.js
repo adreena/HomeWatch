@@ -22,15 +22,7 @@ function ($) {
     });// window load
 
     function initUtilityEditor() {
-        // Setup date inputs
-        var dateInputs = $("[name=startdate], [name=enddate]");
-        
-        // Make jdPicker give us controls that always show.
-        dateInputs.attr('type', 'hidden');
-        dateInputs.jdPicker({
-            date_format: 'YYYY-mm-dd',
-            start_of_week: 0
-        });
+        refreshUtilityDatePickers();
         
         // Init the edit and delete buttons
         $(UTILITY_DISPLAY_ID).find('.delete-utility').click(deleteUtility);
@@ -52,6 +44,17 @@ function ($) {
                 $(element).prev().before(error);
             },
 	        onkeyup: false
+        });
+    }
+    
+    function refreshUtilityDatePickers() {
+        var dateInputs = $("[name=startdate], [name=enddate]");
+        
+        // Make jdPicker give us controls that always show.
+        dateInputs.attr('type', 'hidden');
+        dateInputs.jdPicker({
+            date_format: 'YYYY-mm-dd',
+            start_of_week: 0
         });
     }
     
@@ -106,6 +109,8 @@ function ($) {
         utilityEditorContents.find('input[name=startdate]').val(utility.startdate);
         utilityEditorContents.find('input[name=enddate]').val(utility.enddate);
         utilityEditorContents.find('input[name=id]').val(utility.id);
+        
+        refreshUtilityDatePickers();
     }
 
     // =================================================================================================
