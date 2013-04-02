@@ -419,6 +419,9 @@ class Engineer {
     {
         $result =array();
         $conn=new Connection ();
+        date_default_timezone_set('UTC');
+        $StartDate = date_create_from_Format('Y-m-d G', $StartDate)->format('Y-m-d G');
+        $EndDate = date_create_from_Format('Y-m-d G', $EndDate)->format('Y-m-d G');
         $Query=$conn->connect()->prepare("select * from ".$table." where Apt= :Apt_Num AND Ts between :SD and :ED ") ;
         $Query->bindValue(":Apt_Num",$apt);
         $Query->bindValue(":SD",$StartDate);
