@@ -194,7 +194,7 @@ if ($test) {
 		} else if ($ytype == "energy") {
 		    $energyColumn = $yaxis;
 		    $ydata = Engineer2::getEnergyColumnData($startdate, $enddate, $energyColumn);
-		    trigger_error($ydata, E_USER_WARNING);
+                    //...
 		}
 
 		
