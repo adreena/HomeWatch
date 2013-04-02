@@ -13,11 +13,27 @@ var residentEditor;
 
 $(window).load(function() {
 
-    residentEditor = $(residentEditorID)[0];
+    initResidentEditor();
+});
 
+function initResidentEditor() {
+    residentEditor = $(residentEditorID)[0];
     residentEditor.reset();
 
-}); // window load
+    $(residentEditor).validate({
+        submitHandler: updateResident,
+        rules: {
+	        name: "required",
+	        username: "required",
+	        room: "requred"
+	    },
+	    errorElement: "div",
+        errorPlacement: function(error, element) {
+            $(element).prev().before(error);
+        },
+	    onkeyup: false
+    });
+}
 
 // =================================================================================================
 // RESIDENT CONFIG

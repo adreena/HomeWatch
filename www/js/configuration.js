@@ -76,7 +76,7 @@ function editFunction(editButton) {
     editConfig(functionEditor, functionData);
 }
 
-function submitFunction(form) {
+function submitFunction() {
     $.post('/engineer/submit-function.php', getFunctionEditorData())
     .done(function(data) {
         functionEditor.reset();
