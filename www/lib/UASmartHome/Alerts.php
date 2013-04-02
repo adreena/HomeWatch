@@ -168,7 +168,8 @@ class Alerts
     public static function getAlerts($input) {
 
         $input = json_decode($input, true);
-        $comparison = $input["alert"];
+        /* HACK! Why does this need to take in JSON??!??!??! */
+        $comparison = $input["function"];
         $comparison_md5 = md5($comparison);
 
         if(preg_match("/(.*)(AND|OR)(.*)/", $comparison, $bool_pieces)) {
