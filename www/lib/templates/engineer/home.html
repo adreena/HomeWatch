@@ -1,29 +1,31 @@
-{% extends 'manager/home.html' %}
-
-{# The manager page does this all for us!
+{# The manager home page does all of the hard work for us!
    Just declare which features the engineers have.
 #}
 
-{% block content %}
-{% set features = [
-  {
-    'name': 'Graphs',
-    'url': '/search/',
-    'iconURL': 'graphs.png'
-  },
+{% embed 'manager/home.html' with {'userRole': 'engineer' } %}
 
-  {
-    'name': 'Energy Calculations',
-    'url': '/engineer/calculations.php',
-    'iconURL': 'calculations.png'
-  },
+  {% block content %}
+  {% set features = [
+    {
+      'name': 'Graphs',
+      'url': '/search/',
+      'iconURL': 'graphs.png'
+    },
 
-  {
-    'name': 'Formula configuration',
-    'url': '/engineer/configuration.php',
-    'iconURL': 'configuration.png'
-  }
-]
-%}
-{{ parent() }}
-{% endblock content %}
+    {
+      'name': 'Energy Calculations',
+      'url': '/engineer/calculations.php',
+      'iconURL': 'calculations.png'
+    },
+
+    {
+      'name': 'Formula configuration',
+      'url': '/engineer/configuration.php',
+      'iconURL': 'configuration.png'
+    }
+  ]
+  %}
+  {{ parent() }}
+  {% endblock content %}
+
+{% endembed %}
