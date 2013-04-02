@@ -129,7 +129,10 @@ var apartmentData = {{ apartments|raw }};
         <input class="simple-day-picker" name="start" type="hidden" />
       </label>
       <label><span class="the-actual-gorram-label"> Start hour </span>
-        <input value="0" name="hour" type="number" min="0" max="23" />
+        <input value="0" name="starthour" type="number" min="0" max="23" />
+      </label>
+      <label><span class="the-actual-gorram-label"> End hour on the next day </span>
+        <input value="0" name="endhour" type="number" min="0" max="23" />
       </label>
     </div>
 

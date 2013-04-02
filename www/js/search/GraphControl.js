@@ -555,16 +555,19 @@ function ($, _, D, Graph, TemplateManager) {
         subfetchers = {
             Hourly: function () {
                 var startTimeString = chosenControls.find('input[name=start]').val(),
-                    startHourString = chosenControls.find('[name=hour]').val(),
+                    startHourString = chosenControls.find('[name=starthour]').val(),
+                    endHourString = chosenControls.find('[name=endhour]').val(),
                     startTime = new Date(startTimeString),
                     endTime;
 
                 /* Set the hours from the awesome hour box. */
                 startTime.setUTCHours(parseInt(startHourString, 10));
 
-                /* For this one, we want the next 24 hours of data (one day). */
+                /* The end time on the NEXT day, but with the given
+                 * "End hour on the next day"... */
                 endTime = new Date(startTime.getTime());
-                endTime.setHours(endTime.getHours() + 24);
+                endTime.setDate(endTime.getDate() + 1);
+                endTime.setUTCHours(parseInt(endHourString, 10));
 
                 return {
                     start: startTime.toModifiedISOString(),
