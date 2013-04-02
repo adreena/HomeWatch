@@ -181,9 +181,9 @@ var apartmentData = {{ apartments|raw }};
 
     </ul>
     <label><input class="select-all" value="Select all" type="button" />
-      <!--span class="postfix-label"> Select all </span--> </label>
+      {#<span class="postfix-label"> Select all </span>#} </label>
     <label><input class="select-none" value="Select none" type="button" />
-      <!--span class="postfix-label"> Select all </span--> </label>
+      {# <span class="postfix-label"> Select all </span>#} </label>
   </div>
 </script>
 {# Parameters: None
@@ -197,9 +197,9 @@ var apartmentData = {{ apartments|raw }};
       <li><label><input type="radio" name="graph-type" value="bar" />
           <span class="graph-preview">Bar graph</span>
         </label></li>
-      <li><label><input type="radio" name="graph-type" value="pie" />
+{#    <li><label><input type="radio" name="graph-type" value="pie" />
           <span class="graph-preview">Pie chart</span>
-        </label></li>
+        </label></li>#}
     </ul>
   </form>
 </script>

@@ -145,7 +145,7 @@ if ($test) {
 
 	
 	$bigArray["xaxis"] = $xaxis;
-	$bigArray["yaxis"] = end($yaxis);
+	$bigArray["yaxis"] = is_array($yaxis) ? end($yaxis) : $yaxis;
 
 	foreach ($apartments as $apartment) {
 		if ($ytype == "sensorarray") {
