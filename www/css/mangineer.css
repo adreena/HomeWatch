@@ -93,6 +93,10 @@ p {
     padding: 8px 10px;
 }
 
+.graph-control-axis {
+    width: 220px; 
+}
+
 /* Might contain additional controls to the graph... */
 .graph-container {
     display: inline-block;

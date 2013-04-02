@@ -14,6 +14,7 @@ use \UASmartHome\Auth\Firewall;
 Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MANAGER);
 
 use \UASmartHome\Database\Engineer;
+use \UASmartHome\Database\Engineer2;
 use \UASmartHome\Database\Configuration\ConfigurationDB;
 
 header('Content-Type: application/json; charset=utf-8');
@@ -190,6 +191,10 @@ if ($test) {
                 }
                 //var_dump($bigArray);
             }
+		} else if ($ytype == "energy") {
+		    $energyColumn = $yaxis;
+		    $ydata = Engineer2::getEnergyColumnData($startdate, $enddate, $energyColumn);
+		    
 		}
 
 		

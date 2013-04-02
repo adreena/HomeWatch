@@ -2,6 +2,8 @@
 
 class Engineer2 {
 
+    const ENERGY_EQ = 6;
+    
     public static $EnergyColumns = array(
         "Energy1" => "Solar Day",
         "Energy2" => "DWHR",
@@ -68,7 +70,7 @@ class Engineer2 {
 	$trun->execute();
 	return $row;
 	}
-        if ($EQ==6)
+        if ($EQ==self::ENERGY_EQ)
 	{
 	$dbh=$conn->connect()->prepare("select (SUM(".$column.")*1000000) from Energy_Minute where ts between :SD and :ED") ;
 	$dbh->bindValue(":SD",$Datefrom);
@@ -79,6 +81,10 @@ class Engineer2 {
 	}
 }
 
+    public static function getEnergyColumnData($Datefrom,$Dateto,$column) {
+        return self::EQ($Datefrom, $Dateto, ENERGY_EQ, $column);
+    }
+    
     public static function getEnergyColumns() {
         return self::$EnergyColumns;
     }

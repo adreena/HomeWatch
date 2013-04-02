@@ -13,6 +13,7 @@ use \UASmartHome\Auth\User;
 use \UASmartHome\Auth\Firewall;
 use \UASmartHome\EquationParser;
 use \UASmartHome\Database\Engineer;
+use \UASmartHome\Database\Engineer2;
 use \UASmartHome\Database\Configuration\ConfigurationDB;
 
 Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MANAGER);
@@ -34,6 +35,16 @@ foreach ($unfilteredCategories['functions'] as $func)  {
         "applicableAxes" => "y"
     );
 };
+
+// Add the energy column equations
+$energyCols = Engineer2::getEnergyColumns();
+$categories['Energy'] = array();
+foreach ($energyCols as $col => $description) {
+    $categories['Energy'][$col] = array(
+        "displayName" => $description,
+        "applicableAxes" => "y"
+    );
+}
 
 $categories['Alerts'] = array();
 foreach ($unfilteredCategories['alerts'] as $alert)  {

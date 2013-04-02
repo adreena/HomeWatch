@@ -1205,6 +1205,7 @@ define({
         "Time": "time",
         "Sensors": "sensorarray",
         "Formulae": "formula",
+        "Energy": "energy",
         "Alerts": "alert"
     }
 
