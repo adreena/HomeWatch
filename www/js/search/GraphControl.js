@@ -521,7 +521,7 @@ function ($, _, D, Graph, TemplateManager) {
             partialQuery[v] = (valueTuple.type === 'time')
                 ? valueTuple.values[0]
                 : valueTuple.values;
-            partialQuery[v + 'axis'] = select.text();
+            partialQuery[v + 'axis'] = select.find(':selected').text();
 
         });
 
