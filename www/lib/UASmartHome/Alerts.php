@@ -199,6 +199,7 @@ class Alerts
         /* HACK! Why does this need to take in JSON??!??!??! */
         $comparison = $input["function"];
         $comparison_md5 = md5($comparison);
+        $finalAlerts = array();
 
         if(preg_match("/(.*)(AND|OR)(.*)/", $comparison, $bool_pieces)) {
             $leftbool = trim($bool_pieces[1]);
@@ -245,7 +246,11 @@ class Alerts
                            $input["apartment"], $comparison_md5 . "_Alert",
                            $input["startdate"], $input["enddate"]);
 
-                return $data;
+                foreach($data as $values) {
+                    $finalAlerts[str_replace(" ", ":", $values["TS"])] = $values[$column];
+                }
+
+                return $finalAlerts;
 
             } else {
                 throw new \DomainException("Syntax error in the alert");
@@ -253,7 +258,6 @@ class Alerts
             }
 
         } else {
-            $finalAlerts = array();
 
             $pieces = Alerts::getPieces($comparison);
 
@@ -281,7 +285,12 @@ class Alerts
                            $input["apartment"], $comparison_md5 . "_Alert",
                            $input["startdate"], $input["enddate"]);
 
-                return $data;
+                foreach($data as $values) {
+                    $finalAlerts[str_replace(" ", ":", $values["TS"])] = $values[$column];
+                }
+
+                return $finalAlerts;
+
             }
 
             $input["granularity"] = "Hourly";
@@ -364,10 +373,10 @@ var_dump(Alerts::getDefaultAlerts($input));
 
 /* test data for getAlerts
 $functionArray = array();
-$functionArray["startdate"] = "2012-02-29:0";
-$functionArray["enddate"] = "2012-03-01:23";
+$functionArray["startdate"] = "2012-2-29 0";
+$functionArray["enddate"] = "2012-3-01 23";
 $functionArray["apartment"] = 1;
-$functionArray["alert"] = "\$air_co2$ > 1250";
+$functionArray["function"] = "\$air_co2$*2/\$air_temperature$ < 2000";
 //$functionArray["alert"] = "10 < \$heatflux_insul$ OR \$heatflux_insul$ < 7";
 //$functionArray["alert"] = "\$air_co2$ > \$air_temperature$*1000";
 $functionArray["alerttype"] = "CO2";
