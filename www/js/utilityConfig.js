@@ -19,7 +19,7 @@ function ($) {
         
         // Init editor reset buttons
         $(document).find('.button.editor-reset').click(resetEditor);
-    });// window load
+    });
 
     function initUtilityEditor() {
         refreshUtilityDatePickers();
@@ -49,6 +49,12 @@ function ($) {
     
     function refreshUtilityDatePickers() {
         var dateInputs = $("[name=startdate], [name=enddate]");
+        
+        // HACK: If the date input is currently in a date picker, it is necessary to extract it
+        // before creating a new one.
+        var jdpickers = $(dateInputs).parent(".jdpicker_w");
+        $(dateInputs).insertBefore(".jdpicker_w");
+        jdpickers.remove();
         
         // Make jdPicker give us controls that always show.
         dateInputs.attr('type', 'hidden');
