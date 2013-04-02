@@ -32,7 +32,7 @@ $(window).load(function() {
     constantEditor.reset();
     alertEditor.reset();
 
-    $.get("/search/autocomplete-data.php")
+    $.get("/engineer/autocomplete-data.php")
     .done(function(data) {
         equationAutoCompleteData = $.map(data, function (value, key) { return "$" + key + '$'; });
         
