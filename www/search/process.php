@@ -221,7 +221,7 @@ if ($test) {
             $d1 = date_create_from_Format($dateFormat, $startdate);
             $d2 = date_create_from_Format($dateFormat, $enddate);
             
-            $ydata = Engineer2::getEnergyColumnData($d1, $d2, $period, $yaxis);
+            $ydata = Engineer2::getEnergyColumnData($d1, $d2,$yaxis);
             foreach ($ydata as $date=>$value) {
                 $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
                 $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
