@@ -499,7 +499,7 @@ public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
     $Query->bindValue(":SD",$StartDate);
 	$Query->bindValue(":ED",$EndDate);
 	$Query->execute();
-	while ($row = $Query->fetch(PDO::FETCH_ASSOC))
+	while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
 		     {
 				$result[]=(array)$row;
 		      }
