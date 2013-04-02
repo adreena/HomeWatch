@@ -1,7 +1,7 @@
 <?php namespace UASmartHome\Database; 
 
 class Engineer {
-
+    //This hnadles the query of the database 
     function db_pull_query($apt, $column, $startdate, $enddate, $period, $Phase=null) {
 
         $tables = array("Relative_Humidity"=>"Air", "Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "Insulation"=>"Heat_Flux", "Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy");
@@ -82,7 +82,7 @@ class Engineer {
     }
 
 
-
+    //Gets the Data by Yearly,this still needs to be implmented on the Front End
     public function db_query_Yearly($apt,$table,$Year,$column,$Phase=null)
     {  
         $result =array();
@@ -107,7 +107,7 @@ class Engineer {
         $a= $Query->rowCount();
         return $result;
     }
-
+	//Gets Data by Month
     public function db_query_Monthly($apt,$table,$Year,$Month,$column,$Phase=null)
     {
         $result =array();
@@ -133,6 +133,7 @@ class Engineer {
         $a= $Query->rowCount();
         return $result;
     }
+	//Gets the Data by week 
     public function db_query_Weekly($apt,$table,$Year,$Week,$column,$Phase=null)
     {
         $result =array();
@@ -158,10 +159,9 @@ class Engineer {
         $a= $Query->rowCount();
         return $result;
     }
+	//Gets the data between two dates 
     public function db_query_Daily($apt,$table,$date,$column,$Phase=null)
     {
-
-        //$starttime = microtime(true);
 
         $result =array();
         $table .= '_Daily';
@@ -183,12 +183,10 @@ class Engineer {
             $result[]=(array)$row;
         }
         $a= $Query->rowCount();
-        //$endtime = microtime(true);
-        //$duration = $endtime - $starttime;
-
+ 
         return $result;
     }
-    //Function to get the Max and Min
+    //Function to get the Max and Min for the graphs,Hourly
     public function db_query_Extrema($apt,$column,$table,$startdate,$enddate,$EX,$Phase=null)
     {
         $result =array();
@@ -227,9 +225,10 @@ class Engineer {
         {
             $result[]=(array)$row;
         }
-        //$a= $Query->rowCount();
+
         return $result;
     }
+	//Retrives the Data between two dates at a certain start hour and End hour
     public function db_query_Hourly($apt,$table,$Startdate,$EndDate,$column,$Phase=null)
     {
 
@@ -259,7 +258,7 @@ class Engineer {
 
 
     }
-
+     //This handels the default ones Co2,Relative Humidity 
     public function db_query_default_Alert ($apt,$column,$StartDate,$EndDate,$alertTable = null)
     {
         $tables = array("CO2"=>"Air_CO2_Alert", "Relative_Humidity" => "Air_Relative_Humidity_Alert", "Temperature"=>"Air_Temprature_Alert"); 
@@ -286,6 +285,7 @@ class Engineer {
 
         return $results;
     }
+	//This was another option for the Controller to retrieve results from the DB
     public function db_air_Period($apt,$datefrom,$dateto,$hourfrom,$hourto,$type)
     {
         $result =array();
@@ -348,83 +348,8 @@ class Engineer {
         return $result;
     }
 
-    //Updated Utilities Functions
-    public     function Utilities_Delete ($StartDate,$EndDate,$Type)
-    {
-        $conn=new Connection ();
-        $Query=$conn->connect()->prepare("delete from Utilities_Prices  
-                where Start_Date= :SD AND End_Date= :ED AND Type= :TP" ) ;
-        $Query->bindValue(":SD",$StartDate);
-        $Query->bindValue(":ED",$EndDate);
-        $Query->bindValue(":TP",$Type);
-        $Query->execute();
-        $conn->close();
-    }
-    public     function Utilities_Insert ($Type,$StartDate,$EndDate,$Price)
-    {
 
-        $conn=new Connection ();
-        $Query=$conn->connect()->prepare("INSERT INTO Utilities_Prices (Type,Price,Start_Date,
-            End_Date ) VALUES  (:TP,:PC,:SD, :ED) ") ;
-        $Query->bindValue(":SD",$StartDate);
-        $Query->bindValue(":ED",$EndDate);
-        $Query->bindValue(":TP",$Type);
-        $Query->bindValue(":PC",$Price);
-        $Query->execute();
-        $conn->close();
-    }
-    public     function Utilities_Update ($Start_Date,$End_Date,$Price,$Type)
-    {
-        $conn=new Connection ();
-        $Query=$conn->connect()->prepare("update Utilities_Prices  
-                set Price= :PC where Start_Date= :SD AND End_Date= :ED AND Type= :TP") ;
-        $Query->bindValue(":SD",$Start_Date);
-        $Query->bindValue(":ED",$End_Date);
-        $Query->bindValue(":PC",$Price);
-        $Query->bindValue(":TP",$Type);
-        $Query->execute();
-        $conn->close();
-    }
-
-    public     function Utilities_getPrice ($Type,$Start_Date,$End_Date)
-    {
-        $conn=new Connection ();
-        $Query=$conn->connect()->prepare("select price from Utilities_Prices  
-                where Start_Date= :SD AND End_Date= :ED and Type= :TP") ;
-        $Query->bindValue(":SD",$Start_Date);
-        $Query->bindValue(":ED",$End_Date);
-        $Query->bindValue(":TP",$Type);
-        $Query->execute();
-        $row = $Query->fetch(\PDO::FETCH_ASSOC);
-        $result=(array)$row;
-        return $result;
-        $conn->close();
-    }
-    ///The Type is binded with Month and Date //I don't think this Function is needed  because it will return the Electricity History\\\\\\ 
-    public     function Utilities_getAllOfType    ($Type)
-    {
-        $conn=new Connection ();
-        $Query=$conn->connect()->prepare("select price from Utilities_Prices  
-                where Type= :TP");
-        $Query->bindValue(":TP",$Type);
-        $Query->execute();
-        $row = $Query->fetch(\PDO::FETCH_ASSOC);
-        $result=(array)$row;
-        $conn->close();
-        return $result;
-    }
-    //Why We need That??????????????????????
-    public     function Utilities_getAll()
-    {
-        $conn=new Connection ();
-        $Query=$conn->connect()->prepare("select price from Utilities_Prices");
-        $Query->execute();
-        $row = $Query->fetch(\PDO::FETCH_ASSOC);
-        $result=(array)$row;
-        $conn->close();
-        return $result;
-    }
-    //Hour in 00:00 Format so 01:00 23:00,no Minutes ..
+    //Gets weather data//Still front End needs to be implmented 
     public function Weather_DB_getData ($Year,$Month,$Day,$Hour)
     {
         $conn=new Connection ();
@@ -441,6 +366,7 @@ class Engineer {
         return $result;
 
     }
+	//This Handles the Alert ,to be created based on certian criteria and makes it available to be viewed on the front End
     public function db_create_Alert ($column,$value1,$sign1,$between,$descr,$value2=null,$sign2=null,$condition=null)
     {
         $tables = array("rh"=>"air", "temperature" => "air", "co2"=>"air", 
@@ -487,9 +413,8 @@ class Engineer {
             }    
         }
 
-
-
     }
+	//Get the Alert
     public function db_query_Alert ($apt,$table,$StartDate,$EndDate)
     {
         $result =array();
@@ -504,14 +429,10 @@ class Engineer {
             $result[]=(array)$row;
         }
 
-
-        //$a= $Query->rowCount();
-
-
         return $result;
 
-
     }
+	//Checks if the Alert is exists ,If true then we don't create View and if not then creates a view
     public function db_check_Alert($view)
     {
 
@@ -529,7 +450,7 @@ class Engineer {
         }
 
     }
-
+    //Deletes Alert 
     public function db_Delete_Alert($viewname)
     {            
         $conn=new Connection ();  
@@ -537,8 +458,7 @@ class Engineer {
         $Query->execute();
     }
 
-    /* Ahmed told me that it's okay if this one is the only static function.
-     * ...for now. */
+   //Automatically gets the Apt list to view it to the Front End
     public static function db_apt_list ()
     {
         $conn = new Connection ();  
