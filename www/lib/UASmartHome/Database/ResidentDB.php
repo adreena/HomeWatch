@@ -2,6 +2,7 @@
 
 class ResidentDB {
 
+    //Gets Resident
     public function fetchResidents()
     {
         $connection = (new Connection())->connect();
@@ -31,7 +32,7 @@ class ResidentDB {
 
         return $residents;
     }
-
+     //Reads Resudent
     public function Resident_DB_Read($resident_id)
     {
 
@@ -46,6 +47,7 @@ class ResidentDB {
         $a= $Query->rowCount();
         return $result;
     }
+	//Gets Resd ID in order to load achievemnt as soon the Res logs in 
     public function Resident_Get_ResID($username)
     {
 
@@ -59,6 +61,7 @@ class ResidentDB {
         $a= $Query->rowCount();
         return $result;
     }
+
     public function Resident_DB_Get_All_Residents()
     {
         $result =array();
@@ -67,9 +70,9 @@ class ResidentDB {
         $Query->execute();
         $row = $Query->fetchAll(\PDO::FETCH_COLUMN);
         $result=(array)$row;
-        //$a= $Query->rowCount();
         return $result;
     }
+	//Gets the Resident Score 
     public function Resident_DB_Score($resident_id)
     {
         $result =array();
@@ -83,9 +86,9 @@ class ResidentDB {
         return $result;
     }
 
-
+     //Update the Resident INfo
     public function Resident_DB_Update ($resident_id,$Room_Number,$Room_Status,$Name,$Location,$Username)
-    { //update set where
+    { 
         $conn=new Connection ();
         $Query=$conn->connect()->prepare("update Resident  
                 set Room_Number= :RN, Room_Status= :RS , Name= :NM , Location= :Location, Username= :US where Resident_ID= :Res_ID") ;
@@ -104,8 +107,8 @@ class ResidentDB {
             return false;
         }
     }
-
-    public     function Resident_DB_Achievement ()
+  //Resident Achievement 
+    public function Resident_DB_Achievement ()
     {
         $result =array();
         $conn=new Connection ();
@@ -117,7 +120,8 @@ class ResidentDB {
         }
         return $result;
     }
-    public     function Resident_DB_Earned_Achievement ($resident_id)
+	//Gets Earned Achievement
+    public function Resident_DB_Earned_Achievement ($resident_id)
     {
         $result =array();
         $conn=new Connection ();
@@ -130,7 +134,7 @@ class ResidentDB {
         }
         return $result;
     }
-    public     function Resident_DB_Earned_Achievement_2 ($resident_id)
+    public function Resident_DB_Earned_Achievement_2 ($resident_id)
     {
         $result =array();
         $conn=new Connection ();
@@ -144,8 +148,8 @@ class ResidentDB {
         return $result;
     }
 
-
-    public     function Resident_DB_Building ($resident_id)
+    //Building
+    public function Resident_DB_Building ($resident_id)
     {
         $result =array();
         $conn=new Connection ();
