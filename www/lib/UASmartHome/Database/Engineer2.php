@@ -112,12 +112,14 @@ class Engineer2 {
 
         }
 */      foreach ($period as $tick) {
+
+            $datapoint = "Error";
             
-        $strDisplayTick = $tick->format("Y-m-d:G");
+            $strDisplayTick = $tick->format("Y-m-d:G");
             
             if ($granularity == "Hourly") {
-                $strTick = $tick->format("Y-m-d G");
-                $strTickEnd = $tick->add($interval)->format("Y-m-d G");
+                $strTick = $tick->format("Y-m-d:H");
+                $strTickEnd = $tick->add($interval)->format("Y-m-d:H");
                 $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyH_Graph");
             } else if ($granularity == "Daily") {
                 $strTick = $tick->format("Y-m-d");

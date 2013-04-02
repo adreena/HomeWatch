@@ -215,6 +215,8 @@ if ($test) {
         //Energy data has to be handled differently
 		} else if ($ytype == "energy") {
 
+            //echo var_dump($startdate);
+
             $dateFormat = 'Y-m-d G';
 
             $d1 = date_create_from_Format($dateFormat, $startdate);
