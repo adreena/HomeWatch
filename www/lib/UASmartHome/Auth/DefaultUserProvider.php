@@ -74,7 +74,7 @@ class DefaultUserProvider extends UserProvider
     public function registerNewUserImpl($accountData, $result)
     {
         // Generate the password hash
-        $pwhash = password_hash($accountData->password, PASSWORD_DEFAULT, array("cost" => DefaultUserProvider::PW_COST));
+        $pwhash = generatePasswordHash($accountData->password);
         if ($pwhash == false) {
             $result->setResultCodeOverall(RegistrationResult::CODE_ERROR);
             return false;
@@ -197,7 +197,7 @@ class DefaultUserProvider extends UserProvider
         }
     }
     
-    private function fetchUsername($email) {
+    public function fetchUsername($email) {
         $s = $this->connection->prepare("SELECT Username FROM Users WHERE Email = :Email");
         $s->bindParam(':Email', $email);
         
@@ -238,7 +238,7 @@ class DefaultUserProvider extends UserProvider
         }
 
         if ($result == false)
-            return true;
+            return false;
 
         return $this->sendResetEmail($username, $email, $token);
     }
@@ -253,7 +253,32 @@ class DefaultUserProvider extends UserProvider
     }
     
     public function resetUserPassword($email, $token, $newpassword) {
+        $pwhash = generatePasswordHash($newpassword);
+        if ($pwhash == null)
+            return false;
+        
+        $s = $this->connection->prepare("UPDATE Users
+                                         SET PW_Hash = :PW_Hash, Reset_Token = null
+                                         WHERE Email = :Email AND Token = :Token");
+        $s->bindParam(":Email", $email);
+        $s->bindParam(":Token", $token);
+        
+        $result = false;
+        try {
+            $result = $s->execute();
+        } catch (\PDOException $e) {
+            trigger_error("Failed to reset user password: " . $e->getMessage(), E_USER_WARNING);
+            return false;
+        }
+        
+        if ($result == false)
+            return false;
+        
+        return true;
+    }
     
+    private function generatePasswordHash($password) {
+        return password_hash($password, PASSWORD_DEFAULT, array("cost" => DefaultUserProvider::PW_COST));
     }
     
 }

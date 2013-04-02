@@ -22,6 +22,8 @@ abstract class UserProvider
     ///
     abstract public function fetchUser($username, $password);
     
+    abstract public function fetchUsername($email);
+    
     ///
     /// Attempts to register a new user with the given validated user data.
     /// $result should contain the RegistrationResult for the request.

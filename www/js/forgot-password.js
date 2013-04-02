@@ -16,7 +16,7 @@ function ($) {
         resetForm.reset();
         
         $(resetForm).validate({
-            submitHandler: resetPassword,
+            submitHandler: sendResetToken,
             rules: {
                 email: {
                     required: true,
@@ -31,11 +31,11 @@ function ($) {
         });
     }
     
-    function resetPassword() {
+    function sendResetToken() {
         var resetInfo = getResetInfo();
         
         $.post('/auth/send-reset-token.php', resetInfo)
-        .done(onResetDone)
+        .done(onRequestDone)
         .fail(onResetFail);
         
         return false;
