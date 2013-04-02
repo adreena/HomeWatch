@@ -626,7 +626,7 @@ function ($, _, getInternetExplorerVersion) {
      */
 
     DateToUTC = function (dateString) {
-        var dateRegex = /(\d+)-(\d+)-(\d+)(?::(\d+))?/,
+        var dateRegex = /(\d+)-(\d+)-(\d+)(?:[ :](\d+))?/,
             m, // m for match
             UTCTime;
 
