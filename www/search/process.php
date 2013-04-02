@@ -215,8 +215,11 @@ if ($test) {
                 }
             }
 		} else if ($ytype == "energy") {
-            $d1 = date_create_from_Format('Y-m-d G', $startdate);
-            $d2 = date_create_from_Format('Y-m-d G', $enddate);
+            $dateFormat = 'Y-m-d';
+            if ($period == "Hourly") $dateFormat .= ' G';
+		    
+            $d1 = date_create_from_Format($dateFormat, $startdate);
+            $d2 = date_create_from_Format($dateFormat, $enddate);
             
             $ydata = Engineer2::getEnergyColumnData($d1, $d2, $period, $yaxis);
             foreach ($ydata as $date=>$value) {
