@@ -23,7 +23,7 @@ function ($) {
 
     function initUtilityEditor() {
         refreshUtilityDatePickers();
-        
+                
         // Init the edit and delete buttons
         $(UTILITY_DISPLAY_ID).find('.delete-utility').click(deleteUtility);
         $(UTILITY_DISPLAY_ID).find('.edit-utility').click(editUtility);
@@ -52,10 +52,12 @@ function ($) {
         
         // HACK: If the date input is currently in a date picker, it is necessary to extract it
         // before creating a new one.
-        var jdpickers = $(dateInputs).parent(".jdpicker_w");
-        $(dateInputs).insertBefore(".jdpicker_w");
-        jdpickers.remove();
-        
+        dateInputs.each(function() {
+            var picker = $(this).parent(".jdpicker_w");
+            $(this).insertBefore(picker);
+            picker.remove();
+        });
+            
         // Make jdPicker give us controls that always show.
         dateInputs.attr('type', 'hidden');
         dateInputs.jdPicker({
