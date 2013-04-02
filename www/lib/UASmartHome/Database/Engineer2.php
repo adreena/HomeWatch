@@ -76,11 +76,8 @@ class Engineer2 {
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
-	while ($row = $dbh->fetch(\PDO::FETCH_ASSOC))
-				{
-				$result[]=(array)$row;
-				}
-	return $result;			
+	$result = $dbh->fetch(\PDO::FETCH_ASSOC);
+	return $result;
 	}
 }
 

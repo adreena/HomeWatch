@@ -274,9 +274,11 @@ if ($test) {
 
 
 
+    if (!isset($bigArray['values'])) {
+        $messages[] = 'No data found for the given date range.';
+    }
 
 
-	
 
 
 	if (count($messages) == 0) {
