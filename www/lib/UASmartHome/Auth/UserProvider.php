@@ -28,13 +28,15 @@ abstract class UserProvider
     ///
     abstract public function registerNewUserImpl($accountData, $result);
     
-    abstract public function resetUserPassword($email);
+    abstract public function sendResetToken($email);
+    
+    abstract public function resetUserPassword($user, $token, $newpassword);
     
     ///
     /// Returns a random string suitable as an activation or reset token
     ///
     public function generateActivationToken() {
-        return substr(md5(microtime()), rand(0,26), 20);
+        return md5(microtime());
     }
     
     ///

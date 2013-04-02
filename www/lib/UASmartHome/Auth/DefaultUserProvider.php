@@ -14,6 +14,9 @@ use \UASmartHome\Database\Connection;
 class DefaultUserProvider extends UserProvider
 {
 
+    // TODO: this needs to be in a configuration file
+    const DOMAIN = "http://c401g01.cs.ualberta.ca";
+
     const PW_COST = 10; // CPU cost of password hashing algorithm (from 4 to 31)
     
     private $connection;
@@ -194,34 +197,63 @@ class DefaultUserProvider extends UserProvider
         }
     }
     
-    public function resetUserPassword($email) {
-        $s = $this->connection->prepare("UPDATE Users SET Reset = 1 WHERE Email = :Email");
+    private function fetchUsername($email) {
+        $s = $this->connection->prepare("SELECT Username FROM Users WHERE Email = :Email");
+        $s->bindParam(':Email', $email);
         
+        try {
+            $s->execute();        
+        } catch (\PDOException $e) {
+            trigger_error("Failed to fetch username: " . $e->getMessage(), E_USER_WARNING);
+            return null;
+        }
+        
+        // Check if the user exists
+        if ($s->rowCount() != 1)
+            return null;
+        
+        $userData = $s->fetch(\PDO::FETCH_ASSOC);
+        $username = $userData['Username'];
+        
+        return $username;
+    }
+    
+    public function sendResetToken($email) {
+        $username = fetchUsername($email);
+        if ($username == null)
+            return false;
+        
+        $token = $this->generateActivationToken();
+        $s = $this->connection->prepare("UPDATE Users SET Reset_Token = :Token WHERE Email = :Email");
+        
+        $s->bindParam(':Token', $token);
         $s->bindParam(':Email', $email);
         
         $result = false;
         try {
             $result = $s->execute();
         } catch (\PDOException $e) {
-            trigger_error("Failed to reset user password: " . $e->getMessage(), E_USER_WARNING);
+            trigger_error("Failed to set reset token: " . $e->getMessage(), E_USER_WARNING);
             return false;
         }
 
         if ($result == false)
             return true;
 
-        return $this->sendResetEmail($email);
+        return $this->sendResetEmail($email, $token);
     }
     
-    private function sendResetEmail($email) {
-        $token = $this->generateActivationToken();
-        
+    private function sendResetEmail($username, $email, $token) {
         $to = $email;
         $subject = 'SmartCondo Password Reset';
-        $message = "Use the following activation token to reset your password on next login:\n$token";
+        $message = "Navigate to " . DOMAIN . "/auth/reset-password?username=$username&token=$token (at the correct domain) to reset your password."
         $headers = 'From: donotreply@smartcondo.com';
 
         return mail($email, $subject, $message, $headers);
+    }
+    
+    public function resetUserPassword($email, $token, $newpassword) {
+    
     }
     
 }

@@ -34,7 +34,7 @@ function ($) {
     function resetPassword() {
         var resetInfo = getResetInfo();
         
-        $.post('/auth/reset-password.php', resetInfo)
+        $.post('/auth/send-reset-token.php', resetInfo)
         .done(onResetDone)
         .fail(onResetFail);
         
