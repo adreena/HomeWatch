@@ -47,7 +47,7 @@ define({
      * This is the minimum period between requests to process.
      * An HTTP request is not made within this period.
      */
-    MinRequestDelay: 750,
+    MinRequestDelay: 1500,
 
     /**
      * This is an example of how the sensors will look. It's in simple

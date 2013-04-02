@@ -8,6 +8,10 @@ class Engineer {
 
 		$table = $tables[$column];
 
+        /* Assume that all dates are in a "canonical" format -- that is, 
+         * prevent the server's default timezone from affecting the date. */
+        date_default_timezone_set('UTC');
+
 		if ($period === "Hourly") {
 			$startdate = date_create_from_Format('Y-m-d G', $startdate);
 			$enddate = date_create_from_Format('Y-m-d G', $enddate);
@@ -26,7 +30,7 @@ class Engineer {
 				}
 
 			} else if ($period === "Daily") {
-				while ($startdate < $enddate) {
+				while ($startdate <= $enddate) {
 					$temp = Engineer::db_query_Daily($apt, $table, $startdate->format('Y-m-d'), $column, $Phase);
 					if (ISSET($temp[0])) {
 						$results[$startdate->format('Y-m-d:G')] = $temp[0];
@@ -36,7 +40,7 @@ class Engineer {
 					$startdate->add(date_interval_create_from_date_string('1 day'));
 				}
 			} else if ($period == "Weekly") {
-				while ($startdate < $enddate) {
+				while ($startdate <= $enddate) {
 					$year = $startdate->format("Y");	
 					$week = $startdate->format("W");
 					$temp = Engineer::db_query_Weekly($apt, $table, $year, $week, $column, $Phase);
@@ -48,7 +52,7 @@ class Engineer {
 					$startdate->add(date_interval_create_from_date_string('1 week'));
 				}
 			} else if ($period == "Monthly") {
-				while ($startdate < $enddate) {
+				while ($startdate <= $enddate) {
 					$year = $startdate->format("Y");
 					$month = $startdate->format("n");
 					$temp = Engineer::db_query_Monthly($apt, $table, $year, $month, $column, $Phase);
@@ -62,7 +66,7 @@ class Engineer {
 			} else if ($period == "Yearly") {
 				$endyear = $enddate->format("Y");
 				$year = $startdate->format("Y");
-				while ($startdate < $enddate) {
+				while ($startdate <= $enddate) {
 
 					$temp = Engineer::db_query_Yearly($apt, $table, $year, $column, $Phase);
 					if (ISSET($temp[0])) {
