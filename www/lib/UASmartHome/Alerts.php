@@ -7,6 +7,34 @@ use \UASmartHome\Database\Engineer;
 class Alerts
 {
 
+    public static $ALERTVARS = array(
+        "air_co2" => "co2",
+        "air_humidity" => "rh",
+        "air_temperature" => "temperature",
+        "elec_total" => "Total_Electricity",
+        "elec_ch1" => "ch1",
+        "elec_ch2" => "ch2",
+        "elec_aux1" => "aux1",
+        "elec_aux2" => "aux2",
+        "elec_aux3" => "aux3",
+        "elec_aux4" => "aux4",
+        "elec_aux5" => "aux5",
+        "heat_energy" => "total_energy",
+        "heat_volume" => "total_vol",
+        "heat_mass" => "total_mass",
+        "heat_flow" => "cur_flow",
+        "heat_temp1" => "cur_t1",
+        "heat_temp2" => "cur_t2",
+        "heatflux_stud" => "stud",
+        "heatflux_insul" => "insulation",
+        "water_hot" => "hot",
+        "water_total" => "total",
+        //TODO: add weather functions in database
+        "weather_temp" => "External_Temperature",
+        "weather_humidity" => "External_Relative_Humidity",
+        "weather_windspeed" => "Wind_Speed",
+        "weather_winddirection" => "Wind_Direction"
+    );
 
     public function __construct() {
 
@@ -71,7 +99,7 @@ class Alerts
         $rightpieces = explode("$", $right);
         $numleftpieces = count($leftpieces);
         $numrightpieces = count($rightpieces);
-        $db_vars = EquationParser::getVariables();
+        $db_vars = self::$ALERTVARS;
         $db_compare_vals = array();
 
         if($numleftpieces === 1 && $numrightpieces === 1) {
@@ -214,8 +242,8 @@ class Alerts
                 }
 
                 $data = Engineer::db_query_Alert(
-                           $input["apartment"], $column,
-                           $input["startdate"], $input["enddate"], $comparison_md5 .  "_Alert");
+                           $input["apartment"], $comparison_md5 . "_Alert",
+                           $input["startdate"], $input["enddate"]);
 
                 return $data;
 
@@ -250,8 +278,8 @@ class Alerts
                 }
 
                 $data = Engineer::db_query_Alert(
-                           $input["apartment"], $column,
-                           $input["startdate"], $input["enddate"], $comparison_md5 . "_Alert");
+                           $input["apartment"], $comparison_md5 . "_Alert",
+                           $input["startdate"], $input["enddate"]);
 
                 return $data;
             }
