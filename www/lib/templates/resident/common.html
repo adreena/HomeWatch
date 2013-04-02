@@ -3,8 +3,10 @@
   <div class="blade">
       <h1 class="logo">SmartHome</h1>
       <nav class="minor-nav">
-          <span class="user-status">Welcome {{ user.username|default('anonymous') }}!</span>
-          <a href="#">Preferences</a> | <a href="/auth/logout.php">Logout</a>
+        <span class="user-status">Welcome{{
+          user is defined ? ' ' ~ user.username : ''
+          }}!</span>
+          <a href="/auth/logout.php">Logout</a>
       </nav>
   </div>
 </header>
@@ -12,7 +14,7 @@
 <aside class="left-menu">
   <nav>
     <ul>
-        <li><a href="/resident/home.php">Home</a></li>
+        <li><a href="/">Home</a></li>
         {# Hard-coded URLS. Woohoo! #}
         <li><a href="/resident/achievements.php">Achievements</a></li>
         <li><a href="/resident/scoreboard.php">Scoreboard</a></li>
