@@ -49,7 +49,7 @@ foreach ($energyCols as $col => $description) {
 $categories['Alerts'] = array();
 foreach ($unfilteredCategories['alerts'] as $alert)  {
     $categories['Alerts'][$alert['name']] = array(
-        "displayName" => $func['name'],
+        "displayName" => $alert['name'],
         "applicableAxes" => "y"
     );
 };
