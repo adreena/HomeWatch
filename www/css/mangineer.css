@@ -76,6 +76,31 @@ p {
     padding-bottom: 16px;
 }
 
+/* Front page styles. */
+.big-icons > li {
+    display: inline-block;
+    width: 140px;
+    height: 160px;
+    text-align: center;
+    margin: 10px 10px;
+}
+
+.big-icon {
+    width: 128px;
+}
+
+.big-icons li > a {
+    text-decoration: none;
+}
+
+.big-icons {
+    text-align: center;
+}
+
+.big-icons li:hover {
+    background-color: #f0f0f0;
+}
+
 /* Simple styles for the graph search stuff.
  * Auto-generated using Chrome inspector stylesheets. */
 #graphs, .graph-controls {

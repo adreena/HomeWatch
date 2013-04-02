@@ -1,9 +1,29 @@
-{% extends 'engineer/base.html' %}
+{% extends 'manager/home.html' %}
 
-{% block title 'Engineer home' %}
+{# The manager page does this all for us!
+   Just declare which features the engineers have.
+#}
 
 {% block content %}
-<header>
-  <h1> This is the engineer page! </h1>
-</header>
+{% set features = [
+  {
+    'name': 'Graphs',
+    'url': '/search/',
+    'iconURL': 'graphs.png'
+  },
+
+  {
+    'name': 'Energy Calculations',
+    'url': '/engineer/calculations.php',
+    'iconURL': 'calculations.png'
+  },
+
+  {
+    'name': 'Formula configuration',
+    'url': '/engineer/configuration.php',
+    'iconURL': 'configuration.png'
+  }
+]
+%}
+{{ parent() }}
 {% endblock content %}
