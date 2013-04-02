@@ -1,2 +1,2 @@
 * * * * * cd /opt/smarthome; /usr/bin/git pull
-08 * * * * sh HourlyScript.sh
+02 * * * *  cd /opt/smarthome/script;  sh HourlyScript.sh

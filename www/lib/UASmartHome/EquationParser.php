@@ -305,3 +305,4 @@ class EquationParser
 
 }
 
+//var_dump(Engineer::db_pull_query(1, "CO2", "2012-03-07 00", "2012-03-20 00", "Hourly"));

@@ -1,5 +1,5 @@
 <?php
-include ('Connection.php');
+require ('Connection.php');
 
 class WeatherGetData 
 {

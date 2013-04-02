@@ -487,7 +487,7 @@ function ($, _, getInternetExplorerVersion) {
     };
 
     Graph.prototype.bind_plotclick = function() {
-        var old_granularity = this.graphState.granularity;
+        //var old_granularity = this.graphState.granularity;
        console.log("bound gran is " + this.graphState.granularity);
         var xtype = this.graphState.xtype;
         var startdate = this.graphState.startdate;
@@ -495,6 +495,7 @@ function ($, _, getInternetExplorerVersion) {
         var handleChangedData = this.graphState.callback;
         var drill_granularity, date_from, date_to;
         var data_point, date_UTC;
+        var self = this;
 
         //console.log("xtype is " + xtype);
         //console.log("granularity is " + granularity);
@@ -513,8 +514,7 @@ function ($, _, getInternetExplorerVersion) {
                 };
 
             drill_granularity = new_granularity[granularity];
-            console,.log
-            console.log("old granularity is " + old_granularity);
+            //console.log("old granularity is " + old_granularity);
             console.log("drill granularity is " + drill_granularity);
 
             
@@ -534,7 +534,7 @@ function ($, _, getInternetExplorerVersion) {
                 console.log("data index is " + item.dataIndex);
                 }
 
-                if(drill_granularity === undefined) {
+                if(drill_granularity === null) {
                     // cannot drill down further
                     console.log("returning without drilling");
                     return;

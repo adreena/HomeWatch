@@ -37,6 +37,9 @@ require([
             startdate = $('#startdate').val(),
             enddate = $('#enddate').val(),
 
+            starthour = $('#starthour').val(),
+            endhour = $('#endhour').val(),
+
             calculateButton = $('#calculateButton').get(0);
 
         calculateButton.disabled = true;
@@ -48,7 +51,9 @@ require([
             calculation: calculation,
             energy: energy,
             startdate: startdate,
-            enddate: enddate
+            enddate: enddate,
+            starthour: starthour,
+            endhour: endhour
         })
             .done(function(data) {
                 var resultsdiv = $('#results').get(0);
