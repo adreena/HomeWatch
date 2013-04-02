@@ -215,9 +215,14 @@ if ($test) {
                 }
             }
 		} else if ($ytype == "energy") {
-		    $energyColumn = $yaxis;
-		    $ydata = Engineer2::getEnergyColumnData($startdate, $enddate, $energyColumn);
-                    //...
+            $d1 = date_create_from_Format('Y-m-d G', $startdate);
+            $d2 = date_create_from_Format('Y-m-d G', $enddate);
+            
+            $ydata = Engineer2::getEnergyColumnData($d1, $d2, $period, $yaxis);
+            foreach ($ydata as $date=>$value) {
+                $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
+                $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
+            }
 
 		} else if ($ytype == "utility") {
             $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment, $yaxis);

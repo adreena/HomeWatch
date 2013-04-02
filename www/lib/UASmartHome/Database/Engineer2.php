@@ -72,7 +72,7 @@ class Engineer2 {
 	}
         if ($EQ==self::ENERGY_EQ)
 	{
-	$dbh=$conn->connect()->prepare("select (SUM(".$column.")*1000000) from Energy_Minute where ts between :SD and :ED") ;
+	$dbh=$conn->connect()->prepare("select (SUM(".$column.")*1000000) as sum from Energy_Minute where ts between :SD and :ED") ;
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
@@ -81,8 +81,32 @@ class Engineer2 {
 	}
 }
 
-    public static function getEnergyColumnData($Datefrom,$Dateto,$column) {
-        return self::EQ($Datefrom, $Dateto, self::ENERGY_EQ, $column);
+    public static function getEnergyColumnData($datefrom, $dateto, $granularity, $column) {
+        /* Assume that all dates are in a "canonical" format -- that is, 
+        * prevent the server's default timezone from affecting the date. */
+        date_default_timezone_set('UTC');
+        
+        $intervalString = null;
+        switch ($granularity) {
+            case "Hourly": $intervalString = '1 hour'; break;
+            case "Daily": $intervalString = '1 day'; break;
+            case "Weekly": $intervalString = '1 week'; break;
+            case "Monthly":
+            default: $intervalString = '1 month'; break;
+        }
+        
+        $interval = \DateInterval::createFromDateString($intervalString);
+        $period = new \DatePeriod($datefrom, $interval, $dateto);
+
+        $data = null;
+        foreach ($period as $tick) {
+            $strTick = $tick->format("Y-m-d G");
+            $strTickEnd = $tick->add($interval)->format("Y-m-d G");
+            $sum = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column)['sum'];
+            $data[$tick] = $sum;
+        }
+
+        return data;
     }
     
     public static function getEnergyColumns() {
