@@ -82,7 +82,7 @@ class Engineer2 {
 }
 
     public static function getEnergyColumnData($Datefrom,$Dateto,$column) {
-        return self::EQ($Datefrom, $Dateto, ENERGY_EQ, $column);
+        return self::EQ($Datefrom, $Dateto, self::ENERGY_EQ, $column);
     }
     
     public static function getEnergyColumns() {
