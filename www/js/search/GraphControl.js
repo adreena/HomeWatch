@@ -554,15 +554,15 @@ function ($, _, D, Graph, TemplateManager) {
         /* TODO: Make these subfetchers less terrible. */
         subfetchers = {
             Hourly: function () {
-                var startTime = chosenControls.find('input[name=start]').val(),
-                    endTime;
+                var startTimeString = chosenControls.find('input[name=start]').val(),
+                    startTime = new Date(startTimeString),
+                    endTime = new Date(startTime.getTime());
 
                 /* For this one, we want the next 24 hours of data (one day). */
-                endTime = new Date(startTime);
                 endTime.setHours(endTime.getHours() + 24);
 
                 return {
-                    start: startTime,
+                    start: startTime.toModifiedISOString(),
                     end: endTime.toModifiedISOString()
                 };
             },
