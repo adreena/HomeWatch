@@ -60,9 +60,9 @@ $cols = array(
     'COP1' => array("COP of Solar+DWHR+Geo Field+Heat Pumps", ""),
     'COP2' => array("COP of Entire Heating System", ""),
     'COP3' => array("COP of Heat Pumps", ""),
-    'NUM1' => array("Heat Energy COP1", "GJ"),
-    'NUM2' => array("Heat Energy COP2", "GJ"),
-    'NUM3' => array("Heat Energy COP3", "GJ"),
+    'NUM1' => array("Heat Energy COP1", ""),
+    'NUM2' => array("Heat Energy COP2", ""),
+    'NUM3' => array("Heat Energy COP3", ""),
     'P11-P110' => array("Geo P1 1", "KWH"),
     'P12-P120' => array("Geo P1 2", "KWH"),
     'HPx1-HPx10' => array("Heat Pump HP1", "KWH"),
@@ -83,9 +83,9 @@ $cols = array(
     'BLR_2' => array("Elect Usage Boilers BLR 2", "KWH"),
     'P3_1' => array("Elect Usage Heat Loop P3 1", "KWH"),
     'P3_2' => array("Elect Usage Heat Loop P3 2", "KWH"),
-    'DOM1' => array("Total Elect COP1", "KWH"),
-    'DOM2' => array("Total Elect COP2", "KWH"),
-    'DOM3' => array("Total Elect COP3", "KWH")
+    'DOM1' => array("Total Elect COP1", ""),
+    'DOM2' => array("Total Elect COP2", ""),
+    'DOM3' => array("Total Elect COP3", "")
 );
 
 function getColumnName($uglyName) {
