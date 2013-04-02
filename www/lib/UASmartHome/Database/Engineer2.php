@@ -101,8 +101,12 @@ class Engineer2 {
         $interval = \DateInterval::createFromDateString($intervalString);
         $period = new \DatePeriod($datefrom, $interval, $dateto);
 
+         $strDisplayTick = $tick->format("Y-m-d:G");     
+          $strTick = $tick->format("Y-m-d G"); 
+         $strTickEnd = $tick->add($interval)->format("Y-m-d G");
         $data = null;
-        foreach ($period as $tick) {
+        $data=self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column);
+      /*  foreach ($period as $tick) {
             $strDisplayTick = $tick->format("Y-m-d:G");
             
             $strTick = $tick->format("Y-m-d G");
@@ -111,7 +115,7 @@ class Engineer2 {
             $sum = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column)['sum'];
             
             $data[$strDisplayTick] = $sum;
-        }
+        }*/
 
         return $data;
     }
