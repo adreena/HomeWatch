@@ -39,7 +39,7 @@ function ($) {
     
     function resetPassword() {
         var resetInfo = getResetInfo();
-        console.debug(resetInfo);
+        
         $.post('/auth/reset-password.php', resetInfo)
         .done(onResetDone)
         .fail(onResetFail);

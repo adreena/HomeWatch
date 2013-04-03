@@ -156,7 +156,6 @@ function ($) {
     }
 
     function onRoleChanged() {
-        console.debug("ON ROLE CHANGE: " + this.value);
         // Hide the role form, if any
         if (roleForm)
             roleForm.style.display = 'none';
