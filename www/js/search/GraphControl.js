@@ -247,8 +247,6 @@ function ($, _, D, Graph, TemplateManager) {
             }
             selection = self.values[valueID];
 
-            console.log(selection);
-
             /* Should disable when selection type is NOT sensor. */
             shouldDisable = (selection.type !== 'sensorarray');
 
