@@ -70,11 +70,11 @@ class EquationParser
 
         $costData = UtilitiesDB::Utilities_getPrice($input["type"], $input["startdate"], $input["enddate"]);
 
-        if($input["type"] === "electricity") {
+        if($input["type"] === "Electricity") {
             $utilityUse = EquationParser::getTotalElec($input["apartment"], $input["startdate"], $input["enddate"], $input["granularity"]);
             $utilityUse = EquationParser::convertToKWH($utilityUse, $input["granularity"]);
         }
-        else if($input["type"] === "water") {
+        else if($input["type"] === "Water") {
             $utilityUse = EquationParser::getTotalWater($input["apartment"], $input["startdate"], $input["enddate"], $input["granularity"]);
         }
         else {
