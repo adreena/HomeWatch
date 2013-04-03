@@ -303,7 +303,7 @@ function ($, _, getInternetExplorerVersion) {
 
 	// set zoom and pan ranges
         if(granularity === "Hourly") {
-            base_x.xaxis["zoomRange"] = [1, 10];
+            base_x.xaxis["zoomRange"] = [1, 3600000000];
             var pan_range = max_x * 1.5;
             base_x.xaxis["panRange"] = [-100, pan_range];
         }
@@ -329,7 +329,7 @@ function ($, _, getInternetExplorerVersion) {
         base_y.yaxis["axisLabel"] = graphState.ytype;
 
         if(graphState.granularity === "Hourly") {
-            base_y.yaxis["zoomRange"] = [1, 10];
+            base_y.yaxis["zoomRange"] = [1, 3600000000];
             base_y.yaxis["panRange"] = [-100, 2500];
         }
 
