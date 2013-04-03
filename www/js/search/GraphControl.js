@@ -585,7 +585,7 @@ function ($, _, D, Graph, TemplateManager) {
                     startHourString = chosenControls.find('input[name=hour]').val(),
                     startTime = new Date(startTimeString),
                     startHour = parseInt(startHourString, 10),
-                    endTime = new Date(startTime.getTime());
+                    endTime;
 
                 /* Clamp the start hour to the proper time. */
                 if (startHour > 23) {
@@ -598,7 +598,8 @@ function ($, _, D, Graph, TemplateManager) {
                 startTime.setUTCHours(startHour);
 
                 /* End time is 24 hours in THE FUTURE. */
-                endTime.setHours(startTime.getHours() + 24);
+                endTime = new Date(startTime.getTime());
+                endTime.setHours(endTime.getHours() + 24);
 
                 return {
                     start: startTime.toModifiedISOString(),
