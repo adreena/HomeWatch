@@ -479,13 +479,13 @@ function ($, _, D, Graph, TemplateManager) {
         
         /* HACK: Put the selected day in the inputs */
         dateThing.find('.simple-day-picker').each(function() {
-            var picker = $(this).parent(".jdpicker_w");
-            var date = picker.find('.selectable_day.selected').attr('date');
+            var picker = $(this).parent(".jdpicker_w"),
+                date = picker.find('.selectable_day.selected').attr('date');
             $(this).val(date);
         });
         dateThing.find('.week-picker').each(function() {
-            var picker = $(this).parent(".jdpicker_w");
-            var date = picker.find('.selectable_day.selected').attr('date');
+            var picker = $(this).parent(".jdpicker_w"),
+                date = picker.find('.selectable_day.selected').attr('date');
             $(this).val(date);
         });
         

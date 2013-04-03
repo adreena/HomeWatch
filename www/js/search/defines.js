@@ -68,8 +68,9 @@ define({
         },
 
         "Sensors": {
-            /* This doesn't really work so disable it! */
-            /*
+        },
+
+        "Electricity Sensors": {
             "all_electricity": {
                 "multiple": [
                     "Mains (Phase A)",
@@ -88,8 +89,24 @@ define({
                     "Refrigerator"],
                 "applicableAxes": "y",
                 "displayName": "All electricity"
-            }
-            */
+            },
+
+            /* Each sensor individually. */
+            "Mains (Phase A)": "",
+            "Bedroom and hot water tank (Phase A)": "",
+            "Oven (Phase A) and range hood": "",
+            "Microwave and ERV controller": "",
+            "Electrical duct heating": "",
+            "Kitchen plugs (Phase A) and bathroom lighting": "",
+            "Energy recovery ventilation": "",
+            "Mains (Phase B)": "",
+            "Kitchen plugs (Phase B) and kitchen counter": "",
+            "Oven (Phase B)": "",
+            "Bathroom": "",
+            "Living room and balcony": "",
+            "Hot water tank (Phase B)": "",
+            "Refrigerator": ""
+
         },
 
         "Utilities": {
@@ -225,7 +242,9 @@ define({
         "Energy": "energy",
         "Alerts": "alert",
         "Utilities": "utility"
-    }
+    },
 
+    /* This is pretty much a hack. These sensors are not to be processed. */
+    omissions: ['Ch1', 'Ch2', 'AUX1', 'AUX2', 'AUX3', 'AUX4', 'AUX5']
 
 });

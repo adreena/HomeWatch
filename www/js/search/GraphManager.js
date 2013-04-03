@@ -19,6 +19,8 @@ define([
 function ($, _, D, GraphControl) {
     "use strict";
 
+    var __HACK_shouldOmit;
+
     /**
      * Instantiate a new GraphManager, using the given element to place graphs
      * in, and the data (x, y, values, apartments, etc.).
@@ -160,6 +162,12 @@ function ($, _, D, GraphControl) {
             _.each(elements, function (info, name) {
                 var displayName, value, valueID, forX, forY;
 
+                /* There are some... undesirables. We must turn our cheeks
+                 * towards them -- FOR THE GREATER GOOD! */
+                if ((catName === 'Sensors') && __HACK_shouldOmit(info, name)) {
+                    return;
+                }
+
                 /* Assume the value is applicable for both axes. */
                 forX = true;
                 forY = true;
@@ -212,6 +220,11 @@ function ($, _, D, GraphControl) {
 
         return { x: x, y: y, values: values };
 
+    };
+
+    __HACK_shouldOmit = function (info, name) {
+        /* Omissions is simply a list of keys we should... omit. */
+        return _(D.omissions).contains(name);
     };
 
 
