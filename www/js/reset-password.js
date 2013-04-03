@@ -3,6 +3,8 @@ require(['jquery', 'vendor/jquery.validate.min'],
 function ($) {
     "use strict";
 
+    var PASSWORD_LENGTH_MIN = 8; // TODO: this should match up with the one in register.js
+
     var RESET_FORM = "#reset-form";
     
     var resetForm;
@@ -18,8 +20,14 @@ function ($) {
         $(resetForm).validate({
             submitHandler: resetPassword,
             rules: {
-                password: "required",
-                confpassword: "required"
+                password: {
+                    required: true,
+                    minlength: PASSWORD_LENGTH_MIN
+                },
+                confpassword: {
+                    required: true,
+                    equalTo: "#password"
+                }
 	        },
 	        errorElement: "div",
             errorPlacement: function(error, element) {
@@ -51,8 +59,8 @@ function ($) {
     function getResetInfo() {
         return {
             username: $(resetForm).find('input[name=email]').val(),
-            password: $(resetForm).find('input[name=pasword').val(),
-            token: $(resetForm).find('input[name=token').val()
+            password: $(resetForm).find('input[name=password]').val(),
+            token: $(resetForm).find('input[name=token]').val()
         };
     }
     
