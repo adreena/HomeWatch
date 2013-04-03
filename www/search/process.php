@@ -74,7 +74,6 @@ if ($test) {
 	$xdata = array();
 	$ydata = array();
 
-
    	if ($apartments == null) {
 		array_push($messages, "No apartments selected. ");
 	}
@@ -130,6 +129,8 @@ if ($test) {
     //This array is for determining what phase electrical sensors belong to from the name, passed from the front end
 	$phaseMapping = array("Mains (Phase A)" => "A", "Bedroom and hot water tank (Phase A)" => "A", "Oven (Phase A) and range hood" => "A", "Microwave and ERV controller" => "A", "Electrical duct heating" => "A", "Kitchen plugs (Phase A) and bathroom lighting" => "A", "Energy recovery ventilation" => "A", "Mains (Phase B)" => "B", "Kitchen plugs (Phase B) and kitchen counter" => "B", "Oven (Phase B)" => "B", "Bathroom" => "B", "Living room and balcony" => "B",  "Hot water tank (Phase B)" => "B", "Refrigerator" => "B");
 
+    $channelMapping = array("Mains (Phase A)" => "Ch1", "Bedroom and hot water tank (Phase A)" => "Ch2", "Oven (Phase A) and range hood" => "AUX1", "Microwave and ERV controller" => "AUX2", "Electrical duct heating" => "AUX3", "Kitchen plugs (Phase A) and bathroom lighting" => "AUX4", "Energy recovery ventilation" => "AUX5", "Mains (Phase B)" => "Ch1", "Kitchen plugs (Phase B) and kitchen counter" => "Ch1", "Oven (Phase B)" => "AUX1", "Bathroom" => "AUX2", "Living room and balcony" => "AUX3",  "Hot water tank (Phase B)" => "AUX4", "Refrigerator" => "AUX5");
+
 
     //Xaxis is always a single variable, but multiple variables might be plotted along the y-axis. Here we set the x-axis label to what we received and the y-axis label to the last array name
 	$bigArray["xaxis"] = $xaxis;
@@ -138,7 +139,6 @@ if ($test) {
     if ($xtype == "sensorarray") {
         $x = end($x);
     }
-
 
     //This code block pulls data from a sensor or array of sensors and adds it to the JSON array
 	foreach ($apartments as $apartment) {
@@ -152,6 +152,10 @@ if ($test) {
 					$phase = null;
 				}
 
+                if (ISSET($channelMapping[$sensor])) {
+					$sensor = $channelMapping[$sensor];
+				} 
+
 				$ydata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period, $phase);
 
 				foreach ($ydata as $date=>$yd) {
@@ -159,11 +163,17 @@ if ($test) {
 					if ($yd[$sensor] == null) {
 						array_push ($messages, "No data found for apartment $apartment on the y-axis at time $date");
 					}
-
-					$bigArray['values'][$apartment][$date][$sensor]["y"] = $yd[$sensor];
-					if ($xtype == "time") {
-						$bigArray['values'][$apartment][$date][$sensor]["x"] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
-					}
+                    if ($phase == null) {
+					    $bigArray['values'][$apartment][$date][$sensor]["y"] = $yd[$sensor];
+    					if ($xtype == "time") {
+    						$bigArray['values'][$apartment][$date][$sensor]["x"] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
+    					}
+                    } else {
+                        $bigArray['values'][$apartment][$date][$sensor.$phase]["y"] = $yd[$sensor];
+    					if ($xtype == "time") {
+    						$bigArray['values'][$apartment][$date][$sensor.$phase]["x"] = $date; //we populate the x-axis with time as we do the y-data to save time and memory
+    					}
+                    }
 				}
 			}
 

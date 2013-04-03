@@ -192,13 +192,15 @@ function ($, _, getInternetExplorerVersion) {
             });
         });
 
-	graphState.numbars = apartments.length * graphname.length;
+	// ticks represents discrete time stamps encountered during parsing
+	// and are used for setting x-axis ticks
         graphState.ticks = ticks;
         graphState.startdate = startdate;
         graphState.enddate = enddate;
         graphState.min_x = min_x;
         graphState.max_x = max_x;
 
+	// graph series objects created here (label + data)
         for(var i = 0; i < apartments.length; ++i) {
             for(var j = 0; j < graphname.length; ++j) {
                 var label = "Apartment " + apartments[i] + " " + graphname[j];
@@ -218,6 +220,10 @@ function ($, _, getInternetExplorerVersion) {
         return data_and_options;
     };
 
+    /*
+     * Umbrella function for setting up graphing parameters
+     *
+     */
     var set_all_options = function (graphState) {
         var x_axis = get_x_axis(graphState);
         var y_axis = get_y_axis(graphState);
@@ -225,6 +231,8 @@ function ($, _, getInternetExplorerVersion) {
         var series_opts = get_series_options(graphState);
         var legend = get_legend(graphState);
 
+	// only allow graph zooming (not to be confused with drill down)
+	// on hourly correlational graphs
         if(graphState.granularity === "Hourly" && (graphState.xtype).toLowerCase() !== "time") {
             var zoom = get_zoom_options();
         } else {
@@ -235,6 +243,10 @@ function ($, _, getInternetExplorerVersion) {
         return options;
     };
 
+    /*
+     * Creates x-axis ticks and label for graph, also sets zoom and 
+     * pan range for this axis if appropriate
+     */
     var get_x_axis = function (graphState) {
         var granularity = graphState.granularity;
         var xtype = graphState.xtype;
@@ -267,36 +279,32 @@ function ($, _, getInternetExplorerVersion) {
                 console.log("start date is " + startdate);
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity);
             } else if(granularity === "Daily") {
-                //base_x.xaxis["max"] = startdate + get_millisecond_interval(granularity);
                 base_x.xaxis["timeformat"] = "%a %d";
                 base_x.xaxis["tickSize"] = [1, "day"];
                 base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity, enddate);
             } else if (granularity === "Weekly") {
                 base_x.xaxis["ticks"] = get_tick_labels(ticks, granularity);
-                //granularity = "Daily";
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity, enddate);
-                //console.log("max date is " + max_date);
-                //base_x.xaxis["tickSize"] = [1, "week"];
             } else if(granularity === "Monthly") {
                 base_x.xaxis["timeformat"] = "%b";
                 base_x.xaxis["tickSize"] = [1, "month"];
                 base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                //var label = min_date.getUTCFullYear();
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity, enddate);
-                //var year_end = label + "-12-01:0";
-                //base_x.xaxis["max"] = DateToUTC(year_end);
             } else {
+		// yearly granularity would slot in here
                 base_x.xaxis["ticks"] = get_tick_labels(ticks, granularity);
             }
         } else {
+	    // this is a correlational graph
             base_x.xaxis["min"] = min_x;
             base_x.xaxis["max"] = max_x;
             base_x.xaxis["axisLabel"] = xtype + get_measurement_units(xtype);
         }
 
+	// set zoom and pan ranges
         if(granularity === "Hourly") {
-            base_x.xaxis["zoomRange"] = [0.1, 3600000];
+            base_x.xaxis["zoomRange"] = [1, 10];
             var pan_range = max_x * 1.5;
             base_x.xaxis["panRange"] = [-100, pan_range];
         }
@@ -304,6 +312,10 @@ function ($, _, getInternetExplorerVersion) {
         return base_x;
     };
 
+    /*
+     * Creates y-axis ticks and label, also sets zoom and 
+     * pan range for this axis if appropriate
+     */
     var get_y_axis = function (graphState) {
         var base_y = {
             yaxis:
@@ -318,17 +330,23 @@ function ($, _, getInternetExplorerVersion) {
         base_y.yaxis["axisLabel"] = graphState.ytype;
 
         if(graphState.granularity === "Hourly") {
-            base_y.yaxis["zoomRange"] = [0.1, 3600000];
-            base_y.yaxis["panRange"] = [-100, 1000];
+            base_y.yaxis["zoomRange"] = [1, 10];
+            base_y.yaxis["panRange"] = [-100, 2500];
         }
 
         return base_y;
     };
 
+    /*
+     * Set grid option for graph and make it interactive
+     */
     var get_grid = function () {
         return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};
     };
 
+    /*
+     * Select the type of graph to be plotted
+     */
     var get_series_options = function (graphState) {
         var graphType = graphState.graphType;
 	var num_bars = graphState.numbars;
@@ -340,7 +358,6 @@ function ($, _, getInternetExplorerVersion) {
         var pie =  {series: {pie: {show: true, radius: 1}}};
 
         if(graphType === "line") {
-        //console.log("line opt is " + line.series.points.show);
             return line;
         } else if(graphType === "bar") {
 	    bars.series.bars.barWidth = get_bar_interval(granularity) * 0.75;
@@ -350,6 +367,9 @@ function ($, _, getInternetExplorerVersion) {
         }
     };
 
+    /*
+     * Set options for graph legend
+     */
     var get_legend = function (graphState) {
         return {
             legend:
@@ -364,6 +384,9 @@ function ($, _, getInternetExplorerVersion) {
         }
     };
 
+    /*
+     * Activate zoom and pan options for graph
+     */
     var get_zoom_options = function () {
         return {
             zoom:
@@ -378,6 +401,10 @@ function ($, _, getInternetExplorerVersion) {
         }
     };
 
+    /*
+     * Series object represents label and data package needed to render 
+     * a discrete graph
+     */
     var create_series_object = function (label, data) {
         return {
                  label: label,
@@ -385,6 +412,9 @@ function ($, _, getInternetExplorerVersion) {
                }
     };
 
+    /*
+     * Helper function for plothover
+     */
     var show_tool_tip = function (x, y, contents) {
 
         $('<div id="tooltip">' + contents + '</div>').css( {
@@ -399,13 +429,17 @@ function ($, _, getInternetExplorerVersion) {
         }).appendTo("body").fadeIn(200);
     };
 
+    /*
+     * Binds mouse hover to a particular graph instance allowing
+     * tool tips to be shown
+     */
     Graph.prototype.bind_plothover = function () {
         var previousPoint = null;
         var element = this.graphState.element;
         var xtype = this.graphState.xtype;
         var self = this;
         var type = "tool_tip";
-        var granularity, end_date;
+        var granularity, end_date, x, y;
 
         $(element).bind("plothover", function (event, pos, item) {
             $("#x").text(pos.x.toFixed(2));
@@ -424,12 +458,14 @@ function ($, _, getInternetExplorerVersion) {
                             if(granularity !== "Hourly") {
                                 end_date = item.datapoint[0];
                             }
-                                var x = get_month_day_year(item.datapoint[0], type, granularity, end_date);
+
+                            x = get_month_day_year(item.datapoint[0], type, granularity, end_date);
                             show_tool_tip(item.pageX, item.pageY,
                                 item.series.label + " for " + x + " is " + y);
                         } else {
+			    x = item.datapoint[0].toFixed(2);
                             show_tool_tip(item.pageX, item.pageY,
-                                item.series.label + ": " + y + " against " + xtype + ": " + y);
+                                item.series.label + ": " + y + " against " + xtype + ": " + x);
                         }
                 }
             } else {
@@ -439,9 +475,13 @@ function ($, _, getInternetExplorerVersion) {
         });
     };
 
+    /*
+     * Binds mouseclick to graph instance data points and calculates
+     * new granularity and date ranges so that a drill down event occurs.
+     * This information is passed by callback to a graph manager who
+     * requests and returns the new data from controller class
+     */
     Graph.prototype.bind_plotclick = function() {
-        //var old_granularity = this.graphState.granularity;
-       console.log("bound gran is " + this.graphState.granularity);
         var xtype = this.graphState.xtype;
         var startdate = this.graphState.startdate;
         var enddate = this.graphState.enddate;
@@ -449,9 +489,6 @@ function ($, _, getInternetExplorerVersion) {
         var drill_granularity, date_from, date_to;
         var data_point, date_UTC;
         var self = this;
-
-        //console.log("xtype is " + xtype);
-        //console.log("granularity is " + granularity);
 
             $(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {
@@ -466,65 +503,41 @@ function ($, _, getInternetExplorerVersion) {
                     Yearly: "Monthly"
                 };
 
-            drill_granularity = new_granularity[granularity];
-            //console.log("old granularity is " + old_granularity);
-            console.log("drill granularity is " + drill_granularity);
-
-            
-               
-                console.log("you clicked!");
-
-                 //console.log("granularity is : " + granularity);
-
-
+                drill_granularity = new_granularity[granularity];
+                  
                 if(xtype.toLowerCase() === "time") {
-            console.log("xtype is time");
                     data_point = item.datapoint[0];
                     date_UTC = (new Date(data_point));
                     date_from = format_date(date_UTC);
                 } else {
                     data_point = item.dataIndex;
-                console.log("data index is " + item.dataIndex);
                 }
 
                 if(drill_granularity === null) {
                     // cannot drill down further
-                    console.log("returning without drilling");
                     return;
                 } else if (drill_granularity === "Hourly") {
-            //console.log("drilling down to hourly");
-                    //drill_granularity = "Hourly";
 
                     if(xtype.toLowerCase() === "time") {
-            console.log("we got into hourly drill");
                         date_to = date_from;
-                date_from += " 00";
-                date_to += " 23";
-            console.log("date from is " + date_from + " and date to is " + date_to);
+                        date_from += " 00";
+                        date_to += " 23";
                     } else {
-                        console.log("entered correlational date");
                         date_from = format_date(new Date(map_index_to_time(data_point, startdate, drill_granularity)));
                         date_to = date_from;
                         date_from += " 00";
                         date_to += " 23";
-                        console.log("date to is " + date_to);
                     }
                 } else if (drill_granularity === "Daily") {
-                    //drill_granularity = "Daily";
-
                     if(xtype.toLowerCase() === "time") {
                         date_to = get_date_to(data_point, drill_granularity);
-                        console.log("date to is " + date_to);
                     } else {
                         var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
                         date_from = format_date(new Date(temp_date));
                         date_to = date_from + get_millisecond_interval(drill_granularity);
-                        console.log("date from is " + date_from + " date to is " + date_to);
                     }
 
                 } else if(drill_granularity === "Weekly") {
-                   //drill_granularity = "Weekly";
-
                     if(xtype.toLowerCase() === "time") {
                         date_to = get_date_to(data_point, drill_granularity);
                     } else {
@@ -533,14 +546,11 @@ function ($, _, getInternetExplorerVersion) {
                         var year = date_string.getUTCFullYear();
                         var month = date_string.getUTCMonth();
                         date_from = year + '-' + month + '-01';
-                        date_to = year + '-' + month + '-' + get_days_in_month(month, year);
-                        console.log("date from is " + date_from + " date to is " + date_to);                         
+                        date_to = year + '-' + month + '-' + get_days_in_month(month, year);                        
                     }
 
                 } else {
                     // then current granularity is years
-                    //drill_granularity = "Monthly";
-
                     if(xtype.toLowerCase() === "time") {
                         date_to = date_UTC.getUTCFullYear() + '-12-31';        
                     } else {
@@ -552,8 +562,6 @@ function ($, _, getInternetExplorerVersion) {
                     }        
                 }
 
-        console.log("about to handle changed data");
-            console.log("drill gran is " + drill_granularity);
                 /* Tell whatever handler we've got that there's new data. */
                 handleChangedData({
                     startdate: date_from,
@@ -564,6 +572,12 @@ function ($, _, getInternetExplorerVersion) {
         }); // end plotclick
     };
 
+    /*
+     * Correlational graphs do not carry their timestamp values in their x,y tuple.
+     * This function calculates the target date range for drill down based on the 
+     * location of the clicked data point in its array (eg. on an hourly graph, a 
+     * data point at index 3 would indicate the 4th hour of that day
+     */
     var map_index_to_time = function (data_point, startdate, granularity) {
         return startdate + ((data_point) * get_next_interval(granularity));
     };
@@ -600,11 +614,16 @@ function ($, _, getInternetExplorerVersion) {
         return UTCTime;
     };
 
+    /*
+     *  Return date as string in following format ('2012-03-01')
+     */
     var format_date = function (date) {
-            // return date as string in following format ('2012-03-01')
         return date.getUTCFullYear() + '-' + add_leading_zero(date.getUTCMonth() + 1) + '-' + add_leading_zero(date.getUTCDate());
     };
 
+    /*
+     * Calculates the number of days in a given month
+     */
     var get_days_in_month = function (month, year) {
         month = parseInt(month);
         year = parseInt(year);
@@ -629,16 +648,24 @@ function ($, _, getInternetExplorerVersion) {
         }
     };
 
+    /*
+     * Add zero padding to dates and hours
+     */
     var add_leading_zero = function (date) {
         return date < 10 ? '0' + date : '' + date;
     };
 
+    /*
+     * Return the output for tool tips and axis labels
+     *
+     */
     var get_month_day_year = function (start, type, granularity, end) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         var date_string = new Date(start);        
         var day = date_string.getUTCDate();
         var month = months[date_string.getUTCMonth()];
         var year = date_string.getUTCFullYear();
+	var hour = add_leading_zero(date_string.getUTCHours()) + ":00";
 	var end_date_string, end_day, end_month, end_year, week_end, end_date;
 
         if(granularity === "Monthly") {
@@ -654,7 +681,7 @@ function ($, _, getInternetExplorerVersion) {
 
         if(type === "tool_tip") {
             return tool_tip = {
-                Hourly: month + ' ' + day + ' ' + year,
+                Hourly: month + ' ' + day + ' ' + hour + ' ' + year,
                 Daily: month + ' ' + day + ' ' + year,
                 Weekly: month + ' ' + day + '-' + week_end + ' ' + year,
                 Monthly: month + ' ' + year
@@ -669,7 +696,6 @@ function ($, _, getInternetExplorerVersion) {
             }[granularity];
         } 
 
-        console.log("type gran is " + type[granularity]);
         return type[granularity];
     };
 
@@ -737,8 +763,6 @@ function ($, _, getInternetExplorerVersion) {
 	    Current_Temperature_1: "(°C)",
 	    Current_Temperature_2: "(°C)",
         };
-
-console.log("sensor type is " + sensor_type);
 
 	var metric = unit[sensor_type];
 	if(metric === undefined) {

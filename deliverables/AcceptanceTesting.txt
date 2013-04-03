@@ -1,6 +1,10 @@
 Introduction
 
+<<<<<<< Updated upstream
 	This document is the Acceptance Testing document for the Home Watch application. 
+=======
+	This document is the Acceptance Testing document for the HomeWatch application. 
+>>>>>>> Stashed changes
 	It's purpose is to assist with installation of the system as well as giving the user some idea of how to achieve various goals in more detail than is available in the User Manual. 
 	This detail also lends itself towards aiding a user who is having difficulty working with the interface to locate the exact step at which their problem occurs, as well as alowing them to etermine if the error is a matter of order of operations or a fault in the application itself. 
 	If an application fault is discovered the contacts provided in the Support Contact section can be used to alert the team in order to generate a solution to the fault. The intended audience of this document is the team involved with the instalation and maintenence of the application, 

@@ -68,9 +68,13 @@ define({
         },
 
         "Sensors": {
+<<<<<<< Updated upstream
         },
 
         "Electricity Sensors": {
+=======
+            /* This doesn't really work so disable it! */
+>>>>>>> Stashed changes
             "all_electricity": {
                 "multiple": [
                     "Mains (Phase A)",
@@ -89,6 +93,7 @@ define({
                     "Refrigerator"],
                 "applicableAxes": "y",
                 "displayName": "All electricity"
+<<<<<<< Updated upstream
             },
 
             /* Each sensor individually. */
@@ -107,6 +112,9 @@ define({
             "Hot water tank (Phase B)": "",
             "Refrigerator": ""
 
+=======
+            }
+>>>>>>> Stashed changes
         },
 
         "Utilities": {
