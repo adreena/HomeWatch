@@ -2,19 +2,17 @@
 
 {% block title 'Residents' %}
 
+{% block requireMain '/js/residentEditor' %}
+
 {% block content %}
 
 <link rel="stylesheet" href="/css/vendor/jquery-ui/jquery-ui.min.css" />
-
-<script src="/js/vendor/jquery-ui.js"></script>
-<script src="/js/vendor/jquery.scrollTo-min.js"></script>
-<script src="/js/residentEditor.js"></script>
 
 <div class="configs">
 
     <!-- Resident Config -->
     <div class="config">
-        <div class="config-display residents">
+        <div id="resident-display" class="config-display residents">
             <p class="title">Residents</p>
             <table>
                 <tr class="header">
@@ -33,7 +31,7 @@
                     <td class="room">{{ resident['room'] }}</td>
                     <td class="location">{{ resident['location'] }}</td>
                     <td class="roomstatus">{{ resident['roomstatus'] }}</td>
-                    <td><button onclick="editResident(this)">Edit</button></td>
+                    <td><button class="edit-resident">Edit</button></td>
                 </tr>
                 {% endfor %}
             </table>
@@ -60,7 +58,7 @@
                     <input name="roomstatus" type="text" /><br>
 
                     <div class="footer">
-                        <button class="button" type="button" tabindex="-1" onclick='resetEditor(this)'>Cancel</button>
+                        <button class="button editor-reset" type="button" tabindex="-1"'>Cancel</button>
                         <input class="button" name="submit" type="submit" value="Update"/>
                     </div>
 
