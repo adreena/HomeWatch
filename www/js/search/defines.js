@@ -117,7 +117,7 @@ define({
                     "Refrigerator"
                 ],
                 "applicableAxes": "y",
-                "displayName": "All Phase A sensors"
+                "displayName": "All Phase B sensors"
             },
 
 
