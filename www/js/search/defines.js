@@ -90,11 +90,41 @@ define({
                     "Bathroom",
                     "Living room and balcony",
                     "Hot water tank (Phase B)",
-                    "Refrigerator"],
+                    "Refrigerator"
+                ],
                 "applicableAxes": "y",
                 "displayName": "All electricity"
 <<<<<<< Updated upstream
             },
+
+            "phaseA": {
+                "multiple": [
+                    "Mains (Phase A)",
+                    "Bedroom and hot water tank (Phase A)",
+                    "Oven (Phase A) and range hood",
+                    "Microwave and ERV controller",
+                    "Electrical duct heating",
+                    "Kitchen plugs (Phase A) and bathroom lighting",
+                    "Energy recovery ventilation"
+                ],
+                "applicableAxes": "y",
+                "displayName": "All Phase A sensors"
+            },
+
+            "phaseB": {
+                "multiple": [
+                    "Mains (Phase B)",
+                    "Kitchen plugs (Phase B) and kitchen counter",
+                    "Oven (Phase B)",
+                    "Bathroom",
+                    "Living room and balcony",
+                    "Hot water tank (Phase B)",
+                    "Refrigerator"
+                ],
+                "applicableAxes": "y",
+                "displayName": "All Phase A sensors"
+            },
+
 
             /* Each sensor individually. */
             "Mains (Phase A)": "",

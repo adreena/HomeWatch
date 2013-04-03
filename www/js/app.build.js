@@ -21,7 +21,8 @@
         //included since it is already in require-jquery.js
         {
             name: "search",
-            name: "calculations"
+            name: "calculations",
+            name: "residentEditor"
         }
     ]
 })
