@@ -74,6 +74,7 @@ if ($test) {
 	$xdata = array();
 	$ydata = array();
 
+
    	if ($apartments == null) {
 		array_push($messages, "No apartments selected. ");
 	}
@@ -117,7 +118,7 @@ if ($test) {
     }
 
 
-	//If any errors have occurred at this point there's no way we can process the query, so we spit out the query data, any error messages, and die
+	//If any errors have occurred at this point there's:00 no way we can process the query, so we spit out the query data, any error messages, and die
 	if (count($messages) > 0 && $messages[0] != null) {
 		$bigArray['granularity'] = $period;
 		$bigArray['messages'] = $messages;
@@ -214,7 +215,6 @@ if ($test) {
         //Energy data has to be handled differently
 		} else if ($ytype == "energy") {
 
-            //echo var_dump($startdate);
 
             $dateFormat = 'Y-m-d G';
 
@@ -223,7 +223,6 @@ if ($test) {
 
             $ydata = Engineer2::getEnergyColumnData($d1, $d2,$y[0], $period);
             
-            //echo var_dump($ydata);
 
             foreach ($ydata as $date=>$value) {
                 $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;

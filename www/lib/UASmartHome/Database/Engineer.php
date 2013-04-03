@@ -23,9 +23,9 @@ class Engineer {
         $results = array();
 
         if ($period == "Hourly") {
-            $temp = Engineer::db_query_Hourly($apt, $table, $startdate->format('Y-m-d G'), $enddate->format('Y-m-d G'), $column, $Phase);
+            $temp = Engineer::db_query_Hourly($apt, $table, $startdate->format('Y-m-d:H'), $enddate->format('Y-m-d:H'), $column, $Phase);
             foreach($temp as $row) {
-                $returnDate = date_create_from_Format('Y-m-d G', $row["TS"]);
+                $returnDate = date_create_from_Format('Y-m-d:G', $row["TS"]);
                 $results[$returnDate->format('Y-m-d:G')][$column] = $row[$column];
             }
 
@@ -236,11 +236,11 @@ class Engineer {
         $table .= '_Hourly';
         $conn=new Connection ();
         if ($Phase==null){
-            $Query=$conn->connect()->prepare(" select $column, TS from ".$table." where Apt= :Apt_Num AND Ts between :SD AND :ED ") ;
+            $Query=$conn->connect()->prepare(" select $column, TS from ".$table." where Apt= :Apt_Num AND TS between :SD AND :ED ") ;
         } else {
             if ($Phase == 'A' || 'B')
             {
-                $Query=$conn->connect()->prepare("select $column, TS from ".$table." where Apt= :Apt_Num AND Ts between :SD AND :ED AND Phase= :PS") ;
+                $Query=$conn->connect()->prepare("select $column, TS from ".$table." where Apt= :Apt_Num AND TS between :SD AND :ED AND Phase= :PS") ;
                 $Query->bindValue(":PS",$Phase);
             }
         }
