@@ -554,19 +554,14 @@ function ($, _, D, Graph, TemplateManager) {
         subfetchers = {
             Hourly: function () {
                 var startTimeString = chosenControls.find('input[name=start]').val(),
-                    startHourString = chosenControls.find('[name=starthour]').val(),
-                    endHourString = chosenControls.find('[name=endhour]').val(),
                     startTime = new Date(startTimeString),
-                    endTime;
+                    endTime = new Date(startTime.getTime());
 
                 /* Set the hours from the awesome hour box. */
                 startTime.setUTCHours(parseInt(startHourString, 10));
 
-                /* The end time on the NEXT day, but with the given
-                 * "End hour on the next day"... */
-                endTime = new Date(startTime.getTime());
-                endTime.setDate(endTime.getDate() + 1);
-                endTime.setUTCHours(parseInt(endHourString, 10));
+                /* End time is 24 hours in THE FUTURE. */
+                endTime.setHours(startTime.getHours() + 24);
 
                 return {
                     start: startTime.toModifiedISOString(),
