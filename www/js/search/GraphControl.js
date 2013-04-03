@@ -205,7 +205,9 @@ function ($, _, D, Graph, TemplateManager) {
     GraphControl.prototype._bindOnChange = function () {
         var self = this,
             processControls,
-            internalControls;
+            internalControls,
+            yaxis = this.el.controls.find('.graph-control-axis-x'),
+            xaxis = this.el.controls.find('.graph-control-axis-y');
 
         /* Get all of the control categories explicitly labled to send stuff to
          * process.php. */
@@ -228,6 +230,32 @@ function ($, _, D, Graph, TemplateManager) {
          * graph. */
         internalControls.find('input, select').change(function () {
             self.onNewData();
+        });
+
+
+        /* Finally, allow selection of other than time for the  x-axis
+         * only when a sensor is selected. */
+        yaxis.change(function () {
+            var valueID = yaxis.val(),
+                selection,
+                shouldDisable;
+
+            /* Couldn't get a value ID for the given element. It's not worth
+             * caring about! */
+            if (!_(self.values).has(valueID)) {
+                return;
+            }
+            selection = self.values[valueID];
+
+            /* Should disable when selection type is NOT sensor. */
+            shouldDisable = (selection.type !== 'sensorarray');
+
+            xaxis.attr('disabled', shouldDisable);
+
+            if (shouldDisable) {
+                /* Set the value to 0. */
+                xaxis.val("1"); // SUPER HACK -- this should be whatever time is.
+            }
         });
 
     };
