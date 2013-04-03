@@ -238,6 +238,7 @@ define({
     categoryNameToType: {
         "Time": "time",
         "Sensors": "sensorarray",
+        "Electricity Sensors": "sensorarray",
         "Formulae": "formula",
         "Energy": "energy",
         "Alerts": "alert",
