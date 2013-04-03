@@ -276,7 +276,6 @@ function ($, _, getInternetExplorerVersion) {
 
             if(granularity === "Hourly") {
                 base_x.xaxis["tickSize"] = [2, "hour"];
-                console.log("start date is " + startdate);
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity);
             } else if(granularity === "Daily") {
                 base_x.xaxis["timeformat"] = "%a %d";
@@ -630,6 +629,10 @@ function ($, _, getInternetExplorerVersion) {
         return (32 - new Date(year, month, 32).getDate());
     };
 
+    /*
+     * Calculates the end date range for a drill down request
+     * in daily or weekly granularity
+     */
     var get_date_to = function (date, drill_granularity) {
         var millisecond_day = 86400000;
 
@@ -699,6 +702,9 @@ function ($, _, getInternetExplorerVersion) {
         return type[granularity];
     };
 
+    /*
+     * Get number of milliseconds to end of current interval
+     */
     var get_millisecond_interval = function (interval) {
             var base = 3600000;
             return milliseconds = {
@@ -710,6 +716,9 @@ function ($, _, getInternetExplorerVersion) {
             }[interval];
     };
 
+    /*
+     * Get number of milliseconds to start of next interval
+     */
     var get_next_interval = function (interval) {
         var base = 3600000;
         return milliseconds = {
@@ -720,6 +729,9 @@ function ($, _, getInternetExplorerVersion) {
         }[interval];
     };
 
+    /*
+     * Adjust bar graph width to interval size
+     */
     get_bar_interval = function (granularity) {
         var base = 3600000;
 	return milliseconds = {
@@ -731,6 +743,10 @@ function ($, _, getInternetExplorerVersion) {
         }[granularity];
     };
 
+    /*
+     * Customize tick labels for weeks and years as these are 
+     * not provided natively by flot
+     */
     get_tick_labels = function (ticks, granularity) {
         var label;
 
@@ -738,6 +754,7 @@ function ($, _, getInternetExplorerVersion) {
             if(granularity === "Weekly") {
                 label = "Week " + (i + 1);
             } else {
+   		// these are years
                 label = (new Date(ticks[i][0])).getUTCFullYear();
             }
 
@@ -746,6 +763,10 @@ function ($, _, getInternetExplorerVersion) {
         return ticks;
     };
 
+    /*
+     * Returns the unit metrics for a given sensor type/utility as 
+     * these could not be added to the DB for some reason
+     */
     get_measurement_units = function (sensor_type) {
 	var unit = 
 	{
@@ -762,6 +783,8 @@ function ($, _, getInternetExplorerVersion) {
 	    Current_Flow: "(L/s)",
 	    Current_Temperature_1: "(°C)",
 	    Current_Temperature_2: "(°C)",
+	    Electricity: "($)",
+	    Water: "($)"
         };
 
 	var metric = unit[sensor_type];
