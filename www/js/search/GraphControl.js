@@ -582,11 +582,20 @@ function ($, _, D, Graph, TemplateManager) {
         subfetchers = {
             Hourly: function () {
                 var startTimeString = chosenControls.find('input[name=start]').val(),
+                    startHourString = chosenControls.find('input[name=hour]').val(),
                     startTime = new Date(startTimeString),
+                    startHour = parseInt(startHourString, 10),
                     endTime = new Date(startTime.getTime());
 
+                /* Clamp the start hour to the proper time. */
+                if (startHour > 23) {
+                    startHour = 23;
+                } else if (startHour < 0) {
+                    startHour = 0;
+                }
+
                 /* Set the hours from the awesome hour box. */
-                startTime.setUTCHours(parseInt(startHourString, 10));
+                startTime.setUTCHours(startHour);
 
                 /* End time is 24 hours in THE FUTURE. */
                 endTime.setHours(startTime.getHours() + 24);
