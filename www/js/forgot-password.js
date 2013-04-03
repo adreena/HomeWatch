@@ -24,9 +24,6 @@ function ($) {
                 }
 	        },
 	        errorElement: "div",
-            errorPlacement: function(error, element) {
-                $(element).prev().before(error);
-            },
 	        onkeyup: false
         });
     }

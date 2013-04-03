@@ -1,7 +1,7 @@
 <?php
 
 ///
-/// Initiates a request to reset a users password
+/// Initiates a request to send a new reset token to the user with the given email
 ///
 
 ini_set('display_errors', 0); // Allows PHP to return response 500 on errors

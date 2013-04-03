@@ -54,3 +54,8 @@ body {
   float: left;
 }
 
+div.error {
+  text-align: center;
+  width: 100%;
+}
+
