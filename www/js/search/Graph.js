@@ -376,7 +376,7 @@ function ($, _, getInternetExplorerVersion) {
                 show: true,
                 labelBoxBorderColor: "rgb(51, 204, 204)",
                 backgroundColor: "rgb(255, 255, 204)",
-                //margin: [-150, 0],
+                //margin: [-200, 0],
                 backgroundOpacity: .75,
 		container: graphState.legend
             }
