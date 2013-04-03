@@ -24,4 +24,4 @@ if (!ConfigurationDB::deleteAlert($_POST['id'])) {
     http_response_code(500);
 }
 
-Engineer::db_Delete_Alert(md5($_POST['value']) . "_Alert");
+Engineer::db_Delete_Alert(crc32($_POST['value']) . "_Alert");

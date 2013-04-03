@@ -193,7 +193,7 @@ class Alerts
         $input = json_decode($input, true);
         /* HACK! Why does this need to take in JSON??!??!??! */
         $comparison = $input["function"];
-        $comparison_md5 = md5($comparison);
+        $comparison_crc32 = crc32($comparison);
         $finalAlerts = array();
 
         if(preg_match("/(.*)(AND|OR)(.*)/", $comparison, $bool_pieces)) {
@@ -229,8 +229,8 @@ class Alerts
                 $sign2 = $rightcompare["operator"];
 
                 // check if the view already exists under the name username_variable
-                if (!Engineer::db_check_Alert($comparison_md5)) {
-                    if (!Engineer::db_create_Alert($column, $value1, $sign1, 2, $comparison_md5, $value2, $sign2, $bool_pieces[2])) {
+                if (!Engineer::db_check_Alert($comparison_crc32)) {
+                    if (!Engineer::db_create_Alert($column, $value1, $sign1, 2, $comparison_crc32, $value2, $sign2, $bool_pieces[2])) {
                         /* THERE SHOULD NOT BE AN ECHO HERE! */
                         echo "could not create alert\n";
                         return null;
@@ -238,7 +238,7 @@ class Alerts
                 }
 
                 $data = Engineer::db_query_Alert(
-                           $input["apartment"], $comparison_md5 . "_Alert",
+                           $input["apartment"], $comparison_crc32 . "_Alert",
                            $input["startdate"], $input["enddate"]);
 
                 foreach($data as $values) {
@@ -269,15 +269,15 @@ class Alerts
                 $sign1 = $compare["operator"];
 
                 // check if the view already exists under the name username_variable
-                if(!Engineer::db_check_Alert($comparison_md5)) {
-                    if(!Engineer::db_create_Alert($column, $value1, $sign1, 1, $comparison_md5)) {
+                if(!Engineer::db_check_Alert($comparison_crc32)) {
+                    if(!Engineer::db_create_Alert($column, $value1, $sign1, 1, $comparison_crc32)) {
                         echo "could not create alert\n";
                         return null;
                     }
                 }
 
                 $data = Engineer::db_query_Alert(
-                           $input["apartment"], $comparison_md5 . "_Alert",
+                           $input["apartment"], $comparison_crc32 . "_Alert",
                            $input["startdate"], $input["enddate"]);
 
                 foreach($data as $values) {
@@ -368,13 +368,13 @@ var_dump(Alerts::getDefaultAlerts($input));
 
 /* test data for getAlerts
 $functionArray = array();
-$functionArray["startdate"] = "2012-2-29 0";
-$functionArray["enddate"] = "2012-3-01 23";
+$functionArray["startdate"] = "2012-3-1 0";
+$functionArray["enddate"] = "2012-3-2 0";
 $functionArray["apartment"] = 1;
-$functionArray["function"] = "\$air_co2$*2/\$air_temperature$ < 2000";
+$functionArray["function"] = "\$air_co2$ > 1000 AND \$air_co2$ < 1200";
 //$functionArray["alert"] = "10 < \$heatflux_insul$ OR \$heatflux_insul$ < 7";
 //$functionArray["alert"] = "\$air_co2$ > \$air_temperature$*1000";
-$functionArray["alerttype"] = "CO2";
+//$functionArray["alerttype"] = "CO2";
 
 $input = json_encode($functionArray);
 var_dump(Alerts::getAlerts($input));

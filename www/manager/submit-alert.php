@@ -32,4 +32,4 @@ if (!ConfigurationDB::submitAlert($alert)) {
     http_response_code(400);
 }
 
-Engineer::db_Delete_Alert(md5($_POST['value']) . "_Alert");
+Engineer::db_Delete_Alert(crc32($_POST['value']) . "_Alert");
