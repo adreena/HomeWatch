@@ -35,7 +35,10 @@ function ($) {
         $(utilityEditor).validate({
             submitHandler: submitUtility,
             rules: {
-	            price: "required",
+	            price: {
+	                required: true,
+	                number: true
+                },
 	            startdate: "required",
 	            enddate: "required"
 	        },
@@ -62,7 +65,15 @@ function ($) {
         dateInputs.attr('type', 'hidden');
         dateInputs.jdPicker({
             date_format: 'YYYY-mm-dd',
-            start_of_week: 0
+            start_of_week: 0,
+            date_min:"2010-01-01"
+        });
+        
+        // HACK: Set the value of the input to the selected day in the picker
+        dateInputs.each(function() {
+            var picker = $(this).parent(".jdpicker_w");
+            var date = picker.find('.selectable_day.selected').attr('date');
+            $(this).val(date);
         });
     }
     
