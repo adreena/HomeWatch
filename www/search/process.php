@@ -134,6 +134,10 @@ if ($test) {
     //Xaxis is always a single variable, but multiple variables might be plotted along the y-axis. Here we set the x-axis label to what we received and the y-axis label to the last array name
 	$bigArray["xaxis"] = $xaxis;
 	$bigArray["yaxis"] = is_array($yaxis) ? end($yaxis) : $yaxis;
+    
+    if ($xtype == "sensorarray") {
+        $x = end($x);
+    }
 
 
     //This code block pulls data from a sensor or array of sensors and adds it to the JSON array
@@ -242,13 +246,6 @@ if ($test) {
 
 
 		if ($xtype == "sensorarray") {
-			$x = end($x);
-			if (ISSET($phaseMapping[$x])) {
-				$phase = $phaseMapping[$x];
-			} else {
-				$phase = null;
-			}
-
 			$xdata = Engineer::db_pull_query($apartment, $x, $startdate, $enddate, $period);
 			foreach ($xdata as $date=>$xd) {
 				if ($xd[$x] == null) {
