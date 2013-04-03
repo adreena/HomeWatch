@@ -61,20 +61,20 @@ if ($test) {
 
 	//parsing out the components of the graph
 	$apartments = $graph['apartments'];
-	$startdate = $graph['startdate'];
-	$enddate = $graph['enddate'];
-	$period = $graph['period'];
-	$xtype = $graph['xtype'];
-	$ytype = $graph['ytype'];
-	$xaxis = $graph['xaxis'];
-	$yaxis = $graph['yaxis'];
-	$x = $graph['x'];
-	$y = $graph['y'];
+	$startdate = $graph['startdate']; //Startdate input: yyyy-mm-dd (for non-hourly) or yyyy-mm-dd:h (for hourly)
+	$enddate = $graph['enddate']; //Enddate input (same format as startdate)
+	$period = $graph['period']; //String literal: one of "Hourly" "Weekly" "Monthly" "Yearly" "Daily"
+	$xtype = $graph['xtype']; //String literal: one of "time" "formula" "sensorarray" "alert" "energy" "utility"
+	$ytype = $graph['ytype']; //String literal: same format as xtype
+	$xaxis = $graph['xaxis']; //String literal: x-axis label. Returned untouched to the frontend
+	$yaxis = $graph['yaxis']; //String literal: y-axis label. Returned untouched to the frontend
+	$x = $graph['x']; //The dataset to graph. This is the formula, alert, a string "time", an array of sensor names, or the utility/energy graph being called
+	$y = $graph['y']; //As above
 	$phase = null;
 	$xdata = array();
 	$ydata = array();
-	
-	if ($apartments == null) {
+
+   	if ($apartments == null) {
 		array_push($messages, "No apartments selected. ");
 	}
 	if ($startdate == null) {
@@ -190,7 +190,6 @@ if ($test) {
             }
         //Alerts are handled here
 		} else if ($ytype == "alert") {
-
             $ydata = ConfigurationDB::fetchAlert($yaxis);
 
             // if fetchAlert returns false, this name doesn't exist in db
@@ -222,7 +221,7 @@ if ($test) {
             $d1 = date_create_from_Format($dateFormat, $startdate);
             $d2 = date_create_from_Format($dateFormat, $enddate);
 
-            $ydata = Engineer2::getEnergyColumnData($d1, $d2,$yaxis, $period);
+            $ydata = Engineer2::getEnergyColumnData($d1, $d2,$y[0], $period);
             
             //echo var_dump($ydata);
 
