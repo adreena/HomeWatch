@@ -229,15 +229,14 @@ class DefaultUserProvider extends UserProvider
         $s->bindParam(':Token', $token);
         $s->bindParam(':Email', $email);
         
-        $result = false;
         try {
-            $result = $s->execute();
+            $s->execute();
         } catch (\PDOException $e) {
             trigger_error("Failed to set reset token: " . $e->getMessage(), E_USER_WARNING);
             return false;
         }
 
-        if ($result == false)
+        if ($s->rowCount() == 0)
             return false;
 
         return $this->sendResetEmail($username, $email, $token);
@@ -252,28 +251,38 @@ class DefaultUserProvider extends UserProvider
         return mail($email, $subject, $message, $headers);
     }
     
-    public function resetUserPassword($email, $token, $newpassword) {
-        $pwhash = generatePasswordHash($newpassword);
+    public function resetUserPassword($username, $token, $newpassword) {
+        $pwhash = $this->generatePasswordHash($newpassword);
         if ($pwhash == null)
             return false;
         
-        $s = $this->connection->prepare("UPDATE Users
-                                         SET PW_Hash = :PW_Hash, Reset_Token = null
-                                         WHERE Email = :Email AND Token = :Token");
-        $s->bindParam(":Email", $email);
-        $s->bindParam(":Token", $token);
+        if ($token == null)
+            return false;
         
-        $result = false;
         try {
-            $result = $s->execute();
+            $this->connection->beginTransaction();
+            
+            $s = $this->connection->prepare("UPDATE Users
+                                             SET PW_Hash = :PW_Hash
+                                             WHERE Username = :Username AND Reset_Token = :Token");
+            $s->bindParam(":Username", $username);
+            $s->bindParam(":Token", $token);
+            $s->bindParam(":PW_Hash", $pwhash);
+            
+            $s->execute();
+            if ($s->rowCount() == 0)
+                return false;
+            
+            if (!$this->clearResetToken($username))
+                return false;
+            
+            $this->connection->commit();
         } catch (\PDOException $e) {
             trigger_error("Failed to reset user password: " . $e->getMessage(), E_USER_WARNING);
+            $this->connection->rollback();
             return false;
         }
-        
-        if ($result == false)
-            return false;
-        
+
         return true;
     }
     
@@ -281,4 +290,16 @@ class DefaultUserProvider extends UserProvider
         return password_hash($password, PASSWORD_DEFAULT, array("cost" => DefaultUserProvider::PW_COST));
     }
     
+    private function clearResetToken($username) {
+        $s = $this->connection->prepare("UPDATE Users
+                                         SET Reset_Token = null
+                                         WHERE Username = :Username");
+        $s->bindParam(":Username", $username);
+        
+        $s->execute();
+        if ($s->rowCount() == 0)
+            return false;
+        
+        return true;
+    }
 }

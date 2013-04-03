@@ -39,7 +39,7 @@ function ($) {
     
     function resetPassword() {
         var resetInfo = getResetInfo();
-        
+        console.debug(resetInfo);
         $.post('/auth/reset-password.php', resetInfo)
         .done(onResetDone)
         .fail(onResetFail);
@@ -58,7 +58,7 @@ function ($) {
     
     function getResetInfo() {
         return {
-            username: $(resetForm).find('input[name=email]').val(),
+            username: $(resetForm).find('input[name=username]').val(),
             password: $(resetForm).find('input[name=password]').val(),
             token: $(resetForm).find('input[name=token]').val()
         };

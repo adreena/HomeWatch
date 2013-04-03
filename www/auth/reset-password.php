@@ -21,13 +21,13 @@ if (isset($_GET['username']) && isset($_GET['token'])) {
 
 } else {
 
-    if (!isset($_POST['email']) || !isset($_POST['token']) || !isset($_POST['password'])) {
+    if (!isset($_POST['username']) || !isset($_POST['token']) || !isset($_POST['password'])) {
         http_response_code(400);
         die;
     }
 
     $userProvider = new \UASmartHome\Auth\DefaultUserProvider();
-    $success = $userProvider->resetUserPassword($_POST['email'], $_POST['token'], $_POST['password']);
+    $success = $userProvider->resetUserPassword($_POST['username'], $_POST['token'], $_POST['password']);
     if (!$success) {
         http_response_code(400);
         die;

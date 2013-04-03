@@ -32,7 +32,7 @@ abstract class UserProvider
     
     abstract public function sendResetToken($email);
     
-    abstract public function resetUserPassword($user, $token, $newpassword);
+    abstract public function resetUserPassword($username, $token, $newpassword);
     
     ///
     /// Returns a random string suitable as an activation or reset token
