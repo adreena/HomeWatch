@@ -28,12 +28,7 @@ class Alerts
         "heatflux_stud" => "stud",
         "heatflux_insul" => "insulation",
         "water_hot" => "hot",
-        "water_total" => "total",
-        //TODO: add weather functions in database
-        "weather_temp" => "External_Temperature",
-        "weather_humidity" => "External_Relative_Humidity",
-        "weather_windspeed" => "Wind_Speed",
-        "weather_winddirection" => "Wind_Direction"
+        "water_total" => "total"
     );
 
     public function __construct() {

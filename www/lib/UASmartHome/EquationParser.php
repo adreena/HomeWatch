@@ -33,12 +33,7 @@ class EquationParser
         "heatflux_stud" => "Stud",
         "heatflux_insul" => "Insulation",
         "water_hot" => "Hot_Water",
-        "water_total" => "Total_Water",
-        //TODO: add weather functions in database
-        "weather_temp" => "External_Temperature",
-        "weather_humidity" => "External_Relative_Humidity",
-        "weather_windspeed" => "Wind_Speed",
-        "weather_winddirection" => "Wind_Direction"
+        "water_total" => "Total_Water"
     );
 
     public function __construct() {
