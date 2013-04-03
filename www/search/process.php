@@ -340,6 +340,9 @@ $WEEKLY_VIEW_MAX = 104;
 $MONTHLY_VIEW_MAX = 120;
 
 
+    if ($startdate == null || $enddate == null) {
+        return "No start date or end date selected, unable to graph.";
+    }
 
 	$error = null;
 	if ($period == "Hourly") {
@@ -351,7 +354,8 @@ $MONTHLY_VIEW_MAX = 120;
 		$enddate = date_create_from_Format('Y-m-d', $enddate);
 	}
 
-	$diff = ($enddate->format("U") - $startdate->format("U"));
+  
+    $diff = ($enddate->format("U") - $startdate->format("U"));
 
 	//echo var_dump($diff);
 
