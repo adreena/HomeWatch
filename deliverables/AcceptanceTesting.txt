@@ -276,9 +276,6 @@ System Tests
 				verify that the "loading data" alert is displayed
 				verify that (after a longish delay) a new graph is generated
 				verify that the data points displayed correspond to the values shown under Total_Water minus those under Hot_Water
-				
-			verify multiple y axis charts
-				(pending)
 
 		verify the residents page
 			click the Residents menu text	
@@ -934,12 +931,27 @@ System Tests
 				verify that the "loading data" alert is displayed
 				verify that (after a longish delay) a new graph is generated
 				verify that the data points displayed correspond to the values shown under Total_Water minus those under Hot_Water
-				
-			verify multiple y axis charts
-				(pending)
 		
 		verify calculations page
-			(pending)
+			click the Calculations text
+			verify that you are on the Calculations page
+			select Heat Energy as the function
+			select Solar Day as the argument type
+			enter March 15th 2013 as Start Date
+			enter March 16th 2013 as End Date
+			press the calculate button
+			verify that there is a value displayed
+			verify that the units are reasonable to the function (in this case GJ)
+			enter COP1, COP2 and COP3 Calculation as the function
+			click the calculate button
+			verify that (after a longish delay) values are displayed
+			verify that the value for the previous function is not preserved
+			verify that there are three values displayed
+			verify that none of them have units displayed
+			enter COP1, COP2 and COP3 Analysis as the function
+			verify that the previous values are still displayed
+			verify that twenty six additional values are displayed
+			verify that the units make sense when they are provided
 
 Support Contact
 
