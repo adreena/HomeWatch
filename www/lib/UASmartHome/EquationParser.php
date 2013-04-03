@@ -17,13 +17,20 @@ class EquationParser
         "air_humidity" => "Relative_Humidity",
         "air_temperature" => "Temperature",
         "elec_total" => "Total_Electricity",
-        "elec_ch1" => "Ch1",
-        "elec_ch2" => "Ch2",
-        "elec_aux1" => "AUX1",
-        "elec_aux2" => "AUX2",
-        "elec_aux3" => "AUX3",
-        "elec_aux4" => "AUX4",
-        "elec_aux5" => "AUX5",
+        "elec_ch1_phasea" => "Ch1",
+        "elec_ch2_phasea" => "Ch2",
+        "elec_aux1_phasea" => "AUX1",
+        "elec_aux2_phasea" => "AUX2",
+        "elec_aux3_phasea" => "AUX3",
+        "elec_aux4_phasea" => "AUX4",
+        "elec_aux5_phasea" => "AUX5",
+        "elec_ch1_phaseb" => "Ch1",
+        "elec_ch2_phaseb" => "Ch2",
+        "elec_aux1_phaseb" => "AUX1",
+        "elec_aux2_phaseb" => "AUX2",
+        "elec_aux3_phaseb" => "AUX3",
+        "elec_aux4_phaseb" => "AUX4",
+        "elec_aux5_phaseb" => "AUX5",
         "heat_energy" => "Total_Energy",
         "heat_volume" => "Total_Volume",
         "heat_mass" => "Total_Mass",
@@ -228,6 +235,15 @@ class EquationParser
                     $data["elec_total"][$date]["Ch1"] = $value;
                 }
             }
+            else if(strpos($pieces[$i], "elec_") === 0) {
+                $data[$pieces[$i]] = Engineer::db_pull_query(
+                           $input["apartment"], $db_vars[$pieces[$i]],
+                           $input["startdate"], $input["enddate"],
+                           $input["granularity"],
+                           strtoupper($pieces[$i][strlen($pieces[$i])-1]));
+
+            }
+
             else {
                 $data[$pieces[$i]] = Engineer::db_pull_query(
                            $input["apartment"], $db_vars[$pieces[$i]],
