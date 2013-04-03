@@ -1,16 +1,27 @@
+============================================================================
+Equations
+
+    Equations can be specified by a manager or engineer by clicking $Configuration$ on the top of the page.
 How to use:
 
 database variables (you must include at least one of these in your equation!):
     $air_co2$
     $air_humidity$
     $air_temperature$
-    $elec_ch1$
-    $elec_ch2$
-    $elec_aux1$
-    $elec_aux2$
-    $elec_aux3$
-    $elec_aux4$
-    $elec_aux5$
+    $elec_ch1_phasea$
+    $elec_ch2_phasea$
+    $elec_aux1_phasea$
+    $elec_aux2_phasea$
+    $elec_aux3_phasea$
+    $elec_aux4_phasea$
+    $elec_aux5_phasea$
+    $elec_ch1_phaseb$
+    $elec_ch2_phaseb$
+    $elec_aux1_phaseb$
+    $elec_aux2_phaseb$
+    $elec_aux3_phaseb$
+    $elec_aux4_phaseb$
+    $elec_aux5_phaseb$
     $heat_energy$
     $heat_volume$
     $heat_mass$
@@ -21,10 +32,6 @@ database variables (you must include at least one of these in your equation!):
     $heatflux_insul$
     $water_hot$
     $water_total$
-    $weather_temp$
-    $weather_humidity$
-    $weather_windspeed$
-    $weather_winddirection$
 
 constants:
     e = 2.71...
@@ -42,3 +49,9 @@ example function:
     Based on what you selected in the search for start date, end date,
     granularity, and apartment, it will show time on the x axis and
     the evaluated function values on the y axis.
+
+----------------------------------------------------------------------------
+
+Future work:
+
+    - extend custom equations to allow averages and other statistical analyses
