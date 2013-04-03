@@ -48,6 +48,31 @@ div.config-display table .description {
   padding: 5px;
 }
 
+/* TODO: This CSS is specific to the utilitycontracts and residents pages... */
+div.config-display table .type,
+div.config-display table .price
+{
+  width: 20%;
+}
+
+div.config-display table .startdate,
+div.config-display table .enddate
+{
+  width: 25%
+}
+
+div.config-display table .room {
+  width: 15%;
+}
+
+div.config-display table .username,
+div.config-display table .roomstatus,
+div.config-display table .location
+{
+  width: 20%;
+}
+/* ENDTODO */
+ 
 div.config-display .footer {
   width: 97.5%;
   text-align: right;
