@@ -35,7 +35,7 @@ function ($) {
         var resetInfo = getResetInfo();
         
         $.post('/auth/send-reset-token.php', resetInfo)
-        .done(onRequestDone)
+        .done(onResetDone)
         .fail(onResetFail);
         
         return false;
