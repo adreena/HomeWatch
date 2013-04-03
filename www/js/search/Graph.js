@@ -633,23 +633,24 @@ function ($, _, getInternetExplorerVersion) {
         return date < 10 ? '0' + date : '' + date;
     };
 
-    var get_month_day_year = function (start_date, type, granularity, end_date) {
+    var get_month_day_year = function (start, type, granularity, end) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var date_string = new Date(start_date);        
+        var date_string = new Date(start);        
         var day = date_string.getUTCDate();
         var month = months[date_string.getUTCMonth()];
         var year = date_string.getUTCFullYear();
+	var end_date_string, end_day, end_month, end_year, week_end, end_date;
 
-        if(end_date !== undefined) {
-	    if(start_date === end_date) {
-		console.log("start = end");
-	    }
+        if(granularity === "Monthly") {
+	    end_date = start + get_millisecond_interval(granularity);		    
+	} else {
+	    end_date = end;
+	}
             var end_date_string = new Date(end_date);
             var end_day = end_date_string.getUTCDate();
             var end_month = months[end_date_string.getUTCMonth()];
             var end_year = end_date_string.getUTCFullYear();
             var week_end = (new Date(end_date + get_millisecond_interval("Daily"))).getUTCDate();
-        }
 
         if(type === "tool_tip") {
             return tool_tip = {
@@ -702,39 +703,10 @@ function ($, _, getInternetExplorerVersion) {
 	    Monthly: base * 24 *31,
             Yearly: base * 24 * 366
         }[granularity];
-    }
-
-     /*var get_week_labels = function (startdate, enddate, granularity) {
-        var ticks = [];
-        var milli_week = get_millisecond_interval(granularity);
-        console.log("start is " + startdate);
-        console.log("end is " + enddate);
-        var max_date = enddate - startdate;
-        console.log("max is " + max_date);
-        var num_weeks = Math.ceil(max_date/get_millisecond_interval(granularity)) + 1;
-
-        console.log("num weeks is " + num_weeks);
-        console.log("new iteration");
-        for(i = 0; i < num_weeks; ++i) {
-            console.log("gran is " + granularity);
-            console.log("milli week is " + milli_week);
-            ticks.push([startdate + (milli_week * i), "Week " + (i + 1)]);
-                console.log((startdate + (milli_week * i)) + "Week " + (i + 1));
-        }
-        console.log("milli week 1 is " + startdate);
-        console.log("milli week 2 is " + (startdate + milli_week));
-        console.log("milli week 3 is " + (startdate + (milli_week * 2)));
-        console.log("milli week 4 is " + (startdate + (milli_week * 3)));
-        console.log("milli week 5 is " + (startdate + (milli_week * 4)));
-
-        console.log("ticks size is " + ticks.length);
-
-        return ticks;
-    };*/
+    };
 
     get_tick_labels = function (ticks, granularity) {
         var label;
-        //var milli_year = get_next_interval(granularity);
 
         for(i = 0; i < ticks.length; ++i) {
             if(granularity === "Weekly") {

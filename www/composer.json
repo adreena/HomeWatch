@@ -1,6 +1,6 @@
 {
-    "name": "ualberta/smarthome",
-    "description": "University of Alberta SmartHome sensor visualization.",
+    "name": "ualberta/HomeWatch",
+    "description": "University of Alberta HomeWatch sensor visualization.",
     "require": {
         "twig/twig": ">=1.12",
         "ircmaxell/password-compat": ">=1.0.0",
