@@ -118,9 +118,6 @@ System Tests
 			verify the "incorrect login information" alert
 			verify that you are still on the login page
 			
-	Forgot Password Testing
-		(pending)
-			
 	Resident Testing
 		log in as resident1
 			enter resident1 as username
@@ -165,6 +162,85 @@ System Tests
 			click login button
 			verify you are on the manager home page
 
+		verify adding alerts
+			click the Configuration text
+			verify that you are on the configuration page
+			locate the Alerts Section
+			verify with empty data
+				click the Submit button
+				verify that the failed submit alert is displayed
+				
+			verify with bad data
+				enter testing as the alert name
+				click the Submit button
+				verify that the failed submit alert is displayed
+				click the Clear button
+				verify that all data fields have been cleared
+				enter waffles as the Body
+				click the Submit button
+				verify that the failed submit alert is displayed
+				click the clear button
+				enter waffles as the description
+				click the Submit button
+				verify that the failed submit alert is displayed
+				
+			verify with proper data
+				enter acceptancetesting as the name
+				enter 4 + 5 as the body
+				enter acceptancetesting as the description
+				click the Submit button
+				verify (after a short pause) that the Alerts table displays the new equation
+		
+		verify editing alerts
+			click the Configuration text
+			verify that you are on the configuration page
+			locate the Alerts Section
+			find an alert to edit
+			click the edit button
+			verify that the Alerts Edit section has been updated with the correct data
+			verify with empty data
+				delete all data in the data fields
+				click the submit button
+				verify that the failed submit alert is displayed
+				
+			verify with bad data
+				enter testing as the alert name
+				click the Submit button
+				verify that the failed submit alert is displayed
+				delete all data in the name field
+				verify that all data fields have been cleared
+				enter waffles as the Body
+				click the Submit button
+				verify that the failed submit alert is displayed
+				delete all data in the body field
+				enter waffles as the description
+				click the Submit button
+				verify that the failed submit alert is displayed
+				
+			verify with proper data
+				enter acceptancetesting2 as the name
+				enter 4 + 5 as the body
+				enter acceptancetesting2 as the description
+				click the Submit button
+				verify (after a short pause) that the Alerts table displays the alert with the new data and doesn't contain the old version
+				
+			verify the cancel button
+				choose a formula to edit
+				click the edit button
+				verify that the Formula Edit section is updated with the proper data
+				verify that the title mentions the specific alert being edited
+				click the Cancel button
+				verify that all data fields are now blank
+				verify that the title no longer mentions the specific alert being edited
+		
+		verify deleting alerts
+			click the Configuration text
+			verify that you are on the configuration page
+			locate the Alerts Section
+			find an alert to delete
+			click the delete button
+			verify that (after a short pause) the Alerts table no longer contains the deleted alert
+			
 		verify charts page
 			click the charts text
 			verify that you are on the charts page
@@ -255,7 +331,23 @@ System Tests
 				verify that the old form and graph have not changed
 			
 			verify alerts
-				(pending)
+				click the Create Graph text (bottom of screen)
+				select Time as x axis
+				select TestFour as the y axis
+				select Daily as granularity
+				enter March 1st 2012 as Start Date
+				enter March 10th 2012 as End Date
+				select apartment1 from apartments
+				verify that (after a short delay) a new graph is created
+				click the Create Graph text (bottom of screen)
+				select Time as x axis
+				select TestThree as the y axis
+				select Daily as granularity
+				enter March 1st 2012 as Start Date
+				enter March 10th 2012 as End Date
+				select apartment1 from apartments
+				verify that (after a short delay) a new graph is created
+				verify that all values in the new graph below 1000 do not appear in the old graph
 			
 			verify custom equations
 				click the Create Graph text (bottom of screen)
@@ -568,7 +660,7 @@ System Tests
 				enter resident12345 as username
 				enter password as password
 				enter password as confirm password
-				enter resident12345@hotmail.com as email
+				enter YOUR OWN EMAIL (for testing the forgot password page later) as email
 				select resident as role
 				click register
 				verify the success message displays (pending)
@@ -579,9 +671,6 @@ System Tests
 				click login button
 				verify you are on the resident home page	
 				click the logout text
-				enter manager1 as username
-				enter password as password
-				click login button
 
 			register an engineer
 				enter engineer123 as username
@@ -598,9 +687,6 @@ System Tests
 				click login button
 				verify you are on the engineer home page	
 				click the logout text
-				enter manager1 as username
-				enter password as password
-				click login button
 
 			register a manager
 				enter manager123 as username
@@ -617,9 +703,6 @@ System Tests
 				click login button
 				verify you are on the manager home page	
 				click the logout text
-				enter manager1 as username
-				enter password as password
-				click login button
 
 			register an admin
 				enter admin123 as username
@@ -636,9 +719,6 @@ System Tests
 				click login button
 				verify you are on the manager home page (there is no admin home page)
 				click the logout text
-				enter manager1 as username
-				enter password as password
-				click login button
 
 			register a developer
 				enter developer123 as username
@@ -654,6 +734,29 @@ System Tests
 				enter password as password
 				click login button
 				verify you are on the manager home page (there is no developer home page)	
+				click the logout text
+				
+	Forgot Password Testing
+		click the Forgot Password text
+		verify that you are on the forgot password page
+		enter your own email as the email
+		click the submit button
+		verify that the success alert is displayed
+		click ok
+		go check your email
+		verify that there is an email from donotreply@smartcondo.com
+		click the link inside that email
+		verify that you are on the password reset page
+		enter password2 as password
+		enter password2 as confirm password
+		click the submit button
+		verify the success alert displays
+		click ok
+		verify that you are on the login page
+		enter resident12345 as username
+		enter password2 as password
+		click the log in button
+		verify that you are on the resident page
 
 	Engineer Testing
 		log in as engineer1
@@ -910,7 +1013,23 @@ System Tests
 				verify that the old form and graph have not changed
 			
 			verify alerts
-				(pending)
+				click the Create Graph text (bottom of screen)
+				select Time as x axis
+				select TestFour as the y axis
+				select Daily as granularity
+				enter March 1st 2012 as Start Date
+				enter March 10th 2012 as End Date
+				select apartment1 from apartments
+				verify that (after a short delay) a new graph is created
+				click the Create Graph text (bottom of screen)
+				select Time as x axis
+				select TestThree as the y axis
+				select Daily as granularity
+				enter March 1st 2012 as Start Date
+				enter March 10th 2012 as End Date
+				select apartment1 from apartments
+				verify that (after a short delay) a new graph is created
+				verify that all values in the new graph below 1000 do not appear in the old graph
 			
 			verify custom equations
 				click the Create Graph text (bottom of screen)
