@@ -478,8 +478,19 @@ function ($, _, D, Graph, TemplateManager) {
         dateThing.find('.week-picker').jdPicker(jdPickerDefaultsWith({
             select_week: true
         }));
-
-
+        
+        /* HACK: Put the selected day in the inputs */
+        dateThing.find('.simple-day-picker').each(function() {
+            var picker = $(this).parent(".jdpicker_w");
+            var date = picker.find('.selectable_day.selected').attr('date');
+            $(this).val(date);
+        });
+        dateThing.find('.week-picker').each(function() {
+            var picker = $(this).parent(".jdpicker_w");
+            var date = picker.find('.selectable_day.selected').attr('date');
+            $(this).val(date);
+        });
+        
         /* Hides all of the date/time category things. */
         hideAll = function () {
             dateThing.children('div').hide();
