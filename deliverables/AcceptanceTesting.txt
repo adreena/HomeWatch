@@ -1,16 +1,12 @@
 Introduction
 
-	This document is the Acceptance Testing document for the Smart Home application. 
+	This document is the Acceptance Testing document for the Home Watch application. 
 	It's purpose is to assist with installation of the system as well as giving the user some idea of how to achieve various goals in more detail than is available in the User Manual. 
 	This detail also lends itself towards aiding a user who is having difficulty working with the interface to locate the exact step at which their problem occurs, as well as alowing them to etermine if the error is a matter of order of operations or a fault in the application itself. 
 	If an application fault is discovered the contacts provided in the Support Contact section can be used to alert the team in order to generate a solution to the fault. The intended audience of this document is the team involved with the instalation and maintenence of the application, 
 	rather than those who use it for non work purposes or administration, although the System Tests section may be of some use to them if they cannot learn what they want from the User Manual.
 
 Instalation
-	
-	(instructions on how to run the pages, however we want them to do it.)
-	(Maybe we give them the folder/files to run on their own server or we tell them how to access a server)
-	(if we want them to make their own we should give instructions of virtual machines as well)
 	
 	###################################################################################
   	DB First Time Installtion:
@@ -30,10 +26,6 @@ Instalation
         B)This cronJob for Daily update the views and tables for the DB overnight and allow the Weather.php to pull the data 
 	and store in the DB 
         ###################################################################################
-
-	(instructions on how to set up required scripts)
-	
-	(instruction on how to do other stuff (?))
 	
 System Tests
 	
@@ -154,6 +146,11 @@ System Tests
 			click the Advice menu text
 			verify that you are on the advice page
 			(advice not fully implemented - no further tests)
+			
+		verify the history page
+			click the History menu text
+			verify that you are on the history page
+			(history not fully implemented - no further tests)
 
 	Manager Testing
 		log in as manager1
@@ -174,12 +171,12 @@ System Tests
 				enter testing as the alert name
 				click the Submit button
 				verify that the failed submit alert is displayed
-				click the Clear button
+				click the Cancel button
 				verify that all data fields have been cleared
 				enter waffles as the Body
 				click the Submit button
 				verify that the failed submit alert is displayed
-				click the clear button
+				click the Cancel button
 				enter waffles as the description
 				click the Submit button
 				verify that the failed submit alert is displayed
@@ -241,9 +238,9 @@ System Tests
 			click the delete button
 			verify that (after a short pause) the Alerts table no longer contains the deleted alert
 			
-		verify charts page
-			click the charts text
-			verify that you are on the charts page
+		verify Graphs page
+			click the graphs text
+			verify that you are on the graphs page
 			verify that the "Pick some axes, timeframe and apartments to graph" alert is displayed
 			verify one line graph
 				enter Time as the x axis
@@ -324,7 +321,7 @@ System Tests
 				verify that the original graph does not change
 				verify that the data points associated with apartment1 in the new graph match those in the old graph (via hovering)
 			
-			verify hiding charts
+			verify hiding graphs
 				click the Destroy text above the new graph (right side of screen just above the graph)
 				verify that the new form and graph are no longer displayed
 				verify that the old form and graph still display
@@ -384,23 +381,23 @@ System Tests
 					enter tester as name
 					click the Submit button
 					verify that the failed submission alert is displayed
-					click the clear button
+					click the Cancel button
 					enter tester as username
 					click the Submit button
 					verify that the failed submission alert is displayed
-					click the clear button
+					click the Cancel button
 					enter 1212 as room 
 					click the Submit button
 					verify that the failed submission alert is displayed
-					click the clear button
+					click the Cancel button
 					enter NE as location
 					click the Submit button
 					verify that the failed submission alert is displayed
-					click the clear button
+					click the Cancel button
 					enter occupied as room status
 					click the Submit button
 					verify that the failed submission alert is displayed
-					click the clear button
+					click the Cancel button
 					
 				verify with invalid data
 					enter testing12345 as name
@@ -410,7 +407,7 @@ System Tests
 					enter occupied as room status
 					click the Submit button
 					verify that the failed submission alert is displayed
-					click the clear button
+					click the Cancel button
 					
 				verify with proper data
 					enter testing12345 as name
@@ -460,7 +457,7 @@ System Tests
 					enter occupied as room status
 					click the Submit button
 					verify that the failed submission alert is displayed
-					click the clear button
+					click the Cancel button
 					
 				verify with proper data
 					click the edit button to restore data
@@ -476,8 +473,8 @@ System Tests
 				verify that (after a small delay) the resident table no longer contains data on that resident
 
 		verify the utility contracts page
-			click the Utility Contracts menu text	
-			verify that you are on the contracts page
+			click the Utilities menu text	
+			verify that you are on the utility contracts page
 			verify that the contracts table is not empty
 			verify that the contracts table does not contain duplicate data
 			verify that the contracts table contains reasonable data
@@ -590,9 +587,9 @@ System Tests
 				verify that (after a small delay) the table no longer contains data on that contract
 
 		verify the register new user page
+			click Register New User text
+			verify you have entered the registration page
 			register with empty data
-				click register text
-				verify you have entered the registration page
 				click register button
 				verify that the registration process fails
 				verify the "Please enter a username" alert
@@ -777,12 +774,12 @@ System Tests
 				enter testing as the alert name
 				click the Submit button
 				verify that the failed submit alert is displayed
-				click the Clear button
+				click the Cancel button
 				verify that all data fields have been cleared
 				enter waffles as the Body
 				click the Submit button
 				verify that the failed submit alert is displayed
-				click the clear button
+				click the Cancel button
 				enter waffles as the description
 				click the Submit button
 				verify that the failed submit alert is displayed
@@ -856,12 +853,12 @@ System Tests
 				enter testing as the function name
 				click the Submit button
 				verify that the failed submit alert is displayed
-				click the Clear button
+				click the Cancel button
 				verify that all data fields have been cleared
 				enter waffles as the Body
 				click the Submit button
 				verify that the failed submit alert is displayed
-				click the clear button
+				click the Cancel button
 				enter waffles as the description
 				click the Submit button
 				verify that the failed submit alert is displayed
@@ -923,9 +920,9 @@ System Tests
 			click the delete button
 			verify that (after a short pause) the Formulas table no longer contains the deleted formula
 		
-		verify charts page
-			click the charts text
-			verify that you are on the charts page
+		verify graphs page
+			click the Graphs text
+			verify that you are on the graphs page
 			verify that the "Pick some axes, timeframe and apartments to graph" alert is displayed
 			verify one line graph
 				enter Time as the x axis
@@ -989,7 +986,7 @@ System Tests
 				verify that the x axis is labeled with the correct day
 				verify that the data points are distributed in such a way that their averages match the noted distances
 			
-			verify multiple charts
+			verify multiple graphs
 				click the Create Graph text (bottom of screen)
 				verify that an empty form has been created for a second graph
 				enter Time as the x axis
@@ -1006,7 +1003,7 @@ System Tests
 				verify that the original graph does not change
 				verify that the data points associated with apartment1 in the new graph match those in the old graph (via hovering)
 			
-			verify hiding charts
+			verify hiding graphs
 				click the Destroy text above the new graph (right side of screen just above the graph)
 				verify that the new form and graph are no longer displayed
 				verify that the old form and graph still display
