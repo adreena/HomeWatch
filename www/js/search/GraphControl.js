@@ -206,8 +206,8 @@ function ($, _, D, Graph, TemplateManager) {
         var self = this,
             processControls,
             internalControls,
-            yaxis = this.el.controls.find('.graph-control-axis-x'),
-            xaxis = this.el.controls.find('.graph-control-axis-y');
+            yaxis = this.el.controls.find('.graph-control-axis-y'),
+            xaxis = this.el.controls.find('.graph-control-axis-x');
 
         /* Get all of the control categories explicitly labled to send stuff to
          * process.php. */
@@ -246,6 +246,8 @@ function ($, _, D, Graph, TemplateManager) {
                 return;
             }
             selection = self.values[valueID];
+
+            console.log(selection);
 
             /* Should disable when selection type is NOT sensor. */
             shouldDisable = (selection.type !== 'sensorarray');
