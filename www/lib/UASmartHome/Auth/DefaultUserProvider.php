@@ -25,7 +25,7 @@ class DefaultUserProvider extends UserProvider
     public function __construct()
     {
         $con = new Connection();
-        $this->connection =  $con->connect();
+        $this->connection = $con->connect();
     }
     
     ///
@@ -74,7 +74,7 @@ class DefaultUserProvider extends UserProvider
     public function registerNewUserImpl($accountData, $result)
     {
         // Generate the password hash
-        $pwhash = generatePasswordHash($accountData->password);
+        $pwhash = $this->generatePasswordHash($accountData->password);
         if ($pwhash == false) {
             $result->setResultCodeOverall(RegistrationResult::CODE_ERROR);
             return false;
