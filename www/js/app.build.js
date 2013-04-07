@@ -20,8 +20,12 @@
         //Optimize the application files. jQuery is not 
         //included since it is already in require-jquery.js
         {
-            name: "search",
-            name: "calculations",
+            name: "search"
+        },
+        {
+            name: "calculations"
+        },
+        {
             name: "residentEditor"
         }
     ]

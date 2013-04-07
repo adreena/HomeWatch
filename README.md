@@ -73,6 +73,14 @@ This would recreate the `www/` directory into a `build/` directory.
 It's kind of crazy, and I wouldn't recommend trying it right now, but
 it's all set up and pretty nifty.
 
+Simply do this in the root repository directory:
+
+```sh
+r.js -o www/js/app.build.js
+```
+And a _clone_ of the `www/` directory will be made called `build/`
+that will contain all of the uglified JavaScript and CSS sources.
+
 [r.js]: http://requirejs.org/docs/optimization.html
 
 # Credits
@@ -81,3 +89,4 @@ Using the [EvalMath][] PHP class by Miles Kaufmann.
 
 [EvalMath]:
 http://www.phpclasses.org/package/2695-PHP-Safely-evaluate-mathematical-expressions.html
+
