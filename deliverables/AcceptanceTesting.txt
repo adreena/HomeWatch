@@ -1,1078 +1,1132 @@
 Introduction
 
+        This document is the Acceptance Testing document for the HomeWatch
+        application.
 
-	This document is the Acceptance Testing document for the HomeWatch application. 
+        It's purpose is to assist with installation of the system as
+        well as giving the user some idea of how to achieve various
+        goals in more detail than is available in the User Manual. This
+        detail also lends itself towards aiding a user who is having
+        difficulty working with the interface to locate the exact step
+        at which their problem occurs, as well as allowing them to
+        determine if the error is a matter of order of operations or
+        a fault in the application itself. If an application fault is
+        discovered the contacts provided in the Support Contact section
+        can be used to alert the team in order to generate a solution
+        to the fault. The intended audience of this document is the
+        team involved with the installation and maintenance of the
+        application, rather than those who use it for non work purposes
+        or administration, although the System Tests section may be of
+        some use to them if they cannot learn what they want from the
+        User Manual.
 
-	It's purpose is to assist with installation of the system as well as giving the user some idea of how to achieve various goals in more detail than is available in the User Manual. 
-	This detail also lends itself towards aiding a user who is having difficulty working with the interface to locate the exact step at which their problem occurs, as well as alowing them to etermine if the error is a matter of order of operations or a fault in the application itself. 
-	If an application fault is discovered the contacts provided in the Support Contact section can be used to alert the team in order to generate a solution to the fault. The intended audience of this document is the team involved with the instalation and maintenence of the application, 
-	rather than those who use it for non work purposes or administration, although the System Tests section may be of some use to them if they cannot learn what they want from the User Manual.
+Installation
 
-Instalation
-	
-	###################################################################################
-  	DB First Time Installtion:
-        A)The user will need to have the Same table names as was provided by the client 
-        B)User will need to put the Air,Water,Heatflux,Energy and Water in one DB and the Bas tables should be in different one
-        ,incase the data or views needed to be accessed through phpmyadmin
-        C) InstallDB.sh and DB.tar should be in the Same folder under the Script folder 
-	D)Excute the InstallDB shell script
- 	E)User will need to enter the username ,password and 2 Databases names .The first one for Water..etc and second for 
- 	bas 
+        ###################################################################################
+        DB First Time Installation:
+
+        A) The user will need to have the Same table names as was
+        provided by the client
+
+        B) User will need to put the Air, Water, Heatflux, Energy and
+        Water in one DB and the Bas tables should be in different
+        one, in case the data or views needed to be accessed through
+        phpmyadmin
+
+        C) InstallDB.sh and DB.tar should be in the Same folder under the Script folder
+
+        D) Execute the InstallDB shell script
+
+        E)User will need to enter the username ,password and 2 Databases
+        names .The first one for Water..etc and second for bas
+
         ###################################################################################
 
-	###################################################################################
-         CronJob Installtion:
-        A)User will need to insert the username,password,db names in the Daily script shell script and config.php,inorder to be
-        excuted by crontab .
-        B)This cronJob for Daily update the views and tables for the DB overnight and allow the Weather.php to pull the data 
-	and store in the DB 
         ###################################################################################
-	
+        Website First Time Setup
+
+        This installs the website assets such that it can be run from
+        a server server running Apache 2 and PHP >= 5.4. In addition,
+        git is needed to download and install PHP and JavaScript
+        dependencies.
+
+        A) Change directory to the repository root and run the
+        first-time-setup.sh script. This will download and install
+        the Composer PHP dependency manager. Additionally, this will
+        initialize the git submodules for some JavaScript libraries.
+        This is an entirely automated process.
+
+        B) (Optional, not supported) Run the r.js optimizer with the
+        build file in `www/js/app.build.js`. This will create a clone
+        of the web root directory, `www`, called `build` and obfuscate
+        the JavaScript files such that they use the least amount of
+        bandwidth. Additionally, this combines JavaScript and CSS files
+        such that they are transfered in the least amount of HTTP
+        requests. r.js requires the node package manager.
+
+        C) Now the www or build directory is the web document root. Set
+        up of Apache is up to the discretion of the installer.
+
+        ###################################################################################
+
+        ###################################################################################
+        CronJob Installtion:
+
+        A) User will need to insert the username, password, db names in
+        the Daily script shell script and config.php, in order to be
+        executed by crontab.
+
+        B) This cronjob for Daily update the views and tables for the DB
+        overnight and allow the Weather.php to pull the data and store
+        in the DB.
+        ###################################################################################
+
 System Tests
-	
-	All tests need to be repeated for recent versions Firefox, Chrome and Internet Explorer
-	Successful user registrations will cause future registrations of that username or email address to fail. Appending a number works for testing purposes.
-	
-	Testing usernames and passwords
-		engineer1 password
-		manager1 password
-		resident1 password
-	
-	Login Testing
-		log in as resident
-			enter resident1 as username
-			enter password as password
-			press log in button
-			verify you have entered the resident home page
-		log out
-			press logout text (top right)
-			verify you have entered the login page
-			click the browsers back button
-			verify you are still on the login page
 
-		log in as engineer
-			enter engineer1 as username
-			enter password as password
-			press log in button
-			verify you have entered the engineer home page
-		log out
-			press logout text (top right)
-			verify you have entered the login page
-			click the browsers back button
-			verify you are still on the login page
+        All tests need to be repeated for recent versions Firefox,
+        Chrome and Internet Explorer Successful user registrations will
+        cause future registrations of that username or email address to
+        fail. Appending a number works for testing purposes.
 
-		log in as manager
-			enter manager1 as username
-			enter password as password
-			press log in button
-			verify you have entered the manager home page
-		log out
-			press logout text (top right)
-			verify you have entered the login page
-			click the browsers back button
-			verify you are still on the login page
+        Testing usernames and passwords
+                engineer1 password
+                manager1 password
+                resident1 password
 
-		log in as admin
-			enter admin1 as username
-			enter password as password
-			press log in button
-			verify you have entered the manager home page (there is no admin home page)
-		log out
-			press logout text (top right)
-			verify you have entered the login page
-			click the browsers back button
-			verify you are still on the login page
+        Login Testing
+                log in as resident
+                        enter resident1 as username
+                        enter password as password
+                        press log in button
+                        verify you have entered the resident home page
+                log out
+                        press logout text (top right)
+                        verify you have entered the login page
+                        click the browsers back button
+                        verify you are still on the login page
 
-		log in as developer
-			enter developer1 as username
-			enter password as password
-			press log in button
-			verify you have entered the manager home page (there is no developer home page)
-		log out
-			press logout text (top right)
-			verify you have entered the login page
-			click the browsers back button
-			verify you are still on the login page
+                log in as engineer
+                        enter engineer1 as username
+                        enter password as password
+                        press log in button
+                        verify you have entered the engineer home page
+                log out
+                        press logout text (top right)
+                        verify you have entered the login page
+                        click the browsers back button
+                        verify you are still on the login page
 
-		log in with random data
-			enter asdfasdf as username
-			enter asdfasdf as password
-			press log in button
-			verify the "incorrect login information" alert
-			verify that you are still on the login page
-			enter manager1 as username
-			enter asdfasdf as password
-			press log in button
-			verify the "incorrect login information" alert
-			verify that you are still on the login page
-			enter asdfasdf as username
-			enter password as password
-			press log in button
-			verify the "incorrect login information" alert
-			verify that you are still on the login page
-			
-	Resident Testing
-		log in as resident1
-			enter resident1 as username
-			enter password as password
-			click login button
-			verify you are on the resident home page
+                log in as manager
+                        enter manager1 as username
+                        enter password as password
+                        press log in button
+                        verify you have entered the manager home page
+                log out
+                        press logout text (top right)
+                        verify you have entered the login page
+                        click the browsers back button
+                        verify you are still on the login page
 
-		verify resident home page data
-			verify that your rank is not blank
-			verify that your rank is not zero
-			verify that your rank is a reasonable number
-			verify that the ranking table is not empty
-			verify that the ranking table holds reasonable numbers
+                log in as admin
+                        enter admin1 as username
+                        enter password as password
+                        press log in button
+                        verify you have entered the manager home page (there is no admin home page)
+                log out
+                        press logout text (top right)
+                        verify you have entered the login page
+                        click the browsers back button
+                        verify you are still on the login page
 
-		verify achievements page data
-			click the Achievements menu text
-			verify that you are on the achievements page
-			verify that the achievements array is not empty
-			verify that reasonable icons are displaying for each achievement
-			verify that one icon is not greyed out (pending)
-			verify achievement data
-				hover over an achievement icon
-				verify that a tooltip appears
-				verify that the tooltip is not empty
-				verify that the tooltip contains valid text
-				verify that the tooltip text roughly relates to the icon
+                log in as developer
+                        enter developer1 as username
+                        enter password as password
+                        press log in button
+                        verify you have entered the manager home page (there is no developer home page)
+                log out
+                        press logout text (top right)
+                        verify you have entered the login page
+                        click the browsers back button
+                        verify you are still on the login page
 
-		verify the schoreboard page
-			click the Scoreboard menu text
-			verify that you are on the scoreboard page
-			(scoreboard not fully implemented - no further tests)
+                log in with random data
+                        enter asdfasdf as username
+                        enter asdfasdf as password
+                        press log in button
+                        verify the "incorrect login information" alert
+                        verify that you are still on the login page
+                        enter manager1 as username
+                        enter asdfasdf as password
+                        press log in button
+                        verify the "incorrect login information" alert
+                        verify that you are still on the login page
+                        enter asdfasdf as username
+                        enter password as password
+                        press log in button
+                        verify the "incorrect login information" alert
+                        verify that you are still on the login page
 
-		verify the advice page
-			click the Advice menu text
-			verify that you are on the advice page
-			(advice not fully implemented - no further tests)
-			
-		verify the history page
-			click the History menu text
-			verify that you are on the history page
-			(history not fully implemented - no further tests)
+        Resident Testing
+                log in as resident1
+                        enter resident1 as username
+                        enter password as password
+                        click login button
+                        verify you are on the resident home page
 
-	Manager Testing
-		log in as manager1
-			enter manager1 as username
-			enter password as password
-			click login button
-			verify you are on the manager home page
+                verify resident home page data
+                        verify that your rank is not blank
+                        verify that your rank is not zero
+                        verify that your rank is a reasonable number
+                        verify that the ranking table is not empty
+                        verify that the ranking table holds reasonable numbers
 
-		verify adding alerts
-			click the Configuration text
-			verify that you are on the configuration page
-			locate the Alerts Section
-			verify with empty data
-				click the Submit button
-				verify that the failed submit alert is displayed
-				
-			verify with bad data
-				enter testing as the alert name
-				click the Submit button
-				verify that the failed submit alert is displayed
-				click the Cancel button
-				verify that all data fields have been cleared
-				enter waffles as the Body
-				click the Submit button
-				verify that the failed submit alert is displayed
-				click the Cancel button
-				enter waffles as the description
-				click the Submit button
-				verify that the failed submit alert is displayed
-				
-			verify with proper data
-				enter acceptancetesting as the name
-				enter 4 + 5 as the body
-				enter acceptancetesting as the description
-				click the Submit button
-				verify (after a short pause) that the Alerts table displays the new equation
-		
-		verify editing alerts
-			click the Configuration text
-			verify that you are on the configuration page
-			locate the Alerts Section
-			find an alert to edit
-			click the edit button
-			verify that the Alerts Edit section has been updated with the correct data
-			verify with empty data
-				delete all data in the data fields
-				click the submit button
-				verify that the failed submit alert is displayed
-				
-			verify with bad data
-				enter testing as the alert name
-				click the Submit button
-				verify that the failed submit alert is displayed
-				delete all data in the name field
-				verify that all data fields have been cleared
-				enter waffles as the Body
-				click the Submit button
-				verify that the failed submit alert is displayed
-				delete all data in the body field
-				enter waffles as the description
-				click the Submit button
-				verify that the failed submit alert is displayed
-				
-			verify with proper data
-				enter acceptancetesting2 as the name
-				enter 4 + 5 as the body
-				enter acceptancetesting2 as the description
-				click the Submit button
-				verify (after a short pause) that the Alerts table displays the alert with the new data and doesn't contain the old version
-				
-			verify the cancel button
-				choose a formula to edit
-				click the edit button
-				verify that the Formula Edit section is updated with the proper data
-				verify that the title mentions the specific alert being edited
-				click the Cancel button
-				verify that all data fields are now blank
-				verify that the title no longer mentions the specific alert being edited
-		
-		verify deleting alerts
-			click the Configuration text
-			verify that you are on the configuration page
-			locate the Alerts Section
-			find an alert to delete
-			click the delete button
-			verify that (after a short pause) the Alerts table no longer contains the deleted alert
-			
-		verify Graphs page
-			click the graphs text
-			verify that you are on the graphs page
-			verify that the "Pick some axes, timeframe and apartments to graph" alert is displayed
-			verify one line graph
-				enter Time as the x axis
-				enter CO2 as the y axis
-				enter Daily as granularity
-				verify that the "No apartments selected. No start date. No end date." alert is displayed
-				enter March 1st 2012 as Start Date
-				verify that the No apartments selected. No end date." alert is displayed
-				enter March 5th as End Date
-				verify that the "No apartments selected." alert is displayed
-				select apartment1 in apartments
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a graph is generated
-				verify that the x axis is measured in days
-				verify that the x axis contains 5 nodes
-				verify that the legend contains only Apartment1
-				
-			verify data point hovering
-				hover over any node in the graph
-				verify that a tooltip is displayed over the node
-				verify that Apartment1 is mentioned
-				verify that the proper date is mentioned
-				verify that a value is mentioned
-				verify that the value mentioned lines up with the y axis point of the node
-				hover over any other node in the graph
-				verify that Apartment1 is still mentioned
-				verify that the date has changed and is still proper
-				verify that the value matches the y axis value of that node
-				
-			verify refreshing line graphs
-				enter March 10th 2012 as End Date
-				verify that the "Loading Data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				verify that the old graph is no longer displayed
-				verify that the x axis contains 10 nodes
-				select apartment8 as well as apartment1 in apartments
-				verify that (after a short delay) a new graph is generated
-				verify that the old graph is no longer displayed
-				verify that there are now two lines being displayed on the graph
-				verify that the legend shows both aparments
-				verify that the data points associated with apartment1 have not changed
-				verify hovering works for the line associated with apartment8
-				
-			verify bar graphs
-				select Bar Graph as Graph Type
-				verify that the line graph is destroyed
-				verify that there is a bar graph generated
-				verify that the x axis has not changed
-				verify that the legend has not changed
-				verify that there are still only two data sets being graphed
-				verify that the data points for each apartment have not changed
-				
-			verify drilling down
-				select Line Graph as Graph Type
-				choose any data point in the graph
-				make note of the relative distance between the data for apartment1 and apartment8 on that day
-				click the data point
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				verify that the x axis is not divided into hours
-				verify that the x axis is labeled with the correct day
-				verify that the data points are distributed in such a way that their averages match the noted distances
-			
-			verify multiple charts
-				click the Create Graph text (bottom of screen)
-				verify that an empty form has been created for a second graph
-				enter Time as the x axis
-				enter CO2 as the y axis
-				enter Daily as granularity
-				enter March 1st 2012 as Start Date
-				enter March 10th 2012 as End Date
-				select apartment1 and apartment8 from apartments
-				verify that the new graph matches the old graph
-				unselect apartment8
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				verify that the second graph updates properly to show only one line
-				verify that the original graph does not change
-				verify that the data points associated with apartment1 in the new graph match those in the old graph (via hovering)
-			
-			verify hiding graphs
-				click the Destroy text above the new graph (right side of screen just above the graph)
-				verify that the new form and graph are no longer displayed
-				verify that the old form and graph still display
-				verify that the old form and graph have not changed
-			
-			verify alerts
-				click the Create Graph text (bottom of screen)
-				select Time as x axis
-				select TestFour as the y axis
-				select Daily as granularity
-				enter March 1st 2012 as Start Date
-				enter March 10th 2012 as End Date
-				select apartment1 from apartments
-				verify that (after a short delay) a new graph is created
-				click the Create Graph text (bottom of screen)
-				select Time as x axis
-				select TestThree as the y axis
-				select Daily as granularity
-				enter March 1st 2012 as Start Date
-				enter March 10th 2012 as End Date
-				select apartment1 from apartments
-				verify that (after a short delay) a new graph is created
-				verify that all values in the new graph below 1000 do not appear in the old graph
-			
-			verify custom equations
-				click the Create Graph text (bottom of screen)
-				select Time as the x axis
-				select Total_Water as the y axis
-				select Daily as granularity
-				enter March 1st 2012 as Start Date
-				enter March 10th 2012 as End Date
-				select apartment1 from apartments
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				make note of some of the values for the data points displayed
-				select Hot_Water as the y axis
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				make note of some of the values for the data points displayed
-				select ColdWater as the y axis (under Formulae)
-				verify that the "loading data" alert is displayed
-				verify that (after a longish delay) a new graph is generated
-				verify that the data points displayed correspond to the values shown under Total_Water minus those under Hot_Water
+                verify achievements page data
+                        click the Achievements menu text
+                        verify that you are on the achievements page
+                        verify that the achievements array is not empty
+                        verify that reasonable icons are displaying for each achievement
+                        verify that one icon is not greyed out (pending)
+                        verify achievement data
+                                hover over an achievement icon
+                                verify that a tooltip appears
+                                verify that the tooltip is not empty
+                                verify that the tooltip contains valid text
+                                verify that the tooltip text roughly relates to the icon
 
-		verify the residents page
-			click the Residents menu text	
-			verify that you are on the resident page
-			verify that the residents table is not empty
-			verify that the residents table does not contain duplicate data
-			verify that the residents table contains reasonable data
-			verify creting a new resident
-				verify with empty data
-					click the Submit button
-					verify that the failed submission alert is displayed
-					
-				verify with incomplete data
-					enter tester as name
-					click the Submit button
-					verify that the failed submission alert is displayed
-					click the Cancel button
-					enter tester as username
-					click the Submit button
-					verify that the failed submission alert is displayed
-					click the Cancel button
-					enter 1212 as room 
-					click the Submit button
-					verify that the failed submission alert is displayed
-					click the Cancel button
-					enter NE as location
-					click the Submit button
-					verify that the failed submission alert is displayed
-					click the Cancel button
-					enter occupied as room status
-					click the Submit button
-					verify that the failed submission alert is displayed
-					click the Cancel button
-					
-				verify with invalid data
-					enter testing12345 as name
-					enter testing12345 as username
-					enter asdfasdf as room
-					enter NE as location
-					enter occupied as room status
-					click the Submit button
-					verify that the failed submission alert is displayed
-					click the Cancel button
-					
-				verify with proper data
-					enter testing12345 as name
-					enter testing12345 as username
-					enter 1212 as room
-					enter NE as location
-					enter occupied as room status
-					click the Submit button
-					verify that (after a small pause) the residents table contains the new resident
-					
-			verify editing a resident
-				choose a resident to edit
-				find the table entry relating to that resident
-				click the edit button
-				verify with empty data
-					delete all data fields
-					click the Submit button
-					verify that the failed submission alert is displayed
-					
-				verify with incomplete data
-					enter tester as name
-					click the Submit button
-					verify that the failed submission alert is displayed
-					delete all data fields
-					enter tester as username
-					click the Submit button
-					verify that the failed submission alert is displayed
-					delete all data fields
-					enter 1212 as room 
-					click the Submit button
-					verify that the failed submission alert is displayed
-					delete all data fields
-					enter NE as location
-					click the Submit button
-					verify that the failed submission alert is displayed
-					delete all data fields
-					enter occupied as room status
-					click the Submit button
-					verify that the failed submission alert is displayed
-					delete all data fields
-					
-				verify with invalid data
-					enter testing12345 as name
-					enter testing12345 as username
-					enter asdfasdf as room
-					enter NE as location
-					enter occupied as room status
-					click the Submit button
-					verify that the failed submission alert is displayed
-					click the Cancel button
-					
-				verify with proper data
-					click the edit button to restore data
-					add +1 to the end of the description
-					click the submit button
-					verify that (after a small delay) the residents table contains the new resident
-					verify that the residents table does not contain the older version
-					
-			verify deleting a resident
-				choose a resident to delete
-				find the row in the resident table relating to that resident
-				click the delete button
-				verify that (after a small delay) the resident table no longer contains data on that resident
+                verify the schoreboard page
+                        click the Scoreboard menu text
+                        verify that you are on the scoreboard page
+                        (scoreboard not fully implemented - no further tests)
 
-		verify the utility contracts page
-			click the Utilities menu text	
-			verify that you are on the utility contracts page
-			verify that the contracts table is not empty
-			verify that the contracts table does not contain duplicate data
-			verify that the contracts table contains reasonable data
-			verify that the contracts table contains contracts of various types
-			
-			verify the add contract page
-				locate the Contacts Edit section
-				verify with empty data
-					delete all data fields
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					
-				verify with incomplete data
-					enter Electricity as Utility Type
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter 1.11 as Price
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter 1/1/2012 as Start Date
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter 1/2/2012 as End Date
-					click the Submit Edit button
-					verify that the failed to submit alert is displayed
-					
-				verify with improper data
-					enter WAFFLES as Utility Type
-					enter valid data for the other fields
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter WAFFLES as Price
-					enter valid data for the other fields
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter WAFFLES as Start Date
-					enter valid data for the other fields
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter WAFFLES as End Date
-					enter valid data for the other fields
-					click the Submit Edit button
-					verify that the failed to submit alert is displayed
-					
-				verify with proper data
-					enter Electricity as Utility Type
-					enter 1.11 as Price
-					enter 1/1/2012 as Start Date
-					enter 1/2/2012 as End Date
-					click the Submit button
-					verify that (after a short delay) the contracts table contains the changes to the contract
-					verify that the table no longer contains the old version
+                verify the advice page
+                        click the Advice menu text
+                        verify that you are on the advice page
+                        (advice not fully implemented - no further tests)
 
-			verify the edit contract page
-				choose a contract to edit
-				find the related row in the table
-				click the associated edit button
-				verify that the Contract Edit area has been updated with that contracts data
-				verify that the title mentions that contract
-				verify with empty data
-					delete all data fields
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					
-				verify with incomplete data
-					enter Electricity as Utility Type
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter 1.11 as Price
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter 1/1/2012 as Start Date
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter 1/2/2012 as End Date
-					click the Submit Edit button
-					verify that the failed to submit alert is displayed
-					
-				verify with improper data
-					enter WAFFLES as Utility Type
-					enter valid data for the other fields
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter WAFFLES as Price
-					enter valid data for the other fields
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter WAFFLES as Start Date
-					enter valid data for the other fields
-					click the Submit button
-					verify that the failed to submit alert is displayed
-					enter WAFFLES as End Date
-					enter valid data for the other fields
-					click the Submit Edit button
-					verify that the failed to submit alert is displayed
-					
-				verify with proper data
-					enter Electricity as Utility Type
-					enter 1.11 as Price
-					enter 1/1/2013 as Start Date
-					enter 1/2/2013 as End Date
-					click the Submit button
-					verify that (after a short delay) the contracts table contains the changes to the contract
-					verify that the table no longer contains the old version
+                verify the history page
+                        click the History menu text
+                        verify that you are on the history page
+                        (history not fully implemented - no further tests)
 
-			verify the delete contract button
-				choose a contract to delete
-				find the row associated with that contract
-				click the delete button
-				verify that (after a small delay) the table no longer contains data on that contract
+        Manager Testing
+                log in as manager1
+                        enter manager1 as username
+                        enter password as password
+                        click login button
+                        verify you are on the manager home page
 
-		verify the register new user page
-			click Register New User text
-			verify you have entered the registration page
-			register with empty data
-				click register button
-				verify that the registration process fails
-				verify the "Please enter a username" alert
-				verify the "Please enter a password" alert
-				verify the "Please confirm your password" alert
-				verify the "Please enter your email" alert
-		
-			register with incomplete data
-				enter a username
-				click register
-				verify that the registration process fails
-				verify that the "Please enter a username" alert no longer displays
-				verify that the other alerts still display
-				enter password as password
-				click register
-				verify that the registration process fails
-				verify that the "Please enter a password" alert no longer displays
-				verify that the other alerts still display
-				enter password as confirm password
-				click register
-				verify that the registration process fails
-				verify that the "Please confirm your password" alert no longer displays
-				verify that the other alerts still display
-				enter test@email.com as email
-				click register
-				verify that the registration process fails
-				verify that the "Please enter your email" alert no longer displays
-				verify the "Failed to register user. Invalid info: role," alert
-			
-			register with improper data
-				enter a username
-				enter test as password
-				enter test as confirm password
-				enter an email as email
-				select a role
-				click register
-				verify that the registration process fails
-				verify the "Failed to register user. Invalid info: password," alert
-				enter a password of 8 characters of longer as password
-				enter a password of 8 characters of longer as confirm password
-				enter testing as email
-				click register
-				verify that the registration process fails
-				verify the "please enter an email address" alert
-			
-			register with duplicate data
-				enter resident1 as username
-				enter password as password
-				enter password as confirm password
-				enter waffles@hotmail.com as email
-				select resident as role
-				click register
-				verify that the registration process fails
-				verify the "Failed to register user. Taken: username," alert
-				enter resident123 as username
-				enter password as password
-				enter password as confirm password
-				enter sgdavis@ualberta.ca as email
-				select resident as role
-				click register
-				verify that the registration process fails
-				verify the "Failed to register user. Taken: email," alert	
+                verify adding alerts
+                        click the Configuration text
+                        verify that you are on the configuration page
+                        locate the Alerts Section
+                        verify with empty data
+                                click the Submit button
+                                verify that the failed submit alert is displayed
 
-			register a resident
-				enter resident12345 as username
-				enter password as password
-				enter password as confirm password
-				enter YOUR OWN EMAIL (for testing the forgot password page later) as email
-				select resident as role
-				click register
-				verify the success message displays (pending)
-				press the logout text
-				verify that you are on the login page
-				enter resident12345 as username
-				enter password as password
-				click login button
-				verify you are on the resident home page	
-				click the logout text
+                        verify with bad data
+                                enter testing as the alert name
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                click the Cancel button
+                                verify that all data fields have been cleared
+                                enter waffles as the Body
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                click the Cancel button
+                                enter waffles as the description
+                                click the Submit button
+                                verify that the failed submit alert is displayed
 
-			register an engineer
-				enter engineer123 as username
-				enter password as password
-				enter password as confirm password
-				enter engineer123@hotmail.com as email
-				select engineer as role
-				click register
-				verify the success message displays (pending)
-				press the logout text
-				verify that you are on the login page
-				enter engineer123 as username
-				enter password as password
-				click login button
-				verify you are on the engineer home page	
-				click the logout text
+                        verify with proper data
+                                enter acceptancetesting as the name
+                                enter 4 + 5 as the body
+                                enter acceptancetesting as the description
+                                click the Submit button
+                                verify (after a short pause) that the Alerts table displays the new equation
 
-			register a manager
-				enter manager123 as username
-				enter password as password
-				enter password as confirm password
-				enter manager123@hotmail.com as email
-				select manager as role
-				click register
-				verify the success message displays (pending)
-				press the logout text
-				verify that you are on the login page
-				enter manager123 as username
-				enter password as password
-				click login button
-				verify you are on the manager home page	
-				click the logout text
+                verify editing alerts
+                        click the Configuration text
+                        verify that you are on the configuration page
+                        locate the Alerts Section
+                        find an alert to edit
+                        click the edit button
+                        verify that the Alerts Edit section has been updated with the correct data
+                        verify with empty data
+                                delete all data in the data fields
+                                click the submit button
+                                verify that the failed submit alert is displayed
 
-			register an admin
-				enter admin123 as username
-				enter password as password
-				enter password as confirm password
-				enter admin123@hotmail.com as email
-				select admin as role
-				click register
-				verify the success message displays (pending)
-				press the logout text
-				verify that you are on the login page
-				enter admin123 as username
-				enter password as password
-				click login button
-				verify you are on the manager home page (there is no admin home page)
-				click the logout text
+                        verify with bad data
+                                enter testing as the alert name
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                delete all data in the name field
+                                verify that all data fields have been cleared
+                                enter waffles as the Body
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                delete all data in the body field
+                                enter waffles as the description
+                                click the Submit button
+                                verify that the failed submit alert is displayed
 
-			register a developer
-				enter developer123 as username
-				enter password as password
-				enter password as confirm password
-				enter developer123@hotmail.com as email
-				select admin as role
-				click register
-				verify the success message displays (pending)
-				press the logout text
-				verify that you are on the login page
-				enter developer123 as username
-				enter password as password
-				click login button
-				verify you are on the manager home page (there is no developer home page)	
-				click the logout text
-				
-	Forgot Password Testing
-		click the Forgot Password text
-		verify that you are on the forgot password page
-		enter your own email as the email
-		click the submit button
-		verify that the success alert is displayed
-		click ok
-		go check your email
-		verify that there is an email from donotreply@smartcondo.com
-		click the link inside that email
-		verify that you are on the password reset page
-		enter password2 as password
-		enter password2 as confirm password
-		click the submit button
-		verify the success alert displays
-		click ok
-		verify that you are on the login page
-		enter resident12345 as username
-		enter password2 as password
-		click the log in button
-		verify that you are on the resident page
+                        verify with proper data
+                                enter acceptancetesting2 as the name
+                                enter 4 + 5 as the body
+                                enter acceptancetesting2 as the description
+                                click the Submit button
+                                verify (after a short pause) that the Alerts table displays the alert with the new data and doesn't contain the old version
 
-	Engineer Testing
-		log in as engineer1
-			enter engineer1 as username
-			enter password as password
-			click login button
-			verify you are on the engineer home page
-			
-		verify adding alerts
-			click the Configuration text
-			verify that you are on the configuration page
-			locate the Alerts Section
-			verify with empty data
-				click the Submit button
-				verify that the failed submit alert is displayed
-				
-			verify with bad data
-				enter testing as the alert name
-				click the Submit button
-				verify that the failed submit alert is displayed
-				click the Cancel button
-				verify that all data fields have been cleared
-				enter waffles as the Body
-				click the Submit button
-				verify that the failed submit alert is displayed
-				click the Cancel button
-				enter waffles as the description
-				click the Submit button
-				verify that the failed submit alert is displayed
-				
-			verify with proper data
-				enter acceptancetesting as the name
-				enter 4 + 5 as the body
-				enter acceptancetesting as the description
-				click the Submit button
-				verify (after a short pause) that the Alerts table displays the new equation
-		
-		verify editing alerts
-			click the Configuration text
-			verify that you are on the configuration page
-			locate the Alerts Section
-			find an alert to edit
-			click the edit button
-			verify that the Alerts Edit section has been updated with the correct data
-			verify with empty data
-				delete all data in the data fields
-				click the submit button
-				verify that the failed submit alert is displayed
-				
-			verify with bad data
-				enter testing as the alert name
-				click the Submit button
-				verify that the failed submit alert is displayed
-				delete all data in the name field
-				verify that all data fields have been cleared
-				enter waffles as the Body
-				click the Submit button
-				verify that the failed submit alert is displayed
-				delete all data in the body field
-				enter waffles as the description
-				click the Submit button
-				verify that the failed submit alert is displayed
-				
-			verify with proper data
-				enter acceptancetesting2 as the name
-				enter 4 + 5 as the body
-				enter acceptancetesting2 as the description
-				click the Submit button
-				verify (after a short pause) that the Alerts table displays the alert with the new data and doesn't contain the old version
-				
-			verify the cancel button
-				choose a formula to edit
-				click the edit button
-				verify that the Formula Edit section is updated with the proper data
-				verify that the title mentions the specific alert being edited
-				click the Cancel button
-				verify that all data fields are now blank
-				verify that the title no longer mentions the specific alert being edited
-		
-		verify deleting alerts
-			click the Configuration text
-			verify that you are on the configuration page
-			locate the Alerts Section
-			find an alert to delete
-			click the delete button
-			verify that (after a short pause) the Alerts table no longer contains the deleted alert
-			
-		verify adding custom equations
-			click the Configuration text
-			verify that you are on the configuration page
-			locate the Formulas Section
-			verify with empty data
-				click the Submit button
-				verify that the failed submit alert is displayed
-				
-			verify with bad data
-				enter testing as the function name
-				click the Submit button
-				verify that the failed submit alert is displayed
-				click the Cancel button
-				verify that all data fields have been cleared
-				enter waffles as the Body
-				click the Submit button
-				verify that the failed submit alert is displayed
-				click the Cancel button
-				enter waffles as the description
-				click the Submit button
-				verify that the failed submit alert is displayed
-				
-			verify with proper data
-				enter acceptancetesting as the name
-				enter 4 + 5 as the body
-				enter acceptancetesting as the description
-				click the Submit button
-				verify (after a short pause) that the Function table displays the new equation
-		
-		verify editing custom equations
-			click the Configuration text
-			verify that you are on the configuration page
-			locate the Formulas Section
-			find a formula to edit
-			click the edit button
-			verify that the Formula Edit section has been updated with the correct data
-			verify with empty data
-				delete all data in the data fields
-				click the submit button
-				verify that the failed submit alert is displayed
-				
-			verify with bad data
-				enter testing as the function name
-				click the Submit button
-				verify that the failed submit alert is displayed
-				delete all data in the name field
-				verify that all data fields have been cleared
-				enter waffles as the Body
-				click the Submit button
-				verify that the failed submit alert is displayed
-				delete all data in the body field
-				enter waffles as the description
-				click the Submit button
-				verify that the failed submit alert is displayed
-				
-			verify with proper data
-				enter acceptancetesting2 as the name
-				enter 4 + 5 as the body
-				enter acceptancetesting2 as the description
-				click the Submit button
-				verify (after a short pause) that the Function table displays the equation with the new data and doesn't contain the old version
-				
-			verify the cancel button
-				choose a formula to edit
-				click the edit button
-				verify that the Formula Edit section is updated with the proper data
-				verify that the title mentions the specific formula being edited
-				click the Cancel button
-				verify that all data fields are now blank
-				verify that the title no longer mentions the specific formula being edited
-		
-		verify deleting custom equations
-			click the Configuration text
-			verify that you are on the configuration page
-			locate the Formulas Section
-			find a formula to delete
-			click the delete button
-			verify that (after a short pause) the Formulas table no longer contains the deleted formula
-		
-		verify graphs page
-			click the Graphs text
-			verify that you are on the graphs page
-			verify that the "Pick some axes, timeframe and apartments to graph" alert is displayed
-			verify one line graph
-				enter Time as the x axis
-				enter CO2 as the y axis
-				enter Daily as granularity
-				verify that the "No apartments selected. No start date. No end date." alert is displayed
-				enter March 1st 2012 as Start Date
-				verify that the No apartments selected. No end date." alert is displayed
-				enter March 5th as End Date
-				verify that the "No apartments selected." alert is displayed
-				select apartment1 in apartments
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a graph is generated
-				verify that the x axis is measured in days
-				verify that the x axis contains 5 nodes
-				verify that the legend contains only Apartment1
-				
-			verify data point hovering
-				hover over any node in the graph
-				verify that a tooltip is displayed over the node
-				verify that Apartment1 is mentioned
-				verify that the proper date is mentioned
-				verify that a value is mentioned
-				verify that the value mentioned lines up with the y axis point of the node
-				hover over any other node in the graph
-				verify that Apartment1 is still mentioned
-				verify that the date has changed and is still proper
-				verify that the value matches the y axis value of that node
-				
-			verify refreshing line graphs
-				enter March 10th 2012 as End Date
-				verify that the "Loading Data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				verify that the old graph is no longer displayed
-				verify that the x axis contains 10 nodes
-				select apartment8 as well as apartment1 in apartments
-				verify that (after a short delay) a new graph is generated
-				verify that the old graph is no longer displayed
-				verify that there are now two lines being displayed on the graph
-				verify that the legend shows both aparments
-				verify that the data points associated with apartment1 have not changed
-				verify hovering works for the line associated with apartment8
-				
-			verify bar graphs
-				select Bar Graph as Graph Type
-				verify that the line graph is destroyed
-				verify that there is a bar graph generated
-				verify that the x axis has not changed
-				verify that the legend has not changed
-				verify that there are still only two data sets being graphed
-				verify that the data points for each apartment have not changed
-				
-			verify drilling down
-				select Line Graph as Graph Type
-				choose any data point in the graph
-				make note of the relative distance between the data for apartment1 and apartment8 on that day
-				click the data point
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				verify that the x axis is not divided into hours
-				verify that the x axis is labeled with the correct day
-				verify that the data points are distributed in such a way that their averages match the noted distances
-			
-			verify multiple graphs
-				click the Create Graph text (bottom of screen)
-				verify that an empty form has been created for a second graph
-				enter Time as the x axis
-				enter CO2 as the y axis
-				enter Daily as granularity
-				enter March 1st 2012 as Start Date
-				enter March 10th 2012 as End Date
-				select apartment1 and apartment8 from apartments
-				verify that the new graph matches the old graph
-				unselect apartment8
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				verify that the second graph updates properly to show only one line
-				verify that the original graph does not change
-				verify that the data points associated with apartment1 in the new graph match those in the old graph (via hovering)
-			
-			verify hiding graphs
-				click the Destroy text above the new graph (right side of screen just above the graph)
-				verify that the new form and graph are no longer displayed
-				verify that the old form and graph still display
-				verify that the old form and graph have not changed
-			
-			verify alerts
-				click the Create Graph text (bottom of screen)
-				select Time as x axis
-				select TestFour as the y axis
-				select Daily as granularity
-				enter March 1st 2012 as Start Date
-				enter March 10th 2012 as End Date
-				select apartment1 from apartments
-				verify that (after a short delay) a new graph is created
-				click the Create Graph text (bottom of screen)
-				select Time as x axis
-				select TestThree as the y axis
-				select Daily as granularity
-				enter March 1st 2012 as Start Date
-				enter March 10th 2012 as End Date
-				select apartment1 from apartments
-				verify that (after a short delay) a new graph is created
-				verify that all values in the new graph below 1000 do not appear in the old graph
-			
-			verify custom equations
-				click the Create Graph text (bottom of screen)
-				select Time as the x axis
-				select Total_Water as the y axis
-				select Daily as granularity
-				enter March 1st 2012 as Start Date
-				enter March 10th 2012 as End Date
-				select apartment1 from apartments
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				make note of some of the values for the data points displayed
-				select Hot_Water as the y axis
-				verify that the "loading data" alert is displayed
-				verify that (after a short delay) a new graph is generated
-				make note of some of the values for the data points displayed
-				select ColdWater as the y axis (under Formulae)
-				verify that the "loading data" alert is displayed
-				verify that (after a longish delay) a new graph is generated
-				verify that the data points displayed correspond to the values shown under Total_Water minus those under Hot_Water
-		
-		verify calculations page
-			click the Calculations text
-			verify that you are on the Calculations page
-			select Heat Energy as the function
-			select Solar Day as the argument type
-			enter March 15th 2013 as Start Date
-			enter March 16th 2013 as End Date
-			press the calculate button
-			verify that there is a value displayed
-			verify that the units are reasonable to the function (in this case GJ)
-			enter COP1, COP2 and COP3 Calculation as the function
-			click the calculate button
-			verify that (after a longish delay) values are displayed
-			verify that the value for the previous function is not preserved
-			verify that there are three values displayed
-			verify that none of them have units displayed
-			enter COP1, COP2 and COP3 Analysis as the function
-			verify that the previous values are still displayed
-			verify that twenty six additional values are displayed
-			verify that the units make sense when they are provided
+                        verify the cancel button
+                                choose a formula to edit
+                                click the edit button
+                                verify that the Formula Edit section is updated with the proper data
+                                verify that the title mentions the specific alert being edited
+                                click the Cancel button
+                                verify that all data fields are now blank
+                                verify that the title no longer mentions the specific alert being edited
+
+                verify deleting alerts
+                        click the Configuration text
+                        verify that you are on the configuration page
+                        locate the Alerts Section
+                        find an alert to delete
+                        click the delete button
+                        verify that (after a short pause) the Alerts table no longer contains the deleted alert
+
+                verify Graphs page
+                        click the graphs text
+                        verify that you are on the graphs page
+                        verify that the "Pick some axes, timeframe and apartments to graph" alert is displayed
+                        verify one line graph
+                                enter Time as the x axis
+                                enter CO2 as the y axis
+                                enter Daily as granularity
+                                verify that the "No apartments selected. No start date. No end date." alert is displayed
+                                enter March 1st 2012 as Start Date
+                                verify that the No apartments selected. No end date." alert is displayed
+                                enter March 5th as End Date
+                                verify that the "No apartments selected." alert is displayed
+                                select apartment1 in apartments
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a graph is generated
+                                verify that the x axis is measured in days
+                                verify that the x axis contains 5 nodes
+                                verify that the legend contains only Apartment1
+
+                        verify data point hovering
+                                hover over any node in the graph
+                                verify that a tooltip is displayed over the node
+                                verify that Apartment1 is mentioned
+                                verify that the proper date is mentioned
+                                verify that a value is mentioned
+                                verify that the value mentioned lines up with the y axis point of the node
+                                hover over any other node in the graph
+                                verify that Apartment1 is still mentioned
+                                verify that the date has changed and is still proper
+                                verify that the value matches the y axis value of that node
+
+                        verify refreshing line graphs
+                                enter March 10th 2012 as End Date
+                                verify that the "Loading Data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                verify that the old graph is no longer displayed
+                                verify that the x axis contains 10 nodes
+                                select apartment8 as well as apartment1 in apartments
+                                verify that (after a short delay) a new graph is generated
+                                verify that the old graph is no longer displayed
+                                verify that there are now two lines being displayed on the graph
+                                verify that the legend shows both aparments
+                                verify that the data points associated with apartment1 have not changed
+                                verify hovering works for the line associated with apartment8
+
+                        verify bar graphs
+                                select Bar Graph as Graph Type
+                                verify that the line graph is destroyed
+                                verify that there is a bar graph generated
+                                verify that the x axis has not changed
+                                verify that the legend has not changed
+                                verify that there are still only two data sets being graphed
+                                verify that the data points for each apartment have not changed
+
+                        verify drilling down
+                                select Line Graph as Graph Type
+                                choose any data point in the graph
+                                make note of the relative distance between the data for apartment1 and apartment8 on that day
+                                click the data point
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                verify that the x axis is not divided into hours
+                                verify that the x axis is labeled with the correct day
+                                verify that the data points are distributed in such a way that their averages match the noted distances
+
+                        verify multiple charts
+                                click the Create Graph text (bottom of screen)
+                                verify that an empty form has been created for a second graph
+                                enter Time as the x axis
+                                enter CO2 as the y axis
+                                enter Daily as granularity
+                                enter March 1st 2012 as Start Date
+                                enter March 10th 2012 as End Date
+                                select apartment1 and apartment8 from apartments
+                                verify that the new graph matches the old graph
+                                unselect apartment8
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                verify that the second graph updates properly to show only one line
+                                verify that the original graph does not change
+                                verify that the data points associated with apartment1 in the new graph match those in the old graph (via hovering)
+
+                        verify hiding graphs
+                                click the Destroy text above the new graph (right side of screen just above the graph)
+                                verify that the new form and graph are no longer displayed
+                                verify that the old form and graph still display
+                                verify that the old form and graph have not changed
+
+                        verify alerts
+                                click the Create Graph text (bottom of screen)
+                                select Time as x axis
+                                select TestFour as the y axis
+                                select Daily as granularity
+                                enter March 1st 2012 as Start Date
+                                enter March 10th 2012 as End Date
+                                select apartment1 from apartments
+                                verify that (after a short delay) a new graph is created
+                                click the Create Graph text (bottom of screen)
+                                select Time as x axis
+                                select TestThree as the y axis
+                                select Daily as granularity
+                                enter March 1st 2012 as Start Date
+                                enter March 10th 2012 as End Date
+                                select apartment1 from apartments
+                                verify that (after a short delay) a new graph is created
+                                verify that all values in the new graph below 1000 do not appear in the old graph
+
+                        verify custom equations
+                                click the Create Graph text (bottom of screen)
+                                select Time as the x axis
+                                select Total_Water as the y axis
+                                select Daily as granularity
+                                enter March 1st 2012 as Start Date
+                                enter March 10th 2012 as End Date
+                                select apartment1 from apartments
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                make note of some of the values for the data points displayed
+                                select Hot_Water as the y axis
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                make note of some of the values for the data points displayed
+                                select ColdWater as the y axis (under Formulae)
+                                verify that the "loading data" alert is displayed
+                                verify that (after a longish delay) a new graph is generated
+                                verify that the data points displayed correspond to the values shown under Total_Water minus those under Hot_Water
+
+                verify the residents page
+                        click the Residents menu text
+                        verify that you are on the resident page
+                        verify that the residents table is not empty
+                        verify that the residents table does not contain duplicate data
+                        verify that the residents table contains reasonable data
+                        verify creting a new resident
+                                verify with empty data
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+
+                                verify with incomplete data
+                                        enter tester as name
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        click the Cancel button
+                                        enter tester as username
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        click the Cancel button
+                                        enter 1212 as room
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        click the Cancel button
+                                        enter NE as location
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        click the Cancel button
+                                        enter occupied as room status
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        click the Cancel button
+
+                                verify with invalid data
+                                        enter testing12345 as name
+                                        enter testing12345 as username
+                                        enter asdfasdf as room
+                                        enter NE as location
+                                        enter occupied as room status
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        click the Cancel button
+
+                                verify with proper data
+                                        enter testing12345 as name
+                                        enter testing12345 as username
+                                        enter 1212 as room
+                                        enter NE as location
+                                        enter occupied as room status
+                                        click the Submit button
+                                        verify that (after a small pause) the residents table contains the new resident
+
+                        verify editing a resident
+                                choose a resident to edit
+                                find the table entry relating to that resident
+                                click the edit button
+                                verify with empty data
+                                        delete all data fields
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+
+                                verify with incomplete data
+                                        enter tester as name
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        delete all data fields
+                                        enter tester as username
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        delete all data fields
+                                        enter 1212 as room
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        delete all data fields
+                                        enter NE as location
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        delete all data fields
+                                        enter occupied as room status
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        delete all data fields
+
+                                verify with invalid data
+                                        enter testing12345 as name
+                                        enter testing12345 as username
+                                        enter asdfasdf as room
+                                        enter NE as location
+                                        enter occupied as room status
+                                        click the Submit button
+                                        verify that the failed submission alert is displayed
+                                        click the Cancel button
+
+                                verify with proper data
+                                        click the edit button to restore data
+                                        add +1 to the end of the description
+                                        click the submit button
+                                        verify that (after a small delay) the residents table contains the new resident
+                                        verify that the residents table does not contain the older version
+
+                        verify deleting a resident
+                                choose a resident to delete
+                                find the row in the resident table relating to that resident
+                                click the delete button
+                                verify that (after a small delay) the resident table no longer contains data on that resident
+
+                verify the utility contracts page
+                        click the Utilities menu text
+                        verify that you are on the utility contracts page
+                        verify that the contracts table is not empty
+                        verify that the contracts table does not contain duplicate data
+                        verify that the contracts table contains reasonable data
+                        verify that the contracts table contains contracts of various types
+
+                        verify the add contract page
+                                locate the Contacts Edit section
+                                verify with empty data
+                                        delete all data fields
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+
+                                verify with incomplete data
+                                        enter Electricity as Utility Type
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter 1.11 as Price
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter 1/1/2012 as Start Date
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter 1/2/2012 as End Date
+                                        click the Submit Edit button
+                                        verify that the failed to submit alert is displayed
+
+                                verify with improper data
+                                        enter WAFFLES as Utility Type
+                                        enter valid data for the other fields
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter WAFFLES as Price
+                                        enter valid data for the other fields
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter WAFFLES as Start Date
+                                        enter valid data for the other fields
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter WAFFLES as End Date
+                                        enter valid data for the other fields
+                                        click the Submit Edit button
+                                        verify that the failed to submit alert is displayed
+
+                                verify with proper data
+                                        enter Electricity as Utility Type
+                                        enter 1.11 as Price
+                                        enter 1/1/2012 as Start Date
+                                        enter 1/2/2012 as End Date
+                                        click the Submit button
+                                        verify that (after a short delay) the contracts table contains the changes to the contract
+                                        verify that the table no longer contains the old version
+
+                        verify the edit contract page
+                                choose a contract to edit
+                                find the related row in the table
+                                click the associated edit button
+                                verify that the Contract Edit area has been updated with that contracts data
+                                verify that the title mentions that contract
+                                verify with empty data
+                                        delete all data fields
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+
+                                verify with incomplete data
+                                        enter Electricity as Utility Type
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter 1.11 as Price
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter 1/1/2012 as Start Date
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter 1/2/2012 as End Date
+                                        click the Submit Edit button
+                                        verify that the failed to submit alert is displayed
+
+                                verify with improper data
+                                        enter WAFFLES as Utility Type
+                                        enter valid data for the other fields
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter WAFFLES as Price
+                                        enter valid data for the other fields
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter WAFFLES as Start Date
+                                        enter valid data for the other fields
+                                        click the Submit button
+                                        verify that the failed to submit alert is displayed
+                                        enter WAFFLES as End Date
+                                        enter valid data for the other fields
+                                        click the Submit Edit button
+                                        verify that the failed to submit alert is displayed
+
+                                verify with proper data
+                                        enter Electricity as Utility Type
+                                        enter 1.11 as Price
+                                        enter 1/1/2013 as Start Date
+                                        enter 1/2/2013 as End Date
+                                        click the Submit button
+                                        verify that (after a short delay) the contracts table contains the changes to the contract
+                                        verify that the table no longer contains the old version
+
+                        verify the delete contract button
+                                choose a contract to delete
+                                find the row associated with that contract
+                                click the delete button
+                                verify that (after a small delay) the table no longer contains data on that contract
+
+                verify the register new user page
+                        click Register New User text
+                        verify you have entered the registration page
+                        register with empty data
+                                click register button
+                                verify that the registration process fails
+                                verify the "Please enter a username" alert
+                                verify the "Please enter a password" alert
+                                verify the "Please confirm your password" alert
+                                verify the "Please enter your email" alert
+
+                        register with incomplete data
+                                enter a username
+                                click register
+                                verify that the registration process fails
+                                verify that the "Please enter a username" alert no longer displays
+                                verify that the other alerts still display
+                                enter password as password
+                                click register
+                                verify that the registration process fails
+                                verify that the "Please enter a password" alert no longer displays
+                                verify that the other alerts still display
+                                enter password as confirm password
+                                click register
+                                verify that the registration process fails
+                                verify that the "Please confirm your password" alert no longer displays
+                                verify that the other alerts still display
+                                enter test@email.com as email
+                                click register
+                                verify that the registration process fails
+                                verify that the "Please enter your email" alert no longer displays
+                                verify the "Failed to register user. Invalid info: role," alert
+
+                        register with improper data
+                                enter a username
+                                enter test as password
+                                enter test as confirm password
+                                enter an email as email
+                                select a role
+                                click register
+                                verify that the registration process fails
+                                verify the "Failed to register user. Invalid info: password," alert
+                                enter a password of 8 characters of longer as password
+                                enter a password of 8 characters of longer as confirm password
+                                enter testing as email
+                                click register
+                                verify that the registration process fails
+                                verify the "please enter an email address" alert
+
+                        register with duplicate data
+                                enter resident1 as username
+                                enter password as password
+                                enter password as confirm password
+                                enter waffles@hotmail.com as email
+                                select resident as role
+                                click register
+                                verify that the registration process fails
+                                verify the "Failed to register user. Taken: username," alert
+                                enter resident123 as username
+                                enter password as password
+                                enter password as confirm password
+                                enter sgdavis@ualberta.ca as email
+                                select resident as role
+                                click register
+                                verify that the registration process fails
+                                verify the "Failed to register user. Taken: email," alert
+
+                        register a resident
+                                enter resident12345 as username
+                                enter password as password
+                                enter password as confirm password
+                                enter YOUR OWN EMAIL (for testing the forgot password page later) as email
+                                select resident as role
+                                click register
+                                verify the success message displays (pending)
+                                press the logout text
+                                verify that you are on the login page
+                                enter resident12345 as username
+                                enter password as password
+                                click login button
+                                verify you are on the resident home page
+                                click the logout text
+
+                        register an engineer
+                                enter engineer123 as username
+                                enter password as password
+                                enter password as confirm password
+                                enter engineer123@hotmail.com as email
+                                select engineer as role
+                                click register
+                                verify the success message displays (pending)
+                                press the logout text
+                                verify that you are on the login page
+                                enter engineer123 as username
+                                enter password as password
+                                click login button
+                                verify you are on the engineer home page
+                                click the logout text
+
+                        register a manager
+                                enter manager123 as username
+                                enter password as password
+                                enter password as confirm password
+                                enter manager123@hotmail.com as email
+                                select manager as role
+                                click register
+                                verify the success message displays (pending)
+                                press the logout text
+                                verify that you are on the login page
+                                enter manager123 as username
+                                enter password as password
+                                click login button
+                                verify you are on the manager home page
+                                click the logout text
+
+                        register an admin
+                                enter admin123 as username
+                                enter password as password
+                                enter password as confirm password
+                                enter admin123@hotmail.com as email
+                                select admin as role
+                                click register
+                                verify the success message displays (pending)
+                                press the logout text
+                                verify that you are on the login page
+                                enter admin123 as username
+                                enter password as password
+                                click login button
+                                verify you are on the manager home page (there is no admin home page)
+                                click the logout text
+
+                        register a developer
+                                enter developer123 as username
+                                enter password as password
+                                enter password as confirm password
+                                enter developer123@hotmail.com as email
+                                select admin as role
+                                click register
+                                verify the success message displays (pending)
+                                press the logout text
+                                verify that you are on the login page
+                                enter developer123 as username
+                                enter password as password
+                                click login button
+                                verify you are on the manager home page (there is no developer home page)
+                                click the logout text
+
+        Forgot Password Testing
+                click the Forgot Password text
+                verify that you are on the forgot password page
+                enter your own email as the email
+                click the submit button
+                verify that the success alert is displayed
+                click ok
+                go check your email
+                verify that there is an email from donotreply@smartcondo.com
+                click the link inside that email
+                verify that you are on the password reset page
+                enter password2 as password
+                enter password2 as confirm password
+                click the submit button
+                verify the success alert displays
+                click ok
+                verify that you are on the login page
+                enter resident12345 as username
+                enter password2 as password
+                click the log in button
+                verify that you are on the resident page
+
+        Engineer Testing
+                log in as engineer1
+                        enter engineer1 as username
+                        enter password as password
+                        click login button
+                        verify you are on the engineer home page
+
+                verify adding alerts
+                        click the Configuration text
+                        verify that you are on the configuration page
+                        locate the Alerts Section
+                        verify with empty data
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+
+                        verify with bad data
+                                enter testing as the alert name
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                click the Cancel button
+                                verify that all data fields have been cleared
+                                enter waffles as the Body
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                click the Cancel button
+                                enter waffles as the description
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+
+                        verify with proper data
+                                enter acceptancetesting as the name
+                                enter 4 + 5 as the body
+                                enter acceptancetesting as the description
+                                click the Submit button
+                                verify (after a short pause) that the Alerts table displays the new equation
+
+                verify editing alerts
+                        click the Configuration text
+                        verify that you are on the configuration page
+                        locate the Alerts Section
+                        find an alert to edit
+                        click the edit button
+                        verify that the Alerts Edit section has been updated with the correct data
+                        verify with empty data
+                                delete all data in the data fields
+                                click the submit button
+                                verify that the failed submit alert is displayed
+
+                        verify with bad data
+                                enter testing as the alert name
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                delete all data in the name field
+                                verify that all data fields have been cleared
+                                enter waffles as the Body
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                delete all data in the body field
+                                enter waffles as the description
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+
+                        verify with proper data
+                                enter acceptancetesting2 as the name
+                                enter 4 + 5 as the body
+                                enter acceptancetesting2 as the description
+                                click the Submit button
+                                verify (after a short pause) that the Alerts table displays the alert with the new data and doesn't contain the old version
+
+                        verify the cancel button
+                                choose a formula to edit
+                                click the edit button
+                                verify that the Formula Edit section is updated with the proper data
+                                verify that the title mentions the specific alert being edited
+                                click the Cancel button
+                                verify that all data fields are now blank
+                                verify that the title no longer mentions the specific alert being edited
+
+                verify deleting alerts
+                        click the Configuration text
+                        verify that you are on the configuration page
+                        locate the Alerts Section
+                        find an alert to delete
+                        click the delete button
+                        verify that (after a short pause) the Alerts table no longer contains the deleted alert
+
+                verify adding custom equations
+                        click the Configuration text
+                        verify that you are on the configuration page
+                        locate the Formulas Section
+                        verify with empty data
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+
+                        verify with bad data
+                                enter testing as the function name
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                click the Cancel button
+                                verify that all data fields have been cleared
+                                enter waffles as the Body
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                click the Cancel button
+                                enter waffles as the description
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+
+                        verify with proper data
+                                enter acceptancetesting as the name
+                                enter 4 + 5 as the body
+                                enter acceptancetesting as the description
+                                click the Submit button
+                                verify (after a short pause) that the Function table displays the new equation
+
+                verify editing custom equations
+                        click the Configuration text
+                        verify that you are on the configuration page
+                        locate the Formulas Section
+                        find a formula to edit
+                        click the edit button
+                        verify that the Formula Edit section has been updated with the correct data
+                        verify with empty data
+                                delete all data in the data fields
+                                click the submit button
+                                verify that the failed submit alert is displayed
+
+                        verify with bad data
+                                enter testing as the function name
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                delete all data in the name field
+                                verify that all data fields have been cleared
+                                enter waffles as the Body
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+                                delete all data in the body field
+                                enter waffles as the description
+                                click the Submit button
+                                verify that the failed submit alert is displayed
+
+                        verify with proper data
+                                enter acceptancetesting2 as the name
+                                enter 4 + 5 as the body
+                                enter acceptancetesting2 as the description
+                                click the Submit button
+                                verify (after a short pause) that the Function table displays the equation with the new data and doesn't contain the old version
+
+                        verify the cancel button
+                                choose a formula to edit
+                                click the edit button
+                                verify that the Formula Edit section is updated with the proper data
+                                verify that the title mentions the specific formula being edited
+                                click the Cancel button
+                                verify that all data fields are now blank
+                                verify that the title no longer mentions the specific formula being edited
+
+                verify deleting custom equations
+                        click the Configuration text
+                        verify that you are on the configuration page
+                        locate the Formulas Section
+                        find a formula to delete
+                        click the delete button
+                        verify that (after a short pause) the Formulas table no longer contains the deleted formula
+
+                verify graphs page
+                        click the Graphs text
+                        verify that you are on the graphs page
+                        verify that the "Pick some axes, timeframe and apartments to graph" alert is displayed
+                        verify one line graph
+                                enter Time as the x axis
+                                enter CO2 as the y axis
+                                enter Daily as granularity
+                                verify that the "No apartments selected. No start date. No end date." alert is displayed
+                                enter March 1st 2012 as Start Date
+                                verify that the No apartments selected. No end date." alert is displayed
+                                enter March 5th as End Date
+                                verify that the "No apartments selected." alert is displayed
+                                select apartment1 in apartments
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a graph is generated
+                                verify that the x axis is measured in days
+                                verify that the x axis contains 5 nodes
+                                verify that the legend contains only Apartment1
+
+                        verify data point hovering
+                                hover over any node in the graph
+                                verify that a tooltip is displayed over the node
+                                verify that Apartment1 is mentioned
+                                verify that the proper date is mentioned
+                                verify that a value is mentioned
+                                verify that the value mentioned lines up with the y axis point of the node
+                                hover over any other node in the graph
+                                verify that Apartment1 is still mentioned
+                                verify that the date has changed and is still proper
+                                verify that the value matches the y axis value of that node
+
+                        verify refreshing line graphs
+                                enter March 10th 2012 as End Date
+                                verify that the "Loading Data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                verify that the old graph is no longer displayed
+                                verify that the x axis contains 10 nodes
+                                select apartment8 as well as apartment1 in apartments
+                                verify that (after a short delay) a new graph is generated
+                                verify that the old graph is no longer displayed
+                                verify that there are now two lines being displayed on the graph
+                                verify that the legend shows both aparments
+                                verify that the data points associated with apartment1 have not changed
+                                verify hovering works for the line associated with apartment8
+
+                        verify bar graphs
+                                select Bar Graph as Graph Type
+                                verify that the line graph is destroyed
+                                verify that there is a bar graph generated
+                                verify that the x axis has not changed
+                                verify that the legend has not changed
+                                verify that there are still only two data sets being graphed
+                                verify that the data points for each apartment have not changed
+
+                        verify drilling down
+                                select Line Graph as Graph Type
+                                choose any data point in the graph
+                                make note of the relative distance between the data for apartment1 and apartment8 on that day
+                                click the data point
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                verify that the x axis is not divided into hours
+                                verify that the x axis is labeled with the correct day
+                                verify that the data points are distributed in such a way that their averages match the noted distances
+
+                        verify multiple graphs
+                                click the Create Graph text (bottom of screen)
+                                verify that an empty form has been created for a second graph
+                                enter Time as the x axis
+                                enter CO2 as the y axis
+                                enter Daily as granularity
+                                enter March 1st 2012 as Start Date
+                                enter March 10th 2012 as End Date
+                                select apartment1 and apartment8 from apartments
+                                verify that the new graph matches the old graph
+                                unselect apartment8
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                verify that the second graph updates properly to show only one line
+                                verify that the original graph does not change
+                                verify that the data points associated with apartment1 in the new graph match those in the old graph (via hovering)
+
+                        verify hiding graphs
+                                click the Destroy text above the new graph (right side of screen just above the graph)
+                                verify that the new form and graph are no longer displayed
+                                verify that the old form and graph still display
+                                verify that the old form and graph have not changed
+
+                        verify alerts
+                                click the Create Graph text (bottom of screen)
+                                select Time as x axis
+                                select TestFour as the y axis
+                                select Daily as granularity
+                                enter March 1st 2012 as Start Date
+                                enter March 10th 2012 as End Date
+                                select apartment1 from apartments
+                                verify that (after a short delay) a new graph is created
+                                click the Create Graph text (bottom of screen)
+                                select Time as x axis
+                                select TestThree as the y axis
+                                select Daily as granularity
+                                enter March 1st 2012 as Start Date
+                                enter March 10th 2012 as End Date
+                                select apartment1 from apartments
+                                verify that (after a short delay) a new graph is created
+                                verify that all values in the new graph below 1000 do not appear in the old graph
+
+                        verify custom equations
+                                click the Create Graph text (bottom of screen)
+                                select Time as the x axis
+                                select Total_Water as the y axis
+                                select Daily as granularity
+                                enter March 1st 2012 as Start Date
+                                enter March 10th 2012 as End Date
+                                select apartment1 from apartments
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                make note of some of the values for the data points displayed
+                                select Hot_Water as the y axis
+                                verify that the "loading data" alert is displayed
+                                verify that (after a short delay) a new graph is generated
+                                make note of some of the values for the data points displayed
+                                select ColdWater as the y axis (under Formulae)
+                                verify that the "loading data" alert is displayed
+                                verify that (after a longish delay) a new graph is generated
+                                verify that the data points displayed correspond to the values shown under Total_Water minus those under Hot_Water
+
+                verify calculations page
+                        click the Calculations text
+                        verify that you are on the Calculations page
+                        select Heat Energy as the function
+                        select Solar Day as the argument type
+                        enter March 15th 2013 as Start Date
+                        enter March 16th 2013 as End Date
+                        press the calculate button
+                        verify that there is a value displayed
+                        verify that the units are reasonable to the function (in this case GJ)
+                        enter COP1, COP2 and COP3 Calculation as the function
+                        click the calculate button
+                        verify that (after a longish delay) values are displayed
+                        verify that the value for the previous function is not preserved
+                        verify that there are three values displayed
+                        verify that none of them have units displayed
+                        enter COP1, COP2 and COP3 Analysis as the function
+                        verify that the previous values are still displayed
+                        verify that twenty six additional values are displayed
+                        verify that the units make sense when they are provided
 
 Support Contact
 
-	For issues regarding system installation failure please contact Ahmed Ghoneim at aghoneim@ualberta.ca
-	For issues regarding database communication failure please contact Ahmed Ghoneim at aghoneim@ualberta.ca
-	For issues regarding web page failure please contact Eddie Santos at esantos@ualberta.ca
+        For issues regarding system installation failure please contact Ahmed Ghoneim at aghoneim@ualberta.ca
+        For issues regarding database communication failure please contact Ahmed Ghoneim at aghoneim@ualberta.ca
+        For issues regarding web page failure please contact Eddie Santos at esantos@ualberta.ca
