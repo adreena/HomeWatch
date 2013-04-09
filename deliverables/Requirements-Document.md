@@ -389,32 +389,32 @@ For this first pass, I have followed the Volere template for requirement analysi
   <tr><th>ID</th><th width='100%'>Description</th><th>Priority</th></tr>
   <tr>
     <td>4.1</td>
-    <td>As a resident, I want to be shown my current standing and usage upon logging in.</td>
+    <td>**On Hold/Dropped** As a resident, I want to be shown my current standing and usage upon logging in.</td>
     <td>Medium</td>
   </tr>
   <tr>
     <td>4.2</td>
-    <td>As a resident, I want to be able to view my awards history, with granularity on the level (gold/silver/bronze) and the type (co2,electricity etc.).</td>
+    <td>**On Hold/Dropped** As a resident, I want to be able to view my awards history, with granularity on the level (gold/silver/bronze) and the type (co2,electricity etc.).</td>
     <td>Medium</td>
   </tr>
   <tr>
     <td>4.3</td>
-    <td>As a resident, I want to be told ways to improve my standing.</td>
+    <td>**On Hold/Dropped** As a resident, I want to be told ways to improve my standing.</td>
     <td>Low</td>
   </tr>
   <tr>
     <td>4.4</td>
-    <td>As a resident, I want to see how the usage of the room has changed since the sensors were installed.</td>
+    <td>**On Hold/Dropped** As a resident, I want to see how the usage of the room has changed since the sensors were installed.</td>
     <td>Low</td>
   </tr>
   <tr>
     <td>4.5</td>
-    <td>As a resident, I want to be able to see how the room's usage has changed since I moved in.</td>
+    <td>**On Hold/Dropped** As a resident, I want to be able to see how the room's usage has changed since I moved in.</td>
     <td>Medium</td>
   </tr>
   <tr>
     <td>4.6</td>
-    <td>As a resident, I want to be able to view and specify my current occupancy status.</td>
+    <td>**On Hold/Dropped** As a resident, I want to be able to view and specify my current occupancy status.</td>
     <td>Low</td>
   </tr>
 </table>
@@ -608,7 +608,7 @@ Exceptions:     8a. Same as for 2.1(7a)
 </pre>
 
 <pre>
-ID:              2.4
+ID:              2.4 **New**
 Description:     Building manager registers new user
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  A new user is uploaded to the database for loging in
@@ -628,7 +628,7 @@ Exceptions:     Manager enters username or email address that is registered to a
 </pre>
 
 <pre>
-ID:              2.5
+ID:              2.5 **New**
 Description:     Building manager adds a new contract
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  A new contract is available for cost calculations
@@ -647,7 +647,7 @@ Exceptions:     Database fails to respond
 </pre>
 
 <pre>
-ID:              2.6
+ID:              2.6 **New**
 Description:     Building manager edits a contract
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  The data for the contract is overwritten in the database
@@ -669,7 +669,7 @@ Exceptions:     Database fails to respond
 </pre>
 
 <pre>
-ID:              2.7
+ID:              2.7 **New**
 Description:     Building manager deletes a contract
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  The database drops the data for that contract
@@ -685,7 +685,7 @@ Exceptions:     Database fails to respond
 </pre>
 
 <pre>
-ID:              2.8
+ID:              2.8 **New**
 Description:     Building manager views an overview of resident data
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  A table containing relevent data is presented to the Manager
@@ -701,7 +701,7 @@ Exceptions:     Database fails to respond
 </pre>
 
 <pre>
-ID:              2.9
+ID:              2.9 **New**
 Description:     Building manager adds a new resident
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  A new resident is added to the database
@@ -720,7 +720,7 @@ Exceptions:     Database fails to respond
 </pre>
 
 <pre>
-ID:              2.10
+ID:              2.10 **New**
 Description:     Building manager edits a resident
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  The database overwrites the data for that resident
@@ -742,7 +742,7 @@ Exceptions:     Database fails to respond
 </pre>
 
 <pre>
-ID:              2.11
+ID:              2.11 **New**
 Description:     Building manager deletes a resident
 Preconditions:   User is logged in as a Building Manager
 Postconditions:  The database drops the data for that resident
@@ -895,7 +895,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.5
+ID:              3.5 **New**
 Description:     Engineer registers an alert state.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  A new alert condition is stored in the database.
@@ -915,7 +915,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.6
+ID:              3.6 **New**
 Description:     Engineer deletes an alert state.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  The chosen alert is no longer stored in the database.
@@ -931,7 +931,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.7
+ID:              3.7 **New**
 Description:     Engineer edits an alert state.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  The chosen alert is updated with new data.
@@ -952,7 +952,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.8
+ID:              3.8 **New**
 Description:     Engineer registers a function.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  A new function is stored in the database.
@@ -972,7 +972,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.9
+ID:              3.9 **New**
 Description:     Engineer deletes a function.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  The chosen function is no longer stored in the database.
@@ -988,7 +988,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.10
+ID:              3.10 **New**
 Description:     Engineer edits a Function.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  The chosen function is updated with new data.
@@ -1009,7 +1009,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.11
+ID:              3.11 **New**
 Description:     Engineer registers a constant.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  A new constant is stored in the database.
@@ -1029,7 +1029,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.12
+ID:              3.12 **New**
 Description:     Engineer deletes a constant.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  The chosen constant is no longer stored in the database.
@@ -1045,7 +1045,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.13
+ID:              3.13 **New**
 Description:     Engineer edits a constant.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  The chosen constant is updated with new data.
@@ -1068,7 +1068,7 @@ Exceptions:
 <a name="uc-resident" />
 ##### Resident
 <pre>
-ID:              4.1
+ID:              4.1 **On Hold/Dropped** 
 Description:     Resident views their stats page
 Preconditions:   Resident is logged in
 Postconditions:  Resident is shown current stats page
@@ -1082,18 +1082,17 @@ Success Flow:
 </pre>
 
 <pre>
-ID:              4.2  
+ID:              4.2
 Description:     Resident views the awards page
 Preconditions:   Resident is logged in
 Postconditions:  Resident is shown the awards page
 Success Flow:
                  1. Resident requests awards history
-                 2. System displays awards page; listing medals, prizes, badges and achievements which
-                    have been won/possible to win.
+                 2. System displays awards page; listing achievements which have been won/possible to win.
 </pre>
 
 <pre>
-ID:              4.3
+ID:              4.3 **On Hold/Dropped** 
 Description:     Resident is informed of ways to improve their standing
 Preconditions:   Resident is logged in
 Postconditions:  Resident is shown useful suggestions
@@ -1105,7 +1104,7 @@ Success Flow:
 </pre>
 
 <pre>
-ID:              4.4
+ID:              4.4 **On Hold/Dropped** 
 Description:     Resident views historical sensor data for their room
 Preconditions:   Resident is logged in
                  Manager doesn't terribly mind someone seeing info from before
@@ -1120,7 +1119,7 @@ Success Flow:
 </pre>
 
 <pre>
-ID:              4.5
+ID:              4.5 **On Hold/Dropped** 
 Description:     Resident views personal historical sensor data for their room
 Preconditions:   Resident is logged in
 Postconditions:  Resident is shown contrasting graphs that hopefully get better
@@ -1134,7 +1133,7 @@ Success Flow:
 </pre>
 
 <pre>
-ID:              4.6
+ID:              4.6 **On Hold/Dropped** 
 Description:     Resident views/changes occupancy information.
 Preconditions:   Resident is logged in.
 Postconditions:  Resident sees his/her current occupancy.
