@@ -139,7 +139,7 @@ System Tests
                         verify you are still on the login page
 
                 log in as developer
-                        enter developer1 as username
+                        enter developer123 as username
                         enter password as password
                         press log in button
                         verify you have entered the manager home page (there is no developer home page)
@@ -302,9 +302,9 @@ System Tests
                                 enter Time as the x axis
                                 enter CO2 as the y axis
                                 enter Daily as granularity
-                                verify that the "No apartments selected. No start date. No end date." alert is displayed
+                                verify that the "No apartments selected." alert is displayed
                                 enter March 1st 2012 as Start Date
-                                verify that the No apartments selected. No end date." alert is displayed
+                                verify that the No apartments selected." alert is displayed
                                 enter March 5th as End Date
                                 verify that the "No apartments selected." alert is displayed
                                 select apartment1 in apartments
@@ -774,16 +774,16 @@ System Tests
                                 click the logout text
 
                         register a developer
-                                enter developer123 as username
+                                enter developer12345 as username
                                 enter password as password
                                 enter password as confirm password
-                                enter developer123@hotmail.com as email
+                                enter developer1245@hotmail.com as email
                                 select admin as role
                                 click register
                                 verify the success message displays (pending)
                                 press the logout text
                                 verify that you are on the login page
-                                enter developer123 as username
+                                enter developer12345 as username
                                 enter password as password
                                 click login button
                                 verify you are on the manager home page (there is no developer home page)
@@ -984,9 +984,9 @@ System Tests
                                 enter Time as the x axis
                                 enter CO2 as the y axis
                                 enter Daily as granularity
-                                verify that the "No apartments selected. No start date. No end date." alert is displayed
+                                verify that the "No apartments selected." alert is displayed
                                 enter March 1st 2012 as Start Date
-                                verify that the No apartments selected. No end date." alert is displayed
+                                verify that the "No apartments selected." alert is displayed
                                 enter March 5th as End Date
                                 verify that the "No apartments selected." alert is displayed
                                 select apartment1 in apartments
