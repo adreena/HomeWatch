@@ -217,19 +217,22 @@ For this first pass, I have followed the Volere template for requirement analysi
     <td>As the building manager, I want to compare the cost of a particular utility over a given time period for unit X and unit Y.</td>
     <td>High</td>
   </tr>
-  <tr>
     <td>2.6</td>
-    <td>As the building manager, I want to be able to register new residents and engineers to the service.</td>
+    <td>**NEW:** As the building manager, I want to know when it's efficient to switch on/off certain heating subsystems. The system should tell me when running certain subsystems are worth running.</td>
+    <td>High</td>
+<tr>
+    <td>2.7</td>
+    <td>**NEW:** As the building manager, I want to be able to register new residents and engineers to the service.</td>
     <td>Medium</td>
   </tr>
   <tr>
-    <td>2.7</td>
-    <td>As the building manager, I want to be able to specify what I am paying for a certain utility at a certain time.</td>
+    <td>2.8</td>
+    <td>**NEW:** As the building manager, I want to be able to specify what I am paying for a certain utility at a certain time.</td>
     <td>High</td>
   </tr>
   <tr>
-    <td>2.8</td>
-    <td>As the building manager, I want to be able to see a general overview of the status of residents.</td>
+    <td>2.9</td>
+    <td>**NEW:** As the building manager, I want to be able to see a general overview of the status of residents.</td>
     <td>Low</td>
   </tr>
 </table>
@@ -338,44 +341,44 @@ For this first pass, I have followed the Volere template for requirement analysi
     <td>As an Engineer, I want to visualize the total hot water usage (gallons) of a set of apartment groups over a given time range and granularity.</td>
     <td>Medium</td>
   </tr>
-  <tr>
+<tr>
     <td>3.21</td>
-    <td>As an Engineer, I want to view the values at any specific point on the graph by hovering over that point.</td>
+    <td>**NEW** As an Engineer, I want to view the values at any specific point on the graph by hovering over that point.</td>
     <td>Medium</td>
   </tr>
   <tr>
     <td>3.22</td>
-    <td>As an Engineer, I want to be able to drill down into more specific time slices when viewing a graph.</td>
+    <td>**NEW** As an Engineer, I want to be able to drill down into more specific time slices when viewing a graph.</td>
     <td>High</td>
   </tr>
   <tr>
     <td>3.23</td>
-    <td>As an Engineer, I want to be able to drill up into less specific time slices when viewing a graph.</td>
+    <td>**NEW** As an Engineer, I want to be able to drill up into less specific time slices when viewing a graph.</td>
     <td>High</td>
   </tr>
   <tr>
     <td>3.24</td>
-    <td>As an Engineer, I want to be able to specify my own forumai to graph.</td>
+    <td>**NEW** As an Engineer, I want to be able to specify my own forumai to graph.</td>
     <td>High</td>
   </tr>
   <tr>
     <td>3.25</td>
-    <td>As an Engineer, I want to be able to graph forumai defined by other engineers.</td>
+    <td>**NEW** As an Engineer, I want to be able to graph forumai defined by other engineers.</td>
     <td>Medium</td>
   </tr>
   <tr>
     <td>3.26</td>
-    <td>As an Engineer, I want to be able to name the formula I have defined.</td>
+    <td>**NEW** As an Engineer, I want to be able to name the formula I have defined.</td>
     <td>Low</td>
   </tr>
   <tr>
     <td>3.27</td>
-    <td>As an Engineer, I want to be able to view certain data trends as a floorplan visualization.</td>
+    <td>**NEW** As an Engineer, I want to be able to view certain data trends as a floorplan visualization.</td>
     <td>Medium</td>
   </tr>
   <tr>
     <td>3.28</td>
-    <td>As an Engineer, I want to be able to create alert cases to notify me when graphed data matches some defined condition.</td>
+    <td>**NEW** As an Engineer, I want to be able to create alert cases to notify me when graphed data matches some defined condition.</td>
     <td>Medium</td>
   </tr>
 </table>
@@ -783,7 +786,7 @@ Variations:
                      8.  Electrical energy consumption (KWh)
                      9.  Total water consumption (gallons)
                      10. Hot water consumption (gallons)
-					 11. User defined function
+		     11. User defined function
                  2a. Visualization Methods:
                      1. Graph
                      2. Report
@@ -1006,7 +1009,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.8
+ID:              3.11
 Description:     Engineer registers a constant.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  A new constant is stored in the database.
@@ -1026,7 +1029,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.9
+ID:              3.12
 Description:     Engineer deletes a constant.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  The chosen constant is no longer stored in the database.
@@ -1042,7 +1045,7 @@ Exceptions:
 </pre>
 
 <pre>
-ID:              3.10
+ID:              3.13
 Description:     Engineer edits a constant.
 Preconditions:   User is logged in as an Engineer
 Postconditions:  The chosen constant is updated with new data.
@@ -1189,7 +1192,7 @@ Our team has agreed to the software license we discussed in class, but we have n
 * **Sustainability Goal:** A goal based on reducing the consumption of utilities indicated by sensor data.
 * **Score:** The total number of points a resident has accumulated based on their utility usage over a certain time period.
 * **Scoreboard (ladder):** A webpage that shows the total score of every resident (by a chosen username) in the building.
-* **Occupency:** the status of the resident as being on vacation or presently occupying the unit.
+* **Occupancy:** the status of the resident as being on vacation or presently occupying the unit.
 
 **Graphing Terms**
 * **Hovering:** to rest the cursor on top of an element of the webpage. Generally used to bring up additional information relating to that element.
