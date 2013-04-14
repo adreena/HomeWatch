@@ -4,16 +4,30 @@
  * Manages the rendering of data as graphs.
  */
 
-requirejs.config({
+/*jslint browser: true, nomen: true, white: true, indent: 4, maxlen: 120 */
+/*global requirejs, define */
 
+requirejs.config({
     /* Have to explicitly specify dependencies of flot and its plugins. */
     shim: {
-        'flot': { deps: ['jquery'] },
-        'flot-orderbars': { deps: ['flot'] },
-        'flot-axislabels': { deps: ['flot'] },
-        'flot-time': { deps: ['flot'] },
-        'flot-navigate':  { deps: ['flot'] },
-        'flot-pie':  { deps: ['flot'] },
+        'flot': {
+            deps: ['jquery']
+        },
+        'flot-orderbars': {
+            deps: ['flot']
+        },
+        'flot-axislabels': {
+            deps: ['flot']
+        },
+        'flot-time': {
+            deps: ['flot']
+        },
+        'flot-navigate': {
+            deps: ['flot']
+        },
+        'flot-pie': {
+            deps: ['flot']
+        },
     },
 
     paths: {
@@ -23,9 +37,10 @@ requirejs.config({
         'flot-time': 'flot/jquery.flot.time',
         'flot-navigate': 'flot/jquery.flot.navigate',
         'flot-pie': 'flot/jquery.flot.pie'
-   }
+    }
 
 });
+
 
 define([
     'jquery',
@@ -36,9 +51,11 @@ define([
     'flot-axislabels',
     'flot-time',
     'flot-navigate',
-    'flot-pie'],
+    'flot-pie'
+],
 
 function ($, _, getInternetExplorerVersion) {
+    "use strict";
 
     // Use Excanvas if on inferior browsers.
     if (getInternetExplorerVersion() <= 8.0) {
@@ -48,19 +65,18 @@ function ($, _, getInternetExplorerVersion) {
     /**
      * Constructor for a graph.
      */
-    function Graph(element, _clickCallback, initialData, legend) {
+    function Graph(element, _clickCallback, legend) {
 
         /*
-	 * Object to keep state for a particular graph instance. Its meta-data
-	 * includes its callback function (used for drilling down), its element (the div
-	 * where the graph will be plotted), its graphtype (line, bar),
-	 * its granularity (Hourly, Daily etc.) and its axes.
-	*/
-        this.graphState =
-        {
+         * Object to keep state for a particular graph instance. Its meta-data
+         * includes its callback function (used for drilling down), its element (the div
+         * where the graph will be plotted), its graphtype (line, bar),
+         * its granularity (Hourly, Daily etc.) and its axes.
+         */
+        this.graphState = {
             callback: _clickCallback,
             element: element,
-	    legend: legend,
+            legend: legend,
             startdate: null,
             enddate: null,
             min_x: null,
@@ -70,7 +86,7 @@ function ($, _, getInternetExplorerVersion) {
             xtype: null,
             ytype: null
         };
-    };
+    }
 
     /** Update method. Provide new data to update the graph. */
     Graph.prototype.update = function (graphData) {
@@ -80,40 +96,40 @@ function ($, _, getInternetExplorerVersion) {
          * AND the graphType! Add all of these to the 
          * graphState object
          */
-            $.extend(this.graphState, {
-                graphType: graphData.graphType,
-                granularity: graphData.granularity,
-                xtype: graphData.xaxis,
-                ytype: graphData.yaxis + get_measurement_units(graphData.yaxis),
-            });
+        $.extend(this.graphState, {
+            graphType: graphData.graphType,
+            granularity: graphData.granularity,
+            xtype: graphData.xaxis,
+            ytype: graphData.yaxis + get_measurement_units(graphData.yaxis),
+        });
 
         var graphState = this.graphState;
         var graphType = graphState.graphType;
         var element = graphState.element;
         var granularity = graphState.granularity;
 
-	// send graph data to parser - expects data and graph options as return
+        // send graph data to parser - expects data and graph options as return
         var data_and_opts = format_data(graphState, graphData.values);
-	
+
         var data = data_and_opts["data"];
         var options = data_and_opts["options"];
 
-	// Flot plot graph call
+        // Flot plot graph call
         $.plot($(element), data, options);
 
-	// bind click event to non-hourly graphs to allow for drill down
-        if(granularity !== "Hourly") {
+        // bind click event to non-hourly graphs to allow for drill down
+        if (granularity !== "Hourly") {
             this.bind_plotclick();
         }
-	
-	// assign tool tip event to this graph instance
+
+        // assign tool tip event to this graph instance
         this.bind_plothover();
     };
 
     /*
-    * Parses the data retrieved from the server into an array of
-    * [x,y] tuples for each discrete graph.
-    */
+     * Parses the data retrieved from the server into an array of
+     * [x,y] tuples for each discrete graph.
+     */
     var format_data = function (graphState, graphData) {
         var sensor_data = [];
         var series_data = [];
@@ -136,13 +152,13 @@ function ($, _, getInternetExplorerVersion) {
                 // key = date stamp
                 time_stamp = DateToUTC(key);
 
-                if(startdate === undefined) {
+                if (startdate === undefined) {
                     startdate = time_stamp;
                     enddate = time_stamp;
                     ticks.push([time_stamp]);
                 }
 
-                if(time_stamp > enddate) {
+                if (time_stamp > enddate) {
                     enddate = time_stamp;
                     ticks.push([time_stamp]);
                 }
@@ -163,19 +179,19 @@ function ($, _, getInternetExplorerVersion) {
                         sensor_data[apartment][sensor] = [];
                     }
 
-                    if((graphState.xtype).toLowerCase() === "time") {
+                    if ((graphState.xtype).toLowerCase() === "time") {
                         sensor_data[apartment][sensor].push([time_stamp, value.y]);
 
                     } else {
-                        if(value.x) {
+                        if (value.x) {
                             tick_size = parseFloat(value.x);
                             sensor_data[apartment][sensor].push([tick_size, value.y]);
 
-                            if(min_x === undefined || min_x > tick_size) {
+                            if (min_x === undefined || min_x > tick_size) {
                                 min_x = tick_size;
                             }
 
-                            if(max_x === undefined || max_x < tick_size) {
+                            if (max_x === undefined || max_x < tick_size) {
                                 max_x = tick_size;
                             }
 
@@ -192,20 +208,20 @@ function ($, _, getInternetExplorerVersion) {
             });
         });
 
-	// ticks represents discrete time stamps encountered during parsing
-	// and are used for setting x-axis ticks
+        // ticks represents discrete time stamps encountered during parsing
+        // and are used for setting x-axis ticks
         graphState.ticks = ticks;
         graphState.startdate = startdate;
         graphState.enddate = enddate;
         graphState.min_x = min_x;
         graphState.max_x = max_x;
 
-	// graph series objects created here (label + data)
-        for(var i = 0; i < apartments.length; ++i) {
-            for(var j = 0; j < graphname.length; ++j) {
+        // graph series objects created here (label + data)
+        for (var i = 0; i < apartments.length; ++i) {
+            for (var j = 0; j < graphname.length; ++j) {
                 var label = "Apartment " + apartments[i] + " " + graphname[j];
                 series_length = series_data.length;
-                if(series_length === 0) {
+                if (series_length === 0) {
                     series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
 
                 } else {
@@ -231,9 +247,9 @@ function ($, _, getInternetExplorerVersion) {
         var series_opts = get_series_options(graphState);
         var legend = get_legend(graphState);
 
-	// only allow graph zooming (not to be confused with drill down)
-	// on hourly correlational graphs
-        if(graphState.granularity === "Hourly" && (graphState.xtype).toLowerCase() !== "time") {
+        // only allow graph zooming (not to be confused with drill down)
+        // on hourly correlational graphs
+        if (graphState.granularity === "Hourly" && (graphState.xtype).toLowerCase() !== "time") {
             var zoom = get_zoom_options();
         } else {
             var zoom = {};
@@ -261,23 +277,22 @@ function ($, _, getInternetExplorerVersion) {
         var type = "axis_label";
 
         var base_x = {
-            xaxis:
-                {
-                  axisLabelUseCanvas: true,
-                  axisLabelFontSizePixels: 12,
-                  axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-                  axisLabelPadding: 25
-                }
+            xaxis: {
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 12,
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                axisLabelPadding: 25
+            }
         };
 
-        if(xtype.toLowerCase() === "time") {
+        if (xtype.toLowerCase() === "time") {
             base_x.xaxis["mode"] = "time";
             base_x.xaxis["min"] = startdate;
 
-            if(granularity === "Hourly") {
+            if (granularity === "Hourly") {
                 base_x.xaxis["tickSize"] = [2, "hour"];
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity);
-            } else if(granularity === "Daily") {
+            } else if (granularity === "Daily") {
                 base_x.xaxis["timeformat"] = "%a %d";
                 base_x.xaxis["tickSize"] = [1, "day"];
                 base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -285,24 +300,24 @@ function ($, _, getInternetExplorerVersion) {
             } else if (granularity === "Weekly") {
                 base_x.xaxis["ticks"] = get_tick_labels(ticks, granularity);
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity, enddate);
-            } else if(granularity === "Monthly") {
+            } else if (granularity === "Monthly") {
                 base_x.xaxis["timeformat"] = "%b";
                 base_x.xaxis["tickSize"] = [1, "month"];
                 base_x.xaxis["monthNames"] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity, enddate);
             } else {
-		// yearly granularity would slot in here
+                // yearly granularity would slot in here
                 base_x.xaxis["ticks"] = get_tick_labels(ticks, granularity);
             }
         } else {
-	    // this is a correlational graph
+            // this is a correlational graph
             base_x.xaxis["min"] = min_x;
             base_x.xaxis["max"] = max_x;
             base_x.xaxis["axisLabel"] = xtype + get_measurement_units(xtype);
         }
 
-	// set zoom and pan ranges
-        if(granularity === "Hourly") {
+        // set zoom and pan ranges
+        if (granularity === "Hourly") {
             base_x.xaxis["zoomRange"] = [1, 3600000000];
             var pan_range = max_x * 1.5;
             base_x.xaxis["panRange"] = [-100, pan_range];
@@ -317,18 +332,17 @@ function ($, _, getInternetExplorerVersion) {
      */
     var get_y_axis = function (graphState) {
         var base_y = {
-            yaxis:
-                {
-                  axisLabelUseCanvas: true,
-                  axisLabelFontSizePixels: 12,
-                  axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-                  axisLabelPadding: 25
-                }
-            };
+            yaxis: {
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 12,
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                axisLabelPadding: 25
+            }
+        };
 
         base_y.yaxis["axisLabel"] = graphState.ytype;
 
-        if(graphState.granularity === "Hourly") {
+        if (graphState.granularity === "Hourly") {
             base_y.yaxis["zoomRange"] = [1, 3600000000];
             base_y.yaxis["panRange"] = [-100, 2500];
         }
@@ -340,7 +354,14 @@ function ($, _, getInternetExplorerVersion) {
      * Set grid option for graph and make it interactive
      */
     var get_grid = function () {
-        return base_grid = {grid: {hoverable: true, clickable: true, borderWidth: 3, labelMargin: 3}};
+        return base_grid = {
+            grid: {
+                hoverable: true,
+                clickable: true,
+                borderWidth: 3,
+                labelMargin: 3
+            }
+        };
     };
 
     /*
@@ -348,20 +369,48 @@ function ($, _, getInternetExplorerVersion) {
      */
     var get_series_options = function (graphState) {
         var graphType = graphState.graphType;
-	var num_bars = graphState.numbars;
-	var granularity = graphState.granularity;
-	var order = [];
+        var num_bars = graphState.numbars;
+        var granularity = graphState.granularity;
+        var order = [];
 
-        var line = {series: {lines: {show: true}, points: {radius: 3, show: true, fill: true}}};
-        var bars = {series: {bars: { show: true, fill: true, lineWidth: 1, clickable: true, hoverable: true}}};
-        var pie =  {series: {pie: {show: true, radius: 1}}};
+        var line = {
+            series: {
+                lines: {
+                    show: true
+                },
+                points: {
+                    radius: 3,
+                    show: true,
+                    fill: true
+                }
+            }
+        };
+        var bars = {
+            series: {
+                bars: {
+                    show: true,
+                    fill: true,
+                    lineWidth: 1,
+                    clickable: true,
+                    hoverable: true
+                }
+            }
+        };
+        var pie = {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1
+                }
+            }
+        };
 
-        if(graphType === "line") {
+        if (graphType === "line") {
             return line;
-        } else if(graphType === "bar") {
-	    bars.series.bars.barWidth = get_bar_interval(granularity) * 0.75;
+        } else if (graphType === "bar") {
+            bars.series.bars.barWidth = get_bar_interval(granularity) * 0.75;
             return bars;
-        } else if(graphType === "pie") {
+        } else if (graphType === "pie") {
             return pie;
         }
     };
@@ -371,14 +420,13 @@ function ($, _, getInternetExplorerVersion) {
      */
     var get_legend = function (graphState) {
         return {
-            legend:
-            {
+            legend: {
                 show: true,
                 labelBoxBorderColor: "rgb(51, 204, 204)",
                 backgroundColor: "rgb(255, 255, 204)",
                 //margin: [-200, 0],
                 backgroundOpacity: .75,
-		container: graphState.legend
+                container: graphState.legend
             }
         }
     };
@@ -388,15 +436,13 @@ function ($, _, getInternetExplorerVersion) {
      */
     var get_zoom_options = function () {
         return {
-            zoom:
-                {
+            zoom: {
                 interactive: true
-                    },
+            },
 
-            pan:
-                {
+            pan: {
                 interactive: true
-                    }
+            }
         }
     };
 
@@ -406,9 +452,9 @@ function ($, _, getInternetExplorerVersion) {
      */
     var create_series_object = function (label, data) {
         return {
-                 label: label,
-                 data: data,
-               }
+            label: label,
+            data: data,
+        }
     };
 
     /*
@@ -416,11 +462,11 @@ function ($, _, getInternetExplorerVersion) {
      */
     var show_tool_tip = function (x, y, contents) {
 
-        $('<div id="tooltip">' + contents + '</div>').css( {
+        $('<div id="tooltip">' + contents + '</div>').css({
             position: 'absolute',
             display: 'none',
             top: y + 20,
-            left: x -25,
+            left: x - 25,
             border: '1px solid #fdd',
             padding: '2px',
             'background-color': '#fee',
@@ -447,25 +493,25 @@ function ($, _, getInternetExplorerVersion) {
             if (item) {
                 if (previousPoint != item.dataIndex) {
                     previousPoint = item.dataIndex;
-    
+
                     granularity = self.graphState.granularity;
 
                     $("#tooltip").remove();
-                        y = item.datapoint[1].toFixed(2);
+                    y = item.datapoint[1].toFixed(2);
 
-                        if(xtype.toLowerCase() === "time") {
-                            if(granularity !== "Hourly") {
-                                end_date = item.datapoint[0];
-                            }
-
-                            x = get_month_day_year(item.datapoint[0], type, granularity, end_date);
-                            show_tool_tip(item.pageX, item.pageY,
-                                item.series.label + " for " + x + " is " + y);
-                        } else {
-			    x = item.datapoint[0].toFixed(2);
-                            show_tool_tip(item.pageX, item.pageY,
-                                item.series.label + ": " + y + " against " + xtype + ": " + x);
+                    if (xtype.toLowerCase() === "time") {
+                        if (granularity !== "Hourly") {
+                            end_date = item.datapoint[0];
                         }
+
+                        x = get_month_day_year(item.datapoint[0], type, granularity, end_date);
+                        show_tool_tip(item.pageX, item.pageY,
+                            item.series.label + " for " + x + " is " + y);
+                    } else {
+                        x = item.datapoint[0].toFixed(2);
+                        show_tool_tip(item.pageX, item.pageY,
+                            item.series.label + ": " + y + " against " + xtype + ": " + x);
+                    }
                 }
             } else {
                 $("#tooltip").remove();
@@ -480,7 +526,7 @@ function ($, _, getInternetExplorerVersion) {
      * This information is passed by callback to a graph manager who
      * requests and returns the new data from controller class
      */
-    Graph.prototype.bind_plotclick = function() {
+    Graph.prototype.bind_plotclick = function () {
         var xtype = this.graphState.xtype;
         var startdate = this.graphState.startdate;
         var enddate = this.graphState.enddate;
@@ -489,7 +535,7 @@ function ($, _, getInternetExplorerVersion) {
         var data_point, date_UTC;
         var self = this;
 
-            $(this.graphState.element).bind("plotclick", function (event, pos, item) {
+        $(this.graphState.element).bind("plotclick", function (event, pos, item) {
             if (item) {
 
                 var granularity = self.graphState.granularity;
@@ -503,8 +549,8 @@ function ($, _, getInternetExplorerVersion) {
                 };
 
                 drill_granularity = new_granularity[granularity];
-                  
-                if(xtype.toLowerCase() === "time") {
+
+                if (xtype.toLowerCase() === "time") {
                     data_point = item.datapoint[0];
                     date_UTC = (new Date(data_point));
                     date_from = format_date(date_UTC);
@@ -512,12 +558,12 @@ function ($, _, getInternetExplorerVersion) {
                     data_point = item.dataIndex;
                 }
 
-                if(drill_granularity === null) {
+                if (drill_granularity === null) {
                     // cannot drill down further
                     return;
                 } else if (drill_granularity === "Hourly") {
 
-                    if(xtype.toLowerCase() === "time") {
+                    if (xtype.toLowerCase() === "time") {
                         date_to = date_from;
                         date_from += " 00";
                         date_to += " 23";
@@ -528,7 +574,7 @@ function ($, _, getInternetExplorerVersion) {
                         date_to += " 23";
                     }
                 } else if (drill_granularity === "Daily") {
-                    if(xtype.toLowerCase() === "time") {
+                    if (xtype.toLowerCase() === "time") {
                         date_to = get_date_to(data_point, drill_granularity);
                     } else {
                         var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
@@ -536,8 +582,8 @@ function ($, _, getInternetExplorerVersion) {
                         date_to = date_from + get_millisecond_interval(drill_granularity);
                     }
 
-                } else if(drill_granularity === "Weekly") {
-                    if(xtype.toLowerCase() === "time") {
+                } else if (drill_granularity === "Weekly") {
+                    if (xtype.toLowerCase() === "time") {
                         date_to = get_date_to(data_point, drill_granularity);
                     } else {
                         var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
@@ -545,20 +591,20 @@ function ($, _, getInternetExplorerVersion) {
                         var year = date_string.getUTCFullYear();
                         var month = date_string.getUTCMonth();
                         date_from = year + '-' + month + '-01';
-                        date_to = year + '-' + month + '-' + get_days_in_month(month, year);                        
+                        date_to = year + '-' + month + '-' + get_days_in_month(month, year);
                     }
 
                 } else {
                     // then current granularity is years
-                    if(xtype.toLowerCase() === "time") {
-                        date_to = date_UTC.getUTCFullYear() + '-12-31';        
+                    if (xtype.toLowerCase() === "time") {
+                        date_to = date_UTC.getUTCFullYear() + '-12-31';
                     } else {
                         var temp_date = map_index_to_time(data_point, startdate, drill_granularity);
                         var date_string = (new Date(temp_date));
                         var year = date_string.getUTCFullYear();
                         date_from = year + '-01-01';
                         date_to = year + '-12-31';
-                    }        
+                    }
                 }
 
                 /* Tell whatever handler we've got that there's new data. */
@@ -567,7 +613,7 @@ function ($, _, getInternetExplorerVersion) {
                     enddate: date_to,
                     period: drill_granularity
                 });
-                   } // if statement
+            } // if statement
         }); // end plotclick
     };
 
@@ -604,11 +650,11 @@ function ($, _, getInternetExplorerVersion) {
         }
 
         UTCTime = Date.UTC(
-           m[1],     // Year
-           m[2] - 1, // Month (WHY IS THIS ZERO-INDEXED?!)
-           m[3],     // Day
-           // Hour may not be present; use 0 in this case.
-           m[4] ? m[4] : 0);
+            m[1], // Year
+        m[2] - 1, // Month (WHY IS THIS ZERO-INDEXED?!)
+        m[3], // Day
+        // Hour may not be present; use 0 in this case.
+        m[4] ? m[4] : 0);
 
         return UTCTime;
     };
@@ -664,25 +710,25 @@ function ($, _, getInternetExplorerVersion) {
      */
     var get_month_day_year = function (start, type, granularity, end) {
         var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var date_string = new Date(start);        
+        var date_string = new Date(start);
         var day = date_string.getUTCDate();
         var month = months[date_string.getUTCMonth()];
         var year = date_string.getUTCFullYear();
-	var hour = add_leading_zero(date_string.getUTCHours()) + ":00";
-	var end_date_string, end_day, end_month, end_year, week_end, end_date;
+        var hour = add_leading_zero(date_string.getUTCHours()) + ":00";
+        var end_date_string, end_day, end_month, end_year, week_end, end_date;
 
-        if(granularity === "Monthly") {
-	    end_date = start + get_millisecond_interval(granularity);		    
-	} else {
-	    end_date = end;
-	}
-            var end_date_string = new Date(end_date);
-            var end_day = end_date_string.getUTCDate();
-            var end_month = months[end_date_string.getUTCMonth()];
-            var end_year = end_date_string.getUTCFullYear();
-            var week_end = (new Date(end_date + get_millisecond_interval("Daily"))).getUTCDate();
+        if (granularity === "Monthly") {
+            end_date = start + get_millisecond_interval(granularity);
+        } else {
+            end_date = end;
+        }
+        var end_date_string = new Date(end_date);
+        var end_day = end_date_string.getUTCDate();
+        var end_month = months[end_date_string.getUTCMonth()];
+        var end_year = end_date_string.getUTCFullYear();
+        var week_end = (new Date(end_date + get_millisecond_interval("Daily"))).getUTCDate();
 
-        if(type === "tool_tip") {
+        if (type === "tool_tip") {
             return tool_tip = {
                 Hourly: month + ' ' + day + ' ' + hour + ' ' + year,
                 Daily: month + ' ' + day + ' ' + year,
@@ -697,7 +743,7 @@ function ($, _, getInternetExplorerVersion) {
                 Monthly: month + ' ' + day + ' ' + year + ' - ' + end_month + ' ' + end_day + ' ' + end_year,
                 Yearly: month + ' ' + day + ' ' + year + ' - ' + end_month + ' ' + end_day + ' ' + end_year
             }[granularity];
-        } 
+        }
 
         return type[granularity];
     };
@@ -706,14 +752,14 @@ function ($, _, getInternetExplorerVersion) {
      * Get number of milliseconds to end of current interval
      */
     var get_millisecond_interval = function (interval) {
-            var base = 3600000;
-            return milliseconds = {
-                Hourly: base * 23,
-                Daily: base * 24 * 6,
-                Weekly: base * 24 * 7,
-		Monthly: base * 24 * 30,
-                Yearly: base * 24 * 365
-            }[interval];
+        var base = 3600000;
+        return milliseconds = {
+            Hourly: base * 23,
+            Daily: base * 24 * 6,
+            Weekly: base * 24 * 7,
+            Monthly: base * 24 * 30,
+            Yearly: base * 24 * 365
+        }[interval];
     };
 
     /*
@@ -734,11 +780,11 @@ function ($, _, getInternetExplorerVersion) {
      */
     get_bar_interval = function (granularity) {
         var base = 3600000;
-	return milliseconds = {
+        return milliseconds = {
             Hourly: base,
             Daily: base * 24,
             Weekly: base * 24 * 7,
-	    Monthly: base * 24 *31,
+            Monthly: base * 24 * 31,
             Yearly: base * 24 * 366
         }[granularity];
     };
@@ -750,11 +796,11 @@ function ($, _, getInternetExplorerVersion) {
     get_tick_labels = function (ticks, granularity) {
         var label;
 
-        for(i = 0; i < ticks.length; ++i) {
-            if(granularity === "Weekly") {
+        for (i = 0; i < ticks.length; ++i) {
+            if (granularity === "Weekly") {
                 label = "Week " + (i + 1);
             } else {
-   		// these are years
+                // these are years
                 label = (new Date(ticks[i][0])).getUTCFullYear();
             }
 
@@ -768,32 +814,31 @@ function ($, _, getInternetExplorerVersion) {
      * these could not be added to the DB for some reason
      */
     get_measurement_units = function (sensor_type) {
-	var unit = 
-	{
+        var unit = {
             Temperature: "(°C)",
             Relative_Humidity: "(%)",
             CO2: "(PPM)",
             Hot_Water: "(gallons)",
             Total_Water: "(gallons)",
-	    Stud: "(W/m²)",
-	    Insulation: "(W/m²)",
-	    Total_Energy: "(Wh)",
-	    Total_Volume: "(L)",
-	    Total_Mass: "(g)",
-	    Current_Flow: "(L/s)",
-	    Current_Temperature_1: "(°C)",
-	    Current_Temperature_2: "(°C)",
-	    Electricity: "($)",
-	    Water: "($)"
+            Stud: "(W/m²)",
+            Insulation: "(W/m²)",
+            Total_Energy: "(Wh)",
+            Total_Volume: "(L)",
+            Total_Mass: "(g)",
+            Current_Flow: "(L/s)",
+            Current_Temperature_1: "(°C)",
+            Current_Temperature_2: "(°C)",
+            Electricity: "($)",
+            Water: "($)"
         };
 
-	var metric = unit[sensor_type];
-	if(metric === undefined) {
-	    metric = "(KJ)";
-	}
+        var metric = unit[sensor_type];
+        if (metric === undefined) {
+            metric = "(KJ)";
+        }
 
         return metric;
-	    
+
     };
 
     /* This module exports one public member -- the class itself. */
