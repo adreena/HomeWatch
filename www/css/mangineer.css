@@ -138,6 +138,18 @@ p {
     min-height: 437px;
 }
 
+.graph-legend {
+  position: absolute;
+  top: 18px;
+  right: -100px;
+  width: 120px;
+}
+
+/* Give more spacing between the labels. */
+.graph-legend > table td {
+  padding-top: 4px;
+}
+
 .graph-group {
     position: relative;
     margin: 10px 0;
