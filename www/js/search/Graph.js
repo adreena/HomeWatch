@@ -57,7 +57,7 @@ define([
 function ($, _, getInternetExplorerVersion) {
     "use strict";
 
-    var get_measurement_units, format_data,
+    var format_data,
         create_series_object,
         dateToUTC;
 
@@ -781,7 +781,7 @@ function ($, _, getInternetExplorerVersion) {
     /*
      * Adjust bar graph width to interval size
      */
-    get_bar_interval = function (granularity) {
+    var get_bar_interval = function (granularity) {
         var base = 3600000;
         return milliseconds = {
             Hourly: base,
@@ -796,7 +796,7 @@ function ($, _, getInternetExplorerVersion) {
      * Customize tick labels for weeks and years as these are 
      * not provided natively by flot
      */
-    get_tick_labels = function (ticks, granularity) {
+    var get_tick_labels = function (ticks, granularity) {
         var label;
 
         for (i = 0; i < ticks.length; ++i) {
@@ -816,7 +816,7 @@ function ($, _, getInternetExplorerVersion) {
      * Returns the unit metrics for a given sensor type/utility as 
      * these could not be added to the DB for some reason
      */
-    get_measurement_units = function (sensor_type) {
+    var get_measurement_units = function (sensor_type) {
         var unit = {
             Temperature: "(°C)",
             Relative_Humidity: "(%)",
