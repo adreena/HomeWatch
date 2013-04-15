@@ -57,7 +57,11 @@ define([
 function ($, _, getInternetExplorerVersion) {
     "use strict";
 
-    // Use Excanvas if on inferior browsers.
+    var get_measurement_units, format_data,
+        create_series_object,
+        dateToUTC;
+
+    // Use Excanvas if using an inferior browser.
     if (getInternetExplorerVersion() <= 8.0) {
         require("flot/excanvas.min.js");
     }
@@ -68,10 +72,11 @@ function ($, _, getInternetExplorerVersion) {
     function Graph(element, _clickCallback, legend) {
 
         /*
-         * Object to keep state for a particular graph instance. Its meta-data
-         * includes its callback function (used for drilling down), its element (the div
-         * where the graph will be plotted), its graphtype (line, bar),
-         * its granularity (Hourly, Daily etc.) and its axes.
+         * Object to keep state for a particular graph instance. Its
+         * meta-data includes its callback function (used for drilling
+         * down), its element (the div where the graph will be plotted),
+         * its graphtype (line, bar), its granularity (Hourly, Daily
+         * etc.) and its axes.
          */
         this.graphState = {
             callback: _clickCallback,
@@ -91,11 +96,9 @@ function ($, _, getInternetExplorerVersion) {
     /** Update method. Provide new data to update the graph. */
     Graph.prototype.update = function (graphData) {
 
-        /* 
-         * Note that graphData contains the plotable data
+        /* Note that graphData contains the plotable data
          * AND the graphType! Add all of these to the 
-         * graphState object
-         */
+         * graphState object */
         $.extend(this.graphState, {
             graphType: graphData.graphType,
             granularity: graphData.granularity,
@@ -103,16 +106,17 @@ function ($, _, getInternetExplorerVersion) {
             ytype: graphData.yaxis + get_measurement_units(graphData.yaxis),
         });
 
-        var graphState = this.graphState;
-        var graphType = graphState.graphType;
-        var element = graphState.element;
-        var granularity = graphState.granularity;
+        var graphState = this.graphState,
+            graphType = graphState.graphType,
+            element = graphState.element,
+            granularity = graphState.granularity,
+            data_and_opts, data, options;
 
         // send graph data to parser - expects data and graph options as return
-        var data_and_opts = format_data(graphState, graphData.values);
+        data_and_opts = format_data(graphState, graphData.values);
 
-        var data = data_and_opts["data"];
-        var options = data_and_opts["options"];
+        data = data_and_opts.data;
+        options = data_and_opts.options;
 
         // Flot plot graph call
         $.plot($(element), data, options);
@@ -126,31 +130,32 @@ function ($, _, getInternetExplorerVersion) {
         this.bind_plothover();
     };
 
-    /*
+    /**
      * Parses the data retrieved from the server into an array of
      * [x,y] tuples for each discrete graph.
      */
-    var format_data = function (graphState, graphData) {
-        var sensor_data = [];
-        var series_data = [];
-        var data_and_options = [];
-        var graphname = [];
-        var apartments = [];
-        var graphname_flag = "false";
-        var min_x, max_x;
-        var apartment, sensor, timestamp, tick_size;
-        var startdate, enddate;
-        var ticks = [];
+    format_data = function (graphState, graphData) {
+
+        var sensor_data = [],
+            series_data = [],
+            data_and_options = [],
+            graphname = [],
+            apartments = [],
+            graphname_flag = "false",
+            min_x, max_x,
+            apartment, sensor, timestamp, tick_size,
+            startdate, enddate,
+            ticks = [],
+            options;
 
         $.each(graphData, function (key, value) {
             apartment = key;
             apartments.push(apartment);
-            console.assert(sensor_data[apartment] === undefined);
             sensor_data[apartment] = [];
 
             $.each(value, function (key, value) {
                 // key = date stamp
-                time_stamp = DateToUTC(key);
+                var time_stamp = dateToUTC(key);
 
                 if (startdate === undefined) {
                     startdate = time_stamp;
@@ -217,22 +222,20 @@ function ($, _, getInternetExplorerVersion) {
         graphState.max_x = max_x;
 
         // graph series objects created here (label + data)
-        for (var i = 0; i < apartments.length; ++i) {
-            for (var j = 0; j < graphname.length; ++j) {
-                var label = "Apartment " + apartments[i] + " " + graphname[j];
-                series_length = series_data.length;
-                if (series_length === 0) {
-                    series_data[0] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
+        _.each(apartments, function (aptNum) {
+            _.each(graphname, function (series) {
+                var label = "Apt. " + aptNum + " " + series;
 
-                } else {
-                    series_data[series_length] = create_series_object(label, sensor_data[apartments[i]][graphname[j]]);
-                }
-            }
-        }
+                series_data.push(
+                    create_series_object(label, sensor_data[aptNum][series])
+                );
 
-        var options = set_all_options(graphState);
-        data_and_options["data"] = series_data;
-        data_and_options["options"] = options;
+            });
+        });
+
+        options = set_all_options(graphState);
+        data_and_options.data = series_data;
+        data_and_options.options = options;
         return data_and_options;
     };
 
@@ -422,10 +425,10 @@ function ($, _, getInternetExplorerVersion) {
         return {
             legend: {
                 show: true,
-                labelBoxBorderColor: "rgb(51, 204, 204)",
-                backgroundColor: "rgb(255, 255, 204)",
+                //labelBoxBorderColor: "rgb(51, 204, 204)",
+                //backgroundColor: "rgb(255, 255, 204)",
                 //margin: [-200, 0],
-                backgroundOpacity: .75,
+                //backgroundOpacity: .75,
                 container: graphState.legend
             }
         }
@@ -450,7 +453,7 @@ function ($, _, getInternetExplorerVersion) {
      * Series object represents label and data package needed to render 
      * a discrete graph
      */
-    var create_series_object = function (label, data) {
+    create_series_object = function (label, data) {
         return {
             label: label,
             data: data,
@@ -637,7 +640,7 @@ function ($, _, getInternetExplorerVersion) {
      * input cannot be parsed, returns undefined.
      */
 
-    DateToUTC = function (dateString) {
+    dateToUTC = function (dateString) {
         var dateRegex = /(\d+)-(\d+)-(\d+)(?::(\d+))?/,
             m, // m for match
             UTCTime;
@@ -650,11 +653,11 @@ function ($, _, getInternetExplorerVersion) {
         }
 
         UTCTime = Date.UTC(
-            m[1], // Year
-        m[2] - 1, // Month (WHY IS THIS ZERO-INDEXED?!)
-        m[3], // Day
-        // Hour may not be present; use 0 in this case.
-        m[4] ? m[4] : 0);
+            m[1],       // Year
+            m[2] - 1,   // Month (WHY IS THIS ZERO-INDEXED?!)
+            m[3],       // Day
+            // Hour may not be present; use 0 in this case.
+            m[4] ? m[4] : 0);
 
         return UTCTime;
     };
