@@ -55,8 +55,6 @@ define([
 ],
 
 function ($, _, getInternetExplorerVersion) {
-    "use strict";
-
     var format_data,
         create_series_object,
         dateToUTC;
@@ -755,7 +753,9 @@ function ($, _, getInternetExplorerVersion) {
      * Get number of milliseconds to end of current interval
      */
     var get_millisecond_interval = function (interval) {
-        var base = 3600000;
+        var base = 3600000,
+            milliseconds;
+
         return milliseconds = {
             Hourly: base * 23,
             Daily: base * 24 * 6,
