@@ -37,6 +37,11 @@ function ($, D, GraphManager) {
             data.apartments = [];
         }
 
+        /* Use the mockdata stream instead. */
+        if (deboog !== undefined && deboog) {
+            D.uri.process = '/search/mockdata.json'
+        }
+
         graphMan = new GraphManager(D.sel.graphList, data);
         /* Have one initial graph control. */
         graphMan.add();
