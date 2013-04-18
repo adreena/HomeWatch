@@ -219,7 +219,6 @@ function ($, _, D, Graph, TemplateManager) {
             var updatedRequest = self.getQuery();
 
             // TODO: query validation before sending...
-
             self.makeRequest(updatedRequest);
 
         });
@@ -262,7 +261,7 @@ function ($, _, D, Graph, TemplateManager) {
     GraphControl.prototype.makeRequest = function (newData) {
 
         // Show a message indicating loading.
-        self.showMessage(D.messages.graphLoading);
+        this.showMessage(D.messages.graphLoading);
 
         this.manager.makeRequest(this, newData);
     };
