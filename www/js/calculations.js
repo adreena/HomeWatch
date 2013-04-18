@@ -8,7 +8,7 @@ require(['jquery', 'underscore', 'vendor/jquery.jdpicker'], function($, _) {
   "use strict";
   var CALCULATE_URL, deboog, renderResults, __renderer;
 
-  deboog = true;
+  deboog = false;
   CALCULATE_URL = deboog ? '/engineer/samplecalc.json' : '/engineer/calculate.php';
   window.calculate = function() {
     var calcDD, calcName, calculateButton, calculation, enddate, endhour, energy, energyDD, energyName, startdate, starthour;
@@ -23,7 +23,7 @@ require(['jquery', 'underscore', 'vendor/jquery.jdpicker'], function($, _) {
     enddate = $('#enddate').val();
     starthour = $('#starthour').val();
     endhour = $('#endhour').val();
-    calculateButton = $('#calculateButton').text('calculating...').attr('disbled', true);
+    calculateButton = $('#calculateButton').text('calculating...').attr('disabled', true);
     $.getJSON(CALCULATE_URL, {
       name: calcName,
       energyname: energyName,

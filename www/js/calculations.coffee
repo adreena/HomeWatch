@@ -8,7 +8,7 @@ Do calculations for engineers or something.
 require ['jquery', 'underscore', 'vendor/jquery.jdpicker'], ($, _) ->
   "use strict"
 
-  deboog = true
+  deboog = false
   CALCULATE_URL = if deboog
     '/engineer/samplecalc.json'
   else
@@ -33,7 +33,7 @@ require ['jquery', 'underscore', 'vendor/jquery.jdpicker'], ($, _) ->
 
     calculateButton = $('#calculateButton')
       .text('calculating...')
-      .attr('disbled', true)
+      .attr('disabled', true)
 
     $.getJSON(CALCULATE_URL,
       name: calcName

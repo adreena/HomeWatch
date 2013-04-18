@@ -207,5 +207,6 @@ p {
 
 /* Hack for jdPicker. */
 .date-wrapper {
-  width: 160px;
+  width: 240px;
+  display: inline-block;
 }

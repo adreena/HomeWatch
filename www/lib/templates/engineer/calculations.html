@@ -11,46 +11,68 @@
 {% block content %}
 <div class="configs">
 
-    <!-- Alert Config -->
+    {# Alert Config #}
     <div class="config">
-    <select id="calculations" onChange="showhideEnergiesOnChange(this);">
-        <option value="eq1">Heat Energy</option>
-        <option value="eq2">Power Usage by Subtraction</option>
-        <option value="eq3">Power Usage by Calculation</option>
-        <option value="eq4">COP1, COP2, and COP3 Calculations</option>
-        <option value="eq5">COP1, COP2, and COP3 Analysis</option>
-    </select>
 
+      {# first drop-down #}
+      <label>
+        <span class="the-actual-gorram-label">
+          Calculation type
+        </span>
+        <select id="calculations" onChange="showhideEnergiesOnChange(this);">
+            <option value="eq1">Heat Energy</option>
+            <option value="eq2">Power Usage by Subtraction</option>
+            <option value="eq3">Power Usage by Calculation</option>
+            <option value="eq4">COP1, COP2, and COP3 Calculations</option>
+            <option value="eq5">COP1, COP2, and COP3 Analysis</option>
+        </select>
+      </label>
 
-    <select id="energies">
-        {% for col, description in energycolumns %}
-        <option value="{{ col }}">{{ description }}</option>
-        {% endfor %}
-    </select>
+      {# first drop-down #}
+      <label>
+        <span class="the-actual-gorram-label">
+          Subtype
+        </span>
+        <select id="energies">
+            {% for col, description in energycolumns %}
+            <option value="{{ col }}">{{ description }}</option>
+            {% endfor %}
+        </select>
+      </label>
 
-    <div>
-      <div>
-        <label for="startdate">Start Date</label><br>
-        <div class="date-wrapper"><div><input id="startdate" name="startdate" type="hidden" /><br></div>
-        <label for="starthour">Start Hour</label>
-        <input id="starthour" type="time" value="00:00" />
-      </div>
+      <div class="calc-params">
+        <div class="calc-date-time">
+          <label for="startdate">Start Date</label><br>
+            <div class="date-wrapper">
+              <input id="startdate" name="startdate" type="hidden" />
+            </div>
+          </label>
 
-      <div>
-        <label for="enddate">End Date</label><br>
-        <div class="date-wrapper"><input id="enddate" name="enddate" type="hidden" /><br></div>
-        <label for="endhour">End Hour</label>
-        <input id="endhour" type="time" value="00:00" />
-      </div>
+          <label>
+            <span class="the-actual-gorram-label">Start Hour</span>
+            <input id="starthour" type="time" value="00:00" />
+          </label>
+        </div>
+
+        <div class="calc-date-time">
+          <label for="enddate">End Date</label><br>
+            <div class="date-wrapper">
+              <input id="enddate" name="enddate" type="hidden" />
+            </div>
+          </label>
+
+          <label>
+            <span class="the-actual-gorram-label">End Hour</span>
+            <input id="endhour" type="time" value="00:00" />
+          </label>
+        </div>
 
         <button id="calculateButton" onClick="calculate(this)">Calculate</button>
-    </div>
+      </div>{# .calc-params #}
+    </div>{# .config #}
+  </div>{# .configs #}
 
-    <div id="results">
-    </div>
-    </div>
-
-  </div>{# Configs #}
+  <div class="results-box" id="results" />
 {% endblock content %}
 
 
