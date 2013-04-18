@@ -38,7 +38,7 @@ function ($, D, GraphManager) {
         }
 
         /* Use the mockdata stream instead. */
-        if (deboog !== undefined && deboog) {
+        if (typeof deboog !== 'undefined' && deboog) {
             D.uri.process = '/search/mockdata.json'
         }
 
