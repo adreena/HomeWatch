@@ -14,12 +14,12 @@ Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER);
 use \UASmartHome\Database\Engineer2;
 
 // Check that the request is valid
-if (!(isset($_POST['calculation'])
-    && isset($_POST['energy'])
-    && isset($_POST['startdate'])
-    && isset($_POST['enddate'])
-    && isset($_POST['starthour'])
-    && isset($_POST['endhour'])))
+if (!(isset($_GET['calculation'])
+    && isset($_GET['energy'])
+    && isset($_GET['startdate'])
+    && isset($_GET['enddate'])
+    && isset($_GET['starthour'])
+    && isset($_GET['endhour'])))
 {
     http_response_code(400);
     die;
@@ -33,14 +33,14 @@ static $FORMULA =  array(
     "eq5" => 5
 );
 
-$calculation = $_POST['calculation'];
+$calculation = $_GET['calculation'];
 
-/* Stupid PHP and its stupid butts. */
+/* Stupid PHP and its stupid timebutts. */
 date_default_timezone_set('America/Edmonton');
-$startDate = \DateTime::createFromFormat('Y-m-d H:i', $_POST['startdate'] .
-    ' ' . $_POST['starthour']);
-$endDate = \DateTime::createFromFormat('Y-m-d H:i', $_POST['enddate'] .
-    ' ' . $_POST['endhour']);
+$startDate = \DateTime::createFromFormat('Y-m-d H:i', $_GET['startdate'] .
+    ' ' . $_GET['starthour']);
+$endDate = \DateTime::createFromFormat('Y-m-d H:i', $_GET['enddate'] .
+    ' ' . $_GET['endhour']);
 
 /* Die because we couldn't parse the date format. */
 if ($startDate === false || $endDate === false) {
@@ -49,14 +49,15 @@ if ($startDate === false || $endDate === false) {
 }
 
 
+/* Do the awesome query! */
 $result = Engineer2::EQ(
     $startDate->format('Y-m-d H:i'),
     $endDate->format('Y-m-d H:i'),
     $FORMULA[$calculation],
-    $_POST['energy']
+    $_GET['energy']
 );
 
-$cols = array(
+static $prettyColumnNames = array(
     'COP1' => array("COP of Solar+DWHR+Geo Field+Heat Pumps", ""),
     'COP2' => array("COP of Entire Heating System", ""),
     'COP3' => array("COP of Heat Pumps", ""),
@@ -89,29 +90,72 @@ $cols = array(
 );
 
 function getColumnName($uglyName) {
-    global $cols;
+    global $prettyColumnNames;
 
-    return isset($cols[$uglyName])
-        ? $cols[$uglyName]
+    return isset($prettyColumnNames[$uglyName])
+        ? $prettyColumnNames[$uglyName]
         : $uglyName;
 }
 
-foreach ($result as $calc => $val) {
+/* Select which fun formatting function will be used. */
+$func = null;
+switch ($calculation) {
+    case 'eq1':
+        $name = $_GET['energyname'];
+        $func = function ($calc, $val) use ($name) {
+            return array(
+                'key' => "$name Energy",
+                'val' => "$val GJ"
+            );
+        };
+        break;
 
+    case 'eq2':
+    case 'eq3':
+        $name = $_GET['name'];
+        $func = function ($calc, $val) use ($name) {
+            return array(
+                'key' => $name,
+                'val' => "$val KWH"
+            );
+        };
+        break;
+
+    case 'eq4':
+    case 'eq5':
+        $col = getColumnName($calc);
+
+        $func = function ($calc, $val) {
+            $labels = getColumnName($calc);
+            $name = $labels[0];
+            $unit = $labels[1];
+
+            return array(
+                'key' => $name,
+                'val' => "$val $unit"
+            );
+        };
+        break;
+
+    default:
+        $name = $_GET['name'];
+        $func = function ($calc, $val) use ($name) {
+            return array(
+                'key' => $name,
+                'val' => "$val"
+            );
+        };
+        break;
+}
+
+$formatted = array();
+foreach ($result as $calc => $val) {
     if (is_null($val)) {
         $val = "null (no data)";
     }
 
-    if ($calculation === "eq1") {
-        echo "<br>" . $_POST['energyname'] . " Energy" . " = $val GJ <br>\n";
-    } else if ($calculation === "eq2" || $calculation === "eq3") {
-        echo "<br><strong> " . $_POST['name'] . " </strong> = $val KWH <br>\n";
-    } else if ($calculation === "eq4" || $calculation === "eq5") {
-        $col = getColumnName($calc);
-        echo "<br><strong>" . $col[0] . "</strong> = $val " . $col[1] . " <br>\n";
-    } else {
-        echo "<br><strong> " . $_POST['name'] . " </strong> = $val <br>\n";
-    }
-
+    $formatted[] = $func($calc, $val);
 }
+
+echo json_encode($formatted);
 
