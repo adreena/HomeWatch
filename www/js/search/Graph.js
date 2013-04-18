@@ -837,7 +837,7 @@ function ($, _, getInternetExplorerVersion) {
 
         var metric = unit[sensor_type];
         if (metric === undefined) {
-            metric = "(KJ)";
+            metric = "";
         }
 
         return metric;
