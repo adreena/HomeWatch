@@ -145,5 +145,6 @@ div.config-editor .id {
 .herp-panel {
     max-width: 320px;
     display: inline-block;
+    float:left;
 }
 
