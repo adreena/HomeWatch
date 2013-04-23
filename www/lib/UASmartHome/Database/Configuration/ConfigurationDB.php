@@ -31,7 +31,9 @@ class ConfigurationDB {
                                        FROM Constants");
         } else {
             $s = $connection->prepare("SELECT c.Constant_ID, Name, Value, Description, uc.User_ID as User
-                                       FROM Constants c LEFT JOIN User_Constants uc ON c.Constant_ID = uc.Constant_ID");
+                                       FROM Constants c LEFT JOIN User_Constants uc
+                                       ON c.Constant_ID = uc.Constant_ID
+                                       AND uc.User_ID = :User_ID");
             
             $s->bindParam(':User_ID', $user->getID());
         }
@@ -50,7 +52,7 @@ class ConfigurationDB {
                 'name' => $constant['Name'],
                 'value' => $constant['Value'],
                 'description' => $constant['Description'],
-                'favorite' => $constant['User'] == ($user == null || $user->getID()) ? 0 : 1
+                'favorite' => $constant['User'] == null ? 0 : 1
             ));
         }
 
@@ -68,7 +70,9 @@ class ConfigurationDB {
                                        FROM Equations");
         } else {
             $s = $connection->prepare("SELECT e.Equation_ID, Name, Value, Description, ue.User_ID as User
-                                       FROM Equations e LEFT JOIN User_Equations ue ON e.Equation_ID = ue.Equation_ID");
+                                       FROM Equations e LEFT JOIN User_Equations ue
+                                       ON e.Equation_ID = ue.Equation_ID
+                                       AND ue.User_ID = :User_ID");
             
             $s->bindParam(':User_ID', $user->getID());
         }
@@ -87,7 +91,7 @@ class ConfigurationDB {
                 'name' => $function['Name'],
                 'value' => $function['Value'],
                 'description' => $function['Description'],
-                'favorite' => $function['User'] == ($user == null || $user->getID()) ? 0 : 1
+                'favorite' => $function['User'] == null ? 0 : 1
             ));
         }
 
@@ -105,7 +109,9 @@ class ConfigurationDB {
                                        FROM Alerts");
         } else {
             $s = $connection->prepare("SELECT a.Alert_ID, Name, Value, Description, ua.User_ID as User
-                                       FROM Alerts a LEFT JOIN User_Alerts ua ON a.Alert_ID = ua.Alert_ID");
+                                       FROM Alerts a LEFT JOIN User_Alerts ua
+                                       ON a.Alert_ID = ua.Alert_ID
+                                       AND ua.User_ID = :User_ID");
             
             $s->bindParam(':User_ID', $user->getID());
         }
@@ -124,7 +130,7 @@ class ConfigurationDB {
                 'name' => $alert['Name'],
                 'value' => $alert['Value'],
                 'description' => $alert['Description'],
-                'favorite' => $alert['User'] == ($user == null || $user->getID()) ? 0 : 1
+                'favorite' => $alert['User'] == null ? 0 : 1
             ));
         }
         
