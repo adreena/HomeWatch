@@ -39,6 +39,7 @@ Graphs are loading &mdash; hang tight!
 <script>
 var categoryData = {{ categories|raw }};
 var apartmentData = {{ apartments|raw }};
+var apartmentLabels = ["Apartment Floor1....",""...];
 </script>
 {# Parameters:
   id:             arbitrary, identifying graph ID
@@ -179,7 +180,7 @@ var apartmentData = {{ apartments|raw }};
       <% _.each(apartments, function (number) { %>
       <li><label><input name="apts" type="checkbox" value="<%= number %>" />
           <span class="postfix-label">
-            Apartment <%= number %>
+            <%= apartmentLabels[number] %>
       </label> </span> </li>
       <% }); %>
 
