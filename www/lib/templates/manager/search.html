@@ -190,7 +190,7 @@ var apartmentLabels = ["Apartment 1asdf",
       <% _.each(apartments, function (number) { %>
       <li><label><input name="apts" type="checkbox" value="<%= number %>" />
           <span class="postfix-label">
-            <%= apartmentLabels[number] %>
+            <%= apartmentLabels[number-1] %>
       </label> </span> </li>
       <% }); %>
 
