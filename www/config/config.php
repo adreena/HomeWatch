@@ -21,7 +21,7 @@ defined('DB_NAME') ? NULL : define('DB_NAME', 'Smart_Condo');
 defined('DB_NAME2') ? NULL : define('DB_NAME2', 'Smart_Bas');
 */
 //New DB
-
+defined('DB_TYPE') ? NULL : define('DB_TYPE', 'mysql');
 defined('DB_HOST') ? NULL : define('DB_HOST', 'hypatia.cs.ualberta.ca');
 defined('DB_USER') ? NULL : define('DB_USER', 'aghoneim');
 defined('DB_PASS') ? NULL : define('DB_PASS', 'usy7f5zW');
