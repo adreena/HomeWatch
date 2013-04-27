@@ -15,7 +15,8 @@ class EquationParser
     public static $DBVARS = array(
         "air_co2" => "CO2",
         "air_humidity" => "Relative_Humidity",
-        "air_temperature" => "Temperature",
+        "air_temperature" => "Inside_Temperature",
+         "out_side_Temprature"=>"OutSide_Temp",
         "elec_total" => "Total_Electricity",
         "elec_ch1_phasea" => "Ch1",
         "elec_ch2_phasea" => "Ch2",
@@ -40,8 +41,8 @@ class EquationParser
         "heatflux_stud" => "Stud",
         "heatflux_insul" => "Insulation",
         "water_hot" => "Hot_Water",
-        "water_total" => "Total_Water",
-        "out_side_Temprature"=>"Temp"
+        "water_total" => "Total_Water"
+       
     );
 
     public function __construct() {
