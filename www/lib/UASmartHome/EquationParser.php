@@ -41,7 +41,13 @@ class EquationParser
         "heatflux_stud" => "Stud",
         "heatflux_insul" => "Insulation",
         "water_hot" => "Hot_Water",
-        "water_total" => "Total_Water"
+        "water_total" => "Total_Water",
+        "BasEnergy_P11"=>"P11",
+        "BasEnergy_P12"=>"P12",
+        "BasEnergy_HP1"=>"HP1",
+        "BasEnergy_HP2"=>"HP2",
+        "BasEnergy_HP3"=>"HP3",
+        "BasEnergy_HP4"=>"HP4",
        
     );
 
