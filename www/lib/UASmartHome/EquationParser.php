@@ -16,7 +16,7 @@ class EquationParser
         "air_co2" => "CO2",
         "air_humidity" => "Relative_Humidity",
         "air_temperature" => "Inside_Temperature",
-         "out_side_Temprature"=>"OutSide_Temp",
+         "out_side_Temprature"=>"OutSide_Temperature",
         "elec_total" => "Total_Electricity",
         "elec_ch1_phasea" => "Ch1",
         "elec_ch2_phasea" => "Ch2",
