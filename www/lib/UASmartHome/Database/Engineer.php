@@ -164,7 +164,7 @@ class Engineer {
     {
 
         $result =array();
-        $table .= '_Daily';
+        $table .= '_Daily_t';
         $conn=new Connection ();
         if ($Phase ==null ){
             $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date ") ;
@@ -190,7 +190,7 @@ class Engineer {
     public function db_query_Extrema($apt,$column,$table,$startdate,$enddate,$EX,$Phase=null)
     {
         $result =array();
-        $table .= '_Hourly';
+        $table .= '_Hourly_t';
         $conn=new Connection ();
         if ($EX==1)
         { 
@@ -233,7 +233,7 @@ class Engineer {
     {
 
         $result =array();
-        $table .= '_Hourly';
+        $table .= '_Hourly_t';
         $conn=new Connection ();
         if ($Phase==null){
             $Query=$conn->connect()->prepare(" select $column, TS from ".$table." where Apt= :Apt_Num AND TS between :SD AND :ED ") ;

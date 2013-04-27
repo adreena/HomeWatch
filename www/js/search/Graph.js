@@ -101,7 +101,7 @@ function ($, _, getInternetExplorerVersion) {
             graphType: graphData.graphType,
             granularity: graphData.granularity,
             xtype: graphData.xaxis,
-            ytype: graphData.yaxis + get_measurement_units(graphData.yaxis),
+            ytype: graphData.yaxis + get_measurement_units(graphData.yaxis, graphData.unit),
         });
 
         var graphState = this.graphState,
@@ -222,7 +222,9 @@ function ($, _, getInternetExplorerVersion) {
         // graph series objects created here (label + data)
         _.each(apartments, function (aptNum) {
             _.each(graphname, function (series) {
-                var label = "Apt. " + aptNum + " " + series;
+                var label = series;
+                if (aptNum != -1)
+                    label = "Apt. " + apartmentLabels[aptNum] + " " + label
 
                 series_data.push(
                     create_series_object(label, sensor_data[aptNum][series])
@@ -294,7 +296,7 @@ function ($, _, getInternetExplorerVersion) {
                 base_x.xaxis["tickSize"] = [2, "hour"];
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity);
             } else if (granularity === "Daily") {
-                base_x.xaxis["timeformat"] = "%a %d";
+                base_x.xaxis["timeformat"] = "%d";
                 base_x.xaxis["tickSize"] = [1, "day"];
                 base_x.xaxis["dayNames"] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
                 base_x.xaxis["axisLabel"] = get_month_day_year(startdate, type, granularity, enddate);
@@ -816,7 +818,10 @@ function ($, _, getInternetExplorerVersion) {
      * Returns the unit metrics for a given sensor type/utility as 
      * these could not be added to the DB for some reason
      */
-    var get_measurement_units = function (sensor_type) {
+    var get_measurement_units = function (sensor_type, unit) {
+        if (unit != "")
+            return " " + unit;
+
         var unit = {
             Temperature: "(°C)",
             Relative_Humidity: "(%)",
@@ -840,7 +845,7 @@ function ($, _, getInternetExplorerVersion) {
             metric = "";
         }
 
-        return metric;
+        return " " + metric;
 
     };
 

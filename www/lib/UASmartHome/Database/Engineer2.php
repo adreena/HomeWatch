@@ -5,7 +5,7 @@ class Engineer2 {
     const ENERGY_EQ = 6;
 
     public static $EnergyColumns = array(
-            "Energy1" => "Solar Day",
+            "Energy1" => "Solar Energy",
             "Energy2" => "DWHR",
             "Energy3" => "Geothermal + DWHR",
             "Energy4" => "Solar + DWHR + Geothermal + Heat Pumps",
@@ -20,7 +20,7 @@ class Engineer2 {
 	 $conn=new Connection2();
 	if ($EQ==1)
 	{
-	$dbh=$conn->connect()->prepare("select SUM(".$column.") from Energy_Minute where ts between :SD and :ED") ;
+	$dbh=$conn->connect()->prepare("select SUM(".$column.") from Energy_Minute_t where ts between :SD and :ED") ;
 	$dbh->bindValue(":SD",$Datefrom);
 	$dbh->bindValue(":ED",$Dateto);
 	$dbh->execute();
@@ -120,11 +120,11 @@ class Engineer2 {
             if ($granularity == "Hourly") {
                 $strTick = $tick->format("Y-m-d:H");
                 $strTickEnd = $tick->add($interval)->format("Y-m-d:H");
-                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyH_Graph");
+                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyH_Graph_t");
             } else if ($granularity == "Daily") {
                 $strTick = $tick->format("Y-m-d");
                 $strTickEnd = $tick->add($interval)->format("Y-m-d");
-                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyD_Graph");
+                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyD_Graph_t");
             }
                
             $data[$strDisplayTick] = $datapoint;

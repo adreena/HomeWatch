@@ -74,7 +74,7 @@ if ($test) {
 	$xdata = array();
 	$ydata = array();
 
-   	if ($apartments == null) {
+   	if ($apartments == null && $ytype != 'energy') {
 		array_push($messages, "No apartments selected. ");
 	}
 	if ($startdate == null) {
@@ -140,6 +140,8 @@ if ($test) {
         $x = end($x);
     }
 
+    if ($ytype == "energy")
+		$apartments[0] = -1;
     //This code block pulls data from a sensor or array of sensors and adds it to the JSON array
 	foreach ($apartments as $apartment) {
 		if ($ytype == "sensorarray") {
@@ -229,7 +231,6 @@ if ($test) {
         //Energy data has to be handled differently
 		} else if ($ytype == "energy") {
 
-
             $dateFormat = 'Y-m-d G';
 
             $d1 = date_create_from_Format($dateFormat, $startdate);
@@ -297,6 +298,16 @@ if ($test) {
 
 	$bigArray['granularity'] = $period;
 	$bigArray['messages'] = $messages;
+
+	$unit = "";
+
+	if ($ytype == 'energy') //BAS energy calculations
+		$unit = "(KJ)";
+	elseif (isset($channelMapping[$yaxis])) //apartment energy monitors
+		$unit = "(J)";
+
+	$bigArray['unit'] = $unit;
+
     $json = json_encode($bigArray);
     echo $json;
 
