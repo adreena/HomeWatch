@@ -235,7 +235,7 @@ class Engineer {
         $result =array();
         $table .= '_Hourly_t';
         $conn=new Connection ();
-        if ($apt==null){
+        if ($apt==1){
           
             {
                 $Query=$conn->connect()->prepare("select $column, TS from ".$table." where  TS between :SD AND :ED ") ;
