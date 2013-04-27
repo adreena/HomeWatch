@@ -15,7 +15,7 @@ class EquationParser
     public static $DBVARS = array(
         "air_co2" => "CO2",
         "air_humidity" => "Relative_Humidity",
-        "air_temperature" => "Inside_Temperature",
+        "Inside_temperature" => "Temperature",
          "out_side_Temprature"=>"OutSide_Temperature",
         "elec_total" => "Total_Electricity",
         "elec_ch1_phasea" => "Ch1",
