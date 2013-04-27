@@ -139,7 +139,13 @@ class Engineer {
         $result =array();
         $table .= '_Weekly';
         $conn=new Connection ();
-        if ($Phase ==null ){
+        if ($table=='OutsideTemp_Weekly'){
+          
+            {
+                $Query=$conn->connect()->prepare("select ".$column." from ".$table." where  Year= :Year AND Week= :Week ") ;
+           	 
+           }	
+        }else { if ($Phase ==null ){
             $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
         }else{
             if ($Phase == 'A' || 'B')
@@ -148,6 +154,7 @@ class Engineer {
                 $Query->bindValue(":PS",$Phase);
             }}
         $Query->bindValue(":Apt_Num",$apt);
+        }
         $Query->bindValue(":Year",$Year);
         $Query->bindValue(":Week",$Week);
         $Query->execute();
@@ -166,6 +173,12 @@ class Engineer {
         $result =array();
         $table .= '_Daily_t';
         $conn=new Connection ();
+         if ($table=='OutsideTemp_Daily_t'){
+          
+            {
+                $Query=$conn->connect()->prepare("select ".$column."  from ".$table." where  Date= :Date ") ;
+           }	
+        }else {
         if ($Phase ==null ){
             $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date ") ;
         }else{
@@ -175,7 +188,8 @@ class Engineer {
                 $Query->bindValue(":PS",$Phase);
             }}
         $Query->bindValue(":Apt_Num",$apt);
-        $Query->bindValue(":Date",$date);
+          }
+         $Query->bindValue(":Date",$date);
         $Query->execute();
         $row_count= $Query->rowCount();
         while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
@@ -239,8 +253,6 @@ class Engineer {
           
             {
                 $Query=$conn->connect()->prepare("select $column, TS from ".$table." where  TS between :SD AND :ED ") ;
-           	  $Query->bindValue(":SD",$Startdate);
-     	          $Query->bindValue(":ED",$EndDate);
            }	
         }else {
         if ($Phase==null){
@@ -253,9 +265,9 @@ class Engineer {
             }
         }
         $Query->bindValue(":Apt_Num",$apt);
+        }
         $Query->bindValue(":SD",$Startdate);
         $Query->bindValue(":ED",$EndDate);
-        }
         $Query->execute();
         $row_count= $Query->rowCount();
         while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
