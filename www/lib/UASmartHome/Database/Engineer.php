@@ -4,7 +4,7 @@ class Engineer {
     //This hnadles the query of the database 
     function db_pull_query($apt, $column, $startdate, $enddate, $period, $Phase=null) {
 
-        $tables = array("Relative_Humidity"=>"Air","Outside_Temperature"=>"OutsideTemp", "Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "Insulation"=>"Heat_Flux", "Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy", "Wind_Speed"=>"Weather_Forecast", "Wind_Direction" => "Weather_Forecast");
+        $tables = array("P11"=>"BasEnergy","P12"=>"BasEnergy","HP1"=>"BasEnergy","HP2"=>"BasEnergy","HP3"=>"BasEnergy","HP4"=>"BasEnergy""Relative_Humidity"=>"Air","Outside_Temperature"=>"OutsideTemp", "Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "Insulation"=>"Heat_Flux", "Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy", "Wind_Speed"=>"Weather_Forecast", "Wind_Direction" => "Weather_Forecast");
 
         $table = $tables[$column];
 
@@ -113,6 +113,13 @@ class Engineer {
         $result =array();
         $table .= '_Monthly';
         $conn=new Connection ();
+         if ($table=='OutsideTemp_Monthly' || 'BasEnergy_Monthly'){
+          
+            {
+                $Query=$conn->connect()->prepare("select ".$column." from ".$table." where  Year= :Year AND Month= :Month ") ;
+           	 
+           }	
+        }else {
         if ($Phase ==null ){
             $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month ") ;
         }else{
@@ -122,6 +129,7 @@ class Engineer {
                 $Query->bindValue(":PS",$Phase);
             }}
         $Query->bindValue(":Apt_Num",$apt);
+        }
         $Query->bindValue(":Year",$Year);
         $Query->bindValue(":Month",$Month);
         $Query->execute();
@@ -139,7 +147,7 @@ class Engineer {
         $result =array();
         $table .= '_Weekly';
         $conn=new Connection ();
-        if ($table=='OutsideTemp_Weekly'){
+        if ($table=='OutsideTemp_Weekly'|| 'BasEnergy_Weekly'){
           
             {
                 $Query=$conn->connect()->prepare("select ".$column." from ".$table." where  Year= :Year AND Week= :Week ") ;
@@ -173,7 +181,7 @@ class Engineer {
         $result =array();
         $table .= '_Daily_t';
         $conn=new Connection ();
-         if ($table=='OutsideTemp_Daily_t'){
+         if ($table=='OutsideTemp_Daily_t'|| 'BasEnergy_Daily_t'){
           
             {
                 $Query=$conn->connect()->prepare("select ".$column."  from ".$table." where  Date= :Date ") ;
@@ -249,7 +257,7 @@ class Engineer {
         $result =array();
         $table .= '_Hourly_t';
         $conn=new Connection ();
-        if ($table=='OutsideTemp_Hourly_t'){
+        if ($table=='OutsideTemp_Hourly_t'|| 'BasEnergy_Daily_t'){
           
             {
                 $Query=$conn->connect()->prepare("select $column, TS from ".$table." where  TS between :SD AND :ED ") ;
