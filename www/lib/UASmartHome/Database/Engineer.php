@@ -235,6 +235,14 @@ class Engineer {
         $result =array();
         $table .= '_Hourly_t';
         $conn=new Connection ();
+        if ($apt==null){
+          
+            {
+                $Query=$conn->connect()->prepare("select $column, TS from ".$table." where  TS between :SD AND :ED ") ;
+           	  $Query->bindValue(":SD",$Startdate);
+     	          $Query->bindValue(":ED",$EndDate);
+           }	
+        }else {
         if ($Phase==null){
             $Query=$conn->connect()->prepare(" select $column, TS from ".$table." where Apt= :Apt_Num AND TS between :SD AND :ED ") ;
         } else {
@@ -247,6 +255,7 @@ class Engineer {
         $Query->bindValue(":Apt_Num",$apt);
         $Query->bindValue(":SD",$Startdate);
         $Query->bindValue(":ED",$EndDate);
+        }
         $Query->execute();
         $row_count= $Query->rowCount();
         while ($row = $Query->fetch(\PDO::FETCH_ASSOC))
