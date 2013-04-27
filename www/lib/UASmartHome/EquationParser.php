@@ -40,7 +40,8 @@ class EquationParser
         "heatflux_stud" => "Stud",
         "heatflux_insul" => "Insulation",
         "water_hot" => "Hot_Water",
-        "water_total" => "Total_Water"
+        "water_total" => "Total_Water",
+        "test"=>"tesst"
     );
 
     public function __construct() {
