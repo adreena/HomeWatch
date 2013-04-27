@@ -41,7 +41,7 @@ class EquationParser
         "heatflux_insul" => "Insulation",
         "water_hot" => "Hot_Water",
         "water_total" => "Total_Water",
-        "test"=>"tesst"
+        "out_side_Temprature"=>"out_temp"
     );
 
     public function __construct() {
