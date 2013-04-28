@@ -15,8 +15,8 @@ class EquationParser
     public static $DBVARS = array(
         "air_co2" => "CO2",
         "air_humidity" => "Relative_Humidity",
-        "Inside_temperature" => "Temperature",
-         "out_side_Temprature"=>"Outside_Temperature",
+        "inside_temperature" => "Temperature",
+         "out_side_temprature"=>"Outside_Temperature",
         "elec_total" => "Total_Electricity",
         "elec_ch1_phasea" => "Ch1",
         "elec_ch2_phasea" => "Ch2",
@@ -42,12 +42,12 @@ class EquationParser
         "heatflux_insul" => "Insulation",
         "water_hot" => "Hot_Water",
         "water_total" => "Total_Water",
-        "BasEnergy_P11"=>"P11",
-        "BasEnergy_P12"=>"P12",
-        "BasEnergy_HP1"=>"HP1",
-        "BasEnergy_HP2"=>"HP2",
-        "BasEnergy_HP3"=>"HP3",
-        "BasEnergy_HP4"=>"HP4",
+        "bas_energy_p11"=>"P11",
+        "bas_energy_p12"=>"P12",
+        "bas_energy_hp1"=>"HP1",
+        "bas_energy_hp2"=>"HP2",
+        "bas_energy_hp3"=>"HP3",
+        "bas_energy_hp4"=>"HP4",
        
     );
 
@@ -253,6 +253,9 @@ class EquationParser
             }
 
             else {
+						/*print "$i\n";
+						print_r($pieces);
+						print_r($db_vars);*/
                 $data[$pieces[$i]] = Engineer::db_pull_query(
                            $input["apartment"], $db_vars[$pieces[$i]],
                            $input["startdate"], $input["enddate"],

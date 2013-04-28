@@ -409,7 +409,7 @@ $MONTHLY_VIEW_MAX = 120;
 
 function isBasEnergy($name) {
 	$dbvars = EquationParser::getVariables();
-	return isset($dbvars["BasEnergy_$name"]);
+	return isset($dbvars["bas_energy_$name"]);
 }
 
 function needsApartment($ytype, $yaxis) {
