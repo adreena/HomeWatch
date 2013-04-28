@@ -113,7 +113,7 @@ class Engineer {
         $result =array();
         $table .= '_Monthly';
         $conn=new Connection ();
-         if ($table=='OutsideTemp_Monthly' || 'BasEnergy_Monthly'){
+         if ($table=='OutsideTemp_Monthly' || $table=='BasEnergy_Monthly'){
           
             {
                 $Query=$conn->connect()->prepare("select ".$column." from ".$table." where  Year= :Year AND Month= :Month ") ;
@@ -147,7 +147,7 @@ class Engineer {
         $result =array();
         $table .= '_Weekly';
         $conn=new Connection ();
-        if ($table=='OutsideTemp_Weekly'|| 'BasEnergy_Weekly'){
+        if ($table=='OutsideTemp_Weekly'|| $table=='BasEnergy_Weekly'){
           
             {
                 $Query=$conn->connect()->prepare("select ".$column." from ".$table." where  Year= :Year AND Week= :Week ") ;
@@ -181,7 +181,7 @@ class Engineer {
         $result =array();
         $table .= '_Daily_t';
         $conn=new Connection ();
-         if ($table=='OutsideTemp_Daily_t'|| 'BasEnergy_Daily_t'){
+         if ($table=='OutsideTemp_Daily_t'|| $table=='BasEnergy_Daily_t'){
           
             {
                 $Query=$conn->connect()->prepare("select ".$column."  from ".$table." where  Date= :Date ") ;
@@ -257,7 +257,7 @@ class Engineer {
         $result =array();
         $table .= '_Hourly_t';
         $conn=new Connection ();
-        if ($table=='OutsideTemp_Hourly_t'|| 'BasEnergy_Daily_t'){
+        if ($table=='OutsideTemp_Hourly_t'|| $table=='BasEnergy_Hourly_t'){
           
             {
                 $Query=$conn->connect()->prepare("select $column, TS from ".$table." where  TS between :SD AND :ED ") ;
