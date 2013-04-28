@@ -91,7 +91,7 @@ class Engineer {
         if ($Phase == null ){
             $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year ") ;
         }else{
-            if ($Phase == 'A' || 'B')
+            if ($Phase == 'A' || $Phase == 'B')
             {
                 $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Phase= :PS") ;
                 $Query->bindValue(":PS",$Phase);
@@ -123,7 +123,7 @@ class Engineer {
         if ($Phase ==null ){
             $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month ") ;
         }else{
-            if ($Phase == 'A' || 'B')
+            if ($Phase == 'A' || $Phase == 'B')
             {
                 $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Month= :Month AND Phase= :PS ") ;
                 $Query->bindValue(":PS",$Phase);
@@ -156,7 +156,7 @@ class Engineer {
         }else { if ($Phase ==null ){
             $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week") ;
         }else{
-            if ($Phase == 'A' || 'B')
+            if ($Phase == 'A' || $Phase == 'B')
             {
                 $Query=$conn->connect()->prepare("select  ".$column." from ".$table." where Apt= :Apt_Num AND Year= :Year AND Week= :Week AND Phase= :PS") ;
                 $Query->bindValue(":PS",$Phase);
@@ -190,7 +190,7 @@ class Engineer {
         if ($Phase ==null ){
             $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date ") ;
         }else{
-            if ($Phase == 'A' || 'B')
+            if ($Phase == 'A' || $Phase == 'B')
             {
                 $Query=$conn->connect()->prepare("select ".$column." from ".$table." where Apt= :Apt_Num AND Date= :Date AND Phase= :PS") ;
                 $Query->bindValue(":PS",$Phase);
@@ -219,7 +219,7 @@ class Engineer {
             if ($Phase==null){
                 $Query=$conn->connect()->prepare("select MAX(".$column."),Hour from ".$table." where Apt= :Apt_Num AND Date between :SD AND :ED") ;
             }else{
-                if ($Phase == 'A' || 'B')
+                if ($Phase == 'A' || $Phase == 'B')
                 {
                     $Query=$conn->connect()->prepare("select MAX(".$column."),Hour from ".$table." where Apt= :Apt_Num AND Phase= :PS AND Date between :SD AND :ED") ;
                     $Query->bindValue(":PS",$Phase);
@@ -231,7 +231,7 @@ class Engineer {
             if ($Phase==null){
                 $Query=$conn->connect()->prepare("select MIN(".$column."),Hour from ".$table." where Apt= :Apt_Num AND Date between :SD AND :ED") ;
             }else{
-                if ($Phase == 'A' || 'B')
+                if ($Phase == 'A' || $Phase == 'B')
                 {
                     $Query=$conn->connect()->prepare("select MIN(".$column."),Hour from ".$table." where Apt= :Apt_Num AND Phase= :PS AND Date between :SD AND :ED") ;
                     $Query->bindValue(":PS",$Phase);
@@ -266,7 +266,7 @@ class Engineer {
         if ($Phase==null){
             $Query=$conn->connect()->prepare(" select $column, TS from ".$table." where Apt= :Apt_Num AND TS between :SD AND :ED ") ;
         } else {
-            if ($Phase == 'A' || 'B')
+            if ($Phase == 'A' || $Phase == 'B')
             {
                 $Query=$conn->connect()->prepare("select $column, TS from ".$table." where Apt= :Apt_Num AND TS between :SD AND :ED AND Phase= :PS") ;
                 $Query->bindValue(":PS",$Phase);
