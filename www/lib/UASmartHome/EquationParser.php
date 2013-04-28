@@ -80,7 +80,7 @@ class EquationParser
         $costData = UtilitiesDB::Utilities_getPrice($input["type"], $input["startdate"], $input["enddate"]);
 
         if($input["type"] === "Electricity") {
-            $utilityUse = EquationParser::getTotalElec($input["apartment"], $input["startdate"], $input["enddate"], $input["granularity"]);
+            $utilityUse = EquationParser::getTotalHP($input["startdate"], $input["enddate"], $input["granularity"]);
             $utilityUse = EquationParser::convertToKWH($utilityUse, $input["granularity"]);
         }
         else if($input["type"] === "Water") {
@@ -160,6 +160,21 @@ class EquationParser
                 $data[$date] = 0;
             else
                 $data[$date] = $value["Total_Water"];
+        }
+
+        return $data;
+
+    }
+      public static function getTotalHP($startdate, $enddate, $granularity) {
+        $data = array();
+        $waterData = Engineer::db_pull_query(-1, "Total_HP",
+                                             $startdate, $enddate, $granularity);
+
+        foreach($waterData as $date=>$value) {
+            if($waterData[$date] === 0 && $value === 0)
+                $data[$date] = 0;
+            else
+                $data[$date] = $value["Total_HP"];
         }
 
         return $data;
