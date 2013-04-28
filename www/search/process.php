@@ -16,6 +16,7 @@ Firewall::instance()->restrictAccess(Firewall::ROLE_ENGINEER, Firewall::ROLE_MAN
 use \UASmartHome\Database\Engineer;
 use \UASmartHome\Database\Engineer2;
 use \UASmartHome\Database\Configuration\ConfigurationDB;
+use \UASmartHome\EquationParser;
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -74,7 +75,9 @@ if ($test) {
 	$xdata = array();
 	$ydata = array();
 
-   	if ($apartments == null && $ytype != 'energy') {
+
+
+   if ($apartments == null && needsApartment($ytype, $yaxis)) {
 		array_push($messages, "No apartments selected. ");
 	}
 	if ($startdate == null) {
@@ -131,7 +134,6 @@ if ($test) {
 
     $channelMapping = array("Mains (Phase A)" => "Ch1", "Bedroom and hot water tank (Phase A)" => "Ch2", "Oven (Phase A) and range hood" => "AUX1", "Microwave and ERV controller" => "AUX2", "Electrical duct heating" => "AUX3", "Kitchen plugs (Phase A) and bathroom lighting" => "AUX4", "Energy recovery ventilation" => "AUX5", "Mains (Phase B)" => "Ch1", "Kitchen plugs (Phase B) and kitchen counter" => "Ch1", "Oven (Phase B)" => "AUX1", "Bathroom" => "AUX2", "Living room and balcony" => "AUX3",  "Hot water tank (Phase B)" => "AUX4", "Refrigerator" => "AUX5");
 
-
     //Xaxis is always a single variable, but multiple variables might be plotted along the y-axis. Here we set the x-axis label to what we received and the y-axis label to the last array name
 	$bigArray["xaxis"] = $xaxis;
 	$bigArray["yaxis"] = is_array($yaxis) ? end($yaxis) : $yaxis;
@@ -140,7 +142,7 @@ if ($test) {
         $x = end($x);
     }
 
-    if ($ytype == "energy")
+    if (!needsApartment($ytype, $yaxis))
 		$apartments[0] = -1;
     //This code block pulls data from a sensor or array of sensors and adds it to the JSON array
 	foreach ($apartments as $apartment) {
@@ -301,10 +303,12 @@ if ($test) {
 
 	$unit = "";
 
-	if ($ytype == 'energy') //BAS energy calculations
+	if ($ytype == 'energy') //calculated from flow and temp. difference
 		$unit = "(KJ)";
-	elseif (isset($channelMapping[$yaxis])) //apartment energy monitors
+	elseif (isset($channelMapping[$yaxis]) || isBasEnergy($yaxis)) //from energy monitors
 		$unit = "(J)";
+	elseif ($yaxis == "Outside_Temperature")
+		$unit = "(°C)";
 
 	$bigArray['unit'] = $unit;
 
@@ -403,6 +407,14 @@ $MONTHLY_VIEW_MAX = 120;
 
 }
 
+function isBasEnergy($name) {
+	$dbvars = EquationParser::getVariables();
+	return isset($dbvars["BasEnergy_$name"]);
+}
 
-
+function needsApartment($ytype, $yaxis) {
+	if ($ytype == "energy" || isBasEnergy($yaxis) || $yaxis == "Outside_Temperature")
+		return 0;
+	return 1;
+}
 
