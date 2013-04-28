@@ -48,6 +48,7 @@ class EquationParser
         "bas_energy_hp2"=>"HP2",
         "bas_energy_hp3"=>"HP3",
         "bas_energy_hp4"=>"HP4",
+        "bas_energy_total_hp"=>"Total_HP"
        
     );
 
