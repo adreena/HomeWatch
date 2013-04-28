@@ -224,7 +224,7 @@ function ($, _, getInternetExplorerVersion) {
             _.each(graphname, function (series) {
                 var label = series;
                 if (aptNum != -1)
-                    label = "Apt. " + apartmentLabels[aptNum] + " " + label
+                    label = "Apt. " + apartmentLabels[aptNum-1] + " " + label;
 
                 series_data.push(
                     create_series_object(label, sensor_data[aptNum][series])
