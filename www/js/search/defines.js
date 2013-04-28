@@ -140,7 +140,7 @@ define({
         },
 
         "Utilities": {
-            "electricity": "Electricity",
+            "electricity": "HP_Electricity",
             "water": "Water"
         },
 

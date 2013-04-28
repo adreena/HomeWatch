@@ -836,8 +836,9 @@ function ($, _, getInternetExplorerVersion) {
             Current_Flow: "(L/s)",
             Current_Temperature_1: "(°C)",
             Current_Temperature_2: "(°C)",
-            Electricity: "($)",
-            Water: "($)"
+            HP_Electricity: "($)",
+            Water: "($)",
+				Total_HP: "(kWh)"
         };
 
         var metric = unit[sensor_type];

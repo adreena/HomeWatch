@@ -181,7 +181,7 @@ class Engineer {
         $result =array();
         $table .= '_Daily_t';
         $conn=new Connection ();
-         if ($table=='OutsideTemp_Daily_t'|| $table=='BasEnergy_Daily_t'){
+         if ($table=='OutsideTemp_Daily_t'|| $table=='BasEnergy_Daily_t' || $table=='TotalElec_Daily_t'){
           
             {
                 $Query=$conn->connect()->prepare("select ".$column."  from ".$table." where  Date= :Date ") ;
@@ -257,7 +257,7 @@ class Engineer {
         $result =array();
         $table .= '_Hourly_t';
         $conn=new Connection ();
-        if ($table=='OutsideTemp_Hourly_t'|| $table=='BasEnergy_Hourly_t'){
+        if ($table=='OutsideTemp_Hourly_t'|| $table=='BasEnergy_Hourly_t' || $table=='TotalElec_Hourly_t'){
           
             {
                 $Query=$conn->connect()->prepare("select $column, TS from ".$table." where  TS between :SD AND :ED ") ;
