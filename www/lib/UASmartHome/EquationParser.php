@@ -79,7 +79,7 @@ class EquationParser
 
         $costData = UtilitiesDB::Utilities_getPrice($input["type"], $input["startdate"], $input["enddate"]);
 
-        if($input["type"] === "Electricity") {
+        if($input["type"] === "HP_Electricity") {
             $utilityUse = EquationParser::getTotalHP($input["startdate"], $input["enddate"], $input["granularity"]);
             $utilityUse = EquationParser::convertToKWH($utilityUse, $input["granularity"]);
         }
