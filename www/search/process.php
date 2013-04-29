@@ -307,7 +307,7 @@ if ($test) {
 		$unit = "(KJ)";
 	elseif (isset($channelMapping[$yaxis]) || isBasEnergy($yaxis)) //from energy monitors
 		$unit = "(J)";
-	elseif ($yaxis == "Outside_Temperature")
+	elseif ($yaxis == "Outside_Temperature" || $yaxis == "Temperature Difference" )
 		$unit = "(°C)";
 
 	$bigArray['unit'] = $unit;
@@ -413,7 +413,7 @@ function isBasEnergy($name) {
 }
 
 function needsApartment($ytype, $yaxis) {
-	if ($ytype == "energy" || isBasEnergy($yaxis) || $yaxis == "tempdifference" || ($ytype == "utility" && $yaxis == "HP_Electricity") || $yaxis == "Total_HP")
+	if ($ytype == "energy" || isBasEnergy($yaxis) || $yaxis == "Outside_Temperature" || ($ytype == "utility" && $yaxis == "HP_Electricity") || $yaxis == "Total_HP")
 		return 0;
 	return 1;
 }
