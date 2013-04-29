@@ -413,7 +413,7 @@ function isBasEnergy($name) {
 }
 
 function needsApartment($ytype, $yaxis) {
-	if ($ytype == "energy" || $AptArray[$ytype]==null ||isBasEnergy($yaxis) || $yaxis == "Outside_Temperature" || ($ytype == "utility" && $yaxis == "HP_Electricity") || $yaxis == "Total_HP")
+	if ($ytype == "energy" || $AptArray[$yaxis]==null ||isBasEnergy($yaxis) || $yaxis == "Outside_Temperature" || ($ytype == "utility" && $yaxis == "HP_Electricity") || $yaxis == "Total_HP")
 		return 0;
 	return 1;
 }
