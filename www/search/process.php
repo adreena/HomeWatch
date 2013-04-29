@@ -27,7 +27,7 @@ $test = true;
 $sensors = array();
 $apartments = array();
 $messages = array();
-$AptArray =array ("Relative_Humidity"=>"Air","Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "HeatFlux_Insulation"=>"Heat_Flux", "HeatFlux_Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy")
+$AptArray =array ("Relative_Humidity"=>"Air","Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "HeatFlux_Insulation"=>"Heat_Flux", "HeatFlux_Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy");
 //If we are getting data from the front end, this flag will tell us to use that input instead of test data
 if (ISSET($_GET['notest'])) {
 	$test = false;
