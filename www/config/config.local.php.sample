@@ -1,0 +1,16 @@
+<?php
+/** The following are defines to setup the database.
+ * Edit those to match your setup. */
+
+defined('DB_TYPE') ? NULL : define('DB_TYPE', 'mysql');
+defined('DB_HOST') ? NULL : define('DB_HOST', 'localhost');
+defined('DB_USER') ? NULL : define('DB_USER', '');
+defined('DB_PASS') ? NULL : define('DB_PASS', '');
+defined('DB_NAME') ? NULL : define('DB_NAME', 'stonymountain_hw_apts');
+defined('DB_NAME2') ? NULL : define('DB_NAME2', 'stonymountain_hw_bas');
+
+
+/* If CUSTOM_LOG is defined, errors and warnings will be logged to the specified file.
+ * Otherwise they will go to the standard apache error log */
+//define('CUSTOM_LOG', '/var/log/HomeWatch_errors.log');
+?>

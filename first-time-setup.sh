@@ -29,5 +29,8 @@ my_msg 'Installing git submodules'
 git submodule init
 git submodule update
 
+my_msg 'Copying sample config to www/config/config.local.php'
+cp www/config/config.local.php.sample www/config/config.local.php
+my_msg 'You need to edit the DB information in www/config/config.local.php'
 my_msg 'Done'
 
