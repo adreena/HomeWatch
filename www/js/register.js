@@ -113,7 +113,7 @@ function ($) {
             roledata: roleData
         };
         
-        $.post('/auth/register-user.php', registrationData)
+        $.post('/HomeWatch/auth/register-user.php', registrationData)
         .done(onRegisterDone)
         .fail(onRegisterFail);
         

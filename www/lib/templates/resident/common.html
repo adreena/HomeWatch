@@ -6,7 +6,8 @@
         <span class="user-status">Welcome{{
           user is defined ? ' ' ~ user.username : ''
           }}!</span>
-          <a id="logout" href="/auth/logout.php">Logout</a>
+          <a href="/HomeWatch/auth/account-settings.php">Account Settings</a> || 
+          <a id="logout" href="/HomeWatch/auth/logout.php">Logout</a>
       </nav>
   </div>
 </header>
@@ -14,12 +15,12 @@
 <aside class="left-menu">
   <nav>
     <ul>
-        <li><a href="/">Home</a></li>
+        <li><a href="/HomeWatch">Home</a></li>
         {# Hard-coded URLS. Woohoo! #}
-        <li><a href="/resident/achievements.php">Achievements</a></li>
-        <li><a href="/resident/scoreboard.php">Scoreboard</a></li>
-        <li><a href="/resident/advice.php">Advice</a></li>
-        <li><a href="/resident/history.php">History</a></li>
+        <li><a href="/HomeWatch/resident/achievements.php">Achievements</a></li>
+        <li><a href="/HomeWatch/resident/scoreboard.php">Scoreboard</a></li>
+        <li><a href="/HomeWatch/resident/advice.php">Advice</a></li>
+        <li><a href="/HomeWatch/resident/history.php">History</a></li>
     </ul>
   </nav>
 </aside>

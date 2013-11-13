@@ -37,7 +37,7 @@ function ($) {
     function resetPassword() {
         var resetInfo = getResetInfo();
         
-        $.post('/auth/reset-password.php', resetInfo)
+        $.post('/HomeWatch/auth/reset-password.php', resetInfo)
         .done(onResetDone)
         .fail(onResetFail);
         
@@ -46,7 +46,7 @@ function ($) {
     
     function onResetDone(response) {
         alert("Reset successful. You may now login with your new password.");
-        window.location.replace("/");
+        window.location.replace("/HomeWatch/");
     }
 
     function onResetFail(response) {

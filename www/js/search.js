@@ -39,7 +39,7 @@ function ($, D, GraphManager) {
 
         /* Use the mockdata stream instead. */
         if (typeof deboog !== 'undefined' && deboog) {
-            D.uri.process = '/search/mockdata.json'
+            D.uri.process = '/HomeWatch/search/mockdata.json'
         }
 
         graphMan = new GraphManager(D.sel.graphList, data);
@@ -56,5 +56,13 @@ function ($, D, GraphManager) {
         $(D.sel.pageLoadingPlaceholder).remove();
 
     });
-
 });
+
+function addYItem() {
+	for (i = 0; i < 10; i++) {
+		if ($('select.yaxis'+i).is(":hidden")) {
+			$('select.yaxis'+i).show();
+			break;
+		}
+	}
+}

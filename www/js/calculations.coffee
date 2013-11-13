@@ -10,9 +10,9 @@ require ['jquery', 'underscore', 'vendor/jquery.jdpicker'], ($, _) ->
 
   deboog = false
   CALCULATE_URL = if deboog
-    '/engineer/samplecalc.json'
+    '/HomeWatch/engineer/samplecalc.json'
   else
-    '/engineer/calculate.php'
+    '/HomeWatch/engineer/calculate.php'
 
   window.calculate = ->
 

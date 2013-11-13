@@ -60,7 +60,7 @@ function ($) {
     }
 
     function updateResident() {
-        $.post('/manager/update-resident.php', getResidentEditorData())
+        $.post('/HomeWatch/manager/update-resident.php', getResidentEditorData())
         .done(function(data) {
             residentEditor.reset();
             location.reload();
@@ -76,7 +76,7 @@ function ($) {
         var deleteButton = event.target;
         var residentID = getRowData(deleteButton).id;
 
-        $.post('/manager/delete-resident.php', {id: residentID})
+        $.post('/HomeWatch/manager/delete-resident.php', {id: residentID})
         .done(function(data) { window.location.reload(); })
         .fail(function(data) { alert("Error deleting resident: " + data.statusText); });
     }

@@ -38,9 +38,9 @@ foreach ($unfilteredCategories['functions'] as $func)  {
 
 // Add the energy column equations
 $energyCols = Engineer2::getEnergyColumns();
-$categories['Energy'] = array();
+$categories['BAS Energy'] = array();
 foreach ($energyCols as $col => $description) {
-    $categories['Energy'][$col] = array(
+    $categories['BAS Energy'][$col] = array(
         "displayName" => $description,
         "applicableAxes" => "y"
     );
@@ -54,11 +54,12 @@ foreach ($unfilteredCategories['alerts'] as $alert)  {
     );
 };
 
+
 /* There should probably be a better source for the sensor names, but ah well. */
-$categories['Sensors'] = array();
+/*$categories['Sensors'] = array();
 foreach (array_unique(EquationParser::$DBVARS) as $DBName) {
     $categories['Sensors'][$DBName] = "";
-};
+};*/
 
 /* Get all of the apartments. */
 $apartments = Engineer::db_apt_list();

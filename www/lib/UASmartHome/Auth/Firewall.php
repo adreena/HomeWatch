@@ -79,7 +79,7 @@ class Firewall
     ///
     private function BlockAccess()
     {
-        header('location: /');
+        header('location: /HomeWatch');
     }
     
 }

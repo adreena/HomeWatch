@@ -1,10 +1,13 @@
 <?php namespace UASmartHome\Database; 
 
+date_default_timezone_set("America/Edmonton");
+
 class Engineer {
+	 private static $dataTypes = null;
     //This hnadles the query of the database 
     function db_pull_query($apt, $column, $startdate, $enddate, $period, $Phase=null) {
 
-        $tables = array("Total_HP"=>"TotalElec","P11"=>"BasEnergy","P12"=>"BasEnergy","HP1"=>"BasEnergy","HP2"=>"BasEnergy","HP3"=>"BasEnergy","HP4"=>"BasEnergy","Relative_Humidity"=>"Air","Outside_Temperature"=>"OutsideTemp", "Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "HeatFlux_Insulation"=>"Heat_Flux", "HeatFlux_Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy", "Wind_Speed"=>"Weather_Forecast", "Wind_Direction" => "Weather_Forecast");
+        $tables = array("Total_HP"=>"TotalElec","Total_P1"=>"TotalElec","P11"=>"BasEnergy","P12"=>"BasEnergy","HP1"=>"BasEnergy","HP2"=>"BasEnergy","HP3"=>"BasEnergy","HP4"=>"BasEnergy","Relative_Humidity"=>"Air","Outside_Temperature"=>"OutsideTemp", "Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "HeatFlux_Insulation"=>"Heat_Flux", "HeatFlux_Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy", "Wind_Speed"=>"Weather_Forecast", "Wind_Direction" => "Weather_Forecast");
 
         $table = $tables[$column];
 
@@ -179,9 +182,9 @@ class Engineer {
     {
 
         $result =array();
-        $table .= '_Daily_t';
+        $table .= '_Daily';
         $conn=new Connection ();
-         if ($table=='OutsideTemp_Daily_t'|| $table=='BasEnergy_Daily_t' || $table=='TotalElec_Daily_t'){
+         if ($table=='OutsideTemp_Daily'|| $table=='BasEnergy_Daily' || $table=='TotalElec_Daily'){
           
             {
                 $Query=$conn->connect()->prepare("select ".$column."  from ".$table." where  Date= :Date ") ;
@@ -212,7 +215,7 @@ class Engineer {
     public function db_query_Extrema($apt,$column,$table,$startdate,$enddate,$EX,$Phase=null)
     {
         $result =array();
-        $table .= '_Hourly_t';
+        $table .= '_Hourly';
         $conn=new Connection ();
         if ($EX==1)
         { 
@@ -255,9 +258,9 @@ class Engineer {
     {
 
         $result =array();
-        $table .= '_Hourly_t';
+        $table .= '_Hourly';
         $conn=new Connection ();
-        if ($table=='OutsideTemp_Hourly_t'|| $table=='BasEnergy_Hourly_t' || $table=='TotalElec_Hourly_t'){
+        if ($table=='OutsideTemp_Hourly'|| $table=='BasEnergy_Hourly' || $table=='TotalElec_Hourly'){
           
             {
                 $Query=$conn->connect()->prepare("select $column, TS from ".$table." where  TS between :SD AND :ED ") ;
@@ -497,6 +500,27 @@ class Engineer {
         $Query=$conn->connect()->prepare(" SELECT distinct(`apt`) FROM `apt_info` ");
         $Query->execute();
         return $Query->fetchAll(\PDO::FETCH_COLUMN, 0);
+    }
+
+    public static function fetchDataTypes() {
+    	if (self::$dataTypes !== null)
+    		return self::$dataTypes;
+    	$conn = new Connection ();
+    	$query=$conn->connect()->prepare(" SELECT * FROM data_types");
+    	$query->execute();
+    	try {
+    		$query->execute();
+    	} catch (\PDOException $e) {
+    		//this is a fatal error
+    		trigger_error("Failed to fetch data types: " . $e->getMessage(), E_USER_ERROR);
+    		die;
+    	}
+
+    	self::$dataTypes = array();
+    	while ($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+    		self::$dataTypes[$row['type_id']] = $row['type_desc'] . " (".$row['unit'].")";
+    	}
+    	return self::$dataTypes;
     }
 
 }

@@ -48,6 +48,7 @@ class EquationParser
         "bas_energy_hp2"=>"HP2",
         "bas_energy_hp3"=>"HP3",
         "bas_energy_hp4"=>"HP4",
+        "bas_energy_total_p1"=>"Total_P1",
         "bas_energy_total_hp"=>"Total_HP"
        
     );
@@ -216,7 +217,7 @@ class EquationParser
         for($i=1; $i<count($pieces); $i+=2) {
 
             if($pieces[$i] === "elec_total") {
-                $totalElec = getTotalElec($input["apartment"],
+                $totalElec = self::getTotalElec($input["apartment"],
                                 $input["startdate"], $input["enddate"],
                                 $input["granularity"]);
 

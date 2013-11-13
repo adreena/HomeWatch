@@ -45,6 +45,7 @@ requirejs.config({
 define([
     'jquery',
     'underscore',
+    'search/defines',
     'utils/getInternetExplorerVersion',
     'flot',
     'flot-orderbars',
@@ -54,7 +55,7 @@ define([
     'flot-pie'
 ],
 
-function ($, _, getInternetExplorerVersion) {
+function ($, _, D, getInternetExplorerVersion) {
     var format_data,
         create_series_object,
         dateToUTC;
@@ -87,7 +88,8 @@ function ($, _, getInternetExplorerVersion) {
             graphType: null,
             granularity: null,
             xtype: null,
-            ytype: null
+            ytype: null,
+			chPhMapping: null
         };
     }
 
@@ -97,11 +99,16 @@ function ($, _, getInternetExplorerVersion) {
         /* Note that graphData contains the plotable data
          * AND the graphType! Add all of these to the 
          * graphState object */
+			var graphItems = Object.keys(graphData.values);
+			var yitems = Object.keys(graphData.values[graphItems[0]]);
+			var yItem = Object.keys(graphData.values[graphItems[0]][yitems[0]])[0];
+
         $.extend(this.graphState, {
             graphType: graphData.graphType,
             granularity: graphData.granularity,
             xtype: graphData.xaxis,
-            ytype: graphData.yaxis + get_measurement_units(graphData.yaxis, graphData.unit),
+            ytype: graphData.yaxis,
+			chPhMapping: graphData.chPhMapping
         });
 
         var graphState = this.graphState,
@@ -115,7 +122,6 @@ function ($, _, getInternetExplorerVersion) {
 
         data = data_and_opts.data;
         options = data_and_opts.options;
-
         // Flot plot graph call
         $.plot($(element), data, options);
 
@@ -139,7 +145,6 @@ function ($, _, getInternetExplorerVersion) {
             data_and_options = [],
             graphname = [],
             apartments = [],
-            graphname_flag = "false",
             min_x, max_x,
             apartment, sensor, timestamp, tick_size,
             startdate, enddate,
@@ -166,22 +171,17 @@ function ($, _, getInternetExplorerVersion) {
                     ticks.push([time_stamp]);
                 }
 
-                if (graphname.length !== 0) {
-                    graphname_flag = "true";
-                }
-
                 $.each(value, function (key, value) {
                     // key = sensor names
                     sensor = key;
-
-                    if (graphname_flag === "false" && sensor !== "time") {
+                    if (graphname.indexOf(sensor) == -1) {
                         graphname.push(sensor);
                     }
 
                     if (sensor_data[apartment][sensor] === undefined) {
                         sensor_data[apartment][sensor] = [];
                     }
-
+                    
                     if ((graphState.xtype).toLowerCase() === "time") {
                         sensor_data[apartment][sensor].push([time_stamp, value.y]);
 
@@ -218,13 +218,12 @@ function ($, _, getInternetExplorerVersion) {
         graphState.enddate = enddate;
         graphState.min_x = min_x;
         graphState.max_x = max_x;
-
         // graph series objects created here (label + data)
         _.each(apartments, function (aptNum) {
             _.each(graphname, function (series) {
-                var label = series;
+                var label = getProperName(graphState, series);
                 if (aptNum != -1)
-                    label = "Apt. " + apartmentLabels[aptNum-1] + " " + label;
+                    label = "Apt. " + aptNum + " ("+ apartmentLabels[aptNum-1] + ") " + label;
 
                 series_data.push(
                     create_series_object(label, sensor_data[aptNum][series])
@@ -232,13 +231,29 @@ function ($, _, getInternetExplorerVersion) {
 
             });
         });
-
         options = set_all_options(graphState);
         data_and_options.data = series_data;
         data_and_options.options = options;
         return data_and_options;
     };
 
+
+    var getProperName = function (graphState, label) {
+    	if (graphState.chPhMapping != null && graphState.chPhMapping.hasOwnProperty(label))
+    		return graphState.chPhMapping[label];
+    	for (var catName in D.exampleCategories) {
+    		var series = D.exampleCategories[catName];
+    		if (series.hasOwnProperty(label) && series[label] != "") {
+    			label = series[label];
+    			if (label.hasOwnProperty("displayName"))
+    				label = label["displayName"];
+    			return label;
+    		}
+    	}
+
+    	return label;
+    };
+		
     /*
      * Umbrella function for setting up graphing parameters
      *
@@ -316,7 +331,7 @@ function ($, _, getInternetExplorerVersion) {
             // this is a correlational graph
             base_x.xaxis["min"] = min_x;
             base_x.xaxis["max"] = max_x;
-            base_x.xaxis["axisLabel"] = xtype + get_measurement_units(xtype);
+            base_x.xaxis["axisLabel"] = xtype;
         }
 
         // set zoom and pan ranges
@@ -812,42 +827,6 @@ function ($, _, getInternetExplorerVersion) {
             ticks[i].push(label);
         }
         return ticks;
-    };
-
-    /*
-     * Returns the unit metrics for a given sensor type/utility as 
-     * these could not be added to the DB for some reason
-     */
-    var get_measurement_units = function (sensor_type, unit) {
-        if (unit != "")
-            return " " + unit;
-
-        var unit = {
-            Temperature: "(°C)",
-            Relative_Humidity: "(%)",
-            CO2: "(PPM)",
-            Hot_Water: "(gallons)",
-            Total_Water: "(gallons)",
-            HeatFlux_Stud: "(W/m²)",
-            HeatFlux_Insulation: "(W/m²)",
-            Total_Energy: "(Wh)",
-            Total_Volume: "(L)",
-            Total_Mass: "(g)",
-            Current_Flow: "(L/s)",
-            Current_Temperature_1: "(°C)",
-            Current_Temperature_2: "(°C)",
-            HP_Electricity: "($)",
-            Water: "($)",
-				Total_HP: "(kWh)"
-        };
-
-        var metric = unit[sensor_type];
-        if (metric === undefined) {
-            metric = "";
-        }
-
-        return " " + metric;
-
     };
 
     /* This module exports one public member -- the class itself. */

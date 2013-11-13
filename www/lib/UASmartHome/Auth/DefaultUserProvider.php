@@ -15,7 +15,7 @@ class DefaultUserProvider extends UserProvider
 {
 
     // TODO: this needs to be in a configuration file
-    const DOMAIN = 'http://cs401g01.cs.ualberta.ca';
+    const DOMAIN = 'https://smartcondo.ca';
 
     const PW_COST = 10; // CPU cost of password hashing algorithm (from 4 to 31)
     
@@ -244,9 +244,9 @@ class DefaultUserProvider extends UserProvider
     
     private function sendResetEmail($username, $email, $token) {
         $to = $email;
-        $subject = 'SmartCondo Password Reset';
-        $message = "Navigate to " . self::DOMAIN . "/auth/reset-password?username=$username&token=$token (at the correct domain) to reset your password.";
-        $headers = 'From: donotreply@smartcondo.com';
+        $subject = 'HomeWatch Password Reset';
+        $message = "Please go to " . self::DOMAIN . "/HomeWatch/auth/reset-password.php?username=$username&token=$token to reset your password.";
+        $headers = 'From: HomeWatch <donotreply@smartcondo.ca>';
 
         return mail($email, $subject, $message, $headers);
     }
@@ -284,6 +284,36 @@ class DefaultUserProvider extends UserProvider
         }
 
         return true;
+    }
+    
+    public function setUserPassword($user, $newpassword) {
+		if ($user == null || $user->getID() == null)
+			return false;
+    	$pwhash = $this->generatePasswordHash($newpassword);
+    	if ($pwhash == null)
+    		return false;
+    
+    	try {
+    		$this->connection->beginTransaction();
+    
+    		$s = $this->connection->prepare("UPDATE Users
+                                             SET PW_Hash = :PW_Hash
+                                             WHERE User_ID = :Userid");
+    		$s->bindParam(":Userid", $user->getID());
+    		$s->bindParam(":PW_Hash", $pwhash);
+    
+    		$s->execute();
+    		if ($s->rowCount() == 0)
+    			return false;
+    
+    		$this->connection->commit();
+    	} catch (\PDOException $e) {
+    		trigger_error("Failed to set user password: " . $e->getMessage(), E_USER_WARNING);
+    		$this->connection->rollback();
+    		return false;
+    	}
+    
+    	return true;
     }
     
     private function generatePasswordHash($password) {

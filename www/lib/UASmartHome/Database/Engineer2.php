@@ -5,74 +5,83 @@ class Engineer2 {
     const ENERGY_EQ = 6;
 
     public static $EnergyColumns = array(
-            "Energy1" => "Solar Energy",
+            "Energy1" => "Solar",
             "Energy2" => "DWHR",
             "Energy3" => "Geothermal + DWHR",
             "Energy4" => "Solar + DWHR + Geothermal + Heat Pumps",
             "Energy5" => "Boiler 1",
             "Energy6" => "Boiler 2",
-            "Energy7" => "Heating Energy Consumption"
+            "Energy7" => "Heating Consumption"
             );
 
-    public function EQ($Datefrom,$Dateto,$EQ,$column=null,$tablename=null)
+    public function EQ($Datefrom,$Dateto,$EQ,$column=null,$tablename=null, $incl=1)
 	{
 	
 	 $conn=new Connection2();
-	if ($EQ==1)
-	{
-	$dbh=$conn->connect()->prepare("select SUM(".$column.") from Energy_Minute_t where ts between :SD and :ED") ;
-	$dbh->bindValue(":SD",$Datefrom);
-	$dbh->bindValue(":ED",$Dateto);
-	$dbh->execute();
-	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
-	return $row;
+	if ($EQ==1)	{
+		$dbh=$conn->connect()->prepare("select SUM(Energy1) AS Energy1,SUM(Energy2) AS Energy2,SUM(Energy3) AS Energy3,SUM(Energy4) AS Energy4,SUM(Energy5+Energy6) AS Energy5_6,SUM(Energy7) AS Energy7 from Energy_Minute where ts between :SD and :ED") ;
+		$dbh->bindValue(":SD",$Datefrom);
+		$dbh->bindValue(":ED",$Dateto);
+		$dbh->execute();
+		$row = $dbh->fetch(\PDO::FETCH_ASSOC);
+		return $row;
 	}
-	if ($EQ==2){//EQ2_part1
-	 $dbh=$conn->connect()->prepare("select EQ2_Part1 (:SD, :ED)") ;
-	$dbh->bindParam(":SD",$Datefrom);
-	$dbh->bindParam(":ED",$Dateto);
-	$dbh->execute();
-	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
-	return $row;
+	if ($EQ==2 || $EQ==3)	{
+		$row = array();
+
+		$dbh=$conn->connect()->prepare("SELECT * FROM stonymountain.bas_el_energy WHERE ts >= :SD ORDER BY ts LIMIT 0,1") ;
+		$dbh->bindParam(":SD",$Datefrom);
+		$dbh->execute();
+		$start = $dbh->fetch(\PDO::FETCH_ASSOC);
+		$dbh=$conn->connect()->prepare("SELECT * FROM stonymountain.bas_el_energy WHERE ts >= :ED ORDER BY ts LIMIT 0,1") ;
+		$dbh->bindParam(":ED",$Dateto);
+		$dbh->execute();
+		$end = $dbh->fetch(\PDO::FETCH_ASSOC);
+	
+		foreach ($end as $pump => $energy)
+			$row[$pump] = ($end[$pump] - $start[$pump])*2.778e-7;
+
+		$dbh=$conn->connect()->prepare("SELECT * FROM `bas_el_energy_extra` WHERE ts >= :SD ORDER BY ts LIMIT 0,1") ;
+		$dbh->bindParam(":SD",$Datefrom);
+		$dbh->execute();
+		$start = $dbh->fetch(\PDO::FETCH_ASSOC);
+		$dbh=$conn->connect()->prepare("SELECT * FROM `bas_el_energy_extra` WHERE ts >= :ED ORDER BY ts LIMIT 0,1") ;
+		$dbh->bindParam(":ED",$Dateto);
+		$dbh->execute();
+		$end = $dbh->fetch(\PDO::FETCH_ASSOC);
+		foreach ($end as $pump => $energy)
+			$row[$pump] = ($end[$pump] - $start[$pump]);
+		
+		unset($row['ts']);
+		unset($row['seconds_counter']);
+
+		if ($EQ==2)
+			return $row;
+
+		if ($EQ==3) {
+			$cop = array();
+			$dbh=$conn->connect()->prepare("SELECT SUM(Energy4) AS prod_total,SUM(Energy7) AS cons_total from EnergyH_Graph where ts between :SD and :ED");
+			$dbh->bindValue(":SD",$Datefrom);
+			$dbh->bindValue(":ED",$Dateto);
+			$dbh->execute();
+			$energy = $dbh->fetch(\PDO::FETCH_ASSOC);
+			$cop1_el = $row['HP1']+$row['HP2']+$row['HP3']+$row['HP4'];
+			$cop2_el = $cop1_el+$row['P-1-1']+$row['P-1-2']+$row['SHTS']+$row['P7_1']+$row['P8']+$row['P2_1']+$row['P2_2']+$row['P2_3']+$row['P2_4'];
+			$cop3_el = $cop2_el+$row['P4_1']+$row['P4_2']+$row['BLR_1']+$row['BLR_2']+$row['P3_1']+$row['P3_2'];
+			$cop['COP1'] = ($energy['prod_total']*2.778e-4)/($cop1_el);
+			$cop['COP2'] = ($energy['prod_total']*2.778e-4)/($cop2_el);
+			$cop['COP3'] = ($energy['cons_total']*2.778e-4)/($cop3_el);
+			return $cop;
+		}
 	}
-	if ($EQ==3)
-	{ //EQ2_Part 2
-	 $dbh=$conn->connect()->prepare("select EQ2_part2( :SD, :ED)") ;
-	$dbh->bindParam(":SD",$Datefrom);
-	$dbh->bindParam(":ED",$Dateto);
-	$dbh->execute();
-	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
-	return $row;
-	}
-	if ($EQ==4)
-	{//Gets the Cop1 & Cop2
-	 $dbh=$conn->connect()->prepare("select Calc_Cop( :SD,:ED)") ;
-	 $dbh->bindParam(":SD",$Datefrom);
-	$dbh->bindParam(":ED",$Dateto);
-	$dbh->execute();
-	$dbh=$conn->connect()->prepare("select * from COPCal") ;
-	$dbh->execute();
-	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
-	$trun=$conn->connect()->prepare ("Truncate COPCal");
-	$trun->execute();
-	return $row;
-	}
-	if ($EQ==5)
-	{// UseAnaylze the Cop1 & Cop2
-	 $dbh=$conn->connect()->prepare("select calc_cop_test( :SD,:ED)") ;
-	 $dbh->bindParam(":SD",$Datefrom);
-	$dbh->bindParam(":ED",$Dateto);
-	$dbh->execute();
-	$dbh=$conn->connect()->prepare("select * from anaylze") ;
-	$dbh->execute();
-	$row = $dbh->fetch(\PDO::FETCH_ASSOC);
-	$trun=$conn->connect()->prepare ("Truncate anaylze");
-	$trun->execute();
-	return $row;
-	}
+	
     if ($EQ==self::ENERGY_EQ)
 	{//The Tablees Are EnergyH_Graph the Ts format ->2013-03-15:01 ,EnergyD_Graph is a Date only 2013-03-15
-	    $dbh=$conn->connect()->prepare("select ".$column."  from ".$tablename." where ts between :SD and :ED") ;
+	    //print "$Datefrom $Dateto\n";
+	    $comparison = '<';
+	    if ($incl)
+	    	$comparison = '<=';
+		$dbh=$conn->connect()->prepare("select ".$column."  from ".$tablename." where ts >= :SD AND ts $comparison :ED") ;
 	    $dbh->bindValue(":SD",$Datefrom);
 	    $dbh->bindValue(":ED",$Dateto);
 	    $dbh->execute();
@@ -120,11 +129,16 @@ class Engineer2 {
             if ($granularity == "Hourly") {
                 $strTick = $tick->format("Y-m-d:H");
                 $strTickEnd = $tick->add($interval)->format("Y-m-d:H");
-                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyH_Graph_t");
+                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyH_Graph");
             } else if ($granularity == "Daily") {
                 $strTick = $tick->format("Y-m-d");
                 $strTickEnd = $tick->add($interval)->format("Y-m-d");
-                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyD_Graph_t");
+                $datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, $column, "EnergyD_Graph");
+            }
+            else if ($granularity == "Monthly" || $granularity == "Weekly") {
+            	$strTick = $tick->format("Y-m-d");
+            	$strTickEnd = $tick->add($interval)->format("Y-m-d");
+            	$datapoint = self::EQ($strTick, $strTickEnd, self::ENERGY_EQ, "SUM($column)", "EnergyD_Graph", 0);
             }
                
             $data[$strDisplayTick] = $datapoint;

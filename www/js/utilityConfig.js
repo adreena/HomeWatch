@@ -88,7 +88,7 @@ function ($) {
     }
 
     function submitUtility() {
-        $.post('/manager/submit-utility.php', getUtilityEditorData())
+        $.post('/HomeWatch/manager/submit-utility.php', getUtilityEditorData())
         .done(function(data) {
             utilityEditor.reset();
             location.reload();
@@ -104,7 +104,7 @@ function ($) {
         var deleteButton = event.target;
         var utilityID = getRowData(deleteButton).id;
 
-        $.post('/manager/delete-utility.php', {id: utilityID})
+        $.post('/HomeWatch/manager/delete-utility.php', {id: utilityID})
         .done(function(data) { window.location.reload(); })
         .fail(function(data) { alert("Error deleting utility cost configuration: " + data.statusText); });
     }

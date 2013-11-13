@@ -32,7 +32,7 @@ function ($) {
     function loginUser() {
         var credentials = getCredentials();
 
-        $.post('/auth/login-user.php', credentials)
+        $.post('/HomeWatch/auth/login-user.php', credentials)
         .done(onLoginDone)
         .fail(onLoginFail);
         

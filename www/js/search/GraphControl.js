@@ -158,7 +158,7 @@ function ($, _, D, Graph, TemplateManager) {
      * Gets the graph type from the graph controls.
      */
     GraphControl.prototype.getGraphType = function () {
-        var checkedRadio = this.el.controls.find('input[type=radio]:checked');
+    	var checkedRadio = this.el.controls.find('[data-name=graph-type] input:checked');
 
         return checkedRadio.val();
     };
@@ -545,39 +545,57 @@ function ($, _, D, Graph, TemplateManager) {
     fetchAxes = function (controlElement, values) {
         var partialQuery =  {};
 
-        // The  "v" is for "variable variable"!
-        _.each(['x', 'y'], function (v) {
-            var select = controlElement.find('select[name=' + v + 'axis]'),
-                valueID,
-                valueTuple;
+        var select = controlElement.find('select[name=xaxis]'),
+             valueID,
+             valueTuple;
+			
+         /* Assumes a single select. */
+         valueID = select.val();
+         valueTuple = values[valueID];
+         /* Set the values in the partial tuple. */
 
-            /* Assumes a single select. */
-            valueID = select.val();
+      // process.php expects a single value, not an array.
+		 partialQuery['x'] = (valueTuple.type === 'time')
+								 ? valueTuple.values[0]
+								 : valueTuple.values;
+         partialQuery['xtype'] = valueTuple.type;
+         partialQuery['xaxis'] = select.find(':selected').text();
+		
+         partialQuery['ytype'] = Array();
+         partialQuery['yaxis'] = Array();
+		 partialQuery['y'] = Array();
+		 var index = 0;
+		 while (true) {
+			var select = controlElement.find('select[name=yaxis'+index+']');
+			if (select === undefined || select.length == 0)
+				break;
+
+			valueID = select.val();
             valueTuple = values[valueID];
-
-            /* Set the values in the partial tuple. */
-            partialQuery[v + 'type'] = valueTuple.type;
-            // process.php expects a single value, not an array.
-            partialQuery[v] = (valueTuple.type === 'time')
-                ? valueTuple.values[0]
-                : valueTuple.values;
-            partialQuery[v + 'axis'] = select.find(':selected').text();
-
-        });
+			if (valueTuple.type != "none") {
+				partialQuery['ytype'].push(valueTuple.type);
+				partialQuery['yaxis'].push(select.find(':selected').text());
+	            partialQuery['y'] = partialQuery['y'].concat(valueTuple.values);
+			}
+			index++;
+		}
 
         return partialQuery;
     };
 
     fetchApartments = function (controlElement) {
-        var checkboxList, apartments;
+        var checkboxList, apartments, aptMultiple;
 
         checkboxList = controlElement.find("[data-name=apts] input:checked");
         apartments = $.map(checkboxList, function (el) {
             return $(el).val();
         });
+        
+        aptMultiple = controlElement.find("[data-name=graph-apt-mult] input:checked");
 
         return {
-            apartments: apartments.length ? apartments : []
+            apartments: apartments.length ? apartments : [],
+            aptMultiple: $(aptMultiple).val()
         };
     };
 

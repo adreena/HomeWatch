@@ -4,6 +4,7 @@
  * @author Devin Hanchar
  * Processes all queries from jSearch.php and returns the data as a multidimensional JSON array
  */
+date_default_timezone_set("America/Edmonton");
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__. '/../lib/UASmartHome/EquationParser.php';
@@ -22,7 +23,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 //TESTING FLAG: SET TO FALSE TO USE DATA FROM SERVER
 //This is overwritten by a "don't use test" flag from the front-end so this can be left true
-$test = true;
+$test = false;
 
 $sensors = array();
 $apartments = array();
@@ -64,21 +65,23 @@ if ($test) {
 	$startdate = $graph['startdate']; //Startdate input: yyyy-mm-dd (for non-hourly) or yyyy-mm-dd:h (for hourly)
 	$enddate = $graph['enddate']; //Enddate input (same format as startdate)
 	$period = $graph['period']; //String literal: one of "Hourly" "Weekly" "Monthly" "Yearly" "Daily"
-	$xtype = $graph['xtype']; //String literal: one of "time" "formula" "sensorarray" "alert" "energy" "utility"
-	$ytype = $graph['ytype']; //String literal: same format as xtype
-	$xaxis = $graph['xaxis']; //String literal: x-axis label. Returned untouched to the frontend
-	$yaxis = $graph['yaxis']; //String literal: y-axis label. Returned untouched to the frontend
-	$x = $graph['x']; //The dataset to graph. This is the formula, alert, a string "time", an array of sensor names, or the utility/energy graph being called
-	$y = $graph['y']; //As above
+	$xtype = 'time';
+	$ytypes = $graph['ytype']; //String literal: one of "time" "formula" "sensorarray" "alert" "energy" "utility"
+	$xaxis = 'Time';
+	$yaxises = array(); 
+	if (isset($graph['yaxis']))
+		$yaxises = $graph['yaxis']; //Array of strings: y-axis labels
+	$x = 'time'; 
+	$y = $graph['y']; //The dataset to graph. This is the formula, alert, a string "time", an array of sensor names, or the utility/energy graph being called
+	$aptMultiple = $graph['aptMultiple']; //Whether apartments should be plotted seperately, averaged or summed
 	$phase = null;
 	$xdata = array();
 	$ydata = array();
-
-
-
-   if ($apartments == null && needsApartment($ytype, $yaxis)) {
-		array_push($messages, "No apartments selected. ");
-	}
+	$validPeriods = array_flip(array("Daily", "Monthly", "Hourly", "Weekly", "Yearly"));
+	$validAptMultiple = array_flip(array("seperate", "avg", "sum"));
+	
+	
+//TODO early check for valid period and valid apt multiple
 	if ($startdate == null) {
 		array_push($messages, "No start date. ");
 	}
@@ -88,14 +91,32 @@ if ($test) {
 	}
 
 	if ($period == null) {
-		array_push($messages, "No granularity. ");
+		array_push($messages, "No granularity (period) specified. ");
 	}
+	
+	if ($period != null && !isset($validPeriods[$period])) {
+		array_push($messages, "Invalid granularity (period) specified.");
+	}
+	
+	if ($period == "Hourly") {
+		$dateFmtIn = "Y-m-d G";
+		$dateFmtOut = "%Y-%m-%d %H";
+	}
+	else {
+		$dateFmtIn = "Y-m-d";
+		$dateFmtOut = "%Y-%m-%d";
+	}
+	
+	if (date_create_from_Format($dateFmtIn, $startdate) === false)
+		$startdate = strftime($dateFmtOut, strtotime($startdate));
+	if (date_create_from_Format($dateFmtIn, $enddate) === false)
+		$enddate = strftime($dateFmtOut, strtotime($enddate));
 
 	if ($xtype == null) {
 		array_push($messages, "X-axis type not specified. ");
 	}
 
-	if ($ytype == null) {
+	if ($ytypes == null || !isset($ytypes[0])) {
 		array_push($messages, "Y-axis type not specified. ");
 	}
 
@@ -106,7 +127,31 @@ if ($test) {
 	if ($y == null) {
 		array_push($messages, "No y-axis dataset selected. ");
 	}
+	
+	if ($aptMultiple == null && count($apartments) > 1) 
+		array_push($messages, "Multiple apartment handling type not selected. ");
+	
+	if ($aptMultiple != null && !isset($validAptMultiple[$aptMultiple]))
+		array_push($messages, "Invalid aptMultiple option specified.");
+	
+	for ($i = 0; $i < count($y); $i++) {
+		if (!isset($yaxises[$i]))
+			$yaxises[$i] = ucwords($y[$i]);
+	}
+	
+	if ($apartments == null) {
+		for ($i = 0; $i < count($ytypes); $i++) {
+			if (needsApartment($ytypes[$i], $y[$i], $yaxises[$i])) {
+				array_push($messages, "No apartments selected. ");
+				break;
+			}
+		}
+		$apartments = array(-1);
+	}
 
+	$bigArray = array();
+	bailIfErrors($messages, $period, $bigArray);
+	
 	//Check to make sure the query is over a reasonable data set
 	if ($startdate != null && $enddate != null) {
 		array_push($messages, calculateRejection($startdate, $enddate, $period));
@@ -118,36 +163,31 @@ if ($test) {
         $enddate .= " ".date("G");
     }
 
-
-	//If any errors have occurred at this point there's:00 no way we can process the query, so we spit out the query data, any error messages, and die
-	if (count($messages) > 0 && $messages[0] != null) {
-		$bigArray['granularity'] = $period;
-		$bigArray['messages'] = $messages;
-        $json = json_encode($bigArray);
-        echo $json;
-		die;
-	}
+	bailIfErrors($messages, $period, $bigArray);
 
     //This array is for determining what phase electrical sensors belong to from the name, passed from the front end
-	$phaseMapping = array("Mains (Phase A)" => "A", "Bedroom and hot water tank (Phase A)" => "A", "Oven (Phase A) and range hood" => "A", "Microwave and ERV controller" => "A", "Electrical duct heating" => "A", "Kitchen plugs (Phase A) and bathroom lighting" => "A", "Energy recovery ventilation" => "A", "Mains (Phase B)" => "B", "Kitchen plugs (Phase B) and kitchen counter" => "B", "Oven (Phase B)" => "B", "Bathroom" => "B", "Living room and balcony" => "B",  "Hot water tank (Phase B)" => "B", "Refrigerator" => "B");
+	$phaseMapping = array("Mains (Phase A)" => "A", "Bedroom and hot water tank (Phase A)" => "A", "Oven (Phase A) and range hood" => "A", "Microwave" => "A", "Electrical duct heating" => "A", "Kitchen plugs (Phase A) and bathroom lighting" => "A", "Energy recovery ventilation" => "A", "Mains (Phase B)" => "B", "Kitchen plugs (Phase B) and kitchen counter" => "B", "Oven (Phase B)" => "B", "Bathroom" => "B", "Living room and balcony" => "B",  "Hot water tank (Phase B)" => "B", "Refrigerator" => "B");
 
-    $channelMapping = array("Mains (Phase A)" => "Ch1", "Bedroom and hot water tank (Phase A)" => "Ch2", "Oven (Phase A) and range hood" => "AUX1", "Microwave and ERV controller" => "AUX2", "Electrical duct heating" => "AUX3", "Kitchen plugs (Phase A) and bathroom lighting" => "AUX4", "Energy recovery ventilation" => "AUX5", "Mains (Phase B)" => "Ch1", "Kitchen plugs (Phase B) and kitchen counter" => "Ch1", "Oven (Phase B)" => "AUX1", "Bathroom" => "AUX2", "Living room and balcony" => "AUX3",  "Hot water tank (Phase B)" => "AUX4", "Refrigerator" => "AUX5");
+    $channelMapping = array("Mains (Phase A)" => "Ch1", "Bedroom and hot water tank (Phase A)" => "Ch2", "Oven (Phase A) and range hood" => "AUX1", "Microwave" => "AUX2", "Electrical duct heating" => "AUX3", "Kitchen plugs (Phase A) and bathroom lighting" => "AUX4", "Energy recovery ventilation" => "AUX5", "Mains (Phase B)" => "Ch1", "Kitchen plugs (Phase B) and kitchen counter" => "Ch1", "Oven (Phase B)" => "AUX1", "Bathroom" => "AUX2", "Living room and balcony" => "AUX3",  "Hot water tank (Phase B)" => "AUX4", "Refrigerator" => "AUX5");
 
     //Xaxis is always a single variable, but multiple variables might be plotted along the y-axis. Here we set the x-axis label to what we received and the y-axis label to the last array name
 	$bigArray["xaxis"] = $xaxis;
-	$bigArray["yaxis"] = is_array($yaxis) ? end($yaxis) : $yaxis;
     
     if ($xtype == "sensorarray") {
         $x = end($x);
     }
+    $yDataTypes = array();
+    
+    for ($i = 0; $i < count($ytypes); $i++) {
+    	$ytype = $ytypes[$i];
+    	$yaxis = $yaxises[$i];
 
-    if (!needsApartment($ytype, $yaxis))
-		$apartments[0] = -1;
     //This code block pulls data from a sensor or array of sensors and adds it to the JSON array
 	foreach ($apartments as $apartment) {
+		if ($apartment != -1 && !needsApartment($ytype, $y[$i], $yaxis))
+			$apartment = -1;
 		if ($ytype == "sensorarray") {
-
-			foreach ($y as $sensor) {
+			$sensor = $y[$i];
 
 				if (ISSET($phaseMapping[$sensor])) {
 					$phase = $phaseMapping[$sensor];
@@ -178,7 +218,6 @@ if ($test) {
     					}
                     }
 				}
-			}
 
         //If the frontend has requested a formula then we fetch the formula and process that, then add it to the JSON array
 		} else if ($ytype == "formula") {
@@ -190,6 +229,7 @@ if ($test) {
             if (!$ydata)
                 array_push($messages, "No equation with the name $yaxis found");
             else {
+            	$yDataTypes[$i] = $ydata['Type'];
                 $ydata = $ydata["Value"];
                 $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment);
 
@@ -199,7 +239,7 @@ if ($test) {
                     $ydata = array();
                     $messages[] = $e->getMessage();
                 }
-
+						
                 foreach($ydata as $date=>$value) {
                     $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
                     $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
@@ -236,17 +276,17 @@ if ($test) {
 
             $d1 = date_create_from_Format($dateFormat, $startdate);
             $d2 = date_create_from_Format($dateFormat, $enddate);
+				
+	         $ydata = Engineer2::getEnergyColumnData($d1, $d2,$y[$i], $period);
 
-            $ydata = Engineer2::getEnergyColumnData($d1, $d2,$y[0], $period);
-            
+				$energyColumns = Engineer2::getEnergyColumns();
 
-            foreach ($ydata as $date=>$value) {
-                $bigArray['values'][$apartment][$date][$yaxis]["x"] = $date;
-                $bigArray['values'][$apartment][$date][$yaxis]["y"] = $value;
-            }
+	         foreach ($ydata as $date=>$value) {
+	             $bigArray['values'][$apartment][$date][$energyColumns[$y[$i]]]["x"] = $date;
+	             $bigArray['values'][$apartment][$date][$energyColumns[$y[$i]]]["y"] = $value;
+	         }
         //This is where we process the cost of energy data
 		} else if ($ytype == "utility") {
-
             $function = parseFormulaToJson($ydata, $startdate, $enddate, $period, $apartment, $yaxis);
             $ydata = EquationParser::getUtilityCosts($function);
             foreach($ydata as $date=>$value) {
@@ -283,16 +323,56 @@ if ($test) {
 		//$messages = array_merge($messages, $alerts);
 
 	}
+  }
 
-
+  $bigArray['yaxis'] = getYAxis($y, $ytypes, $yaxises, $yDataTypes);
+	if ($bigArray['yaxis'] === false) {
+		$messages[] = 'Incompatible sensor types have been selected';
+		unset($bigArray['values']);
+		$bigArray['messages'] = $messages;
+		$json = json_encode($bigArray);
+		echo $json;
+		die;
+	}
 
     if (!isset($bigArray['values'])) {
         $messages[] = 'No data found for the given date range.';
     }
+	
+    if ($aptMultiple == 'avg' || $aptMultiple == 'sum') {
+    	$allApts = $apartments;
+    	if (($key = array_search(-1, $allApts)) !== false)
+    		unset($allApts[$key]);
+    	
+    	$allTS = array_keys($bigArray['values'][$allApts[0]]);
+    	$allY =  array_keys($bigArray['values'][$allApts[0]][$allTS[0]]);
+		
+    	foreach ($allTS as $ts) {
+    		foreach ($allY as $yItem) {
+    			$aggrVal = 0;
+    			foreach ($allApts as $apt)
+    				if (isset($bigArray['values'][$apt][$ts][$yItem]))
+    					$aggrVal += $bigArray['values'][$apt][$ts][$yItem]['y'];
 
-
-
-
+    			if ($aptMultiple == 'avg')
+    				$aggrVal /= count($allApts);
+    			$bigArray['values'][-1][$ts][$yItem]['x'] = $ts;
+    			$bigArray['values'][-1][$ts][$yItem]['y'] = $aggrVal;
+    		}
+    	}
+    	
+    	foreach ($allApts as $apt)
+    		unset($bigArray['values'][$apt]);
+    }
+    
+    foreach ($bigArray['values'] as $apt => $aptValues) {
+    	foreach ($aptValues as $ts => $values) {
+    		foreach ($values as $sens => $v) {
+    			$bigArray['values'][$apt][$ts][$sens]['y'] = round($bigArray['values'][$apt][$ts][$sens]['y'], 3);
+    		}
+    	}
+    }
+        
 	if (count($messages) == 0) {
 		array_push($messages, "Success!");
 	}
@@ -300,16 +380,15 @@ if ($test) {
 	$bigArray['granularity'] = $period;
 	$bigArray['messages'] = $messages;
 
-	$unit = "";
 
-	if ($ytype == 'energy') //calculated from flow and temp. difference
-		$unit = "(KJ)";
-	elseif (isset($channelMapping[$yaxis]) || isBasEnergy($yaxis)) //from energy monitors
-		$unit = "(J)";
-	elseif ($yaxis == "Outside_Temperature" || $yaxis == "Temperature Difference" )
-		$unit = "(°C)";
-
-	$bigArray['unit'] = $unit;
+	$chPhMapping= array();
+	foreach ($y as $yItem)
+		if (isset($channelMapping[$yItem]) && isset($phaseMapping[$yItem]))
+			$chPhMapping[$yItem] = $channelMapping[$yItem].$phaseMapping[$yItem];
+	if (count($chPhMapping) > 0) {
+		$chPhMapping = array_flip($chPhMapping);
+		$bigArray['chPhMapping'] = $chPhMapping;
+	}
 
     $json = json_encode($bigArray);
     echo $json;
@@ -319,7 +398,55 @@ if ($test) {
 
 
 
+function getYAxis($y, $ytypes, $yaxises, $yDataTypes = array()) {
+	global $channelMapping;
+	
+	$typeDesc = Engineer::fetchDataTypes();
+	$sensorTypes = array(
+		"Relative_Humidity" => 7,
+		"Outside_Temperature" => 8,
+		"Temperature" => 8,
+		"CO2" => 1,
+		"Hot_Water" => 9,
+		"Total_Water" => 9,
+		"HeatFlux_Insulation" => 6,
+		"HeatFlux_Stud" => 6,
+		"Current_Temperature_1" => 8,
+		"Current_Temperature_2" => 8,
+		"Total_Energy" => 4,
+		"Total_Volume" => 10,	
+	);
 
+	$types = array();
+	for ($i = 0; $i < count($ytypes); $i++) {
+		$ytype = $ytypes[$i];
+		$yItem = $y[$i];
+		$yAxis = $yaxises[$i];
+		if (isset($yDataTypes[$i]))
+			array_push($types, $yDataTypes[$i]);
+		elseif ($ytype == 'energy') //calculated from flow and temp. difference
+			array_push($types, 4);
+		elseif ($ytype == 'utility')
+			array_push($types, 2);
+		elseif (isset($channelMapping[$yItem]) || isBasEnergy($yItem))
+			array_push($types, 3);
+		elseif (isset($typeDesc[$yAxis]))
+			array_push($types, $yAxis);
+		elseif (isset($sensorTypes[$yItem]))
+			array_push($types, $sensorTypes[$yItem]);
+		else
+			array_push($types, 'Unknown');
+	}
+
+	$types = array_unique($types);	
+	//for now if we have two incompatible types we return an error
+	if (count($types) > 1)
+		return false;
+	if (count($types) == 0 || $types[0] == 'Unknown')
+		return 'Unknown';
+	
+	return $typeDesc[$types[0]];
+}
 
 /*
  * This returns a json array used for formula/function parsing.
@@ -376,6 +503,10 @@ $MONTHLY_VIEW_MAX = 120;
 	}
 
   
+	if ($startdate == null || $enddate == null) {
+		return "Invalid start date or end date given, unable to graph.";
+	}
+	
     $diff = ($enddate->format("U") - $startdate->format("U"));
 
 	//echo var_dump($diff);
@@ -408,14 +539,23 @@ $MONTHLY_VIEW_MAX = 120;
 
 function isBasEnergy($name) {
 	$dbvars = EquationParser::getVariables();
-	return isset($dbvars["bas_energy_$name"]);
+ 	$varname = strtolower("bas_energy_$name");
+ 	return isset($dbvars[$varname]);
 }
 
-function needsApartment($ytype, $yaxis) {
-	//$AptArray =array ("Relative_Humidity"=>"Air","Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "HeatFlux_Insulation"=>"Heat_Flux", "HeatFlux_Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy");
-        //$AptArray[$yaxis]==null 
-	if ($ytype == "energy" || isBasEnergy($yaxis) || $yaxis == "Outside_Temperature" || ($ytype == "utility" && $yaxis == "HP_Electricity") || $yaxis == "Total_HP")
+function needsApartment($ytype, $y, $yaxis) {
+	if ($ytype == "energy" || isBasEnergy($y) || $y == "Outside_Temperature" || $y == "Total_HP" || ($ytype == "utility" && $yaxis == "HP_Electricity"))
 		return 0;
 	return 1;
 }
 
+function bailIfErrors($messages, $period, $bigArray) {
+	//If any errors have occurred at this point there's:00 no way we can process the query, so we spit out the query data, any error messages, and die
+	if (count($messages) > 0 && $messages[0] != null) {
+		$bigArray['granularity'] = $period;
+		$bigArray['messages'] = $messages;
+		$json = json_encode($bigArray);
+		echo $json;
+		die;
+	}
+}

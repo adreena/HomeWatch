@@ -10,6 +10,7 @@ class Equation {
     public $name;
     public $body;
     public $description;
+    public $data_type;
     
     public function hasID()
     {
@@ -23,7 +24,10 @@ class Equation {
         
         if (!isset($this->body))
             return false;
-        
+
+        if (!isset($this->data_type))
+        	return false;
+
         return true;
     }
     

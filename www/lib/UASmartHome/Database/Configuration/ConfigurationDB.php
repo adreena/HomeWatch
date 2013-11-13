@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use \UASmartHome\Database\Connection;
 use \UASmartHome\Auth\User;
+use \UASmartHome\Database\Engineer;
 
 class ConfigurationDB {
 
@@ -66,10 +67,10 @@ class ConfigurationDB {
         
         $s = null;
         if ($user == null) {
-            $s = $connection->prepare("SELECT Equation_ID, Name, Value, Description, NULL as User
+            $s = $connection->prepare("SELECT Equation_ID, Name, Value, Description, NULL as User, Type
                                        FROM Equations");
         } else {
-            $s = $connection->prepare("SELECT e.Equation_ID, Name, Value, Description, ue.User_ID as User
+            $s = $connection->prepare("SELECT e.Equation_ID, Name, Value, Description, ue.User_ID as User, e.Type AS Type
                                        FROM Equations e LEFT JOIN User_Equations ue
                                        ON e.Equation_ID = ue.Equation_ID
                                        AND ue.User_ID = :User_ID");
@@ -84,6 +85,7 @@ class ConfigurationDB {
             return null;
         }
 
+        $dataTypes = Engineer::fetchDataTypes();
         $functions = array();        
         while ($function = $s->fetch(\PDO::FETCH_ASSOC)) {
             array_push($functions, array(
@@ -91,6 +93,8 @@ class ConfigurationDB {
                 'name' => $function['Name'],
                 'value' => $function['Value'],
                 'description' => $function['Description'],
+                'data_type' => $dataTypes[$function['Type']],
+                'data_type_id' => $function['Type'],
                 'favorite' => $function['User'] == null ? 0 : 1
             ));
         }
@@ -162,7 +166,7 @@ class ConfigurationDB {
     {
         $con = new Connection();
         $con = $con->connect();
-        $s = $con->prepare("SELECT Equation_ID, Name, Value, Description
+        $s = $con->prepare("SELECT Equation_ID, Name, Value, Description,Type
                                    FROM Equations WHERE Name=:Equation_Name");
 
         $s->bindParam(':Equation_Name', $function_name);
@@ -189,18 +193,19 @@ class ConfigurationDB {
         
         if ($function->hasID()) {
             $s = $con->prepare('UPDATE Equations
-                                SET Name=:Name, Value=:Value, Description=:Description
+                                SET Name=:Name, Value=:Value, Description=:Description, Type=:Type
                                 WHERE Equation_ID=:Equation_ID');
             
             $s->bindParam(':Equation_ID', $function->id);
         } else {
-            $s = $con->prepare('INSERT INTO Equations (Name, Value, Description)
-                                VALUES (:Name, :Value, :Description)');
+            $s = $con->prepare('INSERT INTO Equations (Name, Value, Description, Type)
+                                VALUES (:Name, :Value, :Description, :Type)');
         }
         $s->bindParam(':Name', $function->name);
         $s->bindParam(':Name', $function->name);
         $s->bindParam(':Value', $function->body);
         $s->bindParam(':Description', $function->description);
+        $s->bindParam(':Type', str_replace('data_type', '', $function->data_type));
         
         try {
             $s->execute();
@@ -456,7 +461,52 @@ class ConfigurationDB {
         }
         
         return false;
-    }   
+    }
+
+    public function dataTypeExists($type_name, $type_unit) {
+    	$con = new Connection();
+    	$con = $con->connect();
+    	$s = $con->prepare("SELECT COUNT(*) FROM data_types WHERE type_desc = :Type_Name AND unit = :Type_Unit");
+
+    	$s->bindParam(':Type_Name', $type_name);
+    	$s->bindParam(':Type_Unit', $type_unit);
+
+    	try {
+    		$s->execute();
+    	} catch (\PDOException $e) {
+    		trigger_error("Failed to check data type: " . $e->getMessage(), E_USER_ERROR);
+    		return null;
+    	}
+
+    	$count = $s->fetch(\PDO::FETCH_NUM);
+    	return ($count == 0);
+    }
+
+    public function insertNewDataType($type_name, $type_unit) {
+    	$exists = ConfigurationDB::dataTypeExists($type_name, $type_unit);
+    	if ($exists === null)
+    		return array(null, "A database error occurred.");
+    	if ($exists === true)
+    		return array(null, "Data type \"$type_name ($type_unit)\" already exists.");
+
+    	$con = new Connection();
+    	$con = $con->connect();
+    	$s = $con->prepare("INSERT INTO data_types (type_desc, unit)
+    			VALUES (:Type_Name, :Type_Unit)");
+
+    	$s->bindParam(':Type_Name', $type_name);
+    	$s->bindParam(':Type_Unit', $type_unit);
+
+    	try {
+    		$s->execute();
+    	} catch (\PDOException $e) {
+    		trigger_error("Failed to insert data type: " . $e->getMessage(), E_USER_ERROR);
+    		return array(null, "A database error occurred.");
+    	}
+
+    	return array($con->lastInsertId(), null);
+    }
+
 
 }
 

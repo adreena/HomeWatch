@@ -8,9 +8,9 @@ define({
     /* URIs -- such as that for AJAX calls. */
     uri: {
         // Pedantic note: this is the model, not the controller...
-        controller: '/search/process.php',
+        controller: '/HomeWatch/search/process.php',
         // Mock data for database-less debugging.
-        mockdata: '/search/mockdata.json' 
+        mockdata: '/HomeWatch/search/mockdata.json' 
      },
 
     /* jQuery selectors. */

@@ -3,10 +3,10 @@
 {% block title 'Calculations' %}
 
 {% block extraStyles %}
-<link rel="stylesheet" href="/css/vendor/jdpicker/jdpicker.css" />
+<link rel="stylesheet" href="/HomeWatch/css/vendor/jdpicker/jdpicker.css" />
 {% endblock extraStyles %} 
 
-{% block requireMain '/js/calculations' %}
+{% block requireMain '/HomeWatch/js/calculations' %}
 
 {% block content %}
 <div class="configs">
@@ -23,24 +23,10 @@
       <span class="the-actual-gorram-label">
         Calculation type
       </span>
-      <select id="calculations" onChange="showhideEnergiesOnChange(this);">
-          <option value="eq1">Heat Energy</option>
-          <option value="eq2">Power Usage by Subtraction</option>
-          <option value="eq3">Power Usage by Calculation</option>
-          <option value="eq4">COP1, COP2, and COP3 Calculations</option>
-          <option value="eq5">COP1, COP2, and COP3 Analysis</option>
-      </select>
-    </label>
-
-    {# first drop-down #}
-    <label>
-      <span class="the-actual-gorram-label">
-        Subtype
-      </span>
-      <select id="energies">
-          {% for col, description in energycolumns %}
-          <option value="{{ col }}">{{ description }}</option>
-          {% endfor %}
+      <select id="calculations">
+          <option value="eq1">Heating Energy</option>
+          <option value="eq2">Power Usage of Pumps</option>
+          <option value="eq3">COP</option>
       </select>
     </label>
 

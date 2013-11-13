@@ -9,7 +9,7 @@
 
 {% block title 'Search' %}
 
-{% block requireMain '/js/search' %}
+{% block requireMain '/HomeWatch/js/search' %}
 
 {# See below for the templates within the templates. #}
 
@@ -89,19 +89,29 @@ var apartmentLabels = ["3-B-S",
   xAxis:  a series of options/optgroups
   yAxis:  a series of options/optgroups
 #}
+
 <script id="_t-graph-control-axes" type="text/html">
   <div data-for-process class="graph-control-axes">
-    <label><span class="the-actual-gorram-label">X Axis</span>
-      <select class="graph-control-axis graph-control-axis-x" name="xaxis">
+
+    <label ><span class="the-actual-gorram-label">X Axis</span>
+      <select class="graph-control-axis graph-control-axis-x" name="xaxis" disabled>
         <%= xAxis %>
       </select>
     </label>
 
-    <label><span class="the-actual-gorram-label">Y Axis</span>
-      <select class="graph-control-axis graph-control-axis-y" name="yaxis">
-        <%= yAxis %>
-      </select>
-    </label>
+    <label><span class="the-actual-gorram-label">Y Axis</span></label>
+		<select class="graph-control-axis graph-control-axis-y yaxis0" name="yaxis0"><%= yAxis %></select>
+		<select class="graph-control-axis graph-control-axis-y yaxis1" name="yaxis1" style="display: none"><%= yAxis %></select>
+		<select class="graph-control-axis graph-control-axis-y yaxis2" name="yaxis2" style="display: none"><%= yAxis %></select>
+		<select class="graph-control-axis graph-control-axis-y yaxis3" name="yaxis3" style="display: none"><%= yAxis %></select>
+		<select class="graph-control-axis graph-control-axis-y yaxis4" name="yaxis4" style="display: none"><%= yAxis %></select>
+		<select class="graph-control-axis graph-control-axis-y yaxis5" name="yaxis5" style="display: none"><%= yAxis %></select>
+		<select class="graph-control-axis graph-control-axis-y yaxis6" name="yaxis6" style="display: none"><%= yAxis %></select>
+		<select class="graph-control-axis graph-control-axis-y yaxis7" name="yaxis7" style="display: none"><%= yAxis %></select>
+		<select class="graph-control-axis graph-control-axis-y yaxis8" name="yaxis8" style="display: none"><%= yAxis %></select>
+		<select class="graph-control-axis graph-control-axis-y yaxis9" name="yaxis9" style="display: none"><%= yAxis %></select>
+  
+	 <button onclick='addYItem()'>Add Y</button>
   </div>
 </script>
 {# Parameters
@@ -193,7 +203,7 @@ var apartmentLabels = ["3-B-S",
       <% _.each(apartments, function (number) { %>
       <li><label><input name="apts" type="checkbox" value="<%= number %>" />
           <span class="postfix-label">
-            <%= apartmentLabels[number-1] %>
+            Apt. <%= number %> (<%= apartmentLabels[number-1] %>)
       </label> </span> </li>
       <% }); %>
 
@@ -202,6 +212,21 @@ var apartmentLabels = ["3-B-S",
       {#<span class="postfix-label"> Select all </span>#} </label>
     <label><input class="select-none" value="Select none" type="button" />
       {# <span class="postfix-label"> Select all </span>#} </label>
+
+<form>{# This form is here so that the radio buttons work properly... #}
+    <ul data-for-process class="graph-controls-apt-mult" data-graph data-name="graph-apt-mult">
+      <li><label><input checked type="radio" name="graph-apt-mult" value="seperate" />
+          Seperate
+        </label></li>
+      <li><label><input type="radio" name="graph-apt-mult" value="sum" />
+          Sum
+        </label></li>
+      <li><label><input type="radio" name="graph-apt-mult" value="avg" />
+          Average
+        </label></li>
+    </ul>
+</form>
+
   </div>
 </script>
 {# Parameters: None
@@ -225,5 +250,5 @@ var apartmentLabels = ["3-B-S",
 
 {# An extra style for the date picker shebang. #}
 {% block extraStyles %}
-<link rel="stylesheet" href="/css/vendor/jdpicker/jdpicker.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/HomeWatch/css/vendor/jdpicker/jdpicker.css" type="text/css" media="screen" />
 {% endblock %}

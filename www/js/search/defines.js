@@ -12,7 +12,7 @@ define({
     /** Internal URIs to use for AJAX and alike. */
     uri: {
         /* URI to retrieve new graph data. */
-        process: '/search/process.php'
+        process: '/HomeWatch/search/process.php'
     },
 
     messages: {
@@ -67,65 +67,37 @@ define({
             }
         },
 
-        "Sensors": {
+        "None":{"None":""},
+
+        "Air Quality": {
+        	"CO2": "",
+        	"Relative_Humidity": "Relative Humidity",
+        	"Temperature": "Indoor Temperature",
+        	"Outside_Temperature": "Outside Temperature"
         },
 
-        "Electricity Sensors": {
-            "all_electricity": {
-                "multiple": [
-                    "Mains (Phase A)",
-                    "Bedroom and hot water tank (Phase A)",
-                    "Oven (Phase A) and range hood",
-                    "Microwave and ERV controller",
-                    "Electrical duct heating",
-                    "Kitchen plugs (Phase A) and bathroom lighting",
-                    "Energy recovery ventilation",
-                    "Mains (Phase B)",
-                    "Kitchen plugs (Phase B) and kitchen counter",
-                    "Oven (Phase B)",
-                    "Bathroom",
-                    "Living room and balcony",
-                    "Hot water tank (Phase B)",
-                    "Refrigerator"
-                ],
-                "applicableAxes": "y",
-                "displayName": "All electricity"
-            },
+        "Apartment Heating": {
+        	"Total_Energy": "Heating Energy Consumed",
+        	"Total_Volume": "Heating Flow",
+        	"Current_Temperature_1": "Supply Temperature",
+        	"Current_Temperature_2": "Return Temperature"
+        },
 
-            "phaseA": {
-                "multiple": [
-                    "Mains (Phase A)",
-                    "Bedroom and hot water tank (Phase A)",
-                    "Oven (Phase A) and range hood",
-                    "Microwave and ERV controller",
-                    "Electrical duct heating",
-                    "Kitchen plugs (Phase A) and bathroom lighting",
-                    "Energy recovery ventilation"
-                ],
-                "applicableAxes": "y",
-                "displayName": "All Phase A sensors"
-            },
+        "Heat Flux": {
+        	"HeatFlux_Stud": "Heat Flux Stud",
+        	"HeatFlux_Insulation": "Heat Flux Insulation"
+        },
 
-            "phaseB": {
-                "multiple": [
-                    "Mains (Phase B)",
-                    "Kitchen plugs (Phase B) and kitchen counter",
-                    "Oven (Phase B)",
-                    "Bathroom",
-                    "Living room and balcony",
-                    "Hot water tank (Phase B)",
-                    "Refrigerator"
-                ],
-                "applicableAxes": "y",
-                "displayName": "All Phase B sensors"
-            },
+        "Water": {
+        	"Hot_Water": "Hot Water",
+        	"Total_Water": "Total Water"
+        },
 
-
-            /* Each sensor individually. */
+        "Apartment Electricity": {
             "Mains (Phase A)": "",
             "Bedroom and hot water tank (Phase A)": "",
             "Oven (Phase A) and range hood": "",
-            "Microwave and ERV controller": "",
+            "Microwave": "",
             "Electrical duct heating": "",
             "Kitchen plugs (Phase A) and bathroom lighting": "",
             "Energy recovery ventilation": "",
@@ -139,15 +111,26 @@ define({
 
         },
 
-        "Utilities": {
+        "Formulae": {
+        },
+
+		  "Utilities Costs": {
             "electricity": "HP_Electricity",
             "water": "Water"
         },
 
-        "Formulae": {
+        "Alerts": {
         },
 
-        "Alerts": {
+        "BAS Electricity": {
+        	"Total_P1": "Total Geo Circ. Pump",
+        	"Total_HP": "Total Heat Pumps",
+        	"P11": "Geo Circ Pump 1 (P-1-1)",
+        	"P12": "Geo Circ Pump 2 (P-1-2)",
+        	"HP1": "Heat Pump 1",
+        	"HP2": "Heat Pump 2",
+        	"HP3": "Heat Pump 3",
+        	"HP4": "Heat Pump 4"
         }
     },
 
@@ -267,12 +250,18 @@ define({
      */
     categoryNameToType: {
         "Time": "time",
+        "None": "none",
         "Sensors": "sensorarray",
-        "Electricity Sensors": "sensorarray",
+        "Air Quality": "sensorarray",
+        "Apartment Heating": "sensorarray",
+        "Heat Flux": "sensorarray",
+        "Water": "sensorarray",
+        "Apartment Electricity": "sensorarray",
+        "BAS Electricity": "sensorarray",
         "Formulae": "formula",
-        "Energy": "energy",
+        "BAS Energy": "energy",
         "Alerts": "alert",
-        "Utilities": "utility"
+        "Utilities Costs": "utility"
     },
 
     /* This is pretty much a hack. These sensors are not to be processed. */

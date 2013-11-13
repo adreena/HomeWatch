@@ -16,5 +16,5 @@ if ($user != null) {
 }
 
 // Direct the user back to the homepage
-header("Location: /");
+header("Location: /HomeWatch");
 

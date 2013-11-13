@@ -31,7 +31,7 @@ function ($) {
     function sendResetToken() {
         var resetInfo = getResetInfo();
         
-        $.post('/auth/send-reset-token.php', resetInfo)
+        $.post('/HomeWatch/auth/send-reset-token.php', resetInfo)
         .done(onResetDone)
         .fail(onResetFail);
         
@@ -40,7 +40,7 @@ function ($) {
     
     function onResetDone(response) {
         alert("Reset successful. Check your email to reset your password.");
-        window.location.replace("/");
+        window.location.replace("/HomeWatch/");
     }
 
     function onResetFail(response) {

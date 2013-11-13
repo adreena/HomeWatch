@@ -39,7 +39,7 @@ function ($) {
         initAlertConfig();
         
         initEquationAutoComplete();
-        
+        initDataTypes();
         // Init editor reset buttons
         $(document).find('.button.editor-reset').click(resetEditor);
     });
@@ -88,13 +88,13 @@ function ($) {
     }
 
     function submitFunction() {
-        $.post('/engineer/submit-function.php', getFunctionEditorData())
+        $.post('/HomeWatch/engineer/submit-function.php', getFunctionEditorData())
         .done(function(data) {
             functionEditor.reset();
             location.reload();
         })
         .fail(function(data) {
-            alert("Error submitting function: " + data.statusText);
+            alert("Error submitting function: " + (data.responseText ? data.responseText : data.statusText));
         });
         
         return false;
@@ -104,7 +104,7 @@ function ($) {
         var deleteButton = event.target;
         var functionID = getRowData(deleteButton).id;
         
-        $.post('/engineer/delete-function.php', {id: functionID})
+        $.post('/HomeWatch/engineer/delete-function.php', {id: functionID})
         .done(function(data) { window.location.reload(); })
         .fail(function(data) { alert("Error deleting function: " + data.statusText); });
     }
@@ -116,7 +116,10 @@ function ($) {
             id: functionEditorContents.find('input[name=id]').val(),
             name: functionEditorContents.find('input[name=name]').val(),
             value: functionEditorContents.find('input[name=value]').val(),
-            description: functionEditorContents.find('input[name=description]').val()        
+            description: functionEditorContents.find('input[name=description]').val(),
+			data_type: functionEditorContents.find('select[name=data_type]').val(),
+			data_type_new_name: functionEditorContents.find('input[name=data_type_new_name]').val(),
+			data_type_new_unit: functionEditorContents.find('input[name=data_type_new_unit]').val()
         };
     }
 
@@ -126,12 +129,13 @@ function ($) {
         functionEditorContents.find('input[name=value]').val(fn.value);
         functionEditorContents.find('input[name=description]').val(fn.description);
         functionEditorContents.find('input[name=id]').val(fn.id);
+        functionEditorContents.find('select[name=data_type]').val('data_type'+fn.data_type_id);
     }
 
     function updateFavoriteFunctions() {
         var favorites = getFavorites($(FUNCTION_DISPLAY_ID));
         
-        $.post('/engineer/update-favorite-functions.php', { favorites: favorites })
+        $.post('/HomeWatch/engineer/update-favorite-functions.php', { favorites: favorites })
         .done(function(data) { window.location.reload(); })
         .fail(function(data) { alert("Error updating favorite functions: " + data.statusText); });
     }
@@ -183,7 +187,7 @@ function ($) {
     }
 
     function submitConstant() {
-        $.post('/engineer/submit-constant.php', getConstantEditorData())
+        $.post('/HomeWatch/engineer/submit-constant.php', getConstantEditorData())
         .done(function(data) {
             constantEditor.reset();
             location.reload();
@@ -199,7 +203,7 @@ function ($) {
         var deleteButton = event.target;
         var constantID = getRowData(deleteButton).id;
         
-        $.post('/engineer/delete-constant.php', {id: constantID})
+        $.post('/HomeWatch/engineer/delete-constant.php', {id: constantID})
         .done(function(data) { window.location.reload(); })
         .fail(function(data) { alert("Error deleting constant: " + data.statusText); });
     }
@@ -226,7 +230,7 @@ function ($) {
     function updateFavoriteConstants() {
         var favorites = getFavorites($(CONSTANT_DISPLAY_ID));
         
-        $.post('/engineer/update-favorite-constants.php', { favorites: favorites })
+        $.post('/HomeWatch/engineer/update-favorite-constants.php', { favorites: favorites })
         .done(function(data) { window.location.reload(); })
         .fail(function(data) { alert("Error updating favorite constants: " + data.statusText); });
     }
@@ -275,7 +279,7 @@ function ($) {
     }
 
     function submitAlert() {
-        $.post('/manager/submit-alert.php', getAlertEditorData())
+        $.post('/HomeWatch/manager/submit-alert.php', getAlertEditorData())
         .done(function(data) {
             alertEditor.reset();
             location.reload();
@@ -293,7 +297,7 @@ function ($) {
         var alertID = rowData.id;
         var alertValue = rowData.value;
         
-        $.post('/manager/delete-alert.php', {id: alertID, value: alertValue})
+        $.post('/HomeWatch/manager/delete-alert.php', {id: alertID, value: alertValue})
         .done(function(data) { window.location.reload(); })
         .fail(function(data) { alert("Error deleting alert: " + data.statusText); });
     }
@@ -320,7 +324,7 @@ function ($) {
     function updateFavoriteAlerts() {
         var favorites = getFavorites($(ALERT_DISPLAY_ID));
         
-        $.post('/engineer/update-favorite-alerts.php', { favorites: favorites })
+        $.post('/HomeWatch/engineer/update-favorite-alerts.php', { favorites: favorites })
         .done(function(data) { window.location.reload(); })
         .fail(function(data) { alert("Error updating favorite alerts: " + data.statusText); });
     }
@@ -337,6 +341,7 @@ function ($) {
         
         return {
             id: row.attr('id').match(/\d+/)[0],
+            data_type_id: $(row.children(".data_type")).attr('dt_id').match(/\d+/)[0],
             name: $(row.children(".name")[0]).text(),
             value: $(row.children(".value")).text(),
             description: $(row.children(".description")).text(),
@@ -390,7 +395,7 @@ function ($) {
     }
 
     function initEquationAutoComplete() {
-        $.get("/engineer/autocomplete-data.php")
+        $.get("/HomeWatch/engineer/autocomplete-data.php")
         .done(function(data) {
             equationAutoCompleteData = $.map(data, function (value, key) { return "$" + key + '$'; });
             
@@ -404,6 +409,33 @@ function ($) {
             alert("Failed to get equation variables: " + data.statusText);
         });
     } 
+
+    function initDataTypes() {
+    	$.get("/HomeWatch/engineer/data-types.php")
+    	.done(function(data) {
+    		$('select.data_type').append($("<option />").val('').text("Not Selected"));
+    		$('select.data_type').append($("<option />").val('data_type_new').text("New Data Type"));
+    		for (var i in data)
+    			$('select.data_type').append($("<option />").val('data_type'+i).text(data[i]));
+
+    		$('select.data_type')
+    		.change(function() {
+    			$.each([$('input.data_type_new_name'), $('label.data_type_new_name'), 
+    			        $('input.data_type_new_unit'), $('label.data_type_new_unit')], 
+    			        function(ind,el) {
+    				if ($('select.data_type').val() == 'data_type_new')
+    					el.show();
+    				else
+    					el.hide();
+    			});
+
+
+    		});
+    	})
+    	.error(function(data) {
+    		alert("Failed to get data types: " + data.statusText);
+    	});
+    }
 
     function addEquationAutoComplete(textbox) {
         $(textbox).autocomplete(

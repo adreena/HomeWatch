@@ -9,7 +9,7 @@ require(['jquery', 'underscore', 'vendor/jquery.jdpicker'], function($, _) {
   var CALCULATE_URL, deboog, renderResults, __renderer;
 
   deboog = false;
-  CALCULATE_URL = deboog ? '/engineer/samplecalc.json' : '/engineer/calculate.php';
+  CALCULATE_URL = deboog ? '/HomeWatch/engineer/samplecalc.json' : '/HomeWatch/engineer/calculate.php';
   window.calculate = function() {
     var calcDD, calcName, calculateButton, calculation, enddate, endhour, energy, energyDD, energyName, startdate, starthour;
 
@@ -38,7 +38,7 @@ require(['jquery', 'underscore', 'vendor/jquery.jdpicker'], function($, _) {
 
       return resultsdiv = $('#results').html(renderResults(data));
     }).fail(function(data) {
-      return alert("Error Doing Calculations: " + data.statusText);
+      return alert("Error Doing Calculations: " + (data.responseText ? data.responseText : data.statusText));
     }).always(function() {
       calculateButton.removeAttr('disabled');
       return calculateButton.text('Calculate');
@@ -56,7 +56,13 @@ require(['jquery', 'underscore', 'vendor/jquery.jdpicker'], function($, _) {
     subDropDown = $('#energies');
     return subDropDown.attr('disabled', calcType !== 'eq1');
   };
-  __renderer = _.template("  <ul>    <% _.each(results, function (pair) { %>    <li><strong> <%= pair.key %> </strong> = <%= pair.val %></li>    <% }) %>  </ul>  ");
+
+  __renderer = _.template("  <ul>    <% _.each(results, function (pair) { " +
+  		"if (pair.key == 'pie') { %>" +
+  		"<br/><br/><img src='https://chart.googleapis.com/chart?cht=p3&chs=600x250&chd=t:<%= pair.values %>&chl=<%= pair.names %>&chco=00FF00|0000FF|FFFF00|FF0000'/>" +
+  		"<% } else { %>   " +
+  		" <li><strong> <%= pair.key %> </strong> = <%= pair.val %></li>   " +
+  		" <% }}) %>  </ul>  ");
   renderResults = function(results) {
     return __renderer({
       results: results
@@ -67,6 +73,12 @@ require(['jquery', 'underscore', 'vendor/jquery.jdpicker'], function($, _) {
 
     datePickers = $('#startdate, #enddate');
     datePickers.attr('type', 'hidden');
+    
+    var today = new Date();
+    datePickers.each(function() {
+        $(this).val(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate());
+    });
+    
     return datePickers.jdPicker({
       date_format: 'YYYY-mm-dd',
       start_of_week: 0
