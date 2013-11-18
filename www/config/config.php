@@ -18,12 +18,14 @@
 define('UASMARTHOME_ROOT_DIR', __DIR__ . '/..');
 date_default_timezone_set("America/Edmonton");
 
-if (!file_exists("config/config.local.php")) {
+$localConfig = UASMARTHOME_ROOT_DIR . "/config/config.local.php";
+
+if (!file_exists($localConfig)) {
 	print "Local config (www/config/config.local.php) missing!";
 	die;
 }
 
-require_once("config/config.local.php");
+require_once($localConfig);
 
 if (defined('CUSTOM_LOG'))
 	require_once("CustomLogging.php")
