@@ -1,0 +1,205 @@
+{% extends 'manager/new_base.html' %}
+
+{% set productName = 'HomeWatch' %}
+
+{% block title 'Electricity' %}
+
+{% block extraScripts %}
+<script src="/HomeWatch/my_search/js/highcharts_stock.js"></script>
+{% endblock %}
+{% block breadcrumb %}
+<li>
+  <i class="icon-home home-icon"></i>
+  <a href="#">Home</a>
+</li>
+
+<li class="">BAS</li>
+<li class="active">Building Screen</li>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="row">
+    <div div class="col-xs-12 col-sm-10 widget-container-span ui-sortable" style="position: relative; bottom: 0px;" >
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat">
+
+                <div class="row">
+                    <div  class="col-xs-8" style="padding:0 !important;">
+                        <h5 class="green"><i class="icon-signal green"></i> Electricity (kWh)</h5>
+                    </div>
+                    <div class="col-xs-4 pull-right">
+                        <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                            <div class="col-xs-10" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                <select id="elec-select-source"  data-placeholder="Choose a Your name" data-query="BAS Electricity" class="width-80 chosen-select" style="display: none;" >
+                                    
+                                    <option value="Total_HP">Total Heat Pumps</option>
+                                    <option value="Total_P1">Total Geo Circ.</option>
+                                    <option value="P11">Geo Circ. Pump 1</option>
+                                    <option value="P12">Geo Circ. Pump2</option>
+                                    <option value="HP1">Heat Pump 1</option>
+                                    <option value="HP2">Heat Pump 2</option>
+                                    <option value="HP3">Heat Pump 3</option>
+                                    <option value="HP4">Heat Pump 4</option>
+                                    
+                                </select>
+                            </div>
+
+                            <span class="ui-pg-div apt-checkbox" id="BAS Electricity (kWh)-checkbox" >
+                                <span class="ui-icon icon-plus-sign green"></span>
+                            </span>
+                            
+                        </span>
+                    </div>
+              </div>
+
+            </div>
+            <div class="widget-body"><div class="widget-main" id="Electricity"></div><!-- /widget-main --></div><!-- /widget-body -->
+        </div><!-- /widget-box -->
+    </div>
+    <div class="col-xs-2 widget-container-span" style="padding:0;">
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat" style="padding-top:2%;">
+               <h5 class="green"> Electricity Cost &amp; Usage</h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main" id="elec-cost-pie" style="height:170px; width:180px; margin:0; padding:0 !important;"></div>
+                <div style="padding-left:5px; padding-bottom:5px;" id="total-cost-elec">Total: </div>
+                <hr height="10%" style="margin:0;">
+                <div class="widget-main"  style="height:170px; width:180px; margin:0; padding:0 !important;" id="elec-usage-pie"></div>
+                <label style="padding-left:5px; padding-bottom:5px;" id="elec-total" class="muted"></label>
+                <input type="hidden" id="hidden-elec-total" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div div class="col-xs-12 col-sm-10 widget-container-span ui-sortable" style="position: relative; bottom: 0px;">
+            <div class="widget-box">
+                <div class="widget-header widget-header-flat">
+                    <div class="row">
+                        <div class="col-xs-8" style="padding:0 !important;">
+                            <h5 class="purple"><i class="icon-signal purple"></i> Energy (kJ)</h5>
+                        </div>
+                        <div class="col-xs-4 pull-right">
+                                <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                                        <div class="col-xs-10" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                        <select id="energy-select-source" data-query="BAS Energy" class="width-80 chosen-select" style="display:none;" >
+                                            <option value="Energy1">Solar</option>
+                                            <option value="Energy2">DWHR</option>
+                                            <option value="Energy3">Geothermal + DWHR</option>
+                                            <option value="Energy4">Solar + DWHR + Geothermal + Heat Pumps</option>
+                                            <option value="Energy5">Boiler 1</option>
+                                            <option value="Energy6">Boiler 2</option>
+                                            <option value="Energy7">Heating Consumption</option>
+                                        </select>
+                                        </div>
+
+                                        <span class="ui-pg-div apt-checkbox" id="BAS Energy (kJ)-checkbox" >
+                                            <span class="ui-icon icon-plus-sign green"></span>
+                                        </span>
+                                         
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main" id="Energy"></div><!-- /widget-main -->
+
+                </div><!-- /widget-body -->
+            </div><!-- /widget-box -->
+    </div>
+    <div class="col-xs-2 widget-container-span" style="padding:0;">
+        <div class="widget-box">
+            <div class="widget-header widget-header-flat" style="padding-top:2%;">
+               <h5 class="green"> Energy Cost &amp; Usage</h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main" id="energy-cost-pie" style="height:170px; width:180px; margin:0; padding:0 !important;"></div>
+                <div style="padding-left:5px; padding-bottom:5px;" id="total-cost-energy">Total: </div>
+                <hr height="10%" style="margin:0;">
+                <div class="widget-main"  style="height:170px; width:180px; margin:0; padding:0 !important;" id="energy-usage-pie"></div>
+                <label style="padding-left:5px; padding-bottom:5px;" id="energy-total" class="muted"></label>
+                <input type="hidden" id="hidden-energy-total" />
+            </div>
+        </div>
+    </div>        
+</div>
+
+<div  id="ChartAddedAlert" style="display:none;">
+    <div class="ui-widget-overlay ui-front"></div>
+    <div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable" style="height: auto; width: 300px; top: 47px; left: 460px; display: block;" tabindex="-1" role="dialog" aria-describedby="dialog-confirm" aria-labelledby="ui-id-26" >
+        <div class="ui-dialog-content ui-widget-content"  style="width: auto; min-height: 27px; max-height: none; height: auto;">
+                                                
+            <p class="bigger-110 bolder center grey">
+                <i class="icon-ok green bigger-110"></i>
+                Chart successfully added to Charts Folder !
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+
+
+function sendAjax(consumption,source){
+
+            var query=[];
+            query[0]=consumption;
+            query[1]=source;
+            var queryResult=$.parseJSON(
+                $.ajax({
+                 'async':false,
+                 'global':false,
+                  url:"http://localhost:8888/HomeWatch/my_search/bas.php",
+                  type:"get",
+                  data:{id:query}
+                 
+                }).responseText);
+            return queryResult;
+        }
+
+$(document).ready(function(){   
+        var allCharts={};
+
+// Drawing BAS Screen highstocks 
+    dataSeries=sendAjax('total-elec','Total_HP');
+    allCharts["BAS Electricity (kWh)"]=draw_stock("#Electricity",dataSeries['result']["Total_HP"],"#elec-select-source",'Total_HP','total-elec');
+   
+    dataSeries=sendAjax('total-energy',"Energy1"); // Energy1-> Solar
+    allCharts["BAS Energy (kJ)"]=draw_stock("#Energy",dataSeries['result']['Solar'],"#energy-select-source",'Solar','total-energy');
+
+    $(".apt-checkbox").click( function(e){
+            e.preventDefault();
+            var socket = io.connect('http://localhost:3000'); 
+            console.log($(this).attr("id"));
+            var id=$(this).attr("id").split('-')[0];
+
+            /* I am sending selector Options to chartFolder to recreate this selector, becuase by creating html via innerhtml, all events attached to DOM object are lost.  */
+            var selectorOptions=[];
+            var selector=$(this).parent().find("select");
+            var selectorID=$(this).parent().find("select").attr("id");
+            var selectorType="BAS";
+            var selectorVal=$(selector).val();
+            var temp=$(this).parent().find("select option");
+            $(temp).each(function(){
+                if($(this).val().length>0)
+                    selectorOptions.push($(this).val());
+            });
+            /* --- */
+            console.log("selectorOptions",selectorOptions);
+            var selectedChart=allCharts[id];
+            socket.emit('testMethod2',{name:id, data:selectedChart,selectorID:selectorID, selectorOptions:selectorOptions, selectorType:selectorType, selectorVal:selectorVal});
+            $("#ChartAddedAlert").fadeIn(1000);
+            $("#ChartAddedAlert").fadeOut(1500);
+           
+
+    });
+     
+});
+    
+</script>
+
+    
+{% endblock %}

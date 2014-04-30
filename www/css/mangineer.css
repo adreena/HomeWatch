@@ -107,6 +107,7 @@ p {
     list-style: none;
     padding-left: 0;
 }
+/*
 .graph-controls {
     width: 240px;
     background-color: rgb(240, 248, 250);
@@ -117,24 +118,27 @@ p {
 .graph-controls > li {
     padding: 8px 10px;
 }
+*/
 
 .graph-control-axis {
     width: 220px; 
 }
 
 /* Might contain additional controls to the graph... */
+/*
 .graph-container {
     display: inline-block;
     position: absolute;
     /*top: 0;*/
-    width: 720px;
+   /* width: 720px;
     right: 0;
 }
-
+*/
 /* Flot needs a height and a width to graph! */
 .graph {
+    /*
     margin: 8px 10px;
-    width: 700px;
+    width: 700px;*/
     min-height: 437px;
 }
 
@@ -149,14 +153,15 @@ p {
 .graph-legend > table td {
   padding-top: 4px;
 }
+/*
 
 .graph-group {
     position: relative;
     margin: 10px 0;
     min-height: 472px;
-}
+}*/
 
-/* Graph visibility controls */
+/* Graph visibility controls 
 .graph-vis-controls li {
     display: inline;
     float: right;
@@ -167,12 +172,12 @@ p {
     width: 100%;
     height: 24px;
 }
-
+*/
 /* The destroy button. */
 .graph-vis-controls li a[href='#destroy-graph'] {
   color: #C03030;
   font-weight: bold;
-  margin-left: 12px;
+  /*margin-left: 12px;*/
 }
 
 /* The show button -- by default a graph is showing, so hide the show button! */

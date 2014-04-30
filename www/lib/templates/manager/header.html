@@ -1,22 +1,115 @@
-<header class="page-header">
-  <div class="masthead">
-    <h1 class="logo"> <a href="/HomeWatch">HomeWatch</a> </h1>
 
-    <nav class="primary-nav"> <ul class="inline-nav">
-      {% block primaryNav %}
-        <li><a href="/HomeWatch"> Overview </a></li>
-        <li><a href="/HomeWatch/search/"> Graphs </a></li>
-        <li><a href="/HomeWatch/manager/residents.php"> Residents </a></li>
-        <li><a href="/HomeWatch/manager/utilitycontracts.php"> Utilities </a></li>
-        <li><a href="/HomeWatch/manager/configuration.php"> Configuration </a></li>
-        <li><a href="/HomeWatch/auth/register.php"> Register New User </a>
-      {% endblock primaryNav %}
-    </ul> </nav>
+  <script type="text/javascript">
+    try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+  </script>
 
-    <nav class="secondary-nav"> <ul class="inline-nav">
-        <li><a href="/HomeWatch/auth/account-settings.php">Account Settings</a></li>
-        <li><a href="/HomeWatch/auth/logout.php">Logout</a></li>
-    </ul> </nav>
-  </div>{# .masthead #}
+  <div id="navbar-container" class="navbar-container">
+    <div id="masthead">
+      <div class="navbar-header pull-left" >
+        <a class="navbar-brand" href="/HomeWatch">
+            <small>
+            <i class="icon-leaf"></i>
+            HomeWatch
+            </small>
+        </a>
+      </div><!--navbar header-->
+      <div class="navbar-header pull-right " role="navigation">
+          <ul class="nav ace-nav">
+            {% block primaryNav %}
+              
+            {% endblock primaryNav %}
+            <li class="purple">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-bell-alt"></i>
+                <span class="badge badge-important">7</span>
+              </a>
 
-</header>
+              <ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
+                <li class="dropdown-header">
+                  <i class="icon-warning-sign"></i>
+                  7 Notifications
+                </li>
+
+                <li>
+                  <a href="#">
+                    <div class="clearfix">
+                      <span class="pull-left">
+                        <i class="btn btn-xs icon-warning-sign"></i>
+                        Alerts
+                      </span>
+                      <span class="pull-right badge badge-info">+3</span>
+                    </div>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#">
+                    <div class="clearfix">
+                    <span class="pull-left">
+                      <i class="btn btn-xs btn-primary icon-exclamation yellow"></i>
+                      Warnings
+                    </span>
+                     <span class="pull-right badge badge-info">+1</span>
+                   </div>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#">
+                    <div class="clearfix">
+                      <span class="pull-left">
+                        <i class="btn btn-xs no-hover btn-success icon-check green"></i>
+                        Fixed
+                      </span>
+                      <span class="pull-right badge badge-success">+3</span>
+                    </div>
+                  </a>
+                </li>
+
+                
+
+                <li>
+                  <a href="#">
+                    See all notifications
+                    <i class="icon-arrow-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            </li>
+              <li class="light-blue">
+                <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                  <i class="icon-user"></i>
+                  <span class="user-info">
+                  <small>Hi,</small>
+                    There
+                  </span>
+
+                  <i class="icon-caret-down"></i>
+                </a>
+              <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                <li>
+                  <a href="/HomeWatch/auth/account-settings.php">
+                    <i class="icon-cog"></i>
+                    Settings
+                  </a>
+                </li>
+                <li class="divider"></li>
+
+                <li>
+                  <a href="/HomeWatch/auth/logout.php">
+                    <i class="icon-off"></i>
+                    Logout
+                  </a>
+                </li>
+              </ul>
+             </li>
+             
+          </ul> 
+      </div>
+
+  </div>{# #masthead #}
+</div>
+
+
+  

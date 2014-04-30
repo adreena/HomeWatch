@@ -1,0 +1,28 @@
+
+div.box{
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width:50%;
+	
+	border: 0.05em solid black;
+	margin-top: 5%;
+	margin-left:25%;
+	font: 0.65em sans-serif;
+	padding: 20px 20px;
+
+}
+div.axis{
+	width:100%;
+	text-align: center;
+	font-size: 1.4em;
+}
+.chart div {
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  width: 100%;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}

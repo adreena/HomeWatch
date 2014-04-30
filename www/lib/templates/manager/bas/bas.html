@@ -1,0 +1,149 @@
+{% extends 'manager/new_base.html' %}
+
+{% set productName = 'HomeWatch' %}
+
+{% block title 'Electricity' %}
+
+{% block extraScripts %}
+<script src="/HomeWatch/my_search/js/highcharts_stock.js"></script>
+{% endblock %}
+{% block breadcrumb %}
+<li>
+  <i class="icon-home home-icon"></i>
+  <a href="#">Home</a>
+</li>
+<li>Graphs &amp; Charts</li>
+
+<li class="">Electricity Consumption</li>
+<li class="active">Apartment</li>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="row-fluid">
+    
+        <div div class="col-xs-12 col-sm-10 widget-container-span ui-sortable" style="position: relative; bottom: 0px;" >
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+
+                        
+                            <div style="padding:0 !important;"><h5><i class="icon-signal"></i> Energy</h5></div>
+                      
+
+                    </div>
+                    <div class="widget-body"><div class="widget-main" id="HotWater"></div><!-- /widget-main --></div><!-- /widget-body -->
+                </div><!-- /widget-box -->
+        </div>
+        <div div class="col-xs-12 col-sm-10 widget-container-span ui-sortable" style="position: relative; bottom: 0px;">
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+
+                            <div style="padding:0 !important;">
+                                <h5><i class="icon-signal"></i> Oven &amp; Range Hood
+                                </h5>
+                           </div>
+
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main" id="Oven"></div><!-- /widget-main -->
+                    </div><!-- /widget-body -->
+                </div><!-- /widget-box -->
+        </div><!--col6-->
+
+        
+</div>
+
+<script>
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+function setUrlVars(apt) {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        value=apt;
+    });
+}
+function sendAjax(consumption,source,apartment){
+
+            var elec_query=[];
+            elec_query[0]=consumption;
+            elec_query[1]=source;
+            elec_query[2]=apartment;
+            console.log(elec_query[1],elec_query[2]);
+            //elec_query[1]=date;
+            //var enddate=date.replace(" 0"," 23");
+           
+           // elec_query[2]=enddate;
+           // elec_query[3]=source;
+          
+            var queryResult=$.parseJSON(
+                $.ajax({
+                 'async':false,
+                 'global':false,
+                  url:"http://localhost:8888/HomeWatch/my_search/electricity.php",
+                  type:"get",
+                  data:{id:elec_query}
+                 
+                }).responseText);
+            return queryResult;
+        }
+
+$(document).ready(function(){
+    /* a temporary starting date
+    var dateString = '2012-02-29 18:00:00';
+    dateString= dateString.split(' ').join('T');
+    var date = new Date(dateString);
+    console.log(date);
+    timeStart=date.getTime();
+    console.log(timeStart);*/
+
+
+    var apartment=getUrlVars()["val"];
+
+    if(apartment!==undefined){
+        console.log(apartment);
+        $("#apt-title-select").val(apartment);
+        setApt(apartment);
+        $("#apt-title-select").on('change',function(){
+            apartment=$("#apt-title-select").val();
+            setApt(apartment);
+        });
+
+    }else{
+        apartment=$("#apt-title-select").val();
+        setApt(apartment);
+        $("#apt-title-select").on('change',function(){
+            apartment=$("#apt-title-select").val();
+            setApt(apartment);
+        });
+    }
+    function setApt(apartment){
+        dataSeries=sendAjax('apartment',"Hot water tank",apartment);
+        draw_stock("#HotWater",dataSeries,"#hotwater-select-Apt",apartment);
+        dataSeries=sendAjax('apartment',"Microwave",apartment);
+        draw_stock("#Microwave",dataSeries,"#microwave-select-Apt",apartment);
+        dataSeries=sendAjax('apartment',"Oven",apartment);
+        draw_stock("#Oven",dataSeries,"#oven-select-Apt",apartment);
+        dataSeries=sendAjax('apartment',"Kitchen",apartment);
+        draw_stock("#Kitchen",dataSeries,"#kitchen-select-Apt",apartment);
+        dataSeries=sendAjax('apartment',"Energy recovery ventilation",apartment);
+        draw_stock("#Energy",dataSeries,"#energy-select-Apt",apartment);
+        dataSeries=sendAjax('apartment',"Living room and balcony",apartment);
+        draw_stock("#LivingRoom",dataSeries,"#livingroom-select-Apt",apartment);
+        dataSeries=sendAjax('apartment',"Refrigerator",apartment);
+        draw_stock("#Refrigerator",dataSeries,"#refrigerator-select-Apt",apartment);
+        dataSeries=sendAjax('apartment',"Bathroom",apartment);
+        draw_stock("#Bathroom",dataSeries,"#bathroom-select-Apt",apartment);
+    }
+   
+});
+</script>
+
+    
+{% endblock %}

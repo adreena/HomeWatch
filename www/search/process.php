@@ -28,6 +28,8 @@ $test = false;
 $sensors = array();
 $apartments = array();
 $messages = array();
+console.log("Look at me");
+
 //If we are getting data from the front end, this flag will tell us to use that input instead of test data
 if (ISSET($_GET['notest'])) {
 	$test = false;
@@ -80,7 +82,7 @@ if ($test) {
 	$validPeriods = array_flip(array("Daily", "Monthly", "Hourly", "Weekly", "Yearly"));
 	$validAptMultiple = array_flip(array("seperate", "avg", "sum"));
 	
-	
+	//echo $y;
 //TODO early check for valid period and valid apt multiple
 	if ($startdate == null) {
 		array_push($messages, "No start date. ");
@@ -200,7 +202,6 @@ if ($test) {
 				} 
 
 				$ydata = Engineer::db_pull_query($apartment, $sensor, $startdate, $enddate, $period, $phase);
-
 				foreach ($ydata as $date=>$yd) {
 
 					if ($yd[$sensor] == null) {
@@ -276,9 +277,9 @@ if ($test) {
 
             $d1 = date_create_from_Format($dateFormat, $startdate);
             $d2 = date_create_from_Format($dateFormat, $enddate);
-				
+			 //echo $d1;
 	         $ydata = Engineer2::getEnergyColumnData($d1, $d2,$y[$i], $period);
-
+	         //echo "** {$y[$i]} ** \n";
 				$energyColumns = Engineer2::getEnergyColumns();
 
 	         foreach ($ydata as $date=>$value) {

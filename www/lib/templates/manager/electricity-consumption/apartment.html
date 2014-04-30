@@ -1,0 +1,607 @@
+{% extends 'manager/new_base.html' %}
+
+{% set productName = 'HomeWatch' %}
+
+{% block title 'Electricity' %}
+
+{% block extraScripts %}
+{% endblock %}
+{% block breadcrumb %}
+<li>
+  <i class="icon-home home-icon"></i>
+  <a href="#">Home</a>
+</li>
+<li>Graphs &amp; Charts</li>
+
+<li class="">Electricity Consumption</li>
+<li class="active">Apartment</li>
+{% endblock %}
+
+
+{% block pageheader %}
+<div class="row alert alert-info" style="height:50px; padding:8px 0; margin:0;">
+    <div class="col-xs-12 ">
+        <div  class="col-sm-4 col-sm-offset-4" style=" margin:1px !important;">
+            <label for="apt-title-select">Change Apartment:</label>
+            <select  id="apt-title-select" class="width-30 chosen-select" data-style="btn" style=" margin:0; display:none; ">
+                <option value="Apt.1">Apt.1</option>
+                <option value="Apt.2">Apt.2</option>
+                <option value="Apt.3">Apt.3</option>
+                <option value="Apt.4">Apt.4</option>
+                <option value="Apt.5">Apt.5</option>
+                <option value="Apt.6">Apt.6</option>
+                <option value="Apt.7">Apt.7</option>
+                <option value="Apt.8">Apt.8</option>
+                <option value="Apt.9">Apt.9</option>
+                <option value="Apt.10">Apt.10</option>
+                <option value="Apt.11">Apt.11</option>
+                <option value="Apt.12">Apt.12</option>
+            </select>
+        </div>
+        <!--
+        <div class="col-xs-3" id="ChartAddedAlert" style="display:none;">
+          <i class="icon-ok green"></i> Chart dded to ChartFolder Successfully!
+        </div> -->
+        <div class="col-xs-3 pull-right" style="padding-top:2px; margin:0;">
+            <label for="drag">Relocate Charts:</label>
+            <input class="ace ace-switch ace-switch-4" type="checkbox" id="drag" >
+            <span class="lbl"></span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="row-fluid">
+
+        <div div class="col-xs-12 col-sm-6 widget-container-span ui-sortable" style="position: relative; bottom: 0px;" >
+                <div class="widget-box" id="HotWater-widget">
+                    <div class="widget-header widget-header-flat">
+                        <div class="row">
+                        <div class="col-xs-12"  style="padding:0 !important;">
+                            <div class="col-xs-6" style="padding:0 !important;"><h5><i class="icon-signal"></i> Hot Water Tank &amp; Bedrooms (kWh)</h5>
+                            </div>
+                            <div class="col-xs-5 pull-right">
+                                <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                                        <div class="col-xs-9" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                        <select id="hotwater-select-Apt" data-query="Hot water tank"  style="width: 130px; margin-bottom:4px; padding:3px;">
+                                            <option value="Apt.1">Apt.1</option>
+                                            <option value="Apt.2">Apt.2</option>
+                                            <option value="Apt.3">Apt.3</option>
+                                            <option value="Apt.4">Apt.4</option>
+                                            <option value="Apt.5">Apt.5</option>
+                                            <option value="Apt.6">Apt.6</option>
+                                            <option value="Apt.7">Apt.7</option>
+                                            <option value="Apt.8">Apt.8</option>
+                                            <option value="Apt.9">Apt.9</option>
+                                            <option value="Apt.10">Apt.10</option>
+                                            <option value="Apt.11">Apt.11</option>
+                                            <option value="Apt.12">Apt.12</option>
+                                        </select>
+                                        </div>
+                                    
+
+                                        <span class="ui-pg-div apt-checkbox" id="Hot Water Tank and Bedrooms (kWh)-checkbox" >
+                                            <span class="ui-icon icon-plus-sign green"></span>
+                                        </span>
+                                        <span class="ui-pg-div " data-original-title="close this chart">
+                                            <span class="ui-icon icon-remove-sign red close"></span>
+                                        </span>
+                                        
+                                </span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main" id="HotWater"></div><!-- /widget-main --></div><!-- /widget-body -->
+                </div><!-- /widget-box -->
+        </div>
+        <div div class="col-xs-12 col-sm-6 widget-container-span ui-sortable" style="position: relative; bottom: 0px;">
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+                        <div class="row">
+                        <div class="col-xs-12"  style="padding:0 !important;">
+                            <div class="col-xs-6" style="padding:0 !important;">
+                                <h5><i class="icon-signal"></i> Oven &amp; Range Hood (kWh)
+                                </h5>
+                           </div>
+                           <div class="col-xs-5 pull-right">
+                                <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                                        <div class="col-xs-9" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                        <select id="oven-select-Apt"  data-query="Oven" style="width: 130px; margin-bottom:4px; padding:3px;" >
+                                            <option value="Apt.1">Apt.1</option>
+                                            <option value="Apt.2">Apt.2</option>
+                                            <option value="Apt.3">Apt.3</option>
+                                            <option value="Apt.4">Apt.4</option>
+                                            <option value="Apt.5">Apt.5</option>
+                                            <option value="Apt.6">Apt.6</option>
+                                            <option value="Apt.7">Apt.7</option>
+                                            <option value="Apt.8">Apt.8</option>
+                                            <option value="Apt.9">Apt.9</option>
+                                            <option value="Apt.10">Apt.10</option>
+                                            <option value="Apt.11">Apt.11</option>
+                                            <option value="Apt.12">Apt.12</option>
+                                        </select>
+                                        </div>
+                                        
+                                        <span class="ui-pg-div apt-checkbox" id="Oven and Range Hood (kWh)-checkbox" >
+                                            <span class="ui-icon icon-plus-sign green"></span>
+                                        </span>
+                                        <span class="ui-pg-div " data-original-title="close this chart">
+                                            <span class="ui-icon icon-remove-sign red close"></span>
+                                        </span>
+                                    
+                                </span>
+                           </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main" id="Oven"></div><!-- /widget-main -->
+                    </div><!-- /widget-body -->
+                </div><!-- /widget-box -->
+        </div><!--col6-->
+
+        <div class="col-xs-12 col-sm-6 widget-container-span ui-sortable" style="position: relative; bottom: 0px;">
+            <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+                        <div class="row">
+                        <div class="col-xs-12"  style="padding:0 !important;">
+                            <div class="col-xs-7" style="padding:0 !important;"><h5 id="chart-title">
+                            <i class="icon-signal"></i> Kitchen plugs &amp; Bathroom Lights (kWh)</h5></div>
+                            <div class="col-xs-4 pull-right">
+                                <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                                        <div class="col-xs-9" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                        <select id="kitchen-select-Apt"  data-query="Kitchen" style="width: 130px; margin-bottom:4px; padding:3px;">
+                                            <option value="Apt.1">Apt.1</option>
+                                            <option value="Apt.2">Apt.2</option>
+                                            <option value="Apt.3">Apt.3</option>
+                                            <option value="Apt.4">Apt.4</option>
+                                            <option value="Apt.5">Apt.5</option>
+                                            <option value="Apt.6">Apt.6</option>
+                                            <option value="Apt.7">Apt.7</option>
+                                            <option value="Apt.8">Apt.8</option>
+                                            <option value="Apt.9">Apt.9</option>
+                                            <option value="Apt.10">Apt.10</option>
+                                            <option value="Apt.11">Apt.11</option>
+                                            <option value="Apt.12">Apt.12</option>
+                                        </select>
+                                        </div>
+                                        <span class="ui-pg-div apt-checkbox" id="Kitchen Plugs and Bathroom Lights (kWh)-checkbox" >
+                                            <span class="ui-icon icon-plus-sign green"></span>
+                                        </span>
+                                        <span class="ui-pg-div " data-original-title="close this chart">
+                                            <span class="ui-icon icon-remove-sign red close"></span>
+                                        </span>
+                                    
+                                </span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main" id="Kitchen"> </div><!-- /widget-main -->
+                        
+
+                    </div><!-- /widget-body -->
+            </div><!-- /widget-box -->
+        </div><!--col6-->
+        <div class="col-xs-12 col-sm-6 widget-container-span ui-sortable" style="position: relative; bottom: 0px;">
+            <div class="widget-box">
+
+                    <div class="widget-header widget-header-flat">
+                        <div class="row">
+                        <div class="col-xs-12"  style="padding:0 !important;">
+                            <div class="col-xs-7" style="padding:0 !important;"><h5><i class="icon-signal"></i> Bathroom (kWh)</h5></div>
+                            <div class="col-xs-4 pull-right">
+                                <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                                        <div class="col-xs-9" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                        <select id="bathroom-select-Apt"  data-query="Bathroom" style="width: 130px; margin-bottom:4px; padding:3px;" >
+                                            <option value="Apt.1">Apt.1</option>
+                                            <option value="Apt.2">Apt.2</option>
+                                            <option value="Apt.3">Apt.3</option>
+                                            <option value="Apt.4">Apt.4</option>
+                                            <option value="Apt.5">Apt.5</option>
+                                            <option value="Apt.6">Apt.6</option>
+                                            <option value="Apt.7">Apt.7</option>
+                                            <option value="Apt.8">Apt.8</option>
+                                            <option value="Apt.9">Apt.9</option>
+                                            <option value="Apt.10">Apt.10</option>
+                                            <option value="Apt.11">Apt.11</option>
+                                            <option value="Apt.12">Apt.12</option>
+                                        </select>
+                                        </div>
+                                        <span class="ui-pg-div apt-checkbox" id="Bathroom (kWh)-checkbox" >
+                                            <span class="ui-icon icon-plus-sign green"></span>
+                                        </span>
+                                        <span class="ui-pg-div " data-original-title="close this chart">
+                                            <span class="ui-icon icon-remove-sign red close"></span>
+                                        </span>
+                                   
+                                </span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main" id="Bathroom"> </div><!-- /widget-main -->
+                        
+
+                    </div><!-- /widget-body -->
+            </div><!-- /widget-box -->
+        </div><!--col6-->
+
+        <div class="col-xs-12 col-sm-6 widget-container-span ui-sortable" style="position: relative; bottom: 0px;">
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+                        <div class="row">
+                        <div class="col-xs-12"  style="padding:0 !important;">
+                            <div class="col-xs-7" style="padding:0 !important;"><h5><i class="icon-signal"></i> Living room &amp; Balcony (kWh)</h5></div>
+                            <div class="col-xs-4 pull-right">
+                                <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                                        <div class="col-xs-9" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                        <select id="livingroom-select-Apt"  data-query="Living room and balcony"  style="width: 130px; margin-bottom:4px; padding:3px;">
+                                            <option value="Apt.1">Apt.1</option>
+                                            <option value="Apt.2">Apt.2</option>
+                                            <option value="Apt.3">Apt.3</option>
+                                            <option value="Apt.4">Apt.4</option>
+                                            <option value="Apt.5">Apt.5</option>
+                                            <option value="Apt.6">Apt.6</option>
+                                            <option value="Apt.7">Apt.7</option>
+                                            <option value="Apt.8">Apt.8</option>
+                                            <option value="Apt.9">Apt.9</option>
+                                            <option value="Apt.10">Apt.10</option>
+                                            <option value="Apt.11">Apt.11</option>
+                                            <option value="Apt.12">Apt.12</option>
+                                        </select>
+                                        </div>
+                                        <span class="ui-pg-div apt-checkbox" id="Living Room and Balcony (kWh)-checkbox" >
+                                            <span class="ui-icon icon-plus-sign green"></span>
+                                        </span>
+                                        <span class="ui-pg-div " data-original-title="close this chart">
+                                            <span class="ui-icon icon-remove-sign red close"></span>
+                                        </span>
+                                   
+                                </span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main" id="LivingRoom"> </div><!-- /widget-main -->
+                        
+
+                    </div><!-- /widget-body -->
+                </div><!-- /widget-box -->
+        </div><!--col6-->
+        <div class="col-xs-12 col-sm-6 widget-container-span ui-sortable" style="position: relative; bottom: 0px;">
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+                        <div class="row">
+                        <div class="col-xs-12"  style="padding:0 !important;">
+                            <div class="col-xs-7" style="padding:0 !important;"><h5><i class="icon-signal"></i> Energy Recovery Ventilation (kWh)</h5></div>
+                            <div class="col-xs-4 pull-right">
+                                <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                                        <div class="col-xs-9" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                        <select id="energy-select-Apt"  data-query="Energy recovery ventilation" style="width: 130px; margin-bottom:4px; padding:3px;"  >
+                                            <option value="Apt.1">Apt.1</option>
+                                            <option value="Apt.2">Apt.2</option>
+                                            <option value="Apt.3">Apt.3</option>
+                                            <option value="Apt.4">Apt.4</option>
+                                            <option value="Apt.5">Apt.5</option>
+                                            <option value="Apt.6">Apt.6</option>
+                                            <option value="Apt.7">Apt.7</option>
+                                            <option value="Apt.8">Apt.8</option>
+                                            <option value="Apt.9">Apt.9</option>
+                                            <option value="Apt.10">Apt.10</option>
+                                            <option value="Apt.11">Apt.11</option>
+                                            <option value="Apt.12">Apt.12</option>
+                                        </select>
+                                        </div>
+                                        <span class="ui-pg-div apt-checkbox" id="Energy Recovery Ventilation (kWh)-checkbox" >
+                                            <span class="ui-icon icon-plus-sign green"></span>
+                                        </span>
+                                        <span class="ui-pg-div " data-original-title="close this chart">
+                                            <span class="ui-icon icon-remove-sign red close"></span>
+                                        </span>
+                                    
+                                </span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main" id="Energy"> </div><!-- /widget-main -->
+                        
+
+                    </div><!-- /widget-body -->
+                </div><!-- /widget-box -->
+        </div><!--col6-->
+ 
+        <div class="col-xs-12 col-sm-6 widget-container-span ui-sortable" style="position: relative; bottom: 0px;">
+             
+                    <div class="widget-box">
+                        <div class="widget-header widget-header-flat">
+                            <div class="row">
+                                <div class="col-xs-12"  style="padding:0 !important;">
+                                  <div class="col-xs-7" style="padding:0 !important;"><h5><i class="icon-signal"></i> Refrigerator (kWh)</h5></div>
+                                  <div class="col-xs-4 pull-right">
+                                    <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                                           <div class="col-xs-9" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                            <select id="refrigerator-select-Apt"  data-query="Refrigerator" style="width: 130px; margin-bottom:4px; padding:3px;" >
+                                                <option value="Apt.1">Apt.1</option>
+                                                <option value="Apt.2">Apt.2</option>
+                                                <option value="Apt.3">Apt.3</option>
+                                                <option value="Apt.4">Apt.4</option>
+                                                <option value="Apt.5">Apt.5</option>
+                                                <option value="Apt.6">Apt.6</option>
+                                                <option value="Apt.7">Apt.7</option>
+                                                <option value="Apt.8">Apt.8</option>
+                                                <option value="Apt.9">Apt.9</option>
+                                                <option value="Apt.10">Apt.10</option>
+                                                <option value="Apt.11">Apt.11</option>
+                                                <option value="Apt.12">Apt.12</option>
+                                            </select>
+                                            </div>
+                                            <span class="ui-pg-div apt-checkbox" id="Refrigerator (kWh)-checkbox" >
+                                                <span class="ui-icon icon-plus-sign green"></span>
+                                            </span>
+                                            <span class="ui-pg-div " data-original-title="close this chart">
+                                                <span class="ui-icon icon-remove-sign red close"></span>
+                                            </span>
+                                       
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="widget-body">
+                            <div class="widget-main" id="Refrigerator"> </div><!-- /widget-main -->
+                            
+
+                        </div><!-- /widget-body -->
+                    </div><!-- /widget-box -->
+        </div><!--col6-->
+        <div class="col-xs-12 col-sm-6 widget-container-span ui-sortable" style="position: relative; bottom: 0px;">
+                    <div class="widget-box">
+                        <div class="widget-header widget-header-flat">
+                            <div class="row">
+                            <div class="col-xs-12"  style="padding:0 !important;">
+                                <div class="col-xs-7" style="padding:0 !important;">
+                                    <h5>
+                                        <i class="icon-signal"></i>
+                                         Microwave (kWh)
+                                    </h5>
+                                </div>
+                                <div class="col-xs-4 pull-right">
+                                    <span class="widget-toolbar row" style="width:200px; padding:0 !important;">
+                                            <div class="col-xs-9" style="padding:0 !important; padding-left:5% !important; margin:1px !important;">
+                                            <select id="microwave-select-Apt" data-query="Microwave" style="width: 130px; margin-bottom:4px; padding:3px;" >
+                                                <option value="Apt.1">Apt.1</option>
+                                                <option value="Apt.2">Apt.2</option>
+                                                <option value="Apt.3">Apt.3</option>
+                                                <option value="Apt.4">Apt.4</option>
+                                                <option value="Apt.5">Apt.5</option>
+                                                <option value="Apt.6">Apt.6</option>
+                                                <option value="Apt.7">Apt.7</option>
+                                                <option value="Apt.8">Apt.8</option>
+                                                <option value="Apt.9">Apt.9</option>
+                                                <option value="Apt.10">Apt.10</option>
+                                                <option value="Apt.11">Apt.11</option>
+                                                <option value="Apt.12">Apt.12</option>
+                                            </select>
+                                            </div>
+
+                                            <span class="ui-pg-div apt-checkbox" id="Microwave (kWh)-checkbox" >
+                                                <span class="ui-icon icon-plus-sign green"></span>
+                                            </span>
+                                            <span class="ui-pg-div " data-original-title="close this chart">
+                                                <span class="ui-icon icon-remove-sign red close"></span>
+                                            </span>
+                                    </span>
+                                </div>
+                            </div>
+                             </div>
+                      </div>
+
+                        <div class="widget-body">
+                            <div class="widget-main" id="Microwave"> </div><!-- /widget-main -->
+                            
+
+                        </div><!-- /widget-body -->
+                    </div><!-- /widget-box -->
+        </div><!--col6-->
+
+</div>
+<div  id="ChartAddedAlert" style="display:none;">
+    <div class="ui-widget-overlay ui-front"></div>
+    <div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable" style="height: auto; width: 300px; top: 47px; left: 460px; display: block;" tabindex="-1" role="dialog" aria-describedby="dialog-confirm" aria-labelledby="ui-id-26" >
+        <div class="ui-dialog-content ui-widget-content"  style="width: auto; min-height: 27px; max-height: none; height: auto;">
+                                                
+            <p class="bigger-110 bolder center grey">
+                <i class="icon-ok green bigger-110"></i>
+                Chart successfully added to Charts Folder
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
+<script>
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+function sendAjax(consumption,source,apartment){
+
+            var elec_query=[];
+            elec_query[0]=consumption;
+            elec_query[1]=source;
+            elec_query[2]=apartment;
+           // console.log(elec_query[1],elec_query[2]);
+            //elec_query[1]=date;
+            //var enddate=date.replace(" 0"," 23");
+           
+           // elec_query[2]=enddate;
+           // elec_query[3]=source;
+          
+            var queryResult=$.parseJSON(
+                $.ajax({
+                 'async':false,
+                 'global':false,
+                  url:"http://localhost:8888/HomeWatch/my_search/electricity.php",
+                  type:"get",
+                  data:{id:elec_query}
+                 
+                }).responseText);
+            return queryResult;
+        }
+
+$(document).ready(function(){
+    /* a temporary starting date
+    var dateString = '2012-02-29 18:00:00';
+    dateString= dateString.split(' ').join('T');
+    var date = new Date(dateString);
+    console.log(date);
+    timeStart=date.getTime();
+    console.log(timeStart);*/
+    var allCharts={};
+
+
+
+    var apartment=getUrlVars()["val"];
+    window.history.pushState("", "", '/HomeWatch/electricity-consumption/apartment.php');
+
+    if(apartment!==undefined){
+       // console.log(apartment);
+        $("#apt-title-select").val(apartment);
+        setApt(apartment);
+        $("#apt-title-select").on('change',function(){
+            apartment=$("#apt-title-select").val();
+            setApt(apartment);
+        });
+
+    }else{
+        apartment=$("#apt-title-select").val();
+        setApt(apartment);
+        $("#apt-title-select").on('change',function(){
+            apartment=$("#apt-title-select").val();
+            console.log("----",apartment);
+            setApt(apartment);
+        });
+    }
+    function setApt(apartment){
+        var chart;
+        var queryID='apartment';
+
+        $.fn.refresh = function() {
+            return $(this.selector);
+        };
+
+        
+        dataSeries=sendAjax(queryID,"Hot water tank",apartment);
+
+        $("#hotwater-select-Apt").val(apartment);
+        chart=draw_stock("#HotWater",dataSeries,"#hotwater-select-Apt",apartment,queryID);
+        console.log("returned chart:",chart);
+        allCharts["Hot Water Tank and Bedrooms (kWh)"]=chart;
+
+
+        $("#microwave-select-Apt").val(apartment);
+        dataSeries=sendAjax(queryID,"Microwave",apartment);
+        chart=draw_stock("#Microwave",dataSeries,"#microwave-select-Apt",apartment,queryID);
+        allCharts["Microwave (kWh)"]=chart;
+
+
+        $("#oven-select-Apt").val(apartment);
+        dataSeries=sendAjax(queryID,"Oven",apartment);
+        chart=draw_stock("#Oven",dataSeries,"#oven-select-Apt",apartment,queryID);
+        allCharts["Oven and Range Hood (kWh)"]=chart;
+
+
+        $("#kitchen-select-Apt").val(apartment);
+        dataSeries=sendAjax(queryID,"Kitchen",apartment);
+        chart=draw_stock("#Kitchen",dataSeries,"#kitchen-select-Apt",apartment,queryID);
+        allCharts["Kitchen Plugs and Bathroom Lights (kWh)"]=chart;
+
+
+        $("#energy-select-Apt").val(apartment);
+        dataSeries=sendAjax(queryID,"Energy recovery ventilation",apartment);
+        chart=draw_stock("#Energy",dataSeries,"#energy-select-Apt",apartment,queryID);
+        allCharts["Energy Recovery Ventilation (kWh)"]=chart;
+
+
+        $("#livingroom-select-Apt").val(apartment);
+        dataSeries=sendAjax(queryID,"Living room and balcony",apartment);
+        chart=draw_stock("#LivingRoom",dataSeries,"#livingroom-select-Apt",apartment,queryID);
+        allCharts["Living Room and Balcony (kWh)"]=chart;
+
+
+        $("#refrigerator-select-Apt").val(apartment);
+        dataSeries=sendAjax(queryID,"Refrigerator",apartment);
+        chart=draw_stock("#Refrigerator",dataSeries,"#refrigerator-select-Apt",apartment,queryID);
+        allCharts["Refrigerator (kWh)"]=chart;
+
+ 
+        $("#bathroom-select-Apt").val(apartment);
+        console.log(">>>>",apartment);
+        $('#bathroom-select-Apt').find('option:eq('+apartment+')').attr("selected",true);
+        dataSeries=sendAjax(queryID,"Bathroom",apartment);
+        chart=draw_stock("#Bathroom",dataSeries,"#bathroom-select-Apt",apartment,queryID);
+        allCharts["Bathroom (kWh)"]=chart;
+    }
+    var checklist=[];
+    function showAlert(){
+        $("#myAlert").addClass("in")
+    }
+    function hideAlert(){
+        $("#myAlert").removeClass("in")
+    }
+
+    $(".apt-checkbox").click( function(e){
+            e.preventDefault();
+            var socket = io.connect('http://localhost:3000'); 
+            var id=$(this).attr("id").split('-')[0];
+
+
+            /* I am sending selector Options to chartFolder to recreate this selector, becuase by creating html via innerhtml, all events attached to DOM object are lost.  */
+            var selectorOptions=[];
+            var selector=$(this).parent().find("select");
+            var selectorID=$(this).parent().find("select").attr("id");
+            var selectorVal=$(selector).val();
+            var selectorType="apartment";
+            var temp=$(this).parent().find("select option");
+            $(temp).each(function(){
+               if($(this).val().length>0)
+                 selectorOptions.push($(this).val());
+            });
+            /* --- */
+
+            var selectedChart=allCharts[id];
+            socket.emit('testMethod2',{name:id, data:selectedChart, selectorID:selectorID, selectorOptions:selectorOptions, selectorVal:selectorVal});
+
+            $("#ChartAddedAlert").fadeIn(1000);
+            $("#ChartAddedAlert").fadeOut(1500);
+
+           
+
+    });
+});
+</script>
+    
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends 'manager/new_base.html' %}
+
+{% set productName = 'HomeWatch' %}
+
+{% block title 'Charts Folder' %}
+
+{% block breadcrumb %}
+<li>
+  <i class="icon-home home-icon"></i>
+  <a href="#">Home</a>
+</li>
+<li class="active">Charts Folder</li>
+{% endblock %}
+
+
+{% block content %}
+<div style="height:50px; padding:8px 0; margin:0;" class="row alert alert-info">
+    <div class="col-xs-12 ">
+        <div style=" margin:1px !important;" class="col-sm-4 col-sm-offset-4" id="status">
+            Connecting ...
+        </div>
+ 
+        <div style="padding-top:2px; margin:0;" class="col-xs-3 pull-right">
+            <label for="drag">Relocate Charts:</label>
+            <input type="checkbox" id="drag" class="ace ace-switch ace-switch-4">
+            <span class="lbl"></span>
+        </div>
+    </div>
+</div>
+
+        
+<div id="charts" class="row-fluid"></div>
+
+
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+  
+  var chartCounter=0;
+  var socket = io.connect('http://localhost:3000');
+  var shortChartName;
+  var chartInfo={};
+  var allSelectors={};
+  /* Recreating clicking event for selector */
+  function reloadSelector(e){
+     var ID=$(this).attr('name');
+     console.log('clicked',ID);
+     var item=$(this).val();
+     console.log("transferred chart information:",chartInfo[ID].data.drawingInfo);
+     var seriesNames=chartInfo[ID].data.drawingInfo.seriesNames;
+     
+     var qID=chartInfo[ID].data.drawingInfo.queryID;
+     var qData=chartInfo[ID].data.drawingInfo.queryData;
+     console.log("queryID",qID,"queryData",qData);
+     var sID="#"+chartInfo[ID].selectorID+"-"+ID.split("-")[1];
+     ID="#"+ID;
+     draw_stock_helper(ID,sID,qID,0,0,qData,0,seriesNames);
+     
+
+     //      
+     
+  }
+  /* ---end of reloadSelector() */
+  
+
+  $("#status").text('Connected');
+  socket.on('testMethod', function (chartData) {
+    chartInfo["chart-"+chartCounter]=chartData;
+    console.log("chartData:",chartData);
+    console.log(chartData.name);
+    shortChartName=chartData.name.split(" ")[0];
+    chartElement="<div  class='col-xs-12 col-sm-6 widget-container-span ui-sortable' style='position: relative; bottom: 0px;'><div class='widget-box'> <div class='widget-header widget-header-flat' id='widget-"+chartCounter+"'><div class='row'><div class='col-xs-12' style='padding:0 !important;'><div class='col-xs-6' style='padding:0 !important;'><h5><i class='icon-signal'></i> "+chartData.name+"</h5></div><div class='col-xs-5 pull-right'><span class='widget-toolbar row' style='width:200px; padding:0 !important;'><div class='col-xs-9' id='selector-placeholder-"+chartCounter+"' style='padding:0 !important; padding-left:5% !important; margin: 1px !important;'></div><span class='ui-pg-div pull-right' data-original-title='close this chart'><span class='ui-icon icon-remove-sign red' id='close-"+shortChartName+"-"+chartCounter+"' style='margin:10px;'></span></span></span></div></div></div></div><div class='widget-body'><div class='widget-main' id='chart-"+chartCounter+"'> </div </div><!-- /widget-body --></div><!-- /widget-box --></div><!--col6-->";
+    var options=chartData.data.options;
+    $("#charts").append(chartElement);
+
+    console.log(options);
+    var seriesOptions=chartData.data.seriesOptions;
+    options.chart.renderTo="chart-"+chartCounter;
+    options.series=seriesOptions;
+
+
+    console.log("options:",options);
+    var tempchart=new Highcharts.StockChart(options);
+    tempchart.xAxis[0].setExtremes(chartData.data.extremes.min,chartData.data.extremes.max);
+    console.log("extremes",tempchart.xAxis[0].getExtremes());
+
+
+      // as innerhtml solid code destroyes all even listeners for a DOM object, I recreate the eventListener
+      var cbutton=document.getElementById('close-'+shortChartName+"-"+chartCounter);
+      cbutton.addEventListener("click", function(){ 
+          $(this).parents().eq(7).remove();
+       }, false);
+
+      /* recreasting selector:*/
+      var selectorTemp=document.createElement("select");
+      selectorTemp.id=chartData.selectorID+"-"+chartCounter;
+      selectorTemp.onchange=reloadSelector;
+      selectorTemp.className="width-90 chosen-select2";
+      selectorTemp.name="chart-"+chartCounter;
+      
+
+      /* adding options to selector */
+      if (chartData.selectorType === "BAS"){
+
+        var EnergyList={"Energy1":"Solar","Energy2":"DWHR","Energy3":"Geothermal + DWHR","Energy4":"Solar + DWHR + Geothermal + Heat Pumps","Energy5":"Boiler 1","Energy6":"Boiler 2","Energy7":"Heating Consumption"};
+        var ElecList={"Total_P1":"Total Geo Circ. Pump","Total_HP":"Total Heat Pumps","P11":"Geo Circ. Pump 2","P12":"Geo Circ. Pump 1","HP1":"Heat Pump 1","HP2":"Heat Pump 2","HP3":"Heat Pump 3", "HP4":"Heat Pump 4"};
+        chartData.selectorOptions.forEach(function(item){
+
+            if( item in EnergyList)
+              selectorTemp[selectorTemp.length]=new Option(EnergyList[item], item, false, false);
+            else
+              selectorTemp[selectorTemp.length]=new Option(ElecList[item], item, false, false);
+          });
+
+      }else{
+        chartData.selectorOptions.forEach(function(item){
+          selectorTemp[selectorTemp.length]=new Option(item, item, false, false);
+        });
+      }
+      selectorTemp.value=chartInfo["chart-"+chartCounter].selectorVal;
+
+      /* --- */
+
+      document.getElementById("selector-placeholder-"+chartCounter).appendChild(selectorTemp);
+
+      console.log("selector in chart :",selectorTemp);
+      console.log(chartInfo);
+    
+    chartCounter++;
+  });
+  
+  
+</script>
+
+{% endblock %}

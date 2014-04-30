@@ -95,7 +95,7 @@ class Engineer2 {
         /* Assume that all dates are in a "canonical" format -- that is, 
          * prevent the server's default timezone from affecting the date. */
         date_default_timezone_set('UTC');
-
+       // echo "***** {$datefrom} ****";
         
         $intervalString = null;
         switch ($granularity) {

@@ -1,4 +1,4 @@
-{% extends 'manager/base.html' %}
+{% extends 'manager/new_base.html' %}
 
 {% block title 'Utility Contracts' %}
 
@@ -14,59 +14,115 @@
 
     <!-- Utility Config -->
     <div class="config">
-        <div id="utility-display" class="config-display utilities">
-            <p class="title">Utility Contracts</p>
-            <table>
-                <tr class="header">
-                    <th class="type">Type</th>
-                    <th class="price">Price</th>
-                    <th class="startdate">Start Date</th>
-                    <th class="enddate">End Date</th>
-                    <th colspan="2"></th>
-                </tr>
+        <div class="row">
+            <div class="col-sm-5">
+                <div id="utility-display" class="config-display utilities">
+                    <div class="widget-box">
+                        <div class="widget-header widget-header-flat">
+                            <h4>Utility Contracts</h4>
+                        </div>
+                        <div class="widget-body">
+                             <div class="widget-main">
+                                 <div class="row"> 
+                                     <div class="col-xs-12">
+                    
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <tr class="header">
+                                                <th class="type">Type</th>
+                                                <th class="price">Price</th>
+                                                <th class="startdate">Start Date</th>
+                                                <th class="enddate">End Date</th>
+                                                <th colspan="2"></th>
+                                            </tr>
 
-                {% for utility in utilitiesData['utilities'] %}
-                <tr id="utility_{{ utility['id'] }}" class="body">
-                    <td class="type">{{ utility['type'] }}</td>
-                    <td class="price">{{ utility['price'] }}</td>
-                    <td class="startdate">{{ utility['startdate'] }}</td>
-                    <td class="enddate">{{ utility['enddate'] }}</td>
-                    <td><button class="edit-utility">Edit</button></td>
-                    <td><button class="delete-utility"">Delete</button></td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-
-        <div class="config-editor">
-            <form id="utility-editor">
-                <fieldset>
-                    <legend>Utility Prices Editor</legend>
-
-                    <div>
-                    <select name="type">
-                        <option value="electricity">Electricity</option>
-                        <option value="water">Water</option>
-                    </select>
+                                            {% for utility in utilitiesData['utilities'] %}
+                                            <tr id="utility_{{ utility['id'] }}" class="body">
+                                                <td class="type">{{ utility['type'] }}</td>
+                                                <td class="price">{{ utility['price'] }}</td>
+                                                <td class="startdate">{{ utility['startdate'] }}</td>
+                                                <td class="enddate">{{ utility['enddate'] }}</td>
+                                                <td><button class="edit-utility">Edit</button></td>
+                                                <td><button class="delete-utility">Delete</button></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" col-sm-6">
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat">
+                        <h4>Utility Prices Editor</h4>
                     </div>
 
-                    <label for="price">Price (per KWH for electricity, per gallon for water)</label><br>
-                    <input name="price" type="text" /><br>
+                    <div class="widget-body">
+                        <div class="widget-main col-md-offset-1">
+                            <div class="row">
+                                <form id="utility-editor">
+                                    <fieldset>
+                                        <legend></legend>
 
-                    <label for="startdate">Start Date</label><br>
-                    <input name="startdate" type="text" /><br>
+                                        <div class="col-md-9 ">
+                                                <label for="price">Price (per KWH for electricity, per gallon for water)</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="icon-calendar bigger-110"></i>
+                                                    </span>
 
-                    <label for="enddate">End Date</label><br>
-                    <input name="enddate" type="text" /><br>
+                                                     <input name="price" type="text" />
+                                                </div>           
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label>Source</label>
+                                            <select name="type">
+                                                <option value="electricity">Electricity</option>
+                                                <option value="water">Water</option>
+                                            </select>
+                                        </div> 
+                                                            
+                                        <div class="space-6"></div>
+                                        <div class="row" >
+                                            <div class="col-xs-6">
+                                                <label for="startdate">Start Date</label>
+                                                <div  class="row">
+                                                    <div class="col-xs-2 col-sm-6">
+                                                        <input name="startdate" type="text" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <label for="enddate">End Date</label>
+                                                <div  class="row">
+                                                    <div class="col-xs-2 col-sm-6">
+                                                        <input name="enddate" type="text" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="space-6"></div>
+                                        <div class="space-6"></div>
+                                        <div class="row">
+                                                <div class="col-md-4 col-md-offset-2">
+                                                    <button class="button btn btn-danger editor-reset" type="button" tabindex="-1">Cancel</button>
+                                                </div>
+                                                <div class="col-md-4 " >
+                                                    <input class="button btn btn-success" name="submit" type="submit" value="Submit" style=""/>
+                                                </div>
+                                        </div>  
 
-                    <div class="footer">
-                        <button class="button editor-reset" type="button" tabindex="-1">Cancel</button>
-                        <input class="button" name="submit" type="submit" value="Submit"/>
+                                        <input class="id" name="id" value="-1" type="hidden"/>
+                                    
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-
-                    <input class="id" name="id" value="-1" />
-                </fieldset>
-            </form>
+                </div>
+            </div>
         </div>
     </div> <!-- Utility Config -->
 </div> <!-- Configs -->

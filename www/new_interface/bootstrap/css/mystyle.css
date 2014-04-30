@@ -1,0 +1,55 @@
+@gray:         lighten(#000, 33.5%);
+
+body{
+	padding-top:50px;
+}
+
+
+.nav-sidebar{
+	margin-left:-20px;
+	margin-right: -20px;
+}
+#ribbon{
+	margin-left:-10px;
+	padding: 1%;
+}
+.nav-sidebar li{
+
+	padding-left: 0 20px;
+	color: ;
+
+}
+.nav-sidebar a{
+	
+	font-size: 1.1em;
+	padding-left: 1em;
+}
+
+.nav-sidebar > .active >a {
+	color: #555;
+	background-color: #999;
+}
+
+.glyphicon {
+	padding: 0em 1em;
+	font-size: 1.5em;
+	vertical-align: baseline;
+}
+li.side-menu .glyphicon {
+	padding-left: 0.25em;
+	padding-right: 1em;
+	font-size: 1em;
+	vertical-align: baseline;
+}
+li.side-menu a{
+	font-size: 1.25em;
+}
+
+#ribbon{
+	background-color: grey;
+}
+
+.nav-collapse{
+	background-color: #555;
+}
+

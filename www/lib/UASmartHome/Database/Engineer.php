@@ -4,15 +4,27 @@ date_default_timezone_set("America/Edmonton");
 
 class Engineer {
 	 private static $dataTypes = null;
-    //This hnadles the query of the database 
+    //This handles the query of the database 
     function db_pull_query($apt, $column, $startdate, $enddate, $period, $Phase=null) {
+        $tables = array("Total_HP"=>"TotalElec","Total_P1"=>"TotalElec","P11"=>"BasEnergy",
+            "P12"=>"BasEnergy","HP1"=>"BasEnergy","HP2"=>"BasEnergy","HP3"=>"BasEnergy","HP4"=>"BasEnergy",
+            "Relative_Humidity"=>"Air","Outside_Temperature"=>"OutsideTemp",
+            "Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water",
+            "HeatFlux_Insulation"=>"Heat_Flux", "HeatFlux_Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water",
+            "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",
+            "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating",
+            "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy",
+            "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy",
+            "AUX5"=>"El_Energy", "Wind_Speed"=>"Weather_Forecast", "Wind_Direction" => "Weather_Forecast");
+       // echo $column;
 
-        $tables = array("Total_HP"=>"TotalElec","Total_P1"=>"TotalElec","P11"=>"BasEnergy","P12"=>"BasEnergy","HP1"=>"BasEnergy","HP2"=>"BasEnergy","HP3"=>"BasEnergy","HP4"=>"BasEnergy","Relative_Humidity"=>"Air","Outside_Temperature"=>"OutsideTemp", "Temperature" => "Air", "CO2"=>"Air", "Hot_Water"=>"Water", "Total_Water"=>"Water", "HeatFlux_Insulation"=>"Heat_Flux", "HeatFlux_Stud"=>"Heat_Flux", "Current_Flow"=>"Heating_Water", "Current_Temperature_1"=>"Heating_Water", "Current_Temperature_2"=>"Heating_Water",  "Total_Mass"=>"Heating", "Total_Energy"=>"Heating", "Total_Volume"=>"Heating", "Phase"=>"El_Energy", "Ch1"=>"El_Energy", "Ch2"=>"El_Energy", "AUX1"=>"El_Energy", "AUX2"=>"El_Energy", "AUX3"=>"El_Energy", "AUX3"=>"El_Energy", "AUX4"=>"El_Energy", "AUX5"=>"El_Energy", "Wind_Speed"=>"Weather_Forecast", "Wind_Direction" => "Weather_Forecast");
 
         $table = $tables[$column];
 
+
         /* Assume that all dates are in a "canonical" format -- that is, 
          * prevent the server's default timezone from affecting the date. */
+
         date_default_timezone_set('UTC');
 
         if ($period === "Hourly") {
@@ -26,12 +38,16 @@ class Engineer {
         $results = array();
 
         if ($period == "Hourly") {
+            //echo "hourly ***";
             $temp = Engineer::db_query_Hourly($apt, $table, $startdate->format('Y-m-d:H'), $enddate->format('Y-m-d:H'), $column, $Phase);
+            //var_dump($temp);
+
             foreach($temp as $row) {
+
                 $returnDate = date_create_from_Format('Y-m-d:G', $row["TS"]);
                 $results[$returnDate->format('Y-m-d:G')][$column] = $row[$column];
-            }
 
+            }
         } else if ($period === "Daily") {
             while ($startdate <= $enddate) {
                 $temp = Engineer::db_query_Daily($apt, $table, $startdate->format('Y-m-d'), $column, $Phase);
@@ -81,6 +97,7 @@ class Engineer {
                 $year = $startdate->format("Y");
             }
         }
+
         return $results;
     }
 

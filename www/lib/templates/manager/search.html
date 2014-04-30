@@ -5,7 +5,7 @@
  #
  #}
 
-{% extends 'manager/base.html' %}
+{% extends 'manager/new_base.html' %}
 
 {% block title 'Search' %}
 
@@ -13,12 +13,51 @@
 
 {# See below for the templates within the templates. #}
 
+{% block breadcrumb %}
+<li>
+  <i class="icon-home home-icon"></i>
+  <a href="#">Home</a>
+</li>
+<li>Graphs &amp; Charts</li>
+
+<li class="active">Old Graphs</li>
+{% endblock %}
+
+
+
 {% block content %}
-<div class="loading-placeholder">
-Graphs are loading &mdash; hang tight!
-</div>
-<ul id="graphs"></ul>
-<a href="#add-graph">Create graph</a>
+
+<div class="row graph-holder">
+  <div class="col-xs-12 create-after">
+
+                     
+      <div class="row">
+        <div class="loading-placeholder">
+        Graphs are loading &mdash; hang tight!
+        </div>
+        </div>
+      <div class="row" >
+        <ul id="graphs" style="margin:0; padding:0;">
+        </ul>
+        <a  href="#add-graph">
+             Create Graph
+         </a>
+      </div>
+
+                   
+      
+  </div><!--col-xs-12-->
+</div><!--row-->
+  <script>
+  $(document).ready(function(){
+    $('#new-graph').on('click',function(){
+      console.log('clicked');
+      $(".graph-holder").appendTo(".graph-holder");
+    });
+  });
+</script> 
+
+
 {% endblock content %}
 
 {#
@@ -36,6 +75,7 @@ Graphs are loading &mdash; hang tight!
 {% block extraScripts %}
 {# First, some injected JSON data. Because, why make more than one HTTP request
 (says the guy making like... 15 just for scripts. ) #}
+
 <script>
 var categoryData = {{ categories|raw }};
 var apartmentData = {{ apartments|raw }};
@@ -57,33 +97,52 @@ var apartmentLabels = ["3-B-S",
   graphControls:  Provide your own <li>s for the controls.
 #}
 <script id="_t-graph-group" type="text/html">
-  <li class="graph-group" id="<%= graphID %>">
-    <ul class="graph-vis-controls">
-      <li><a href="#destroy-graph">Remove Graph</a></li>
-      {# Currently, these guys are disabled. 
-      <li><a href="#minify-graph">Minify</a></li>
-      <li><a href="#hide-graph">Hide</a></li>
-      <li><a href="#show-graph">Show</a></li>
-      #}
-    </ul>
-    <ul class="graph-controls"><%= graphControls %></ul>
-    <div class="graph-container">
-      <div class="graph" />
-      <div class="graph-legend" />
-      <div class="graph-messages" />
-    </div>
+
+  <li class="graph-group" id="<%= graphID %>" style="padding:0;">
+    <div class="row">
+    <div class="col-xs-12">
+        <div class="col-xs-3" style="padding-left:0;">
+        <div  style="width:100%; background-color: #EFF3F8;" >
+          <div class="graph-controls" style="padding:5%; "><%= graphControls %>
+           <div></div>
+
+          
+          </div><!-- /.nav-list -->
+          
+
+         
+           
+          
+        </div> 
+
+        </div>
+    
+
+
+        <div class="col-xs-8" style="padding-top:5%; padding-left:2%;">
+        <div class="graph-container">
+          <div class="graph" />
+          <div class="graph-legend" />
+          <div class="graph-messages" />
+        </div>
+        </div>
+      </div>
+      </div>
   </li>
 </script>
+
+
+
 {# Parameters
   header:     The title of the field
   content:    The FULL HTML content (including any wrapping). Must be one
               element.
 #}
 <script id="_t-graph-control-li" type="text/html">
-  <li>
+  <div>
     <h3 class="spiffy-header"><%- header %></h3>
     <%= content %>
-  </li>
+  </div>
 </script>
 {# Parameters
   xAxis:  a series of options/optgroups
@@ -99,6 +158,7 @@ var apartmentLabels = ["3-B-S",
       </select>
     </label>
 
+
     <label><span class="the-actual-gorram-label">Y Axis</span></label>
 		<select class="graph-control-axis graph-control-axis-y yaxis0" name="yaxis0"><%= yAxis %></select>
 		<select class="graph-control-axis graph-control-axis-y yaxis1" name="yaxis1" style="display: none"><%= yAxis %></select>
@@ -111,7 +171,8 @@ var apartmentLabels = ["3-B-S",
 		<select class="graph-control-axis graph-control-axis-y yaxis8" name="yaxis8" style="display: none"><%= yAxis %></select>
 		<select class="graph-control-axis graph-control-axis-y yaxis9" name="yaxis9" style="display: none"><%= yAxis %></select>
   
-	 <button onclick='addYItem()'>Add Y</button>
+	 <button class="btn" style="margin-top:4%;" onclick='addYItem()'>Add Y</button>
+   <hr>
   </div>
 </script>
 {# Parameters
@@ -197,51 +258,69 @@ var apartmentLabels = ["3-B-S",
 #}
 
 <script id="_t-graph-control-apartments" type="text/html">
-<p><strong><font size="2">Floor-Type-Orientation</font></strong></p>
-  <div data-select-boundary class="graph-controls-apartment">
-    <ul data-for-process data-name="apts">
-      <% _.each(apartments, function (number) { %>
-      <li><label><input name="apts" type="checkbox" value="<%= number %>" />
-          <span class="postfix-label">
-            Apt. <%= number %> (<%= apartmentLabels[number-1] %>)
-      </label> </span> </li>
-      <% }); %>
 
-    </ul>
-    <label><input class="select-all" value="Select all" type="button" />
-      {#<span class="postfix-label"> Select all </span>#} </label>
-    <label><input class="select-none" value="Select none" type="button" />
-      {# <span class="postfix-label"> Select all </span>#} </label>
+    <h5>Floor-Type-Orientation</h5>
+        <div class="row">
+        <ul  data-for-process data-name="apts" style="padding-left:2%">
+         
+          <% _.each(apartments, function (number) { %>
+          <li><label for="apt <%= number %>">
+              <input  name="apts" type="checkbox"  value="<%= number %>" />
+              <span class="postfix-label">
+                <%= apartmentLabels[number-1] %>
+          
+                </span> 
+            </label>
+          </li>
+          <% }); %>
 
-<form>{# This form is here so that the radio buttons work properly... #}
-    <ul data-for-process class="graph-controls-apt-mult" data-graph data-name="graph-apt-mult">
-      <li><label><input checked type="radio" name="graph-apt-mult" value="seperate" />
-          Seperate
-        </label></li>
-      <li><label><input type="radio" name="graph-apt-mult" value="sum" />
-          Sum
-        </label></li>
-      <li><label><input type="radio" name="graph-apt-mult" value="avg" />
-          Average
-        </label></li>
-    </ul>
-</form>
+        </ul>
+        </div>
+      
+        <hr >
+         
 
-  </div>
+           <!--changed to button group -->
+          <div class="row">
+          <form>
+              <div class="row" data-for-process class="btn-group" data-toggle="buttons" data-graph data-name="graph-apt-mult" style="margin-left:2%">
+                <button class="btn btn-sm btn" ><input checked type="radio" name="graph-apt-mult" value="seperate" />
+                    Seperate
+                  </button>
+                <button class="btn btn-sm btn"><input type="radio" name="graph-apt-mult" value="sum" />
+                    Sum
+                  </button>
+                <button class="btn btn-sm btn"><input type="radio" name="graph-apt-mult" value="avg" />
+                    Average
+                  </button>
+              </div> 
+
+
+          </form>
+          </div>
+
+
+     
 </script>
+
+
+
 {# Parameters: None
 #}
 <script id="_t-graph-control-types" type="text/html">
   <form>{# This form is here so that the radio buttons work properly... #}
   <ul data-for-internal class="graph-controls-type" data-graph data-name="graph-type">
-      <li><label><input checked type="radio" name="graph-type" value="line" />
-          <span class="graph-preview">Line graph</span>
+      <li>
+        <label><input class="ace" checked type="radio" name="graph-type" value="line" />
+          <span class="graph-preview lbl">Line graph</span>
         </label></li>
-      <li><label><input type="radio" name="graph-type" value="bar" />
-          <span class="graph-preview">Bar graph</span>
+      <li>
+        <label><input class="ace" type="radio" name="graph-type" value="bar" />
+          <span class="graph-preview lbl">Bar graph</span>
         </label></li>
-{#    <li><label><input type="radio" name="graph-type" value="pie" />
-          <span class="graph-preview">Pie chart</span>
+{#    <li>
+        <label><input class="ace" type="radio" name="graph-type" value="pie" />
+          <span class="graph-preview lbl">Pie chart</span>
         </label></li>#}
     </ul>
   </form>

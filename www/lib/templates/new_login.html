@@ -1,0 +1,120 @@
+{% set loginTitle = pageTitle|default('HomeWatch Login') %}
+
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>{{ loginTitle }}</title>
+    <!--
+    <link rel="stylesheet" type="text/css" href="/HomeWatch/css/common.css" />
+    <link rel="stylesheet" type="text/css" href="/HomeWatch/css/login.css" />-->
+    <script data-main="/HomeWatch/js/login" src="/HomeWatch/js/vendor/require-jquery.js"></script>
+      <!-- basic styles -->
+
+      <link href="/HomeWatch/new_interface/assets/css/bootstrap.min.css" rel="stylesheet" />
+      <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/font-awesome.min.css" />
+
+      <!--[if IE 7]>
+        <link rel="stylesheet" href="assets/css/font-awesome-ie7.min.css" />
+      <![endif]-->
+
+      <!-- page specific plugin styles -->
+
+      <!-- fonts -->
+
+      <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace-fonts.css" />
+
+      <!-- ace styles -->
+
+      <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace.min.css" />
+      <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace-rtl.min.css" />
+       <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/mystyle.css" />
+
+      <!--[if lte IE 8]>
+        <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
+      <![endif]-->
+
+      <!-- inline styles related to this page -->
+
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+      <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+      <script src="assets/js/respond.min.js"></script>
+      <![endif]-->
+  </head>
+<body class="login-layout" >
+          <div class="main-container">
+            <div class="main-content">
+            <div class="row">
+            <div class="col-sn-10 col-sm-offset-1">
+            <div class="login-container">
+            <div class="center">
+                <h1>
+                  <i class="icon-leaf green"></i>
+                  <span class="red">Home Watch</span>
+                </h1>
+                
+              </div>
+
+
+            <div class="space-6"></div>
+            <div class="position-relative">
+                <div id="login-box" class="login-box visible widget-box no-border">
+
+                <div class="widget-body">
+                    <div class="widget-main">
+                      <h4 class="header blue lighter bigger">
+                        <i class="icon-coffee green"></i>
+                        Please Enter Your Information
+                      </h4>
+                      <div id="wrapper">
+                      <div id="login-content">
+                      <div class="space-6"></div> <!--line-->
+                      {% block loginForm %}
+                                
+                                  <form id="login-form">
+                                    <fieldset>
+                                    <label for="username" class="block clearfix"> 
+                                      <span class="block input-icon input-icon-right">
+                                      <input name="username" type="text" autofocus="autofocus" class="form-control" />
+                                      </span>
+                                    </label>
+
+                                    <label for="password" class="block clearfix">
+                                    <span class="block input-icon input-icon-right">
+                                      <input type="password" class="form-control" placeholder="Password" name="password"/>
+                                      <i class="icon-lock"></i>
+                                    </span>
+                                  </label>
+                                  <div class="space"></div>
+                                  <div class="clearfix">
+                                      <button name="submit" type="submit" value="Login" class="width-35 pull-right btn btn-sm btn-primary">
+                                          <i class="icon-key"></i>
+                                            Login
+                                  </button>
+                                    </div>
+                                  <div id="login-error" class="error-string"></div>
+                  
+                                  </fieldset>
+                                </form>
+                                  
+                                  <nav class="extra-items">
+                                    <ul class="inline-nav-list">
+                                      <li><a id="forgotPassword" href="/HomeWatch/auth/forgot-password.php">Forgot password?</a></li>
+                                    </ul>
+                                  </nav>
+                        {% endblock loginForm %}
+                   
+                  </div> {# #login-content #}
+                 </div>{# #wrapper #}
+                 </div> <!--widget-main-->
+               </div><!--widget-body-->
+          </div><!--login-box-->
+        </div> <!--position-->
+      </div> <!--login container-->
+  </div> <!--col 10-->
+</div> <!--row-->
+</div><!--main content-->
+</div> <!--main container-->
+</body>
+</html>

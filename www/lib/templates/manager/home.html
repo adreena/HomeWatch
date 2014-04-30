@@ -7,25 +7,25 @@
 {% set features = [
   {
     'name': 'Graphs',
-    'url': '/HomeWatch/search/',
+    'url': '/search/',
     'iconURL': 'graphs.png'
   },
 
   {
     'name': 'Resident management',
-    'url': '/HomeWatch/manager/residents.php',
+    'url': '/manager/residents.php',
     'iconURL': 'configuration.png'
   },
 
   {
     'name': 'Utility contracts',
-    'url': '/HomeWatch/manager/utilitycontracts.php',
+    'url': '/manager/utilitycontracts.php',
     'iconURL': 'utilities.png'
   },
 
   {
     'name': 'Add new resident',
-    'url': '/HomeWatch/auth/register.php',
+    'url': '/auth/register.php',
     'iconURL': 'residents.png'
   }
 ]
@@ -41,7 +41,7 @@
 <ul class="big-icons">
 {% for feature in features %}
 <li><a href="{{ feature.url }}">
-    <img class="big-icon" src="/HomeWatch/img/{{ feature.iconURL }}" alt="{{ feature.name }}" />
+    <img class="big-icon" src="/img/{{ feature.iconURL }}" alt="{{ feature.name }}" />
     <span class="big-icon-label">{{ feature.name }}</span>
 </a></li>
 {% else %}

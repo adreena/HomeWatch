@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <meta name="description" content="Common UI Features &amp; Elements" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+     <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/HomeWatch/css/mangineer.css">
+
+    <link href="/HomeWatch/new_interface/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/font-awesome.min.css" />
+    <!--[if IE 7]>
+      <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/font-awesome-ie7.min.css" />
+    <![endif]-->
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/jquery-ui-1.10.3.custom.min.css" />
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/jquery-ui-1.10.3.full.min.css" />
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/chosen.css" />
+
+
+    
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/datepicker.css" />
+
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace-fonts.css" />
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace.min.css" />
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace-rtl.min.css" />
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace-skins.min.css" />
+    <script src="/HomeWatch/new_interface/assets/js/ace-extra.min.js"></script>
+    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/mystyle.css" />
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+    <script data-main="{% block requireMain '/HomeWatch/js/main' %}" src="/HomeWatch/js/vendor/require-jquery.js"></script>
+
+    <!--[if lte IE 8]>
+      <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
+    <![endif]-->
+
+    <!-- inline styles related to this page -->
+
+    <style>
+      .spinner-preview {
+        width:100px;
+        height:100px;
+        text-align:center;
+        margin-top:60px;
+      }
+      
+      .dropdown-preview {
+        margin:0 5px;
+        display:inline-block;
+      }
+      .dropdown-preview  > .dropdown-menu {
+        display: block;
+        position: static;
+        margin-bottom: 5px;
+      }
+    </style>
+  <title>{% block title '' %}{% block titleTagline ' - HomeWatch' %}</title>
+   
+ 
+  {% block extraStyles '' %}
+  
+
+   
+
+
+  {% block requireConfig %}
+  <script>
+  // Require config!
+  require.config({
+      shim: {
+          underscore: {
+              exports: '_'
+          }
+      },
+      paths: {
+          underscore: 'vendor/underscore'
+     }
+  });
+  </script>
+  {% endblock requireConfig %}
+
+  {% block extraScripts  %} {% endblock %}
+    
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.highcharts.com/stock/highstock.js"></script>
+    <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+    
+    <script src="/HomeWatch/my_search/js/highcharts_pie.js"></script>
+    <script src="/HomeWatch/my_search/js/highcharts_bar_column.js"></script>
+    <script src="/HomeWatch/my_search/js/highcharts_bar.js"></script>
+    <script src="/HomeWatch/my_search/js/highcharts_stack_bar.js"></script>
+    <script src="/HomeWatch/my_search/js/highcharts_multiax_bar.js"></script>
+     <script src="/HomeWatch/my_search/js/highcharts_stack_area.js"></script>
+<script src="/HomeWatch/my_search/js/highcharts_stock.js"></script>
+    
+
+    <!-- ace settings handler -->
+
+
+    
+    
+
+</head>
+<body>
+
+          
+          <div id="navbar" class="navbar navbar-default" style="background-color:#576D84;">
+          {% include '%s/new_header.html'|format(userRole|default('manager')) %}
+          </div>
+
+          <div class="main-container" id="main-container">
+            <script type="text/javascript">
+              try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+            </script>
+
+            <div class="main-container-inner">
+              <a class="menu-toggler" id="menu-toggler" href="#">
+                <span class="menu-text"></span>
+              </a>
+
+              
+              <div class="sidebar" id="sidebar">
+                {% include '%s/side-navigation.html' |format(userRole|default('manager'))%} 
+              </div> <!--side bar-->
+          
+
+          
+
+              <div class="main-content">
+                <div id="breadcrumbs" class="breadcrumbs">
+                <script type="text/javascript">
+                  try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+                </script>
+
+                <ul class="breadcrumb">
+                  {% block breadcrumb %} {% endblock %}
+                </ul><!-- .breadcrumb -->
+
+                <div id="nav-search" class="nav-search">
+                  <form class="form-search">
+                    <span class="input-icon">
+                      <input type="text" autocomplete="off" id="nav-search-input" class="nav-search-input" placeholder="Search ...">
+                      <i class="icon-search nav-search-icon"></i>
+                    </span>
+                  </form>
+                </div><!-- #nav-search -->
+              </div>
+              {% block pageheader %} {% endblock %}
+                <div class="page-content" id='content'>
+                  <!-- PAGE CONTENT BEGINS -->
+                  
+            
+                    {% block content %} {% endblock %}
+                    
+                  </div> <!--page content-->
+              </div> 
+            </div><!--main content-->
+
+          </div>
+
+    <script type="text/javascript">
+      window.jQuery || document.write("<script src='/HomeWatch/new_interface/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+    </script>
+
+
+    <script type="text/javascript">
+      if("ontouchend" in document) document.write("<script src='/HomeWatch/new_interface/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+    </script>
+
+    <script src="/HomeWatch/new_interface/assets/js/bootstrap.min.js"></script>
+    <script src="/HomeWatch/new_interface/assets/js/typeahead-bs2.min.js"></script>
+
+    <script src="/HomeWatch/new_interface/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="/HomeWatch/new_interface/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+    <script src="/HomeWatch/new_interface/assets/js/jquery.ui.touch-punch.min.js"></script>
+    <script src="/HomeWatch/new_interface/assets/js/bootstrap-tag.min.js"></script>            
+    <script src="/HomeWatch/new_interface/assets/js/chosen.jquery.min.js"></script>
+
+
+
+    
+
+    <!-- page specific plugin scripts -->
+
+    <!-- ace scripts -->
+
+    <script src="/HomeWatch/new_interface/assets/js/ace-elements.min.js"></script>
+    <script src="/HomeWatch/new_interface/assets/js/ace.min.js"></script>
+<!-- inline scripts related to this page -->
+            <script src="/HomeWatch/new_interface/assets/js/bootbox.min.js"></script>
+   
+          
+
+    
+
+    <script src="/HomeWatch/new_interface/assets/js/date-time/bootstrap-datepicker.min.js"></script>
+    
+    
+    <!-- inline scripts related to this page -->
+
+ <script type="text/javascript">
+
+      jQuery(function($) {
+        
+      
+       $( "#datepicker" ).datepicker({
+          showOtherMonths: true,
+          selectOtherMonths: false,
+          autoclose:true,
+          format: 'yyyy-mm-dd',
+          //isRTL:true,
+      
+
+      
+        });
+       $( "#datepicker-air" ).datepicker({
+          showOtherMonths: true,
+          selectOtherMonths: false,
+          autoclose:true,
+          format: 'yyyy-mm-dd',
+          //isRTL:true,
+      
+        });
+        $(".chosen-select").chosen(); 
+       $(".chosen-select2").chosen();
+        
+
+        $('#id-pills-stacked').removeAttr('checked').on('click', function(){
+        $('.nav-pills').toggleClass('nav-stacked');
+        }); 
+
+        $('#apt-nav a').click(function (event) {
+            return false;
+          });
+
+        $('#drag').on("click",function(){
+
+          
+          if($(this).attr("checked")==undefined){
+
+            
+            $(this).attr("checked","checked");
+              console.log('activated');
+
+             
+              $(".row-fluid").sortable({
+
+                      placeholder: 'span4',
+                      connectWith: '.widget-container-span',
+                      helper: 'clone',
+                      appendTo: 'body',
+                      forcePlaceholderSize: true,
+                      start: function(event, ui) {
+                          $('.row-fluid > div.span4:visible:first').addClass('real-first-child');
+                      }, 
+                      stop: function(event, ui) {
+                          $('.row-fluid > div.real-first-child').removeClass('real-first-child');
+                      },
+                      change: function(event, ui) {
+                          $('.row-fluid > div.real-first-child').removeClass('real-first-child');
+                          $('.row-fluid > div.span4:visible:first').addClass('real-first-child');
+                      }
+                    });
+              $('.row-fluid').sortable('enable');
+          }else{
+                $(this).attr("checked",false);
+                $('.row-fluid').sortable('disable');
+                console.log('deactivated'); 
+              }
+        });  
+
+    $(".close").on("click",function(){
+      var parent=$(this).parents().eq(7).remove();
+    });
+
+    $( ".dash-btn" ).tooltip({
+          hide: {
+            effect: "slideDown",
+            delay: 250
+          }
+        });
+
+      });
+    </script>
+
+
+</body>
+</html>

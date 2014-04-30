@@ -10,7 +10,6 @@
  * (e.g., resident/home.html).
  *
  */
-
 require_once __DIR__ . '/vendor/autoload.php';
 
 use \UASmartHome\Auth\User;
@@ -52,7 +51,8 @@ if ($user != null) {
         case User::ROLE_DEV:
         case User::ROLE_ADMIN:
         case User::ROLE_MANAGER:
-            $homepage = 'manager/home.html';
+            //$homepage = 'manager/home.html';
+            $homepage='manager/new_home.html';
             break;
 
         case User::ROLE_ENGINEER:
@@ -69,6 +69,6 @@ if ($user != null) {
 
 } else {
     // No user session? Make 'em login.
-    echo $twig->render('login.html');
+    echo $twig->render('new_login.html');
 }
 

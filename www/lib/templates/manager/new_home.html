@@ -1,0 +1,171 @@
+{% extends 'manager/new_base.html' %}
+
+{% set productName = 'HomeWatch' %}
+
+{% block title 'Home' %}
+
+
+{% set features = [
+  {
+    'name': 'Graphs',
+    'url': '/HomeWatch/search/',
+    'iconURL': 'graphs.png'
+  },
+
+  {
+    'name': 'Resident management',
+    'url': '/HomeWatch/manager/residents.php',
+    'iconURL': 'configuration.png'
+  },
+
+  {
+    'name': 'Utility contracts',
+    'url': '/HomeWatch/manager/utilitycontracts.php',
+    'iconURL': 'utilities.png'
+  },
+
+  {
+    'name': 'Add new resident',
+    'url': '/HomeWatch/auth/register.php',
+    'iconURL': 'residents.png'
+  }
+]
+%}
+{% block extraScripts %}
+
+{% endblock %}
+
+{% block breadcrumb %}
+<li>
+  <i class="icon-home home-icon"></i>
+  <a href="#">Home</a>
+</li>
+<li class="active">Dashboard</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-10 col-sm-offset-2">
+    <div class="btn-group dash-btn" > 
+      <a class="btn btn-app btn-yellow" style="margin:2px 4px; padding:25px;" href="/HomeWatch/bas/bas-screen.php" title="BAS">
+        <i class="icon-building bigger-110"></i>
+      </a>
+
+      <a class="btn btn-app btn-info" style="margin:2px 4px; padding:25px;" href="/HomeWatch/electricity-consumption/calendar.php" title="Apartments">
+        <i class="icon-bar-chart bigger-110"></i>
+      </a>
+      <a class="btn btn-app btn-danger" style="margin:2px 4px; padding:25px;" href="/HomeWatch/search/" title="Old Graphs">
+        <i class="icon-undo bigger-110"></i>
+        
+      </a>
+      <a class="btn btn-app btn-success" style="margin:2px 4px; padding:25px; border-radius:25px;" href="/HomeWatch/manager/utilitycontracts.php" title="Utilities">
+        <i class="icon-dollar bigger-110"></i>
+        
+      </a>
+      <a class="btn btn-app btn-warning radius-4" style="margin:2px 4px; padding:25px;" href="/HomeWatch/manager/residents.php" title="Residents">
+        <i class="icon-group bigger-110"></i>
+        
+      </a>
+     
+      <a class="btn btn-app btn-purple" style="margin:2px 4px; padding:25px;" href="/HomeWatch/auth/register.php" title="New User">
+        <i class="icon-user bigger-110"></i>
+
+      </a>
+       
+      <a class="btn btn-app btn-grey" style="margin:2px 4px; padding:25px;" href="/HomeWatch/manager/configuration.php" title="Configuration">
+        <i class="icon-cog bigger-110"></i>
+        
+      </a>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+      <div class="col-xs-6 widget-container-span ">
+        <div class="widget-box">
+          <div class="widget-header">
+            <h4>BAS Summary</h4>
+          </div> <!--widget-header-->
+          
+          <div class="widget-body" id="bas-dashboard">
+          </div> <!--widget-body-->
+        </div> <!--widget-box-->
+      </div>
+
+      <div class="col-xs-6 widget-container-span ">
+        <div class="widget-box">
+          <div class="widget-header">
+              <h4> Apartment Summary</h4>
+              <div class="pull-right" style="padding:3px;"> 
+                <select  id="dash-apt-select" class=" pull-right width-30 chosen-select" data-style="btn" style=" margin:0; display:none; ">
+                    <option value="Apt.1">Apt.1</option>
+                    <option value="Apt.2">Apt.2</option>
+                    <option value="Apt.3">Apt.3</option>
+                    <option value="Apt.4">Apt.4</option>
+                    <option value="Apt.5">Apt.5</option>
+                    <option value="Apt.6">Apt.6</option>
+                    <option value="Apt.7">Apt.7</option>
+                    <option value="Apt.8">Apt.8</option>
+                    <option value="Apt.9">Apt.9</option>
+                    <option value="Apt.10">Apt.10</option>
+                    <option value="Apt.11">Apt.11</option>
+                    <option value="Apt.12">Apt.12</option>
+                </select>
+            </div>
+          </div>
+          <div class="widget-body" id="apt-dashboard">
+          </div>
+        </div>
+      </div>        
+    </div>
+</div>
+
+<script>
+function sendAjax(consumption,apt){
+
+            var query=[];
+            query[0]=consumption;
+            console.log(query[0]);
+            //elec_query[1]=date;
+            //var enddate=date.replace(" 0"," 23");
+           
+           // elec_query[2]=enddate;
+           // elec_query[3]=source;
+          
+            tmpURL='';
+            if(consumption==='apt-dashboard'){
+              tempURL="http://localhost:8888/HomeWatch/my_search/electricity.php";
+                query[1]=apt;
+                console.log(apt);
+            }
+            else if(consumption==='bas-dash')
+              tempURL="http://localhost:8888/HomeWatch/my_search/bas.php";
+
+            var queryResult=$.parseJSON(
+                $.ajax({
+                 'async':false,
+                 'global':false,
+                  url:tempURL,
+                  type:"get",
+                  data:{id:query}
+                 
+                }).responseText);
+            return queryResult;
+        }
+   $(document).ready(function(){
+        var data=sendAjax("bas-dash","bas");
+        draw_multiax_bar("bas-dashboard",data['data']);
+
+        var data=sendAjax("apt-dashboard","Apt.1");
+        draw_multiax_bar("apt-dashboard",data['data']);
+        
+        $("#dash-apt-select").on('change',function(){
+            var apartment=$("#dash-apt-select").val();
+            console.log(apartment);
+            data=sendAjax("apt-dashboard",apartment);
+            draw_multiax_bar("apt-dashboard",data['data']);
+        });
+        //
+    });
+</script>
+{% endblock %}

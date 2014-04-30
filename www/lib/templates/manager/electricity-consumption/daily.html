@@ -1,0 +1,187 @@
+{% extends 'manager/new_base.html' %}
+
+{% set productName = 'HomeWatch' %}
+
+{% block title 'Electricity Consumption | Daily Details' %}
+{% block extraScripts %}
+<script src="/HomeWatch/my_search/js/highcharts_spline.js"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+<li>
+  <i class="icon-home home-icon"></i>
+  <a href="#">Home</a>
+</li>
+<li>Graphs &amp; Charts</li>
+<li >Electricity Consumption</li>
+<li class="active">Search a Day</li>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-xs-12">
+
+      <div class="widget-container">
+        <div class="widget-header" style="padding-right:3%;">
+
+                        <div class="widget-box transparent" id="calnedar-setting">
+                          <div class="widget-header">
+
+                            <div class="widget-toolbar no-border" >
+                              <i class="icon-calendar bigger-110"></i>
+                              <a data-action="collapse" href="#" >
+                                <i class="icon-chevron-down"></i>
+                              </a>
+
+                              
+                            </div>
+                          </div>    
+          
+                          <div class="widget-body" >
+                            
+                                <div class="widget-main" >
+                                    <div class="row">
+                                        <div class="col-xs-1" style="padding:0;">
+                                        Pick a Day:
+                                        </div>
+                                        <div class="col-xs-5">  
+                                            <div class="input-group"> 
+                                              <input type="text" class="form-control hasDatepicker" id="datepicker" placeholder="yyyy-mm-dd"> 
+                                              <span class="input-group-btn ">
+                                                <button type="button" class="btn btn-sm btn-default" id="submit-date">
+                                                <i class="icon-calendar bigger-110"></i>
+                                                Go!
+                                                </button>
+                                              </span>       
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6" >
+                                           <select class="width-80 chosen-select" id="source-select" data-placeholder="Choose Source..." data-toggle="tooltip" data-placement="bottom" title="Source can't be epty">
+                                              <option value=""></option>
+                                              <option value="Mains (Phase A)">Mains (Phase A)</option>
+                                              <option value="Bedroom and hot water tank (Phase A)">Bedroom and Hot Water Tank (Phase A)</option>
+                                              <option value="Oven (Phase A) and range hood">Oven (Phase A) and Range Hood</option>
+                                              <option value="Microwave">Microwave</option>
+                                              <option value="Electrical duct heating">Electrical Duct Heating</option>
+                                              <option value="Kitchen plugs (Phase A) and bathroom lighting">Kitchen Plugs (Phase A) and Bathroom Lighting</option>
+                                              <option value="Energy recovery ventilation">Energy Recovery Ventilation</option>
+                                              <option value="Mains (Phase B)">Mains (Phase B)</option>
+                                              <option value="Kitchen plugs (Phase B) and kitchen counter">Kitchen plugs (Phase B) and Kitchen Counter</option>
+                                              <option value="Oven (Phase B)">Oven (Phase B)</option>
+                                              <option value="Bathroom">Bathroom</option>
+                                              <option value="Living room and balcony">Living Room and Balcony</option>
+                                              <option value="Hot water tank (Phase B)">Hot Water Tank (Phase B)</option>
+                                              <option value="Refrigerator">Refrigerator</option>                           
+                                         </select>
+                                            
+                                        </div><!--col-xs-6-->
+                                    </div>
+                                 
+                                </div><!--row-->
+
+                           
+     
+                          </div><!--body-->
+                        </div><!--box-->
+            </div><!--header-->
+            <div class="widget-body">
+                <div class="widget-main">
+                  
+                  <div id="spline-container"> 
+                 </div>
+                          
+                </div>
+            </div>
+                  
+        
+      </div><!--container-->
+
+    </div><!-- col-xs-12 --> 
+</div><!--row-->
+
+
+<script>
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+function sendAjax(date,consumption,source){
+
+            var elec_query=[];
+            elec_query[0]=consumption;
+            elec_query[1]=date;
+            var enddate=date.replace(" 0"," 23");
+           
+            elec_query[2]=enddate;
+            elec_query[3]=source;
+          
+            var queryResult=$.parseJSON(
+                $.ajax({
+                 'async':false,
+                 'global':false,
+                  url:"http://localhost:8888/HomeWatch/my_search/electricity.php",
+                  type:"get",
+                  data:{id:elec_query}
+                 
+                }).responseText);
+            return queryResult;
+        }
+
+   $(document).ready(function(){
+
+        var queryData=[];
+        
+
+        //this part handels data coming from calendar.html , date is inside ["val"] and source is set to Main Phase(A) by default, whihc cn be changed later. Url changes to clean format of daily.php with no values after spline is drawn
+        $("#source-select").parent().removeAttr("border");
+        dateVal=getUrlVars()["val"];
+        if(dateVal!==undefined){
+
+                  source="Mains (Phase A)";
+                  date=dateVal.toString()+" 0";
+                  console.log(dateVal,source);
+                  $("select#source-select option").each(function() { this.selected = (this.text == source); });
+                  var dateVal=dateVal.split("-");
+                  console.log(dateVal[0],dateVal[1],dateVal[2]);                  
+                  $("#datepicker").val(dateVal[0]+'-'+dateVal[1]+'-'+dateVal[2]);
+                  queryData=sendAjax(date,'hourly',source);
+                  window.history.pushState("", "", '/HomeWatch/electricity-consumption/daily.php');
+                }
+          else{
+            queryData['categories']=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+          queryData['query']={'Apt.1':[0],'Apt.2':[0],'Apt.3':[0],'Apt.4':[0],'Apt.5':[0],'Apt.6':[0],'Apt.7':[0],'Apt.8':[0],'Apt.9':[0],'Apt.10':[0],'Apt.11':[0],'Apt.12':[0]};
+          }
+         draw_spline("#spline-container",queryData);
+
+          
+          $("#submit-date").on('click',function(){
+            var date=$('#datepicker').val();
+            date=date.toString()+" 0";
+            var source=$("#source-select").val();
+            //console.log(source);
+            $("#source-select").css("border","1px solid black");
+            if(source!=""){
+              queryData=sendAjax(date,'hourly',source);
+              draw_spline("#spline-container",queryData);
+              $("#source-select").parent().css("border","");
+            }else{
+              console.log("affected");
+              $("#source-select").parent().css("border","solid 1px red");
+
+            }
+         });
+        
+   }); 
+</script>
+
+{% endblock %}
+
+
+
+
+
