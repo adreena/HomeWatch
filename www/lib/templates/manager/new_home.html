@@ -134,12 +134,12 @@ function sendAjax(consumption,apt){
           
             tmpURL='';
             if(consumption==='apt-dashboard'){
-              tempURL="http://localhost:8888/HomeWatch/my_search/electricity.php";
+              tempURL="/HomeWatch/new_search_highcharts/electricity.php";
                 query[1]=apt;
                 console.log(apt);
             }
             else if(consumption==='bas-dash')
-              tempURL="http://localhost:8888/HomeWatch/my_search/bas.php";
+              tempURL="/HomeWatch/new_search_highcharts/bas.php";
 
             var queryResult=$.parseJSON(
                 $.ajax({

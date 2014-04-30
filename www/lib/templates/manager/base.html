@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>{% block title '' %}{% block titleTagline ' - HomeWatch' %}</title>
-   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/HomeWatch/css/mangineer.css">
+  <link rel="stylesheet" type="text/css" href="/css/mangineer.css">
   {% block extraStyles '' %}
-  <script data-main="{% block requireMain '/HomeWatch/js/main' %}" src="/HomeWatch/js/vendor/require-jquery.js"></script>
+  <script data-main="{% block requireMain '/js/main' %}" src="/js/vendor/require-jquery.js"></script>
   {% block requireConfig %}
   <script>
   // Require config!
@@ -24,157 +22,13 @@
   </script>
   {% endblock requireConfig %}
   {% block extraScripts '' %}
-  <meta name="description" content="Common UI Features &amp; Elements" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- basic styles -->
-
-    <link href="/HomeWatch/new_interface/assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/font-awesome.min.css" />
-
-    <!--[if IE 7]>
-      <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/font-awesome-ie7.min.css" />
-    <![endif]-->
-
-    <!-- page specific plugin styles -->
-
-    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/jquery-ui-1.10.3.custom.min.css" />
-    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/jquery.gritter.css" />
-
-    <!-- fonts -->
-
-    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace-fonts.css" />
-
-    <!-- ace styles -->
-
-    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace.min.css" />
-    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace-rtl.min.css" />
-    <link rel="stylesheet" href="/HomeWatch/new_interface/assets/css/ace-skins.min.css" />
-
-    <!--[if lte IE 8]>
-      <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
-    <![endif]-->
-
-    <!-- inline styles related to this page -->
-
-    <style>
-      .spinner-preview {
-        width:100px;
-        height:100px;
-        text-align:center;
-        margin-top:60px;
-      }
-      
-      .dropdown-preview {
-        margin:0 5px;
-        display:inline-block;
-      }
-      .dropdown-preview  > .dropdown-menu {
-        display: block;
-        position: static;
-        margin-bottom: 5px;
-      }
-    </style>
-    <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
-    <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
-    <script src="/HomeWatch/my_search/js/highcharts_pie.js"></script>
-    <script src="/HomeWatch/my_search/js/highcharts_bar_column.js"></script>
-    <script src="http://code.highcharts.com/modules/drilldown.js"></script>
-    <!-- ace settings handler -->
-
-    <script src="/HomeWatch/new_interface/assets/js/ace-extra.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-
-    <!--[if lt IE 9]>
-    <script src="assets/js/html5shiv.js"></script>
-    <script src="assets/js/respond.min.js"></script>
-    <![endif]-->
-
-    
 </head>
 <body>
-
-          
-          <div id="navbar" class="navbar navbar-default">
-          {% include '%s/header.html'|format(userRole|default('manager')) %}
-          </div>
-          <div class="main-container" id="main-container">
-            <script type="text/javascript">
-              try{ace.settings.check('main-container' , 'fixed')}catch(e){}
-            </script>
-
-            <div class="main-container-inner">
-              <a class="menu-toggler" id="menu-toggler" href="#">
-                <span class="menu-text"></span>
-              </a>
-
-              <div class="sidebar" id="sidebar">
-          <script type="text/javascript">
-            try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
-          </script>
-
-          
-
-          <ul class="nav nav-list">
-            
-
-          </ul><!-- /.nav-list -->
-
-          <div class="sidebar-collapse" id="sidebar-collapse">
-            <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
-          </div>
-
-          <script type="text/javascript">
-            try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
-          </script>
- </div> <!--side bar-->
-
-              <div class="main-content">
-                
-
-                <div class="page-content">
-                  <!-- PAGE CONTENT BEGINS -->
-                  
-            
-                    {% block content '' %}
-                    
-                  </div> <!--page content-->
-              </div> 
-            </div><!--main content-->
-
-          </div>
-
-
-<!-- basic scripts -->
-    <!--[if !IE]> -->
-
-    <script type="text/javascript">
-      window.jQuery || document.write("<script src='/HomeWatch/new_interface/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
-    </script>
-
-    <!-- <![endif]-->
-
-    <!--[if IE]>
-    <script type="text/javascript">
-     window.jQuery || document.write("<script src='/HomeWatch/new_interface/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
-    </script>
-    <![endif]-->
-
-    <script type="text/javascript">
-      if("ontouchend" in document) document.write("<script src='/HomeWatch/new_interface/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
-    </script>
-    <script src="/HomeWatch/new_interface/assets/js/bootstrap.min.js"></script>
-    <script src="/HomeWatch/new_interface/assets/js/typeahead-bs2.min.js"></script>
-
-    <!-- page specific plugin scripts -->
-
-    <!-- ace scripts -->
-
-    <script src="/HomeWatch/new_interface/assets/js/ace-elements.min.js"></script>
-    <script src="/HomeWatch/new_interface/assets/js/ace.min.js"></script>
-<!-- inline scripts related to this page -->
-           
-  
+  <div id="wrapper">
+    {% include '%s/header.html'|format(userRole|default('manager')) %}
+    <div class="content-wrapper">
+    {% block content '' %}
+    </div>
+  </div>
 </body>
 </html>

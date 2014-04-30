@@ -5,7 +5,7 @@
 {% block title 'Electricity' %}
 
 {% block extraScripts %}
-<script src="/HomeWatch/my_search/js/highcharts_stock.js"></script>
+<script src="/HomeWatch/new_search_highcharts/highcharts/highcharts_stock.js"></script>
 {% endblock %}
 {% block breadcrumb %}
 <li>
@@ -152,7 +152,7 @@ function sendAjax(consumption,source){
                 $.ajax({
                  'async':false,
                  'global':false,
-                  url:"http://localhost:8888/HomeWatch/my_search/bas.php",
+                  url:"/HomeWatch/new_search_highcharts/bas.php",
                   type:"get",
                   data:{id:query}
                  

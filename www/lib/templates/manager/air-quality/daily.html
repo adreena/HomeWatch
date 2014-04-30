@@ -4,7 +4,7 @@
 
 {% block title 'Electricity Consumption | Daily Details' %}
 {% block extraScripts %}
-<script src="/HomeWatch/my_search/js/highcharts_spline.js"></script>
+<script src="/HomeWatch/new_search_highcharts/highcharts/highcharts_spline.js"></script>
 {% endblock %}
 
 {% block breadcrumb %}
@@ -114,7 +114,7 @@ function sendAjax(date,consumption,source){
                 $.ajax({
                  'async':false,
                  'global':false,
-                  url:"http://localhost:8888/HomeWatch/my_search/air_quality.php",
+                  url:"/HomeWatch/new_search_highcharts/air_quality.php",
                   type:"get",
                   data:{id:query}
                  
