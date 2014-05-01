@@ -47,7 +47,7 @@
                                         </div>
                                         <div class="col-xs-5">  
                                             <div class="input-group"> 
-                                              <input type="text" class="form-control hasDatepicker" id="datepicker" placeholder="yyyy-mm-dd"> 
+                                              <input type="text" class="form-control hasDatepicker" id="datepicker-elec" placeholder="yyyy-mm-dd"> 
                                               <span class="input-group-btn ">
                                                 <button type="button" class="btn btn-sm btn-default" id="submit-date">
                                                 <i class="icon-calendar bigger-110"></i>
@@ -148,7 +148,7 @@ function sendAjax(date,consumption,source){
                   $("select#source-select option").each(function() { this.selected = (this.text == source); });
                   var dateVal=dateVal.split("-");
                   console.log(dateVal[0],dateVal[1],dateVal[2]);                  
-                  $("#datepicker").val(dateVal[0]+'-'+dateVal[1]+'-'+dateVal[2]);
+                  $("#datepicker-elec").val(dateVal[0]+'-'+dateVal[1]+'-'+dateVal[2]);
                   queryData=sendAjax(date,'hourly',source);
                   window.history.pushState("", "", '/HomeWatch/electricity-consumption/daily.php');
                 }
@@ -160,7 +160,7 @@ function sendAjax(date,consumption,source){
 
           
           $("#submit-date").on('click',function(){
-            var date=$('#datepicker').val();
+            var date=$('#datepicker-elec').val();
             date=date.toString()+" 0";
             var source=$("#source-select").val();
             //console.log(source);

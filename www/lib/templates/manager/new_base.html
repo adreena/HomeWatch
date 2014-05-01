@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="description" content="Common UI Features &amp; Elements" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-     <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/HomeWatch/css/mangineer.css">
+   
+    <link rel="stylesheet" type="text/css" href="/HomeWatch/css/mangineer.css">
 
     <link href="/HomeWatch/ace_bootstrap/assets/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/HomeWatch/ace_bootstrap/assets/css/font-awesome.min.css" />
@@ -17,19 +17,20 @@
     <link rel="stylesheet" href="/HomeWatch/ace_bootstrap/assets/css/jquery-ui-1.10.3.full.min.css" />
     <link rel="stylesheet" href="/HomeWatch/ace_bootstrap/assets/css/chosen.css" />
 
-
-    
     <link rel="stylesheet" href="/HomeWatch/ace_bootstrap/assets/css/datepicker.css" />
 
     <link rel="stylesheet" href="/HomeWatch/ace_bootstrap/assets/css/ace-fonts.css" />
     <link rel="stylesheet" href="/HomeWatch/ace_bootstrap/assets/css/ace.min.css" />
     <link rel="stylesheet" href="/HomeWatch/ace_bootstrap/assets/css/ace-rtl.min.css" />
     <link rel="stylesheet" href="/HomeWatch/ace_bootstrap/assets/css/ace-skins.min.css" />
-    <script src="/HomeWatch/ace_bootstrap/assets/js/ace-extra.min.js"></script>
+
     <link rel="stylesheet" href="/HomeWatch/ace_bootstrap/assets/css/mystyle.css" />
+
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="/HomeWatch/ace_bootstrap/assets/js/ace-extra.min.js"></script>
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script data-main="{% block requireMain '/HomeWatch/js/main' %}" src="/HomeWatch/js/vendor/require-jquery.js"></script>
 
@@ -95,18 +96,10 @@
     <script src="http://code.highcharts.com/stock/highstock.js"></script>
     <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
     
-    <script src="/HomeWatch/new_search_highcharts/highcharts/highcharts_pie.js"></script>
-    
+    <script src="/HomeWatch/new_search_highcharts/highcharts/highcharts_pie.js"></script>  
     <script src="/HomeWatch/new_search_highcharts/highcharts/highcharts_stack_bar.js"></script>
-    <script src="/HomeWatch/new_search_highcharts/highcharts/highcharts_multiax_bar.js"></script>
-    
-<script src="/HomeWatch/new_search_highcharts/highcharts/highcharts_stock.js"></script>
-    
-
-    <!-- ace settings handler -->
-
-
-    
+    <script src="/HomeWatch/new_search_highcharts/highcharts/highcharts_multiax_bar.js"></script>   
+    <script src="/HomeWatch/new_search_highcharts/highcharts/highcharts_stock.js"></script>
     
 
 </head>
@@ -186,41 +179,27 @@
     <script src="/HomeWatch/ace_bootstrap/assets/js/chosen.jquery.min.js"></script>
 
 
-
-    
-
-    <!-- page specific plugin scripts -->
-
     <!-- ace scripts -->
 
     <script src="/HomeWatch/ace_bootstrap/assets/js/ace-elements.min.js"></script>
     <script src="/HomeWatch/ace_bootstrap/assets/js/ace.min.js"></script>
-<!-- inline scripts related to this page -->
-            <script src="/HomeWatch/ace_bootstrap/assets/js/bootbox.min.js"></script>
-   
-          
-
-    
-
+    <!-- inline scripts related to this page -->
+    <script src="/HomeWatch/ace_bootstrap/assets/js/bootbox.min.js"></script>
     <script src="/HomeWatch/ace_bootstrap/assets/js/date-time/bootstrap-datepicker.min.js"></script>
     
     
     <!-- inline scripts related to this page -->
 
- <script type="text/javascript">
-
+    <script type="text/javascript">
       jQuery(function($) {
-        
-      
-       $( "#datepicker" ).datepicker({
+            
+          
+       $( "#datepicker-elec" ).datepicker({
           showOtherMonths: true,
           selectOtherMonths: false,
           autoclose:true,
           format: 'yyyy-mm-dd',
           //isRTL:true,
-      
-
-      
         });
        $( "#datepicker-air" ).datepicker({
           showOtherMonths: true,
@@ -231,63 +210,50 @@
       
         });
         $(".chosen-select").chosen(); 
-       $(".chosen-select2").chosen();
-        
 
-        $('#id-pills-stacked').removeAttr('checked').on('click', function(){
-        $('.nav-pills').toggleClass('nav-stacked');
-        }); 
-
-        $('#apt-nav a').click(function (event) {
-            return false;
-          });
-
+        // relocating charts 
         $('#drag').on("click",function(){
-
           
-          if($(this).attr("checked")==undefined){
+            if($(this).attr("checked")==undefined){  
+                $(this).attr("checked","checked");
+                  console.log('activated');
+                  $(".row-fluid").sortable({
 
-            
-            $(this).attr("checked","checked");
-              console.log('activated');
-
-             
-              $(".row-fluid").sortable({
-
-                      placeholder: 'span4',
-                      connectWith: '.widget-container-span',
-                      helper: 'clone',
-                      appendTo: 'body',
-                      forcePlaceholderSize: true,
-                      start: function(event, ui) {
-                          $('.row-fluid > div.span4:visible:first').addClass('real-first-child');
-                      }, 
-                      stop: function(event, ui) {
-                          $('.row-fluid > div.real-first-child').removeClass('real-first-child');
-                      },
-                      change: function(event, ui) {
-                          $('.row-fluid > div.real-first-child').removeClass('real-first-child');
-                          $('.row-fluid > div.span4:visible:first').addClass('real-first-child');
-                      }
-                    });
-              $('.row-fluid').sortable('enable');
-          }else{
-                $(this).attr("checked",false);
-                $('.row-fluid').sortable('disable');
-                console.log('deactivated'); 
+                          placeholder: 'span4',
+                          connectWith: '.widget-container-span',
+                          helper: 'clone',
+                          appendTo: 'body',
+                          forcePlaceholderSize: true,
+                          start: function(event, ui) {
+                              $('.row-fluid > div.span4:visible:first').addClass('real-first-child');
+                          }, 
+                          stop: function(event, ui) {
+                              $('.row-fluid > div.real-first-child').removeClass('real-first-child');
+                          },
+                          change: function(event, ui) {
+                              $('.row-fluid > div.real-first-child').removeClass('real-first-child');
+                              $('.row-fluid > div.span4:visible:first').addClass('real-first-child');
+                          }
+                        });
+                  $('.row-fluid').sortable('enable');
+              }else{
+                    $(this).attr("checked",false);
+                    $('.row-fluid').sortable('disable');
+                    console.log('deactivated'); 
               }
         });  
 
-    $(".close").on("click",function(){
-      var parent=$(this).parents().eq(7).remove();
-    });
-
-    $( ".dash-btn" ).tooltip({
-          hide: {
-            effect: "slideDown",
-            delay: 250
-          }
+        //closing highstock widget 
+        $(".close").on("click",function(){
+          var parent=$(this).parents().eq(7).remove();
         });
+
+        $( ".dash-btn" ).tooltip({
+              hide: {
+                effect: "slideDown",
+                delay: 250
+              }
+            });
 
       });
     </script>
