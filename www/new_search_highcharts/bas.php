@@ -28,7 +28,7 @@
    5. id=='bas-dash'    : Dashboard BAS charts
 
 */
-          if($_GET['id'][0]=="total-elec") {
+         if($_GET['id'][0]=="total-elec") {
                                 
                         $period="Hourly";
                        // time is now fixed and manually adjusted
@@ -187,6 +187,7 @@
                         $months=array("January","February","March","April","May","June","July","August","September","October","November","December");
                         $energy=array();
                         $elec=array();
+                        
                         foreach ($months as $month) {
                             array_push($energy,0);
                             array_push($elec,0);
