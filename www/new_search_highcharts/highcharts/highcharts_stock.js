@@ -7,7 +7,7 @@ var extremes;
 var chartsInfo={seriesNames:[],seriesOptions:[],drawingInfo:{},queryData:''}; 
 
 /* I am setting the colors to keep each source/apartment with same color in all charts pies & stocks */
-var energyColors={"Solar":'#77a1e5',"Energy2":'#0d233a',"Energy3":'#FF9933',"Energy4":'#c42525', "Energy5":'#910000', "Energy6":'#1aadce',"Energy7":'#a6c96a'};
+var energyColors={"Solar":'#8bbc21',"DWHR":'#0d233a',"Geothermal + DWHR":'#FF9933', "Boiler 1":'#910000', "Boiler 2":'#1aadce'};
 var elecColors={"Total_P1":'#2f7ed8',"Total_HP":'#77a1e5',"HP1":'#80699B',"HP2":'#0d233a',"HP3":'#FF9933',"HP4":'#910000',"P11":'#1aadce',"P12":'#492970'};
 var aptColors={"Apt.1":'#93C572',"Apt.2":'#FF4040', "Apt.3":'#434348', "Apt.4":'#F4A460', "Apt.5":'#8085e9', "Apt.6":'#f15c80', "Apt.7":'#e4d354', "Apt.8":'#8085e8', "Apt.9":'#33CC33', "Apt.10":'#8d4653', "Apt.11":'#91e8e1', "Apt.12":'#0066FF'};
 
@@ -16,10 +16,10 @@ var aptColors={"Apt.1":'#93C572',"Apt.2":'#FF4040', "Apt.3":'#434348', "Apt.4":'
 ** ID : ID of widget box
 ** dataSeries : the first data series of an apartment/ or main-apartment-selector
 ** selectorID : Id of the apartment selector in widget's header
-** newItem : name of the apartment
+** newLine : name of the apartment
 ** queryID : query key to communicate with backend apartment.php/bas.php  
 */
-function draw_stock(ID,dataSeries,selectorID,newItem,queryID){
+function draw_stock(ID,dataSeries,selectorID,newLine,queryID){
 
 	chartsInfo.seriesNames[selectorID]=[];
     chartsInfo.seriesOptions[selectorID]=[];
@@ -33,8 +33,8 @@ function draw_stock(ID,dataSeries,selectorID,newItem,queryID){
     var color;
 
     /* 1... Adding the first chart info & creating the chart ...*/
-    if( chartsInfo.seriesNames[selectorID].indexOf(newItem)<0 && newItem !== null)
-    	chartsInfo.seriesNames[selectorID].push(newItem);
+    if( chartsInfo.seriesNames[selectorID].indexOf(newLine)<0 && newLine !== null)
+    	chartsInfo.seriesNames[selectorID].push(newLine);
 
     /* setting item color */
     if(energyColors[selectorName])
@@ -46,7 +46,7 @@ function draw_stock(ID,dataSeries,selectorID,newItem,queryID){
 
     //console.log(selectorName,"\n***color***\n",color);
     chartsInfo.seriesOptions[selectorID].push( {
-        name: newItem, 
+        name: newLine, 
         color: color,
         data: dataSeries
         });
@@ -170,25 +170,21 @@ function draw_stock(ID,dataSeries,selectorID,newItem,queryID){
 	}
 	/*...end 2...*/
 	
-	//console.log(ID,dataSeries,selectorID,newItem,queryID);
+	//console.log(ID,dataSeries,selectorID,newLine,queryID);
 	/* 3... for each widget, there is an apartment selector,
 	 so by changing their selector a new apartment will be added to the highstock for comparison purposes
 	 ...*/
 	$(selectorID).off('change');
 	$(selectorID).change( function(e){
         e.preventDefault();
-        //console.log("seleced");
 		var boxTitle=$(this).data("query");		
 		selectorName=$(selectorID).val();
-		//console.log(selectorName);
-		//console.log(chartsInfo.seriesNames,chartsInfo.seriesOptions);
+		
 		if(chartsInfo.seriesNames[selectorID].indexOf(selectorName)<0){
-			//console.log("to add",selectorName);
-			//console.log(ID,selectorID,queryID,minDate,maxDate,boxTitle,0,chartsInfo.seriesNames[selectorID]);
 			var tChart=draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,boxTitle,0,chartsInfo.seriesNames[selectorID]);			
 			console.log("****",tChart);
-			if(typeof(tChart.newItem) !== "undefined"){
-    			chartsInfo.seriesOptions[selectorID].push(tChart.newItem);
+			if(typeof(tChart.newLine) !== "undefined"){
+    			chartsInfo.seriesOptions[selectorID].push(tChart.newLine);
     		}
 
     		//console.log("new seriesOptions:",chartsInfo.seriesOptions);
@@ -208,11 +204,11 @@ function draw_stock(ID,dataSeries,selectorID,newItem,queryID){
 ** draw_stock calls this function to apply changes on pies-BAS & add more apartment dataseries to a highstock.
 ** 
 */
-function draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,boxTitle,reload,seriesNames){
+function draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,boxTitle,pieReload,seriesNames){
 			var selectorName=$(selectorID).val();
-			//console.log("here",ID,selectorID,queryID,minDate,maxDate,boxTitle,reload,seriesNames);
-			// if reload==1 it means time-selector in BAS has changed, so pies must be updated
-			if(reload===1){
+			//console.log("here",ID,selectorID,queryID,minDate,maxDate,boxTitle,pieReload,seriesNames);
+			// if pieReload==1 it means time-selector in BAS has changed, so pies must be updated
+			if(pieReload===1){
 				if(queryID==="total-elec"){
 					var pieData=sendAjaxPie('pie-elec',minDate,maxDate);
 					draw_pie(pieData['elec'],"elec-usage-pie",'kWh',"BAS-elec");
@@ -229,9 +225,9 @@ function draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,boxTitle,reload
 				}
 			}
 
-			// else reload==0 **************************************
+			// else pieReload==0 **************************************
 			/* Adding new dataseries to current highstock */
-			var chart1=$(ID).highcharts();
+			var chartRetrieved=$(ID).highcharts();
 			var color;
 			var energyMapping={"Energy1":"Solar","Energy2":"DWHR","Energy3":"Geothermal + DWHR","Energy4":"Solar + DWHR + Geothermal + Heat Pumps","Energy5":"Boiler 1","Energy6":"Boiler 2","Energy7":"Heating Consumption"};
 			
@@ -257,17 +253,17 @@ function draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,boxTitle,reload
 					   seriesNames.push(selectorName);
 						}
 
-					var newItem={
+					var newLine={
 			            name: selectorName,
 			         	color:color,
 			            data: dataSeries
 	            	};
-					chart1.addSeries(newItem);
+					chartRetrieved.addSeries(newLine);
 					
 			   }
 			}
-		//console.log(newItem);
-		return {"newItem":newItem};
+		//console.log(newLine);
+		return {"new":newLine};
 }
 		
 function sendAjaxPie(consumption,startDate,endDate){

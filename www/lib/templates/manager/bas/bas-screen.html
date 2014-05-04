@@ -165,10 +165,10 @@ $(document).ready(function(){
 
 // Drawing BAS Screen highstocks 
     dataSeries=sendAjax('total-elec','Total_HP');
-    allCharts["BAS Electricity (kWh)"]=draw_stock("#Electricity",dataSeries['result']["Total_HP"],"#elec-select-source",'Total_HP','total-elec');
+    allCharts["BAS Electricity (kWh)"] = draw_stock("#Electricity",dataSeries['result']["Total_HP"],"#elec-select-source",'Total_HP','total-elec');
    
     dataSeries=sendAjax('total-energy',"Energy1"); // Energy1-> Solar
-    allCharts["BAS Energy (kJ)"]=draw_stock("#Energy",dataSeries['result']['Solar'],"#energy-select-source",'Solar','total-energy');
+    allCharts["BAS Energy (kJ)"] = draw_stock("#Energy",dataSeries['result']['Solar'],"#energy-select-source",'Solar','total-energy');
 
     $(".apt-checkbox").click( function(e){
             e.preventDefault();
