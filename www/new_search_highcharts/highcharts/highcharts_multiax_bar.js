@@ -1,17 +1,18 @@
 
-function draw_multiax_bar(ID,data){
+function draw_multiax_bar(widgetID,queryData){
 
-    var elecData=data['elec'];
-    var energyData=data['energy'];
+    var elecData=queryData['elec'];
+    var energyData=queryData['energy'];
     console.log(elecData);
     console.log(energyData);
-    $(function () {
-            $('#'+ID).highcharts({
+    
+    var options={
                 credits: {
                        enabled: false
                     },
                 exporting: { enabled: false },
                 chart: {
+                    renderTo: widgetID,
                     zoomType: 'xy'
                 },
                 title: {
@@ -89,7 +90,7 @@ function draw_multiax_bar(ID,data){
                     data: elecData//[7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
                     
                 },]
-            });
-        });
-        
+            };
+
+    var outputChart= new Highcharts.Chart(options);    
 }

@@ -4,15 +4,15 @@
 ** if widgetID== cal-pie , it draws pie inside the calendar grid
 ** else: draws pies related to BAS screen
 ** variables:
-** data: contains data for pies
+** queryData: contains queryData for pies
 ** widgetID: widgetID of container
-** measure: measurement such as kWh
-** extraInfo: information about threshold boundaries for coloring purposes 
+** measurement: measurementment such as kWh
+** thresholdInfo: information about threshold boundaries for coloring purposes 
 */
 Highcharts.setOptions({
      colors: ['#93C572','#FF4040', '#434348', '#F4A460', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#33CC33', '#8d4653', '#91e8e1', '#0066FF']
  });
-function draw_pie(data,widgetID,measure,extraInfo){
+function draw_pie(queryData,widgetID,measurement,thresholdInfo){
 
 	var energyColors={"Solar":'#8bbc21',"DWHR":'#0d233a',"Geothermal + DWHR":'#FF9933', "Boiler 1":'#910000', "Boiler 2":'#1aadce'};
 	var elecColors={"HP1":'#80699B',"HP2":'#0d233a',"HP3":'#FF9933',"HP4":'#910000',"P11":'#1aadce',"P12":'#492970'};
@@ -20,17 +20,17 @@ function draw_pie(data,widgetID,measure,extraInfo){
 
 	var pie;
 	if(widgetID==='cal-pie'){
-		for(var item in data){
+		for(var item in queryData){
 		 	widgetID="#"+item+"-pie";
 		 	var dObj=[];
-		 	d=data[item];
+		 	d=queryData[item];
 
 		 	for(val in d){
 		 		obj=new Object();
 		 		obj.name=d[val][0];
 		 		obj.y=d[val][1];
-		 		if(extraInfo != 'no_threshold'){
-		 			var temp=extraInfo.split(",");
+		 		if(thresholdInfo != 'no_threshold'){
+		 			var temp=thresholdInfo.split(",");
 		 		 	var min=parseFloat(temp[0]);
 		 		 	var max=parseFloat(temp[1]);
 		 		 	console.log("***",min,max);
@@ -45,37 +45,37 @@ function draw_pie(data,widgetID,measure,extraInfo){
 				}
 		 		dObj.push(obj);
 		 	}
-		 	pie=draw_helper(widgetID,dObj,measure,extraInfo);   
+		 	pie=draw_helper(widgetID,dObj,measurement,thresholdInfo);   
 		}
 	}
 	else{	
 			var dObj=[];
-			if(extraInfo === "BAS-elec"){
+			if(thresholdInfo === "BAS-elec"){
 				var dObj=[];
-				for(var item in data){
+				for(var item in queryData){
 					obj=new Object();
-				 	obj.name=data[item][0];
-				 	obj.y=data[item][1];
+				 	obj.name=queryData[item][0];
+				 	obj.y=queryData[item][1];
 			 		obj.color=elecColors[obj.name];
 			 		dObj.push(obj);
 				 	}
-			 	pie=draw_helper("#"+widgetID,dObj,measure,extraInfo);
+			 	pie=draw_helper("#"+widgetID,dObj,measurement,thresholdInfo);
 
 		 	}
-		 	else if(extraInfo === "BAS-energy"){
+		 	else if(thresholdInfo === "BAS-energy"){
 				var dObj=[];
-				for(var item in data){
+				for(var item in queryData){
 					obj=new Object();
-				 	obj.name=data[item][0];
-				 	obj.y=data[item][1];
+				 	obj.name=queryData[item][0];
+				 	obj.y=queryData[item][1];
 			 		obj.color=energyColors[obj.name];
 			 		dObj.push(obj);
 				 	}
-			 	pie=draw_helper("#"+widgetID,dObj,measure,extraInfo);
+			 	pie=draw_helper("#"+widgetID,dObj,measurement,thresholdInfo);
 
 		 	}
 		 	else
-		 		pie=draw_helper("#"+widgetID,data,measure,extraInfo);
+		 		pie=draw_helper("#"+widgetID,queryData,measurement,thresholdInfo);
 	 }
 }
 
@@ -85,10 +85,10 @@ function draw_pie(data,widgetID,measure,extraInfo){
 ** returns pie chart
 */
 
-function draw_helper(widgetID,data,measure,extraInfo){
+function draw_helper(widgetID,queryData,measurement,thresholdInfo){
 	widgetID=widgetID.split("#")[1];
 	
-	var pie=new Highcharts.Chart({
+	var options={
 			    	title: {
 					   text: ''
 					},
@@ -105,7 +105,7 @@ function draw_helper(widgetID,data,measure,extraInfo){
 			            plotShadow: false
 			        },
 			        tooltip: {
-			    	    pointFormat: '{point.y:.2f} '+measure//point.y
+			    	    pointFormat: '{point.y:.2f} '+measurement//point.y
 			        },
 			        plotOptions: {
 			            pie: {
@@ -130,9 +130,10 @@ function draw_helper(widgetID,data,measure,extraInfo){
 			        exporting: { enabled: false },
 			        series: [{
 			            type: 'pie',
-			            data: data
+			            data: queryData
 			        }]
 			    
-			});
+			};
+	var pie=new Highcharts.Chart(options);
 	return pie;
 			}

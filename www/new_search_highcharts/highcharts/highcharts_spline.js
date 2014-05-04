@@ -77,6 +77,6 @@ function draw_spline(widgetID,queryData){
                     },
                     series: dataSeries
         };
-    outputChart= new Highcharts.Chart(options);
+    var outputChart= new Highcharts.Chart(options);
            
 }
