@@ -13,13 +13,13 @@ var aptColors={"Apt.1":'#93C572',"Apt.2":'#FF4040', "Apt.3":'#434348', "Apt.4":'
 
 /*
 ** This function is called from outside to draw highStock in widget boxes
-** ID : ID of widget box
+** widgetID : widgetID of widget box
 ** dataSeries : the first data series of an apartment/ or main-apartment-selector
 ** selectorID : Id of the apartment selector in widget's header
 ** newLine : name of the apartment
 ** queryID : query key to communicate with backend apartment.php/bas.php  
 */
-function draw_stock(ID,dataSeries,selectorID,newLine,queryID){
+function draw_stock(widgetID,dataSeries,selectorID,newLine,queryID){
 
 	chartsInfo.seriesNames[selectorID]=[];
     chartsInfo.seriesOptions[selectorID]=[];
@@ -51,7 +51,7 @@ function draw_stock(ID,dataSeries,selectorID,newLine,queryID){
         data: dataSeries
         });
     var firstdata=chartsInfo.seriesOptions[selectorID];
-    var tempID=ID.split('#')[1];
+    var tempID=widgetID.split('#')[1];
     var options={
     	        chart: {
 	            	renderTo: tempID,
@@ -135,7 +135,7 @@ function draw_stock(ID,dataSeries,selectorID,newLine,queryID){
 				    				' | End: '+ Highcharts.dateFormat(null, e.max));
 				    			maxDate=Highcharts.dateFormat(null, e.max);
 				    			minDate=Highcharts.dateFormat(null, e.min);
-				    			var tempOutput=draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,"",1,chartsInfo.seriesNames[selectorID]);
+				    			var tempOutput=draw_stock_helper(widgetID,selectorID,queryID,minDate,maxDate,"",1,chartsInfo.seriesNames[selectorID]);
 
 				    			//console.log("**MinMax**",maxDate,minDate);
 		    				}
@@ -170,7 +170,6 @@ function draw_stock(ID,dataSeries,selectorID,newLine,queryID){
 	}
 	/*...end 2...*/
 	
-	//console.log(ID,dataSeries,selectorID,newLine,queryID);
 	/* 3... for each widget, there is an apartment selector,
 	 so by changing their selector a new apartment will be added to the highstock for comparison purposes
 	 ...*/
@@ -181,7 +180,7 @@ function draw_stock(ID,dataSeries,selectorID,newLine,queryID){
 		selectorName=$(selectorID).val();
 		
 		if(chartsInfo.seriesNames[selectorID].indexOf(selectorName)<0){
-			var tChart=draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,boxTitle,0,chartsInfo.seriesNames[selectorID]);			
+			var tChart=draw_stock_helper(widgetID,selectorID,queryID,minDate,maxDate,boxTitle,0,chartsInfo.seriesNames[selectorID]);			
 			console.log("****",tChart);
 			if(typeof(tChart.newLine) !== "undefined"){
     			chartsInfo.seriesOptions[selectorID].push(tChart.newLine);
@@ -204,9 +203,8 @@ function draw_stock(ID,dataSeries,selectorID,newLine,queryID){
 ** draw_stock calls this function to apply changes on pies-BAS & add more apartment dataseries to a highstock.
 ** 
 */
-function draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,boxTitle,pieReload,seriesNames){
+function draw_stock_helper(widgetID,selectorID,queryID,minDate,maxDate,boxTitle,pieReload,seriesNames){
 			var selectorName=$(selectorID).val();
-			//console.log("here",ID,selectorID,queryID,minDate,maxDate,boxTitle,pieReload,seriesNames);
 			// if pieReload==1 it means time-selector in BAS has changed, so pies must be updated
 			if(pieReload===1){
 				if(queryID==="total-elec"){
@@ -227,7 +225,7 @@ function draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,boxTitle,pieRel
 
 			// else pieReload==0 **************************************
 			/* Adding new dataseries to current highstock */
-			var chartRetrieved=$(ID).highcharts();
+			var chartRetrieved=$(widgetID).highcharts();
 			var color;
 			var energyMapping={"Energy1":"Solar","Energy2":"DWHR","Energy3":"Geothermal + DWHR","Energy4":"Solar + DWHR + Geothermal + Heat Pumps","Energy5":"Boiler 1","Energy6":"Boiler 2","Energy7":"Heating Consumption"};
 			
