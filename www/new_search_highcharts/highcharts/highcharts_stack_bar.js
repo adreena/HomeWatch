@@ -1,14 +1,14 @@
 
 
 
-function draw_stack_bar(id,queryData,categories,yAx_label){
+function draw_stack_bar(widgetID,queryData,categories,yAx_label){
     //var dataSeries=[ {name: 'apartment',data: [5, 3, 4, 7, 2]} , {name: 'Jane',data: [2, 2, 3, 2, 1]}, {name: 'Joe',data: [3, 4, 4, 2, 5]}];
 
   // var categories=categories;//["<a href='#'>Apt.1*</a>","<a href='#'>Apt.2</a>","<a href='#'>Apt.3</a>","<a href='#'>Apt.4</a>","<a href='#'>Apt.5</a>","<a href='#'>Apt.6</a>","<a href='#'>Apt.7</a>","<a href='#'>Apt.8</a>","<a href='#'>Apt.9</a>","<a href='#'>Apt.10</a>","<a href='#'>Apt.11</a>","<a href='#'>Apt.12</a>"];//categories;
 
    var dataSeries =makeObject(queryData);
     console.log("stackBar data:",dataSeries);
-    draw_stackbar_helper(id,dataSeries,categories,yAx_label);
+    draw_stackbar_helper(widgetID,dataSeries,categories,yAx_label);
 }
 
 
@@ -26,9 +26,9 @@ function makeObject(stacks){
 
 
 
-function draw_stackbar_helper(id,dataSeries,categories,yAx_label){
+function draw_stackbar_helper(widgetID,dataSeries,categories,yAx_label){
     $(function () {
-            $(id).highcharts({
+            $(widgetID).highcharts({
                 credits: {
                    enabled: false
                 },
@@ -48,7 +48,7 @@ function draw_stackbar_helper(id,dataSeries,categories,yAx_label){
 
                     categories: categories ,
                     labels: {
-                       // if(id !='apt-dashboard'){
+                       // if(widgetID !='apt-dashboard'){
                             formatter: function () {
                                 return '<a href="apartment.php?val=' + this.value + '">'+this.value+'</a>';
                             },

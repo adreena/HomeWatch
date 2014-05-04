@@ -282,11 +282,7 @@
         }
 
         function drawGraphsForMonthlyData() {
-            
 
-            // Get some random data
-            //var data = getDataForMonth();
-            
             var legend= d3.select("#chart-block");
             legend.selectAll('div').remove();
             var groupTop=$("#chartContainer").offset().top;
@@ -415,11 +411,6 @@
 
             
              //******************** day numbers added to the empty cells**************************
-             
-             
-
-              
-
 
             // Create a new svg group to store the chart elements and store it globally. Again, as the user navigates through the months by pressing 
             // the "back" and "forward" buttons on the page, we clear the chart elements from this group and re add them again.
@@ -428,51 +419,6 @@
            //drawGraphsForMonthlyData();
            
        }
-
-       function makeLegend(colorCounter){
-
-            var w=25;
-            var h=25;
-            
-               //adding a color legend
-            var legend= d3.select("#colors");
-            legend.selectAll(".legend").remove();
-            var toolbarWidth=$('.widget-toolbox').width();
-            var legendGroup=legend.append("svg")
-                                  .attr("class","legend")
-                                  .attr("width",toolbarWidth)
-                                  .append("g");
-
-            legendGroup.attr("class", "legend");
-           
-           // console.log(colorCounter);
-           var i=0;
-           
-            for (var key in colorCounter){
-                //console.log(key,colorCounter[key]);
-                legendGroup.append('rect')
-                      .attr("x",w-15+i)
-                      .attr("y",h-15)
-                      .attr("width",20)
-                      .attr("height",20)
-                      .style("fill",colorCounter[key])
-                      i+=70;
-            }
-            var colortexts=d3.select("#colors svg")
-                                   .append('g')
-                                   .attr("class", "legend");
-            i=0;
-            for(var key in colorCounter){
-                       colortexts.append("text")
-                                 .attr("x", 15+i)
-                                 .attr("y", 5)
-                                 .attr("dx", 20) // right padding
-                                 .attr("dy", 20)
-                              .text(key);
-                        i+=70;
-                }
-         
-        }
 
    
         //creating cellID to keep track of dates shown on a page, each time calendar page changes new date array is loaded into cellID
@@ -580,9 +526,9 @@
         });
 
             
-            draw_pie(queryData['sum'],'cal-pie','kWh','no_threshold');
-            $('#loading').hide();
-            $('.calendar-btn').on('click',function(){
+        draw_pie(queryData['sum'],'cal-pie','kWh','no_threshold');
+        $('#loading').hide();
+        $('.calendar-btn').on('click',function(){
 
                 $('#loading').show();
                 queryData=sendAjax(cellID[0],cellID[34],'pie-calendar');//cellID[cellID.length-1]);
@@ -609,7 +555,7 @@
               
             });
 
-            $('#set-threshold').on('click',function(){
+        $('#set-threshold').on('click',function(){
                 var min=$('#min-threshold').val();
                 var max=$('#max-threshold').val();
                 

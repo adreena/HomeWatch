@@ -18,7 +18,7 @@ io.sockets.on('connection', function(socket){
 var clientCounter=0;
 
 	//socket.emit('testMethod',{'message':"hi"});
-	socket.on('testMethod2',function(data){
+	socket.on('addChart',function(data){
 		//console.log(data);
 		clientCounter++;
 

@@ -261,7 +261,7 @@ function draw_stock_helper(widgetID,selectorID,queryID,minDate,maxDate,boxTitle,
 			   }
 			}
 		//console.log(newLine);
-		return {"new":newLine};
+		return {"newLine":newLine};
 }
 		
 function sendAjaxPie(consumption,startDate,endDate){

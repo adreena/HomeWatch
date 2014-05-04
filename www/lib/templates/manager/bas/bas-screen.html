@@ -190,7 +190,7 @@ $(document).ready(function(){
             /* --- */
             console.log("selectorOptions",selectorOptions);
             var selectedChart=allCharts[id];
-            socket.emit('testMethod2',{name:id, data:selectedChart,selectorID:selectorID, selectorOptions:selectorOptions, selectorType:selectorType, selectorVal:selectorVal});
+            socket.emit('addChart',{name:id, data:selectedChart,selectorID:selectorID, selectorOptions:selectorOptions, selectorType:selectorType, selectorVal:selectorVal});
             $("#ChartAddedAlert").fadeIn(1000);
             $("#ChartAddedAlert").fadeOut(1500);
            
