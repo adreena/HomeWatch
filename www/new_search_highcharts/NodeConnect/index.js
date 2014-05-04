@@ -17,11 +17,8 @@ var io=require('socket.io').listen(server);
 io.sockets.on('connection', function(socket){
 var clientCounter=0;
 
-	//socket.emit('testMethod',{'message':"hi"});
 	socket.on('addChart',function(data){
-		//console.log(data);
 		clientCounter++;
-
 		io.sockets.emit('testMethod',data);
 
 
