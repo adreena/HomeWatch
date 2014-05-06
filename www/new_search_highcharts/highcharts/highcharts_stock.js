@@ -127,7 +127,7 @@ function draw_stock(widgetID,dataSeries,selectorID,newLine,queryID){
 				    				' | End: '+ Highcharts.dateFormat(null, e.max));
 				    			maxDate=Highcharts.dateFormat(null, e.max);
 				    			minDate=Highcharts.dateFormat(null, e.min);
-				    			var tempOutput=draw_stock_helper(ID,selectorID,queryID,minDate,maxDate,"",1,chartsInfo.seriesNames[selectorID]);
+				    			var tempOutput=draw_stock_helper(widgetID,selectorID,queryID,minDate,maxDate,"",1,chartsInfo.seriesNames[selectorID]);
 				    			
 		    				}
 		    			else if(queryID==="total-energy"){
